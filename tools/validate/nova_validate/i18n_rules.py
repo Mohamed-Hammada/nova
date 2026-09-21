@@ -17,6 +17,7 @@ def check_i18n(spec: Spec) -> list[Issue]:
     issues: list[Issue] = []
     for language, table in spec.i18n.items():
         for where, key in needed:
-            if not str(table.get(key, "")).strip():
+            value = table.get(key)
+            if not isinstance(value, str) or not value.strip():
                 issues.append(error("i18n", where, f"missing '{language}' string for key '{key}'"))
     return issues

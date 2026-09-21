@@ -77,3 +77,15 @@ def test_blank_string_counts_as_missing():
     spec = make_spec()
     spec.i18n["ar"]["task.math.count-objects-at-home.name"] = "   "
     assert rules_of(check_i18n(spec)) == {"i18n"}
+
+
+def test_null_value_counts_as_missing():
+    spec = make_spec()
+    spec.i18n["en"]["skill.math.count.cardinality.name"] = None
+    assert rules_of(check_i18n(spec)) == {"i18n"}
+
+
+def test_non_string_value_counts_as_missing():
+    spec = make_spec()
+    spec.i18n["ar"]["game.math.bear-snacks.name"] = 123
+    assert rules_of(check_i18n(spec)) == {"i18n"}
