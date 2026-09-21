@@ -2790,6 +2790,18 @@ def test_blank_string_counts_as_missing():
     spec = make_spec()
     spec.i18n["ar"]["task.math.count-objects-at-home.name"] = "   "
     assert rules_of(check_i18n(spec)) == {"i18n"}
+
+
+def test_null_value_counts_as_missing():
+    spec = make_spec()
+    spec.i18n["en"]["skill.math.count.cardinality.name"] = None
+    assert rules_of(check_i18n(spec)) == {"i18n"}
+
+
+def test_non_string_value_counts_as_missing():
+    spec = make_spec()
+    spec.i18n["ar"]["game.math.bear-snacks.name"] = 123
+    assert rules_of(check_i18n(spec)) == {"i18n"}
 ```
 
 - [ ] **Step 2: Run the test to verify it fails**
@@ -2866,7 +2878,8 @@ def check_i18n(spec: Spec) -> list[Issue]:
     issues: list[Issue] = []
     for language, table in spec.i18n.items():
         for where, key in needed:
-            if not str(table.get(key, "")).strip():
+            value = table.get(key)
+            if not isinstance(value, str) or not value.strip():
                 issues.append(error("i18n", where, f"missing '{language}' string for key '{key}'"))
     return issues
 ```
@@ -2874,7 +2887,7 @@ def check_i18n(spec: Spec) -> list[Issue]:
 - [ ] **Step 4: Run the tests to verify they pass**
 
 Run: `.venv/Scripts/python.exe -m pytest -q`
-Expected: `103 passed`.
+Expected: `105 passed`.
 
 - [ ] **Step 5: Commit**
 
@@ -3158,7 +3171,7 @@ Exit code is 1 when any error is found. Warnings do not fail the run.
 - [ ] **Step 4: Run the full test suite and the CLI**
 
 Run: `.venv/Scripts/python.exe -m pytest -q`
-Expected: `113 passed`.
+Expected: `115 passed`.
 
 Run: `.venv/Scripts/python.exe -m nova_validate --report`
 Expected (data dir has only the schemas so far):
@@ -4242,7 +4255,7 @@ Run from `tools/validate`:
 .venv/Scripts/python.exe -m nova_validate --report
 ```
 
-Expected: `113 passed`, then `0 error(s)`. Record the report's counts (skills, deep-scope skills, games, transfer tasks, rules, parameters by status) in chapter 08.
+Expected: `115 passed`, then `0 error(s)`. Record the report's counts (skills, deep-scope skills, games, transfer tasks, rules, parameters by status) in chapter 08.
 
 - [ ] **Step 2: Check each spec "Definition of done" item against the evidence**
 
