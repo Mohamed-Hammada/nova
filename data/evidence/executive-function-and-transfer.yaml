@@ -1,0 +1,172 @@
+# Executive function, and whether training it transfers.
+#
+# These entries exist to keep Nova honest about the Transfer mastery state. The consistent finding
+# across independent meta-analyses is that training a cognitive skill improves that skill and tasks
+# that resemble it, and that generalisation beyond the trained task is small, inconsistent, or
+# absent. Nova therefore treats transfer as something to be measured with a probe on a different
+# mechanic, never as something a training game may be assumed to produce.
+
+- id: ev.transfer.harvard-cdc-2011
+  title: 'Building the Brain''s "Air Traffic Control" System: How Early Experiences Shape the Development of Executive Function (Working Paper No. 11), with the InBrief summary'
+  citation: "National Scientific Council on the Developing Child / Center on the Developing Child at Harvard University (2011). Working Paper No. 11, and InBrief - Executive Function: Skills for Life and Learning. Harvard University, Cambridge, Massachusetts."
+  url: https://developingchild.harvard.edu/resources/working-paper/building-the-brains-air-traffic-control-system-how-early-experiences-shape-the-development-of-executive-function/
+  verified: true
+  evidence_type: developmental_framework
+  evidence_strength: moderate
+  population: children from infancy through early childhood
+  delivery: not_applicable
+  language: en
+  finding: >-
+    The Center's synthesis names three component skills of executive function and self-regulation:
+    working memory, "the ability to hold and manipulate information in mind"; inhibitory control,
+    "the capacity to resist acting on impulse and to control behavior"; and cognitive flexibility,
+    "the ability to adjust to new demands, priorities, or perspectives". It uses the air-traffic-
+    control metaphor for how the three work together, describes rapid growth in these capacities
+    during early childhood with important growth in the preschool years, and describes them as built
+    through practice, adult scaffolding and games of increasing challenge. This three-part split is
+    the structure Nova uses for its executive-function domain, and it confirms the original brief's
+    description of the Harvard materials.
+  limits: >-
+    A research synthesis by a scientific council, not a primary study and not an evaluation: it
+    supports the vocabulary and the broad developmental picture, never a claim that any particular
+    activity builds any particular component. It says nothing about digital delivery, about the
+    order in which Nova should teach the three, or about Arabic-speaking children, and it does not
+    establish that the three components are cleanly separable in children as young as 3 (see
+    ev.transfer.scionti-2020, whose authors argue executive functions are less modular at this age).
+
+- id: ev.transfer.melby-lervag-2016
+  title: 'Working Memory Training Does Not Improve Performance on Measures of Intelligence or Other Measures of "Far Transfer": Evidence From a Meta-Analytic Review'
+  citation: Melby-Lervåg, M., Redick, T. S., & Hulme, C. (2016). Perspectives on Psychological Science, 11(4), 512-534. doi:10.1177/1745691616635612
+  url: https://ora.ox.ac.uk/objects/uuid:daa9a729-f17b-4e45-97c0-cff5075ea404
+  verified: true
+  evidence_type: meta_analysis
+  evidence_strength: moderate
+  population: 87 publications with 145 experimental comparisons of working-memory training, spanning children and adults (typically developing and clinical samples)
+  delivery: mixed
+  language: en
+  finding: >-
+    Immediately after training there were reliable improvements on measures of intermediate
+    transfer - verbal and visuospatial working memory, that is, tasks resembling the trained task.
+    For measures of far transfer (nonverbal ability, verbal ability, word decoding, reading
+    comprehension, arithmetic) "there was no convincing evidence of any reliable improvements when
+    working memory training was compared with a treated control condition". The authors conclude
+    that working-memory training produces "short-term, specific training effects that do not
+    generalize to measures of 'real-world' cognitive skills".
+  limits: >-
+    The interventions are working-memory drills, not the mixed play-based games Nova builds, and the
+    samples span children and adults rather than 3-6 year olds specifically, so this is a warning
+    about a mechanism rather than a measurement of Nova. It shows the absence of a demonstrated far
+    transfer effect, which is not the same as proof that no transfer is ever possible under any
+    training regime - see ev.transfer.barnett-ceci-2002 on why a single far-transfer effect size is
+    the wrong question. English-language literature; no Arabic-specific estimate.
+
+- id: ev.transfer.sala-2019
+  title: "Near and Far Transfer in Cognitive Training: A Second-Order Meta-Analysis"
+  citation: "Sala, G., Aksayli, N. D., Tatlidil, K. S., Tatsumi, T., Gondo, Y., & Gobet, F. (2019). Collabra: Psychology, 5(1), 18. doi:10.1525/collabra.203"
+  url: https://pure.fujita-hu.ac.jp/en/publications/near-and-far-transfer-in-cognitive-training-a-second-order-meta-a/
+  verified: true
+  evidence_type: meta_analysis
+  evidence_strength: moderate
+  population: a meta-analysis of meta-analyses of cognitive-training programmes across children, adults and older adults (models of 99, 119 and 233 effect sizes)
+  delivery: mixed
+  language: en
+  finding: >-
+    Pooling across previous meta-analyses, working-memory and related cognitive training produced
+    near transfer (to memory tasks), with the size of that effect varying by population. Far
+    transfer to reasoning, processing speed and language was small or null, and once placebo effects
+    and publication bias were accounted for "the overall effect size and true variance equaled
+    zero". The authors conclude that "the lack of generalization of skills acquired by training is
+    thus an invariant of human cognition". This is the single most important entry behind Nova's
+    rule that in-game improvement is never treated as evidence of transfer.
+  limits: >-
+    A second-order meta-analysis inherits the weaknesses of the meta-analyses it pools, including
+    their variable control conditions. It concerns discrete cognitive-training programmes, not
+    curriculum-embedded or play-based learning, and it aggregates across ages rather than isolating
+    3-6 year olds. It bears on transfer of *trained cognitive capacity*; it does not say that taught
+    content (counting, letter sounds) fails to transfer. No Arabic-language evidence.
+
+- id: ev.transfer.kassai-2019
+  title: "A meta-analysis of the experimental evidence on the near- and far-transfer effects among children's executive function skills"
+  citation: Kassai, R., Futo, J., Demetrovics, Z., & Takacs, Z. K. (2019). Psychological Bulletin, 145(2), 165-188. doi:10.1037/bul0000180
+  url: https://www.research.ed.ac.uk/en/publications/a-meta-analysis-of-the-experimental-evidence-on-the-near-and-far-/
+  verified: true
+  evidence_type: meta_analysis
+  evidence_strength: moderate
+  population: children in experimental studies training a component of executive function (the abstract does not state the age band; k = 43 comparisons for near transfer, k = 17 for far transfer)
+  delivery: mixed
+  language: en
+  finding: >-
+    Training one component of executive function (working memory, inhibitory control or cognitive
+    flexibility) produced a significant near-transfer effect on the targeted component
+    (g+ = 0.44, k = 43, p < .001), showing the interventions did what they set out to do. But there
+    was "no convincing evidence of far-transfer" to the untrained components
+    (g+ = 0.11, k = 17, p = .11). The authors "question the practical relevance of training specific
+    executive function skills in isolation". For Nova this means a game that trains inhibition must
+    not be credited with building cognitive flexibility.
+  limits: >-
+    The abstract Nova verified does not state the age range of the included children, so this entry
+    must not be read as specific to 3-6 year olds; the preschool-specific picture is in
+    ev.transfer.scionti-2020, which reached a partly different conclusion about transfer between
+    executive domains in younger children. Only 17 comparisons contributed to the far-transfer
+    estimate, so a small true effect cannot be ruled out. Training paradigms, not games; no Arabic
+    evidence.
+
+- id: ev.transfer.scionti-2020
+  title: "Is Cognitive Training Effective for Improving Executive Functions in Preschoolers? A Systematic Review and Meta-Analysis"
+  citation: Scionti, N., Cavallero, M., Zogmaister, C., & Marzocchi, G. M. (2020). Frontiers in Psychology, 10, 2812. doi:10.3389/fpsyg.2019.02812
+  url: https://www.frontiersin.org/journals/psychology/articles/10.3389/fpsyg.2019.02812/full
+  verified: true
+  evidence_type: meta_analysis
+  evidence_strength: moderate
+  population: preschool children aged 3-6 years; 32 studies from 27 papers, contributing 123 effect sizes
+  delivery: mixed
+  language: en
+  finding: >-
+    Cognitive training improved preschoolers' executive functions overall
+    (g = 0.352, k = 123, p < 0.001), and - unlike the findings in older samples - there was no
+    significant difference between near and far transfer *within* the executive domains
+    (near g = 0.352, 95% CI [0.252, 0.451]; far g = 0.318, 95% CI [0.186, 0.449]). The authors
+    attribute this to executive functions being less modular at this age. Crucially, transfer
+    stopped at the edge of the executive domains: effects on behavioural and learning-related
+    outcomes were not significant (g = 0.169, 95% CI [-0.047, 0.383], p = 0.122). Computerised
+    training was effective (g = 0.281) but no more so than non-computerised (g = 0.373); the
+    difference was not a significant moderator. Effects were larger for developmentally at-risk
+    children (ADHD g = 0.785; low socio-economic status g = 0.430) than for typically developing
+    children, and larger for group than individual sessions (0.443 vs 0.211).
+  limits: >-
+    The authors themselves warn that "task impurity" - executive tasks sharing components - may
+    inflate the within-domain far-transfer result, so this is not a clean demonstration that
+    training one executive skill builds another. The finding that matters most for Nova is the null
+    one: no significant effect on behavioural or learning outcomes, meaning improvements on
+    executive tasks did not show up in the classroom or in academic learning. Sample sizes varied
+    widely and few studies covered disorders other than ADHD. Computerised delivery was not
+    superior, which undercuts any claim that a screen is the better medium. European and North
+    American studies; no Arabic-specific estimate.
+
+- id: ev.transfer.barnett-ceci-2002
+  title: "When and Where Do We Apply What We Learn? A Taxonomy for Far Transfer"
+  citation: Barnett, S. M., & Ceci, S. J. (2002). Psychological Bulletin, 128(4), 612-637. doi:10.1037/0033-2909.128.4.612
+  url: https://rapunselshair.pbworks.com/f/barnett_2002.pdf
+  verified: true
+  evidence_type: developmental_framework
+  evidence_strength: moderate
+  population: not a study of a population - a conceptual taxonomy covering a century of human transfer-of-learning research
+  delivery: not_applicable
+  language: en
+  finding: >-
+    The authors argue that the long dispute over whether far transfer occurs is unresolved because
+    studies fail to specify the dimensions along which transfer is being claimed, "resulting in
+    comparisons of apples and oranges". They set out nine dimensions in two groups: content (what is
+    transferred - the learned skill, its performance change and the memory demand at test) and
+    context (when and where - knowledge domain, physical context, temporal context, functional
+    context, social context and modality). They conclude that "estimation of a single effect size
+    for far transfer is misguided in view of this complexity", and that "evidence for transfer under
+    some conditions is substantial, but critical conditions for many key questions are untested".
+    Nova uses these context dimensions to define what a cross-game transfer probe must actually vary
+    - a different mechanic, a different surface, a later moment - rather than a reskin.
+  limits: >-
+    A framework, not evidence: it tells Nova how to describe and design a transfer claim, and
+    supplies none of the effects. It is about transfer of thinking and reasoning in general, drawing
+    mostly on school-age, adolescent and adult studies, not on 3-6 year olds; the authors explicitly
+    exclude animal, perceptual-learning, attitudinal and motor-skill transfer, and exclude learner
+    characteristics such as age from the taxonomy. Its use here is organisational only.

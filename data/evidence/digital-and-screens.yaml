@@ -1,0 +1,102 @@
+# Digital learning and screen guidance.
+#
+# One framework about what makes an app educational, and two public-health guidances that bound how
+# much screen time Nova may design for. The two guidances are `expert_consensus` and are therefore
+# capped at 'moderate' strength: they are authoritative positions, not measurements of Nova.
+
+- id: ev.digital.hirsh-pasek-2015
+  title: 'Putting Education in "Educational" Apps: Lessons From the Science of Learning'
+  citation: Hirsh-Pasek, K., Zosh, J. M., Golinkoff, R. M., Gray, J. H., Robb, M. B., & Kaufman, J. (2015). Psychological Science in the Public Interest, 16(1), 3-34.
+  url: https://www.psychologicalscience.org/publications/educational-apps.html
+  verified: true
+  evidence_type: developmental_framework
+  evidence_strength: moderate
+  population: young children using educational apps; the article is a synthesis of learning-science research rather than a study of a sample
+  delivery: digital
+  language: en
+  finding: >-
+    The authors propose four "pillars" for judging whether an app is educational. Active: learning
+    requires "'minds-on' activity that requires intellectual thinking", not just tapping. Engaged:
+    "children need to be able to stay on task, engage with the material, and be free of
+    distractions", which argues against decorative animations and reward interruptions. Meaningful:
+    "information is processed at a deeper level when it meaningfully relates to past knowledge or
+    when it is personally relevant". Socially interactive: "an app will be more educationally
+    effective when it allows children to socially interact with others around the new material".
+    They add that learning should be guided by a specific learning goal. They note the market
+    problem directly: "more than 80,000 App Store apps are described as being education- or
+    learning-based, however, there are currently no science-based standards to guide this
+    determination." These four pillars are the design test Nova applies to every mechanic.
+  limits: >-
+    A framework paper, not an experiment: it synthesises learning-science findings obtained mostly
+    outside apps and applies them to apps by argument. It does not show that an app built to the
+    four pillars produces learning, does not quantify any effect, and offers no validated rubric for
+    scoring an app against the pillars. Written in and for a US English-language market in 2015,
+    before the current generation of apps, and it says nothing about Arabic-language content. Nova
+    may cite it for design rationale, never as evidence that a Nova game works.
+
+- id: ev.screens.who-2019
+  title: Guidelines on physical activity, sedentary behaviour and sleep for children under 5 years of age
+  citation: World Health Organization (2019). Guidelines on physical activity, sedentary behaviour and sleep for children under 5 years of age. WHO, Geneva. ISBN 978-92-4-155053-6 (WHO/NMH/PND/2019.4).
+  url: https://www.who.int/publications/i/item/9789241550536
+  verified: true
+  evidence_type: expert_consensus
+  evidence_strength: moderate
+  population: all healthy children under 5 years of age, irrespective of gender, cultural background or socio-economic status
+  delivery: not_applicable
+  language: multi
+  finding: >-
+    WHO's recommendations on sedentary screen time, quoted from the guideline: for infants (less
+    than 1 year) "screen time is not recommended"; for children 1-2 years, "for 1-year-olds,
+    sedentary screen time (such as watching TV or videos, playing computer games) is not
+    recommended. For those aged 2 years, sedentary screen time should be no more than 1 hour; less
+    is better"; for children 3-4 years, "sedentary screen time should be no more than 1 hour; less
+    is better". In every band the guideline adds that "when sedentary, engaging in reading and
+    storytelling with a caregiver is encouraged", and it states that "the quality of sedentary time
+    matters and interactive non-screen-based activities, such as reading, storytelling, singing and
+    puzzles are important for social and cognitive development". WHO also recommends at least 180
+    minutes of physical activity a day for 1-4 year olds and 10-13 hours of sleep for 3-4 year olds.
+    This is a hard design constraint on Nova: a product for 3-6 year olds must fit inside an hour a
+    day that WHO would rather were shorter, and must not displace play, sleep or adult reading.
+  limits: >-
+    Expert consensus, capped at 'moderate' by Nova's rule and not an empirical finding. WHO states
+    the guidelines "were developed using the best available evidence, expert consensus and
+    consideration of values and preferences, acceptability, feasibility, equity and resource
+    implications" - consensus is part of the basis, and Nova did not verify the GRADE ratings for
+    the individual screen-time recommendations from the full guideline text. The recommendations
+    concern sedentary behaviour and physical health outcomes; they set no threshold for learning and
+    make no distinction between passive video and interactive educational use, so they neither
+    endorse nor condemn an hour spent on a guided-play game. They cover under-5s only, so they do
+    not directly cover Nova's 5-8 year old users.
+
+- id: ev.screens.aap-2026
+  title: "Digital Ecosystems, Children, and Adolescents: Policy Statement"
+  citation: Munzer, T., Parga-Belinkie, J., Milkovich, L. M., Tomopoulos, S., Ajumobi, T., Cross, C., Gerwin, R., Madigan, S., & Council on Communications and Media (2026). Pediatrics, 157(2), e2025075320. doi:10.1542/peds.2025-075320
+  url: https://www.healthychildren.org/English/family-life/Media/Pages/helping-kids-thrive-in-a-digital-world-AAP-policy-explained.aspx
+  verified: true
+  evidence_type: expert_consensus
+  evidence_strength: moderate
+  population: children and adolescents; the policy covers infancy through adolescence
+  delivery: digital
+  language: en
+  finding: >-
+    The American Academy of Pediatrics' current policy statement deliberately moves away from a
+    single screen-time number. Its abstract states that "when this digital ecosystem
+    is designed with children's unique developmental needs in mind, it can support learning and
+    well-being", while ecosystems "that prioritize engagement and commercialization often encourage
+    prolonged use, which in turn can displace healthy behaviors (eg, movement behaviors, sleep)",
+    and concludes that "'media and children' cannot be viewed solely through the lens of individual
+    child behaviors or screen limits alone". AAP's own guidance for families states that "infants
+    under 18 months learn best from real-world interactions" and that "heavy solo screen use can
+    affect their developing language and social skills", and advises caregivers to watch and play
+    alongside children, to seek "quality content that puts kids first", and to keep screen-free
+    zones and times. For Nova this endorses three design commitments: an explicit adult-alongside
+    role, content quality over minutes, and no engagement-maximising design.
+  limits: >-
+    Expert consensus, capped at 'moderate'; it is a professional position informed by evidence, not
+    an evaluation, and it measures nothing about Nova. Nova verified the abstract and AAP's own
+    family-facing explanation of the policy; the full Pediatrics text was behind a paywall (HTTP
+    403) and its detailed recommendation tables were not read, so no numeric limit for ages 2-5 is
+    recorded here and none should be attributed to AAP from this entry. It is a US statement in
+    English and reflects the US media environment; it makes no Arabic- or Gulf-specific
+    recommendation. Note the tension with ev.screens.who-2019, which does still set an hourly limit
+    for 2-4 year olds: Nova designs to the stricter of the two.

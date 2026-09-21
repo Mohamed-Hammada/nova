@@ -1,0 +1,164 @@
+# Programme frameworks and the evaluations of them.
+#
+# A programme's own curriculum documentation describes what the programme DOES. It is
+# framework-class evidence (`program_evidence`) and is never evidence that the programme
+# works. Effectiveness claims live in the separate review entries below, stated as the
+# reviews state them, including where the effects were small, mixed or null.
+#
+# Every entry here was checked by opening the URL recorded on it (see
+# docs/curriculum/research-log.md for the verification record).
+
+- id: ev.programs.highscope-2024
+  title: The HighScope Preschool Curriculum (programme documentation)
+  citation: HighScope Educational Research Foundation. Preschool Curriculum. HighScope, Ypsilanti, Michigan (publisher's curriculum page, read 2026-09-21).
+  url: https://highscope.org/what-we-offer/the-highscope-curriculum/preschool-curriculum/
+  verified: true
+  evidence_type: program_evidence
+  evidence_strength: emerging
+  population: preschool children in HighScope classrooms (the page states no age band)
+  delivery: teacher_led
+  language: en
+  finding: >-
+    HighScope's own documentation states that the preschool curriculum covers eight content areas -
+    Approaches to Learning; Social and Emotional Development; Physical Development and Health;
+    Language, Literacy and Communication; Mathematics; Creative Arts; Science and Technology; Social
+    Studies - carrying 58 key developmental indicators (KDIs). It describes active learning as the
+    centre of the curriculum and names the plan-do-review sequence as central to the daily routine,
+    in which "children make decisions about what they will do, carry out their ideas, and reflect
+    upon their activities with adults and other children". Nova uses this as a published example of
+    how one established programme organises early-years content and of an explicit plan-act-reflect
+    routine.
+  limits: >-
+    This is the publisher's own description of its product, not an evaluation. The page asserts the
+    curriculum "has been validated through a direct evaluation of the curriculum" but cites no study
+    on the page; Nova has not verified that claim and does not rely on it. The eight content areas
+    are a curriculum organisation, not an empirical developmental sequence, and nothing here shows
+    that any of it transfers to a tablet game or to Arabic-speaking children.
+
+- id: ev.programs.tools-of-the-mind-2024
+  title: Tools of the Mind (programme documentation)
+  citation: Tools of the Mind. What is Tools / programme overview. Tools of the Mind, Inc. (programme's own site, read 2026-09-21).
+  url: https://www.toolsofthemind.org/learn/what-is-tools/
+  verified: true
+  evidence_type: program_evidence
+  evidence_strength: emerging
+  population: preschool and kindergarten children in Tools classrooms
+  delivery: teacher_led
+  language: en
+  finding: >-
+    Tools of the Mind's own documentation states that the programme "pairs Vygotskian theory with
+    neuroscience", that "Vygotskian theory recognizes the tremendous developmental potential of a
+    certain kind of play - make-believe play", and that its central target is self-regulation, which
+    it calls "the biggest predictor of success in school and life". It describes children planning
+    their play (play plans) before carrying it out. This confirms the original brief's description
+    of the programme as focused on executive function/self-regulation through make-believe play.
+  limits: >-
+    Self-description by the programme, not evidence of effect. The site's own claims (for example
+    that "neuroscience proves early childhood is critical for self-regulation development", and an
+    unreferenced claim about state test rankings) carry no citations and are not relied on. What
+    controlled evaluations actually found is recorded separately in ev.programs.baron-2017, and it
+    is weaker than the programme's framing implies. The programme is a teacher-led US classroom
+    curriculum; none of it is digital or Arabic.
+
+- id: ev.programs.baron-2017
+  title: "The Tools of the Mind curriculum for improving self-regulation in early childhood: a systematic review"
+  citation: Baron, A., Evangelou, M., Malmberg, L.-E., & Melendez-Torres, G. J. (2017). Campbell Systematic Reviews, 13(1), 1-77.
+  url: https://www.campbellcollaboration.org/review/tools-of-the-mind-curriculum-self-regulation-early-childhood/
+  verified: true
+  evidence_type: systematic_review
+  evidence_strength: emerging
+  population: children in six studies (14 records) of the Tools of the Mind curriculum, all conducted in the USA
+  delivery: teacher_led
+  language: en
+  finding: >-
+    The review pooled six studies (randomised controlled trials and quasi-experimental designs), all
+    from the USA. Results were mixed rather than positive across the board: Tools significantly
+    improved children's maths skills relative to comparison curricula, but "the effect size was
+    small", and although "the average effect sizes for self-regulation and literacy favoured tools
+    compared to other approaches, the effect was not statistically significant". The programme's
+    headline target - self-regulation - is therefore the outcome on which the controlled evidence
+    did not reach significance.
+  limits: >-
+    The reviewers report "shortcomings in the quality of evidence" and "high risk of bias in some of
+    the included studies", and say that "given the small number of included studies, as well as
+    other methodological shortcomings, this conclusion should be read with caution". Six US studies
+    of a teacher-led classroom curriculum say nothing directly about a digital game, about children
+    aged 3-6 specifically, or about Arabic-speaking children. Nova must not describe make-believe
+    play or planning routines as a proven route to executive function on the strength of this.
+
+- id: ev.programs.randolph-2023
+  title: "Montessori education's impact on academic and nonacademic outcomes: A systematic review"
+  citation: Randolph, J. J., Bryson, A., Menon, L., Henderson, D. K., Kureethara Manuel, A., Michaels, S., Rosenstein, D. L. W., McPherson, W., O'Grady, R., & Lillard, A. S. (2023). Campbell Systematic Reviews, 19(3), e1330.
+  url: https://www.campbellcollaboration.org/review/montessori-impact-on-academic-and-nonacademic-outcomes/
+  verified: true
+  evidence_type: systematic_review
+  evidence_strength: moderate
+  population: students from preschool to high school in 32 studies published 1970-2020, across eight countries (18 studies in the USA, 4 in Turkey, 3 in Switzerland, one each in England, France, Malaysia, Oman, Iran, the Philippines and Thailand)
+  delivery: teacher_led
+  language: multi
+  finding: >-
+    Across 32 studies comparing Montessori with traditional education, "Montessori students
+    performed about 1/4 of a standard deviation better than students in traditional education" on
+    academic outcomes and "about 1/3 of a standard deviation higher ... on non-academic outcomes,
+    including self-regulation (executive function), well-being at school, social skills and
+    creativity". Effects were "greater for randomized than non-randomized study designs, greater for
+    preschool and elementary school than for middle and high school, and greater for private
+    Montessori compared to public Montessori settings". Nova takes from this that a structured,
+    child-chosen, self-correcting materials environment has measurable non-academic as well as
+    academic effects in the early years.
+  limits: >-
+    This compares whole school environments, not any single mechanic, so it cannot attribute the
+    effect to child-choice, to self-correcting materials or to mixed-age grouping. The larger effect
+    in private settings and the wide date range (1970-2020) both raise selection and era confounds.
+    It is entirely teacher-led and physical: no included study is a tablet game. One included study
+    was in Oman, so the review is not exclusively Western, but it provides no separate estimate for
+    Arabic-speaking children.
+
+- id: ev.programs.reggio-emilia-2024
+  title: The Reggio Emilia Approach (programme documentation)
+  citation: Reggio Children. The Reggio Emilia Approach. Reggio Children, Reggio Emilia, Italy (the approach's own organisation, read 2026-09-21).
+  url: https://www.reggiochildren.it/en/reggio-emilia-approach/
+  verified: true
+  evidence_type: program_evidence
+  evidence_strength: emerging
+  population: children in Reggio Emilia's municipal infant-toddler centres and preschools (birth to 6)
+  delivery: teacher_led
+  language: en
+  finding: >-
+    Reggio Children describes the approach as "an educational philosophy based on the image of a
+    child with strong potentialities for development and a subject with rights, who learns through
+    the hundred languages belonging to all human beings, and grows in relations with others". The
+    site names as constitutive elements the atelier and the atelierista, "the environment as
+    educator", "documentation for making creative knowledge processes visible", pedagogical
+    coordination, the daily presence of more than one educator, and family participation.
+  limits: >-
+    Explicitly a philosophy, not an intervention with an evidence base. The organisation's own site
+    presents no effectiveness research, outcome evaluations or comparative data, and Nova found none
+    on it. It is a municipal, teacher-led, physical-environment approach, so nothing in it supports
+    a claim about a digital product. Nova may cite it as a source of design values (documentation,
+    many media of expression), never as evidence that a mechanic works.
+
+- id: ev.programs.wwc-creative-curriculum-2013
+  title: "What Works Clearinghouse intervention report: The Creative Curriculum for Preschool, Fourth Edition"
+  citation: What Works Clearinghouse (2013, updated March 2013). Early Childhood Education intervention report - The Creative Curriculum for Preschool, Fourth Edition. Institute of Education Sciences, U.S. Department of Education.
+  url: https://ies.ed.gov/ncee/wwc/Intervention/483
+  verified: true
+  evidence_type: systematic_review
+  evidence_strength: emerging
+  population: preschool children; two studies met WWC design standards, covering about 363 children (from the Preschool Curriculum Evaluation Research Consortium, 2008)
+  delivery: teacher_led
+  language: en
+  finding: >-
+    The WWC reviewed the evidence on The Creative Curriculum for Preschool (Fourth Edition) and
+    found only two studies meeting its design standards. Across all four outcome domains it
+    reviewed - general mathematics achievement, oral language, phonological processing and print
+    knowledge - the WWC rated the curriculum "No discernible effects", which it defines as "no
+    evidence that intervention had an effect on outcomes"; no improvement index could be reported
+    for any domain. This is the honest counterweight to programme marketing: a widely used
+    commercial early-years curriculum showed no measurable effect on the outcomes tested.
+  limits: >-
+    Two studies is a thin evidence base, and the reviewed fourth edition has since been superseded
+    by a fifth edition that the WWC did not evaluate, so this is not a current verdict on the
+    product now sold. "No discernible effect" against the comparison curricula used in those studies
+    is not the same as "no effect"; the comparison condition was other preschool provision, not
+    nothing. US, English, teacher-led.

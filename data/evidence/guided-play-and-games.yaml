@@ -1,0 +1,67 @@
+# Guided play and game-based learning.
+#
+# Both entries below are citations the original brief made and that nobody had checked. Both were
+# opened; one is confirmed as described, the other is confirmed to say what the brief reported but
+# is internally inconsistent, which is recorded in its limits and in the research log.
+
+- id: ev.guided-play.skene-2022
+  title: "Can guidance during play enhance children's learning and development in educational contexts? A systematic review and meta-analysis"
+  citation: Skene, K., O'Farrelly, C. M., Byrne, E. M., Kirby, N., Stevens, E. C., & Ramchandani, P. G. (2022). Child Development, 93(4), 1162-1180. doi:10.1111/cdev.13730
+  url: https://pmc.ncbi.nlm.nih.gov/articles/PMC9545698/
+  verified: true
+  evidence_type: meta_analysis
+  evidence_strength: moderate
+  population: children aged 1-8 years; 39 studies reviewed (published 1977-2020), 17 in the meta-analysis (N = 3893); 24 studies in the USA, the rest across Australia, Belgium, Canada, China, Denmark, Kenya, the Netherlands, Portugal, Slovakia, South Africa, Switzerland, Turkey and the UK
+  delivery: teacher_led
+  language: en
+  finding: >-
+    Guided play - play in which an adult keeps a learning goal in view while the child keeps agency
+    - was compared with direct instruction and with free play. Against direct instruction, guided
+    play showed a greater positive effect on early maths skills (g = 0.24), shape knowledge
+    (g = 0.63) and task switching (g = 0.40). Against free play it showed a greater effect on
+    spatial/maths vocabulary (g = 0.93). The authors state plainly that "differences were not
+    identified for other key outcomes": receptive vocabulary (g = -0.06), behaviour regulation
+    (g = -0.03) and inhibitory control (g = -0.06) all showed essentially no difference. This is the
+    strongest evidence Nova has for its core stance that a game should carry a learning goal while
+    leaving the child real choices.
+  limits: >-
+    The benefit is specific, not general: guided play beat direct instruction on four of the
+    outcomes tested and on none of the others, and the maths effect (g = 0.24) is small. The authors
+    report that 38 of the 39 studies were at high risk of bias and that half used samples under 50,
+    and heterogeneity was high where it mattered most (spatial vocabulary vs free play,
+    I-squared = 80.7%); the clean maths estimate (I-squared = 0.00%) rests on few studies. Crucially
+    for Nova, every included intervention was human-guided - a teacher, parent or researcher - and
+    no digital intervention was included, so this does not show that a tablet's scaffolding
+    substitutes for an adult's. Samples were predominantly US and English-speaking (41% White, 28%
+    African American/Black, 19% Hispanic); nothing here is specific to Arabic-speaking children.
+
+- id: ev.games.alotaibi-2024
+  title: "Game-based learning in early childhood education: a systematic review and meta-analysis"
+  citation: Alotaibi, M. S. (2024). Frontiers in Psychology, 15, 1307881. doi:10.3389/fpsyg.2024.1307881
+  url: https://www.frontiersin.org/journals/psychology/articles/10.3389/fpsyg.2024.1307881/full
+  verified: true
+  evidence_type: meta_analysis
+  evidence_strength: emerging
+  population: children aged 3-8 years; the paper reports 136 studies (from 232 screened) published 2013-2023, spanning Africa, Latin America, the Middle East, North America, Australia and the UK
+  delivery: mixed
+  language: en
+  finding: >-
+    The paper reports positive pooled effects of game-based learning on cognitive development
+    (g = 0.46), social development (g = 0.38), emotional development (g = 0.35), motivation
+    (g = 0.40) and engagement (g = 0.44), and reports game type as a significant moderator of the
+    cognitive effect, "with puzzle games having a larger effect than other game types (g = 0.63 vs.
+    g = 0.31)". It states that "educator-guided game-play and scaffolding was important for
+    maximizing learning gains". The original brief's description of this source is accurate as far
+    as what the paper says.
+  limits: >-
+    Rated 'emerging' because the paper is internally inconsistent and Nova will not lean on it. It
+    states that 136 studies were included yet reports a total of only 1,426 participants, with study
+    sample sizes of 20-112 and a median of 40 - figures that cannot all be true together. It reports
+    136 of 232 screened records as included, an implausibly high inclusion rate for a systematic
+    review, and publishes no table of the included studies against a reference list of 77 items, so
+    the included set cannot be checked. No I-squared statistics are reported in the text. Its own
+    caveats also matter for Nova: mixed results for cognitive outcomes across studies, skills
+    acquired through games having limited real-world applicability, and small, short studies. Nova
+    should treat "games help" as a working hypothesis, not a finding, and should not use this entry
+    to justify calling any game 'evidence-based'. The separate, better-verified point that adult
+    guidance matters is carried by ev.guided-play.skene-2022.
