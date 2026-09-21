@@ -1,0 +1,7 @@
+skill.math.count.one-to-one-5.name: Count up to 5, one object at a time
+skill.math.count.one-to-one-5.description: Matches one number word to each object when counting a group of up to 5.
+skill.math.count.cardinality.name: The last number is the total
+skill.math.count.cardinality.description: Understands that the last number counted tells how many there are.
+game.math.bear-apples.name: Bear's Apples
+game.math.number-match.name: Number Match
+task.math.count-objects-at-home.name: Count things at home

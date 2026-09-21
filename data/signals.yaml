@@ -1,0 +1,39 @@
+# Signal vocabulary. Every logged signal is tagged learning or engagement (spec, principle 3).
+# Assessment rules may consume only learning signals; the validator rejects any rule that
+# names an engagement signal. Engagement signals exist for product health, never for mastery.
+- id: accuracy
+  kind: learning
+  description: Share of responses that are correct at the current rung.
+- id: response_time
+  kind: learning
+  description: Time from prompt to response, used only alongside accuracy.
+- id: hints_used
+  kind: learning
+  description: Number of hints the child received on a trial.
+- id: retries
+  kind: learning
+  description: Number of attempts before a correct response.
+- id: error_type
+  kind: learning
+  description: Category of each error, defined per game, used for diagnosis.
+- id: adult_assist
+  kind: learning
+  description: Whether an adult helped, as reported in the app or observed.
+- id: self_correction
+  kind: learning
+  description: The child notices and fixes their own error without a prompt.
+- id: session_time
+  kind: engagement
+  description: Minutes spent in the app.
+- id: completion
+  kind: engagement
+  description: Whether a level or game was finished.
+- id: streak
+  kind: engagement
+  description: Consecutive days or sessions played.
+- id: stars
+  kind: engagement
+  description: Rewards collected in the game.
+- id: return_visit
+  kind: engagement
+  description: Whether the child comes back to a game.

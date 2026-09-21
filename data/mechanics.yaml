@@ -1,0 +1,67 @@
+# Controlled mechanic vocabulary. A game or transfer task names exactly one mechanic_id.
+# "Different mechanic" in the transfer rules means a different id from this list, so add a
+# new entry only when the interaction really differs, never for a reskin.
+- id: sequence-recall
+  description: Watch a short sequence of items, then reproduce it in order.
+- id: position-recall
+  description: Watch items appear in places, then say or tap where each one was.
+- id: match-pairs
+  description: Turn over or reveal items to find matching pairs.
+- id: sort-by-rule
+  description: Put items into groups according to one stated rule (colour, shape, size).
+- id: switch-sort-rule
+  description: Sort by one rule, then sort the same items by a different rule after a cue.
+- id: go-no-go
+  description: Act on one kind of signal and hold back on another.
+- id: wait-then-act
+  description: Hold still for a stated delay before acting.
+- id: drag-to-count
+  description: Drag objects one at a time into a container until a requested number is reached.
+- id: tap-to-count
+  description: Tap each object once while the number words are spoken.
+- id: match-symbol-to-quantity
+  description: Pair a numeral with the group that has that many items, or the reverse.
+- id: compare-quantities
+  description: Choose the group with more, fewer or the same number of items.
+- id: number-line-place
+  description: Place a numeral or object at the right position on a number line.
+- id: pattern-continue
+  description: Extend a repeating or growing pattern with the next items.
+- id: puzzle-assemble
+  description: Fit pieces together to complete a shape or picture.
+- id: catch-target
+  description: Tap the target among moving or falling items when it matches a spoken cue.
+- id: sound-match
+  description: Choose the picture or item whose sound matches a spoken sound.
+- id: rhyme-select
+  description: Choose the item that rhymes with a spoken word.
+- id: blend-sounds
+  description: Hear separate sounds or syllables and pick the word they make.
+- id: segment-sounds
+  description: Hear a word and tap once for each sound or syllable in it.
+- id: letter-trace
+  description: Trace a letter shape with a finger, following the stroke order.
+- id: letter-match
+  description: Pair two forms of the same letter, or a letter with its name or sound.
+- id: print-hunt
+  description: Find a named letter or word in real printed material, with an adult.
+- id: physical-counting
+  description: Count real objects at home or in class, with an adult recording the result.
+- id: physical-build
+  description: Build something from real blocks or materials to a stated specification.
+- id: physical-hunt
+  description: Find real objects that match a stated property, then bring or show them.
+- id: story-choice
+  description: Listen to a short story and choose what happens next or why.
+- id: emotion-match
+  description: Match a face, situation or voice to the emotion it shows.
+- id: free-draw
+  description: Make an open-ended drawing or creation with no single correct answer.
+- id: physical-freeze
+  description: Move or freeze on a spoken or musical signal, with an adult (freeze dance, Simon says).
+- id: physical-sort
+  description: Sort real objects into groups by a stated rule, with an adult.
+- id: retell
+  description: Retell a story or a sequence of events in order, aloud, to an adult.
+- id: oral-sound-game
+  description: Adult-led spoken game about sounds in words, with no screen (for example, I spy with the first sound).

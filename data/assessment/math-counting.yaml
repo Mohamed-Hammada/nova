@@ -1,0 +1,40 @@
+- id: rule.math.count.one-to-one-5
+  skill: math.count.one-to-one-5
+  inputs: [accuracy, hints_used, error_type, adult_assist]
+  state_criteria:
+    emerging:
+      description: At least min-trials responses logged and accuracy above the emerging threshold, at any support level.
+      parameters: [param.default.min-trials, param.default.emerging-accuracy]
+      requires_dimensions: [performance]
+    developing:
+      description: Accuracy above the developing threshold, with hints still in use.
+      parameters: [param.default.min-trials, param.default.developing-accuracy]
+      requires_dimensions: [performance]
+    secure:
+      description: Accuracy above the secure threshold with hints and adult help rare, over at least min-trials responses.
+      parameters: [param.default.min-trials, param.default.secure-accuracy, param.default.secure-max-hints-per-trial]
+      requires_dimensions: [performance, independence]
+    transfer:
+      description: Secure, plus a passed cross_game or cross_context probe at or above the transfer pass mark. A passed delayed probe raises confidence and does not change the state.
+      parameters: [param.default.transfer-pass-accuracy, param.default.delayed-probe-interval-days]
+      requires_dimensions: [transfer]
+- id: rule.math.count.cardinality
+  skill: math.count.cardinality
+  inputs: [accuracy, hints_used, error_type, adult_assist]
+  state_criteria:
+    emerging:
+      description: At least min-trials responses logged and accuracy above the emerging threshold, at any support level.
+      parameters: [param.default.min-trials, param.default.emerging-accuracy]
+      requires_dimensions: [performance]
+    developing:
+      description: Accuracy above the developing threshold, with hints still in use.
+      parameters: [param.default.min-trials, param.default.developing-accuracy]
+      requires_dimensions: [performance]
+    secure:
+      description: Accuracy above the secure threshold with hints and adult help rare, over at least min-trials responses.
+      parameters: [param.default.min-trials, param.default.secure-accuracy, param.default.secure-max-hints-per-trial]
+      requires_dimensions: [performance, independence]
+    transfer:
+      description: Secure, plus a passed cross_game or cross_context probe at or above the transfer pass mark. A passed delayed probe raises confidence and does not change the state.
+      parameters: [param.default.transfer-pass-accuracy, param.default.delayed-probe-interval-days]
+      requires_dimensions: [transfer]

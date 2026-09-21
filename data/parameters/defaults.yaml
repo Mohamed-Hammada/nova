@@ -1,0 +1,67 @@
+# Default assessment and progression parameters. Every value is PROVISIONAL: a starting
+# point chosen by design, not a finding, and none is scientifically validated. Chapter 08
+# describes the pilot that will calibrate them. Add a skill- or cluster-specific parameter
+# only when a default is clearly wrong for it, and keep it provisional too.
+- id: param.default.min-trials
+  value: 6
+  unit: trials
+  status: provisional
+  basis: design_inference
+  rationale: A handful of trials is the least that lets accuracy mean anything; the number is a design guess.
+  calibration_plan: Choose from pilot data by finding where the mastery estimate stops changing as trials are added.
+- id: param.default.emerging-accuracy
+  value: 0.4
+  unit: proportion of correct responses
+  status: provisional
+  basis: design_inference
+  rationale: Above what guessing gives on a small choice set, so some real understanding is plausible.
+  calibration_plan: Compare with chance level per game and with an adult-rated criterion in the pilot.
+- id: param.default.developing-accuracy
+  value: 0.6
+  unit: proportion of correct responses
+  status: provisional
+  basis: design_inference
+  rationale: Clearly above chance but still error-prone.
+  calibration_plan: Set from the pilot distribution of accuracy in children an adult rates as developing.
+- id: param.default.secure-accuracy
+  value: 0.85
+  unit: proportion of correct responses
+  status: provisional
+  basis: design_inference
+  rationale: High and consistent accuracy is the working meaning of secure.
+  calibration_plan: Calibrate against adult-rated mastery and retention on a delayed probe in the pilot.
+- id: param.default.secure-max-hints-per-trial
+  value: 0.2
+  unit: hints per trial
+  status: provisional
+  basis: design_inference
+  rationale: Secure means little support is needed, so hints must be rare.
+  calibration_plan: Set from pilot data on how hint use relates to success on an unsupported probe.
+- id: param.default.transfer-pass-accuracy
+  value: 0.7
+  unit: proportion of correct responses
+  status: provisional
+  basis: design_inference
+  rationale: A transfer probe is unfamiliar, so the pass mark is set a little below the secure mark.
+  calibration_plan: Set from pilot data on accuracy on probes among children rated secure and not secure.
+- id: param.default.advance-accuracy
+  value: 0.8
+  unit: proportion of correct responses over the last min-trials
+  status: provisional
+  basis: design_inference
+  rationale: Move to the next rung when the current one is mostly under control.
+  calibration_plan: Tune in the pilot to keep children in a productive band without frustration or boredom.
+- id: param.default.retreat-accuracy
+  value: 0.5
+  unit: proportion of correct responses over the last min-trials
+  status: provisional
+  basis: design_inference
+  rationale: Step back a rung when a child is failing about as often as succeeding.
+  calibration_plan: Tune in the pilot alongside the advance threshold.
+- id: param.default.delayed-probe-interval-days
+  value: 7
+  unit: days
+  status: provisional
+  basis: design_inference
+  rationale: A week is long enough that success is not just short-term recall, and short enough to schedule.
+  calibration_plan: Compare 3, 7 and 14 day intervals in the pilot for retention signal and drop-out.

@@ -1,0 +1,90 @@
+- id: game.math.bear-apples
+  name_key: game.math.bear-apples.name
+  age_range: [3, 5]
+  primary_skills: [math.count.one-to-one-5, math.count.cardinality]
+  secondary_skills: []
+  objective: Give the bear exactly the number of apples it asks for.
+  mechanic_id: drag-to-count
+  mechanic: The bear asks for a number of apples; the child drags apples onto its plate one at a time while each number is spoken.
+  evidence_basis: judgment
+  evidence_refs: [ev.design.drag-to-count-mechanic]
+  difficulty:
+    varied: [item_complexity, distractors]
+    anchors:
+      item_complexity: ["requests of 1 to 3", "requests of 1 to 5"]
+      distractors: ["only the requested apples on the table", "extra apples on the table"]
+    rungs:
+      - id: r1
+        values: {item_complexity: 0, distractors: 0, working_memory_load: 0, rule_complexity: 0, abstraction: 0, cognitive_load: 0, independence: 0}
+      - id: r2
+        values: {item_complexity: 1, distractors: 0, working_memory_load: 0, rule_complexity: 0, abstraction: 0, cognitive_load: 0, independence: 0}
+      - id: r3
+        values: {item_complexity: 1, distractors: 1, working_memory_load: 0, rule_complexity: 0, abstraction: 0, cognitive_load: 0, independence: 0}
+  scaffolding:
+    hints:
+      - Each apple briefly lights up as its number is spoken.
+      - The bear points at the plate and says the running count.
+    adult_prompt: "After the child finishes, ask: how many apples does the bear have? Let them answer before you say it."
+  signals: [accuracy, hints_used, retries, error_type, completion]
+  progression:
+    advance_parameter: param.default.advance-accuracy
+    retreat_parameter: param.default.retreat-accuracy
+  transfer_probes:
+    - id: probe.one-to-one-at-home
+      type: cross_game
+      delayed: false
+      skill: math.count.one-to-one-5
+      mechanic_id: physical-counting
+      task_ref: task.math.count-objects-at-home
+      changes: From screen apples to real objects at home, counted with a person.
+      preserved: One number word for each object, in groups of up to 5.
+    - id: probe.cardinality-at-home
+      type: cross_game
+      delayed: false
+      skill: math.count.cardinality
+      mechanic_id: physical-counting
+      task_ref: task.math.count-objects-at-home
+      changes: From screen apples to real objects at home, and the adult asks "how many?".
+      preserved: Stating the last number counted as the total.
+    - id: probe.cardinality-later
+      type: cross_context
+      delayed: true
+      skill: math.count.cardinality
+      mechanic_id: physical-counting
+      task_ref: task.math.count-objects-at-home
+      changes: Same real-object counting, presented about a week after the child last played.
+      preserved: Stating the last number counted as the total.
+  offline_extension: Ask the child to set the table with exactly the right number of spoons for the people eating.
+  language_dependencies: []
+- id: game.math.number-match
+  name_key: game.math.number-match.name
+  age_range: [4, 6]
+  primary_skills: [math.count.cardinality]
+  secondary_skills: []
+  objective: Match a numeral card to the group that has that many items.
+  mechanic_id: match-symbol-to-quantity
+  mechanic: A numeral appears with several groups of objects; the child taps the group with that many items.
+  evidence_basis: judgment
+  evidence_refs: [ev.design.match-symbol-mechanic]
+  difficulty:
+    varied: [abstraction, distractors]
+    anchors:
+      abstraction: ["numeral to dot groups", "numeral to groups of mixed pictures"]
+      distractors: ["two groups to choose from", "three groups to choose from"]
+    rungs:
+      - id: r1
+        values: {item_complexity: 0, distractors: 0, working_memory_load: 0, rule_complexity: 0, abstraction: 0, cognitive_load: 0, independence: 0}
+      - id: r2
+        values: {item_complexity: 0, distractors: 0, working_memory_load: 0, rule_complexity: 0, abstraction: 1, cognitive_load: 0, independence: 0}
+      - id: r3
+        values: {item_complexity: 0, distractors: 1, working_memory_load: 0, rule_complexity: 0, abstraction: 1, cognitive_load: 0, independence: 0}
+  scaffolding:
+    hints:
+      - The groups are highlighted one at a time and counted aloud.
+    adult_prompt: Ask the child to count the group they chose out loud before they confirm.
+  signals: [accuracy, response_time, hints_used, error_type]
+  progression:
+    advance_parameter: param.default.advance-accuracy
+    retreat_parameter: param.default.retreat-accuracy
+  transfer_probes: []
+  language_dependencies: []

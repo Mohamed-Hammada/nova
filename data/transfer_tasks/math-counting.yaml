@@ -1,0 +1,8 @@
+- id: task.math.count-objects-at-home
+  name_key: task.math.count-objects-at-home.name
+  age_range: [3, 5]
+  skills: [math.count.one-to-one-5, math.count.cardinality]
+  mechanic_id: physical-counting
+  description: An adult names a set of real objects (for example, spoons on the table); the child counts them aloud, then the adult asks how many there are.
+  signals: [accuracy, adult_assist, error_type]
+  scoring: The adult marks, in the app, whether each object got one number word and whether the child stated the total without recounting.

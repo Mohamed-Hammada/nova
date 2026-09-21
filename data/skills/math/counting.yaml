@@ -1,0 +1,27 @@
+- id: math.count.one-to-one-5
+  domains: [math]
+  name_key: skill.math.count.one-to-one-5.name
+  description_key: skill.math.count.one-to-one-5.description
+  prerequisites: []
+  age_range: [3, 4]
+  indicators:
+    - Touches or moves one object for each number word said
+    - Does not skip or double-count objects in a group of up to 5
+  evidence_basis: judgment
+  evidence_refs: [ev.design.counting-progression]
+  scope: universal
+  deep_scope: true
+- id: math.count.cardinality
+  domains: [math]
+  name_key: skill.math.count.cardinality.name
+  description_key: skill.math.count.cardinality.description
+  prerequisites:
+    - skill: math.count.one-to-one-5
+  age_range: [4, 5]
+  indicators:
+    - Says the last number counted when asked how many
+    - Answers "how many" without recounting when nothing was added or removed
+  evidence_basis: judgment
+  evidence_refs: [ev.design.counting-progression]
+  scope: universal
+  deep_scope: true

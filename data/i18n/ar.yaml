@@ -1,0 +1,7 @@
+skill.math.count.one-to-one-5.name: العدّ حتى ٥ شيئًا شيئًا
+skill.math.count.one-to-one-5.description: يربط كل كلمة عدد بشيء واحد عند عدّ مجموعة تصل إلى ٥ أشياء.
+skill.math.count.cardinality.name: آخر رقم هو العدد الكلي
+skill.math.count.cardinality.description: يفهم أن آخر رقم يُعدّ يدلّ على عدد الأشياء كلها.
+game.math.bear-apples.name: تفاحات الدبّ
+game.math.number-match.name: طابِق الرقم
+task.math.count-objects-at-home.name: عُدّ أشياء في البيت

@@ -1,0 +1,47 @@
+# Language packs. status moves in_progress -> complete only when every shared slot is filled.
+# zh and hi are contract_only: they document what a pack must supply and what differs, and
+# hold no skills yet.
+- id: ar
+  name: Arabic
+  status: in_progress
+  script:
+    direction: rtl
+    joining: true
+    diacritics: true
+    tonal: false
+    notes: Cursive script; each letter has isolated, initial, medial and final forms; short vowels are optional diacritics (harakat).
+  slots_filled: []
+  instruction_voice: undecided (Modern Standard Arabic or a dialect such as Egyptian; see chapter 05)
+- id: en
+  name: English
+  status: in_progress
+  script:
+    direction: ltr
+    joining: false
+    diacritics: false
+    tonal: false
+    notes: Alphabetic with an opaque spelling system; uppercase and lowercase letter forms.
+  slots_filled: []
+  instruction_voice: English
+- id: zh
+  name: Chinese (Mandarin)
+  status: contract_only
+  script:
+    direction: ltr
+    joining: false
+    diacritics: false
+    tonal: true
+    notes: Logographic characters built from strokes and radicals; pinyin is a separate phonetic layer; four tones plus neutral.
+  slots_filled: []
+  instruction_voice: undecided
+- id: hi
+  name: Hindi
+  status: contract_only
+  script:
+    direction: ltr
+    joining: false
+    diacritics: true
+    tonal: false
+    notes: Devanagari abugida; consonants carry an inherent vowel, changed by matras; conjunct consonants.
+  slots_filled: []
+  instruction_voice: undecided

@@ -1,0 +1,36 @@
+# Design inferences: Nova's own working assumptions. They are judgment-class evidence, capped
+# at 'emerging', and never count as empirical support. The research task may replace one with
+# verified empirical or framework evidence; then update the skill or game that cites it.
+- id: ev.design.counting-progression
+  title: Working order for early counting skills
+  citation: Nova design decision, 2026-09
+  verified: false
+  evidence_type: design_inference
+  evidence_strength: emerging
+  population: children 3-6 years
+  delivery: not_applicable
+  language: multi
+  finding: Nova orders counting as one-to-one correspondence, then cardinality (the last number counted is the total). This is a working assumption, to be checked against the early-counting literature.
+  limits: Not tested by Nova; ordering may differ for individual children.
+- id: ev.design.drag-to-count-mechanic
+  title: Dragging objects one at a time to support counting
+  citation: Nova design decision, 2026-09
+  verified: false
+  evidence_type: design_inference
+  evidence_strength: emerging
+  population: children 3-5 years
+  delivery: digital
+  language: multi
+  finding: Moving one object per number word makes one-to-one correspondence visible and physical on a screen. This is an assumption; Nova has not tested that it builds the skill.
+  limits: No evidence that a screen drag transfers to counting real objects; the transfer probes test exactly that.
+- id: ev.design.match-symbol-mechanic
+  title: Pairing numerals with quantities to link symbol and amount
+  citation: Nova design decision, 2026-09
+  verified: false
+  evidence_type: design_inference
+  evidence_strength: emerging
+  population: children 4-6 years
+  delivery: digital
+  language: multi
+  finding: Pairing a numeral with a group of that size links the symbol to the amount. This is an assumption; Nova has not tested it.
+  limits: Children may learn the pairing task without learning the concept; the transfer probes test this.
