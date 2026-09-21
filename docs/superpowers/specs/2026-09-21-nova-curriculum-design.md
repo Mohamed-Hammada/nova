@@ -57,7 +57,8 @@ The full product is several independent subsystems (curriculum, game engine, ada
 - observable indicators: what a child does when the skill is present
 - `evidence_basis: empirical | framework | judgment` (required, see 3.6)
 - `evidence_refs`: evidence ids about the skill itself (its importance and developmental ordering)
-- `scope: universal | language-specific`
+- `scope: universal | language-specific`; a language-specific skill also names its `language` and, where it fills one, its shared `slot` (3.8)
+- `deep_scope: bool`: true for skills in the deep-coverage set (EF, memory and math, plus Arabic and English literacy, whose age range starts before 6 and ends after 3). The validator requires it for every skill that qualifies.
 
 ### 3.2 Mastery
 Each child has a state per skill: **Not yet -> Emerging -> Developing -> Secure -> Transfer**. Per-domain "levels" shown to parents are derived from skill states, not stored.
@@ -84,7 +85,7 @@ Rules:
 - Each game spec declares which dimensions it varies and holds the others fixed at stated values.
 - Rungs change one dimension at a time where possible, so errors are diagnosable.
 - Cognitive load is kept low unless it is the target. It must not confound a rise in another dimension.
-- Anchors and ordering are defined per skill cluster in data. Their psychometric validity is unverified until pilot data exists (3.5).
+- Each game spec names an anchor for every value a varied dimension takes (`anchors[dimension][value]`), so a rung value is never an unlabelled number. The validator enforces this. Consistency of anchors across games in the same skill cluster is a review item. Their psychometric validity is unverified until pilot data exists (3.5).
 - Difficulty is child-relative. Age never gates a rung.
 
 ### 3.4 Assessment dimensions
@@ -103,7 +104,7 @@ Assessment evaluates each skill on separate dimensions and derives the mastery s
 - `cross_context`: the same skill in a different representation, modality or setting: pictorial to symbolic, screen to physical objects, one language of instruction to another for language-independent skills, or an offline task the adult reports.
 - `delayed` (optional, a modifier on either type): the probe is presented after a delay (provisionally days, not minutes), testing retention. A failed delayed probe does not demote the state. It lowers confidence and schedules review.
 
-**Cross-game requirement.** Every deep-scope skill must be covered by **at least two distinct game mechanics**: either two games with different `mechanic_id`s, or one game plus a separately specified transfer task whose `mechanic_id` differs from that game's. A `cross_game` probe is valid only if its mechanic differs from the mechanic(s) used to practise the skill being probed. It cannot be satisfied by a reskin, by the same mechanic with different content, theme or difficulty, or by the same mechanic under a new name. `mechanic_id` comes from a controlled mechanic vocabulary kept in data (e.g. sequence-recall, sort-by-rule, drag-to-count), so "distinct" is checkable, not a judgment call.
+**Cross-game requirement.** Every deep-scope skill must be covered by **at least two distinct game mechanics**: either two games with different `mechanic_id`s, or one game plus a separately specified transfer task whose `mechanic_id` differs from that game's. A `cross_game` probe is valid only if its mechanic differs from the mechanic of the game that declares it (the practice the child just did), and the probed target actually uses the mechanic the probe names. It cannot be satisfied by a reskin, by the same mechanic with different content, theme or difficulty, or by the same mechanic under a new name. `mechanic_id` comes from a controlled mechanic vocabulary kept in data (e.g. sequence-recall, sort-by-rule, drag-to-count), so "distinct" is checkable, not a judgment call.
 
 A **transfer task** is a short, separately specified task (own mechanic, own signals, own scoring) that exists to probe a skill. It need not be a full game.
 
@@ -179,13 +180,19 @@ docs/curriculum/
   07-safety-privacy-a11y.md      child data, content, accessibility rules
   08-validation-roadmap.md       educator review, pilot calibration plan, next sub-projects
 data/
-  schema/   skill, game, evidence, parameter, assessment-rule, langpack JSON Schemas
-  skills/   universal/  ar-literacy/  en-literacy/
-  games/
-  evidence/
-  parameters/
-  i18n/
-tools/validate/   spec validator (checks the spec, not app code)
+  schema/           JSON Schemas: skill, game, transfer_task, evidence, parameter,
+                    assessment_rule, langpack, mechanic, signal
+  skills/           universal and per-language skill graph
+  games/            game specs
+  transfer_tasks/   separately specified transfer tasks
+  evidence/         evidence entries
+  parameters/       provisional parameters
+  assessment/       per-skill assessment rules
+  langpacks/        one record per language (ar, en complete; zh, hi contract-only)
+  mechanics.yaml    controlled mechanic vocabulary
+  signals.yaml      signal vocabulary, each tagged learning or engagement
+  i18n/             en.yaml, ar.yaml (flat key -> string)
+tools/validate/     spec validator (Python; checks the spec, not app code)
 ```
 
 The original 20-item outline maps onto these 8 chapters plus the YAML. The game catalog and difficulty system live in `data/games`, not prose.
@@ -216,7 +223,9 @@ The validator passes:
 - every parameter has metadata and is `provisional` unless it links a calibration study
 - no assessment rule consumes an `engagement` signal
 - every deep-scope skill has at least one game spec and an assessment rule
-- every deep-scope skill is covered by at least two distinct `mechanic_id`s (two games, or one game plus a transfer task on a different mechanic), and every `cross_game` probe's `mechanic_id` differs from the mechanic(s) practising the probed skill
+- every deep-scope skill is covered by at least two distinct `mechanic_id`s (two games, or one game plus a transfer task on a different mechanic), has at least one valid `cross_game` probe, and every `cross_game` probe's `mechanic_id` differs from the mechanic of the game that declares it
+- every language-specific skill belongs to a language pack that exists; a pack's declared slots match the slots its skills fill; a `complete` pack fills every shared slot
+- every i18n key used by a skill, game or transfer task has a non-empty string in both `en` and `ar`
 
 And:
 - Every evidence entry traces to a source verified against the primary publication.
