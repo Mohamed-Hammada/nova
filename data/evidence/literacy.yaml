@@ -173,3 +173,134 @@
     between proximal g = 0.53 and distal g = 0.08 vocabulary, and between specific
     phonological-awareness skills and the phonological-awareness composite, is the same
     near-transfer-only pattern that ev.math.munez-2026 reports for mathematics.
+
+# ---------------------------------------------------------------------------
+# Arabic early literacy
+#
+# Read this before citing anything below. Arabic early-literacy research is small, recent and
+# heavily concentrated in one population - Palestinian-Arabic-speaking children in Israel - and
+# most of it is observational. Only one of the three entries below is an intervention study.
+# Several important Arabic sources could not be recorded at all because the spec's closed type
+# list has no slot for a single observational study; they are named in
+# docs/curriculum/research-log.md. Nova's Arabic track therefore rests substantially on judgment
+# and on framework evidence, and the spec says so rather than implying parity with English.
+# ---------------------------------------------------------------------------
+
+- id: ev.literacy.haj-2026
+  title: "Investigating the role of Arabic diglossia-centered multi-domain intervention (ADMIN) in enhancing Palestinian-Arabic speaking kindergarten children's emergent literacy"
+  citation: "Haj, L., Schiff, R., Ghawi-Dakwar, O., & Saiegh-Haddad, E. (2026). Reading and Writing (advance online publication; received 28 May 2025, accepted 14 January 2026). doi:10.1007/s11145-026-10766-9. Open access, CC BY 4.0."
+  url: https://link.springer.com/content/pdf/10.1007/s11145-026-10766-9.pdf
+  verified: true
+  evidence_type: rct
+  evidence_strength: moderate
+  population: 403 monolingual Palestinian-Arabic-speaking kindergarten children in Israel (189 boys, 214 girls), aged 57-70 months (M = 64.4, SD = 3.1), from mid-to-low SES kindergartens, with no reported hearing or vision impairment and no diagnosed developmental disability; 250 in the experimental group across 50 classrooms and 153 controls across 13 classrooms
+  delivery: teacher_led
+  language: ar
+  finding: >-
+    A cluster-randomised trial of a diglossia-centred kindergarten programme, and the best
+    intervention evidence Nova has for Arabic. Randomisation was at the kindergarten level.
+    Kindergarten teachers, after a 30-hour training course and with weekly in-class modelling and
+    fidelity checks, delivered 45 sessions of 20 minutes, three a week for 15 weeks, in small
+    groups of five; controls got business-as-usual instruction from the standard preschool
+    curriculum. The programme's ordering is the part Nova can use directly. It trains structures
+    that are identical in Spoken and Standard Arabic first and moves to Standard-Arabic-specific
+    structures later; it trains syllable-level phonological awareness in weeks 1-3 and only
+    reaches phoneme-level awareness in week 8; and it introduces letters in a deliberate sequence -
+    first four letters that represent spoken phonemes and share a basic shape while differing only
+    in dots, then a diglossic letter with its spoken phonetic neighbour, each pair presented
+    together, with auditory discrimination of confusable phonemes built in. Multilevel models for
+    the nested data found significant time-by-group interactions favouring the experimental group
+    on every Spoken-Arabic and Standard-Arabic language and metalinguistic measure (receptive and
+    expressive vocabulary, lexico-phonological representations, phonological awareness,
+    morphological awareness), on letter-name and letter-sound knowledge, and on all three
+    executive-function components.
+  limits: >-
+    The control group improved too, and substantially: within-group pre-post effect sizes ran
+    d = 0.20 to 0.65 (Spoken Arabic) and d = 0.26 to 0.86 (Standard Arabic and letter knowledge)
+    for controls, against d = 0.56 to 1.69 for the experimental group. The value added by the
+    programme is therefore the interaction term, and no standardised between-group effect size
+    appears in the results text or the tables that were read; the raw experimental-group d values
+    must not be read as the programme's effect. The allocation was unbalanced in a way that
+    matters - 50 experimental classrooms of five children each against 13 control classrooms of 5
+    to 16 - which is many clusters on one side and few on the other. The authors' own limitations
+    are that outcomes are immediate post-intervention only, with no follow-up into primary school;
+    that children's informal home language and literacy background was not modelled; and that the
+    sample is Palestinian-Arabic speakers in Israel, so "generalization to other Arabic-speaking
+    contexts requires consideration of cultural, regional, and sociolinguistic variability that may
+    moderate intervention effects" - which directly limits its use for Gulf, Egyptian or other
+    Levantine varieties. Delivery was by trained human teachers in small groups with weekly expert
+    support; nothing here shows a tablet can do this, and the programme is multi-domain, so no
+    single component's contribution can be separated out.
+
+- id: ev.literacy.asadi-2026
+  title: "Diglossia and Orthographic Complexity as Multiplicative but not Additive Challenges in Arabic: A Critical Review"
+  citation: Asadi, I., & Asli-Badarneh, A. (2026). Journal of Psycholinguistic Research, 55(3), 37. doi:10.1007/s10936-026-10214-3
+  url: https://pmc.ncbi.nlm.nih.gov/articles/PMC13050341/
+  verified: true
+  evidence_type: systematic_review
+  evidence_strength: emerging
+  population: monolingual first-language Arabic speakers; a PRISMA-guided search of PubMed Central, PsycINFO, ERIC, LLBA, Web of Science, Frontiers and Google Scholar for empirical studies published January 2000 to July 2025, yielding 92 unique records, 38 full texts examined and 29 studies included; the included studies run from kindergarten to about Grade 6
+  delivery: not_applicable
+  language: ar
+  finding: >-
+    The one synthesis Nova found that covers all four of the Arabic features its literacy track has
+    to design around. On letter forms - "With 28 consonantal phonemes but over 100 allographic
+    forms, children must learn that multiple shapes correspond to the same sound", many letters
+    differ only by dots, and "Visual-orthographic errors - mainly letter-shape confusions and
+    faulty ligaturing - made up over a quarter of mistakes in Grades 1-4, second only to
+    phonological errors". On diacritics - vowelization "is essential early on" and its benefit
+    declines with age, while "For skilled readers, diacritics hinder speed and accuracy"; the move
+    from fully vowelized to unvowelized print is a developmental juncture, not a formatting choice.
+    On phonological awareness - "Kindergarten and first-grade pupils struggled with StA-specific
+    phonemes, a gap persisting through Grade 6". On diglossia - "Corpus studies show that only 21%
+    of Palestinian Arabic words are identical across varieties", and the review's central claim is
+    that diglossia and orthographic complexity interact multiplicatively rather than additively.
+    Together these are the reasons Nova runs Arabic as a separate track with its own progression,
+    teaches positional letter forms explicitly, treats diacritics as a staged support to be faded,
+    and does not reuse the English phonological-awareness sequence.
+  limits: >-
+    The authors title it "A Critical Review" and it pools no effect sizes. It is recorded as
+    systematic_review because its method section states that it followed PRISMA and reports a
+    reproducible search and screening count, but it is a narrative synthesis and nothing in it is
+    a pooled estimate. It includes only 29 studies, and the authors note that "Most evidence comes
+    from controlled tasks using isolated words or pseudowords, which clarify specific processes but
+    lack ecological validity", that "Longitudinal data are also missing", and that "research is
+    concentrated in a few national and dialectal settings" - in practice largely Palestinian Arabic
+    in Israel. Most of the included evidence is from school-age children, not from the 3-6 year
+    olds Nova targets, and the vowelization findings it cites (Abu-Rabia and Hijjazi) come from
+    Grades 5-9, well outside Nova's range; Nova therefore treats "vowelize early, fade later" as a
+    direction, not a calibrated rule. Nothing in the review concerns digital delivery.
+
+- id: ev.literacy.taha-thomure-2025
+  title: A systematic review of teaching and learning in the context of Arabic diglossia
+  citation: "Taha Thomure, H., Taha, H., Sabella, T., & Saleh, R. (2025). Social Sciences & Humanities Open, 12, 102281. doi:10.1016/j.ssaho.2025.102281. A corrigendum was published as doi:10.1016/j.ssaho.2026.102681."
+  url: https://doi.org/10.1016/j.ssaho.2025.102281
+  verified: true
+  evidence_type: systematic_review
+  evidence_strength: emerging
+  population: teaching and learning in Arabic diglossic contexts; a PRISMA search of eight education and social-science databases plus grey literature covering 1970-2021, screening 927 Arabic and English records and including 101 studies
+  delivery: teacher_led
+  language: ar
+  finding: >-
+    A PRISMA systematic review of the educational, rather than psycholinguistic, side of Arabic
+    diglossia. Its descriptive synthesis identifies five recurring themes across the 101 included
+    studies: diglossic distance, the achievement gap, prestige and attitudes, policy, and exposure
+    to Standard Arabic including parental engagement. Its recommendations include "integrating
+    simplified standard Arabic in early childhood education", applying evidence-based methods in
+    teacher training, and "expanding home-based exposure to Standard Arabic through accessible,
+    engaging resources", and it concludes by highlighting "the need for research to develop and
+    evaluate pedagogical approaches suited to diglossic contexts". Nova records it for two
+    reasons: it independently corroborates that diglossic distance is the organising problem of
+    early Arabic literacy, and its closing sentence is the honest statement of where this field
+    stands - the pedagogy has largely not been evaluated.
+  limits: >-
+    Only the published abstract was read, confirmed identically on the DOAJ record and on the
+    Crossref and OpenAlex records; ScienceDirect returned HTTP 403, so the 101 included studies,
+    the screening flow and the authors' own limitations were not seen, and nothing beyond the
+    abstract is recorded. It is a descriptive synthesis with no pooled effect sizes and no quality
+    appraisal visible in the abstract, and it includes grey literature, so the evidence base behind
+    the five themes is of unknown and probably mixed quality. Its search stops at 2021. A
+    corrigendum exists and its content was not read; the published abstract also carries an
+    uncorrected production artefact (a raw bibliography key, bib_meiseles_1980, in its second
+    sentence), which is a small sign of loose editorial handling. Its recommendations are
+    recommendations, not tested interventions.

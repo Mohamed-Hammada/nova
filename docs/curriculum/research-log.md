@@ -64,6 +64,47 @@ the table below.
   learning transfer, not of development. Proposed spec change: rename the type to `framework`, or
   add a sibling type, so the label stops implying a developmental claim. This is cosmetic: the class
   and therefore every computed `evidence_basis` is unaffected.
+- **There is no type for a single observational or descriptive study, and this is what blocks
+  Arabic.** Part B went looking for sources on Arabic letter forms and positional shapes,
+  diacritics, phonological awareness in Arabic, and diglossia. Almost everything that exists on the
+  first two is a single cross-sectional or correlational study. The clearest example is **Yassin,
+  R., Share, D. L., & Shalhoub-Awwad, Y. (2020), "Learning to Spell in Arabic: The Impact of
+  Script-Specific Visual-Orthographic Features", *Frontiers in Psychology*, 11, 2059,
+  doi:10.3389/fpsyg.2020.02059** (opened at
+  <https://www.frontiersin.org/journals/psychology/articles/10.3389/fpsyg.2020.02059/full>). It is
+  a naturalistic spelling-error analysis of 96 Palestinian-Arabic-speaking children in grades 1, 2
+  and 4 in northern Israel, and it is the study that establishes the four script-specific features
+  Nova's Arabic track is built around — letter-form similarity, allography (positional variants),
+  ligaturing and non-linearity (extra-linear diacritics) — reporting that visual-orthographic
+  errors were "over one quarter (27.2%)" of all spelling errors, with ligaturing and letter-shape
+  formation each about a third of those. It is not an RCT, not quasi-experimental, not a review and
+  not a framework, so **no evidence entry was recorded**; the same points are carried, at lower
+  resolution, by `ev.literacy.asadi-2026`, which reviews it among others. Proposed spec change: add
+  `observational_study` (empirical class, capped at `moderate`) to the closed list. Without it,
+  Nova cannot cite most of what is actually known about learning to read and write Arabic script,
+  and the Arabic track looks thinner in the data than it is in reality.
+
+## Sources identified in Part B but not recorded
+
+- **Abu Ahmad, H., & Share, D. L. (2024). "Beginning reading instruction: Syllables or phonemes? An
+  experimental training study with Arabic-speaking preliterate preschoolers." *Developmental
+  Psychology*, 61(7), 1325–1341, doi:10.1037/dev0001855.** Directly on point for Nova's Arabic
+  track — 104 preliterate preschoolers taught to read and spell an unfamiliar script via whole CV
+  syllables, phonemes or demiphonemes, with CV-based teaching "significantly and substantially more
+  effective in terms of reading accuracy and speed" than either phoneme condition. Only the
+  publisher-deposited abstract could be opened; APA PsycNet has no accessible full text and no
+  open-access copy exists. The abstract does not state how children were assigned to conditions, so
+  the evidence type (`rct` versus `quasi_experimental`) could not be determined, and the script
+  taught was an artificial one rather than Arabic orthography. Recording it would have meant
+  guessing at its type, so it was **not recorded**. The syllable-before-phoneme ordering it argues
+  for is carried instead by `ev.literacy.haj-2026`, whose intervention sequences syllable-level
+  phonological awareness in weeks 1–3 and phoneme-level awareness in week 8 and which cites this
+  study for that choice.
+- **Saiegh-Haddad, E. (2022/2023). "Embracing diglossia in early literacy education in Arabic: A
+  pilot intervention study with kindergarten children", *Oxford Review of Education*, 49(1),
+  48–68.** A pilot of the approach that `ev.literacy.haj-2026` later tested at scale. Taylor &
+  Francis returned no accessible text and no open-access copy exists, so it was not recorded; the
+  full cluster-randomised trial supersedes it in any case.
 
 ## Notes on access
 
