@@ -134,6 +134,22 @@ on the entry:
   recorded. The full *Pediatrics* text returned 403 and its recommendation tables were not read, so
   no numeric limit for ages 2–5 is attributed to AAP.
 
+Part B hit the same wall in new places. **ScienceDirect returned HTTP 403 to everything**,
+including the open-access CC-BY-NC-ND PDF of `ev.math.sun-2026`; Springer Link redirected article
+pages to an authentication endpoint, though `link.springer.com/content/pdf/<doi>.pdf` served
+open-access PDFs in full (this is how the ADMIN trial and Atit et al. were read); APA PsycNet was
+closed for both spatial meta-analyses and for Abu Ahmad & Share (2024); Wiley was closed again.
+What worked: **ERIC record pages** (`eric.ed.gov/?id=…`), which carry author-provided abstracts and
+were the route to `ev.math.munez-2026`; **PubMed Central**, which carried the full texts of
+`ev.literacy.cusiter-2025`, `ev.literacy.asadi-2026` and `ev.sel.blewitt-2018`; **Frontiers**;
+**CASEL's and the National Academies' own sites**; **NICHD's PDF server**, which served the full
+National Early Literacy Panel and National Reading Panel reports (text extracted locally and read);
+and, for publisher-deposited abstracts, the **Crossref, OpenAlex and DOAJ APIs**, each of which
+returns the abstract the publisher itself deposited. Where only such an abstract could be read, the
+entry's `limits` says so in those words and records nothing beyond it: this applies to
+`ev.math.sun-2026`, `ev.math.munez-2026`, `ev.literacy.taha-thomure-2025`, `ev.spatial.uttal-2013`
+and `ev.spatial.hawes-2022`.
+
 ## Other sources recorded in Part A (not from the brief)
 
 | Source | Why it is here | Type / strength |
@@ -144,8 +160,50 @@ on the entry:
 | Scionti et al. (2020), *Frontiers in Psychology*, meta-analysis of cognitive training in 3–6 year olds | The only transfer meta-analysis in Part A that is specific to Nova's age band, and it partly disagrees with Kassai: transfer **within** executive domains was as large as near transfer (g = 0.318 vs 0.352), but transfer **out** to behavioural and learning outcomes was not significant (g = 0.169, p = 0.122). Computerised training was no more effective than non-computerised. | `meta_analysis` / `moderate` |
 | Hirsh-Pasek et al. (2015), *Psychological Science in the Public Interest* | The four pillars (active, engaged, meaningful, socially interactive) plus a learning goal, and the observation that "more than 80,000 App Store apps are described as being education- or learning-based, however, there are currently no science-based standards to guide this determination". | `developmental_framework` / `moderate` |
 
-## Nothing was dropped in Part A
+## Other sources recorded in Part B (not from the brief)
 
-Every source examined for these rows was either recorded or, in the single case of Diamond & Lee
-(2011), held back pending a spec change and logged above. No claim was recorded that its source did
-not support.
+| Source | Why it is here | Type / strength |
+|---|---|---|
+| National Research Council (2009), *Mathematics Learning in Early Childhood*, ch. 5 | Nova needed a real source for the counting ordering it had been carrying as a design inference. The committee states that children "first connect saying the number word list with 1-to-1 correspondences to begin counting objects. Initially this counting is just an activity without an understanding of the total amount (cardinality)… Connecting counting and cardinality is a milestone". Recorded as `developmental_framework` rather than `expert_consensus`, following Part A's line: bodies that describe *how development works* are framework-class, bodies that issue *recommendations* (WHO, AAP) are `expert_consensus`. | `developmental_framework` / `moderate` |
+| National Early Literacy Panel (2008) | The six predictors of later literacy and their pooled correlations with decoding (alphabet knowledge r = 0.50, phonological awareness r = 0.40, writing r = 0.49…), plus code-focused interventions' effect on phonological awareness (ES = 0.82). English-language studies only. | `meta_analysis` / `moderate` |
+| National Reading Panel (2000), ch. 2 part I, phonemic awareness | PA instruction: d = 0.86 on PA, 0.53 on reading, 0.59 on spelling, from 52 articles and 96 comparisons; largest at preschool/kindergarten; computers were effective; **"Children learning to read in English showed larger effects than children learning to read in other alphabetic languages"** — the panel's own reason not to carry this into Arabic. | `meta_analysis` / `moderate` |
+| National Reading Panel (2000), ch. 2 part II, phonics | Systematic phonics d = 0.44 overall, kindergarten d = 0.56, grades 2–6 d = 0.27, and d = 0.15 (not above chance) for low-achieving readers in grades 2–6. 38 studies, 66 comparisons. | `meta_analysis` / `moderate` |
+| Haj, Schiff, Ghawi-Dakwar & Saiegh-Haddad (2026), ADMIN, *Reading and Writing* | The only Arabic **intervention** evidence found: a cluster-randomised trial, 403 Palestinian-Arabic-speaking kindergarteners, teacher-delivered, diglossia-centred, syllable-level phonological awareness before phoneme-level, letters introduced in shape-and-dot pairs. Controls improved too, and no between-group effect size is reported. | `rct` / `moderate` |
+| Asadi & Asli-Badarneh (2026), *Journal of Psycholinguistic Research* | The only synthesis covering all four Arabic features Nova must design around — allography ("over 100 allographic forms"), diacritics, Arabic phonological awareness, diglossia ("only 21% of Palestinian Arabic words are identical across varieties"). Titled "A Critical Review" but its method section states PRISMA and reports a screening count (92 records → 29 studies), so recorded as a systematic review with that noted. | `systematic_review` / `emerging` |
+| Taha Thomure, Taha, Sabella & Saleh (2025), *Social Sciences & Humanities Open* | PRISMA review of 101 studies of teaching and learning under Arabic diglossia; five themes; concludes that pedagogy for diglossic contexts largely has not been evaluated. Abstract only (ScienceDirect 403); a corrigendum exists and was not read. | `systematic_review` / `emerging` |
+| CASEL, *What is the CASEL Framework?* | Nova's social-emotional vocabulary: the five competences, quoted verbatim. The page presents no research and its two effectiveness claims are uncited, so it is rated `emerging` and the effect estimates are carried by Blewitt et al. instead. | `developmental_framework` / `emerging` |
+| Blewitt et al. (2018), *JAMA Network Open* | Chosen over the larger K–12 SEL meta-analyses because it is the right age band: 79 studies, 18,292 children aged 2–6 in early-years centres. Emotional competence d = 0.54, social competence d = 0.30, behavioural self-regulation d = 0.28, early learning d = 0.18. Only 16% of studies rated high quality. | `meta_analysis` / `moderate` |
+| Uttal et al. (2013), *Psychological Bulletin* | Spatial skill is trainable: g = 0.47 across 217 studies, durable, and transfers to untrained **spatial** tasks. Abstract only (APA full text inaccessible), so the age moderator was not read. | `meta_analysis` / `moderate` |
+| Hawes, Gilligan-Lee & Mix (2022), *Developmental Psychology* | The causal spatial→maths question: g = .28 across 29 studies. Three moderators, all pointing against Nova's case — effects grew with age from 3 to 20, concrete manipulatives beat computerised training, and near transfer beat far. Abstract only. | `meta_analysis` / `moderate` |
+| Atit et al. (2022), *Psychonomic Bulletin & Review* | The correlational spatial↔maths link: r = .36 across 45 articles, unmoderated by gender or grade level, partly mediated by fluid reasoning and verbal skill though a unique relation remains. Full text read. | `meta_analysis` / `moderate` |
+
+## The counting slice (Step 4)
+
+`ev.math.nrc-2009` is a verified framework source for exactly the ordering Nova had been asserting
+on its own, so it replaced `ev.design.counting-progression` in `data/skills/math/counting.yaml`:
+both counting skills and the `math.count.one-to-one-5 → math.count.cardinality` prerequisite edge
+now cite it, and both skills' `evidence_basis` moved from `judgment` to `framework` (recomputed and
+checked by the validator).
+
+`data/games/math/counting.yaml` was **not** changed. Game evidence is about the *mechanic*, and
+nothing verified in Part A or Part B supports either "drag one object per number word" or "tap the
+group that matches the numeral" as a mechanic that builds the skill. `ev.guided-play.skene-2022` is
+the closest, and it included no digital intervention at all. Both games keep their design
+inferences and their `judgment` basis, which is the honest answer.
+
+Note also that `ev.math.sun-2026` was deliberately **not** added to the counting skills. It is
+empirical, so citing it would flip `evidence_basis` to `empirical` and, at `moderate` strength,
+would license the words "evidence-based" under the spec's reporting rule (3.6). But it is evidence
+that pre-primary maths interventions work, not evidence for Nova's ordering — and its effect on
+foundational number and counting was the smallest it reported (g = 0.21). Citing it there would
+have bought a stronger label with the wrong source.
+
+## Nothing was dropped for being false
+
+Every source examined for these rows was either recorded or held back for a stated reason, and
+every one of those reasons is logged above: Diamond & Lee (2011) and Yassin et al. (2020) for want
+of a matching evidence type, and Abu Ahmad & Share (2024) and Saiegh-Haddad (2022) because their
+full texts could not be opened and their design could not be confirmed. No claim was recorded that
+its source did not support, and no source was dropped because its answer was inconvenient — several
+were kept precisely because their answers are unhelpful to Nova (`ev.spatial.hawes-2022`,
+`ev.math.munez-2026`, `ev.literacy.cusiter-2025`).

@@ -1,0 +1,195 @@
+# Social-emotional learning, and spatial skill.
+#
+# Two topics that share a file because each contributes one domain to Nova's skill graph and
+# neither is in the deep-scope set. The social-emotional entries give Nova its vocabulary (CASEL)
+# and one honest estimate of what universal early-years programmes achieve. The spatial entries
+# answer two separate questions that are easy to conflate: can spatial skill be trained at all,
+# and does spatial skill have anything to do with mathematics.
+#
+# Every entry here was checked by opening the URL recorded on it.
+
+# ---------------------------------------------------------------------------
+# Social-emotional learning
+# ---------------------------------------------------------------------------
+
+- id: ev.sel.casel-2026
+  title: "The CASEL Framework: what is social and emotional learning?"
+  citation: Collaborative for Academic, Social, and Emotional Learning (CASEL). Fundamentals of SEL - What is the CASEL Framework? CASEL (organisation's own framework page, read 2026-09-22).
+  url: https://casel.org/fundamentals-of-sel/what-is-the-casel-framework/
+  verified: true
+  evidence_type: developmental_framework
+  evidence_strength: emerging
+  population: "\"all young people and adults\"; the framework is not age-specific and the page states no age band"
+  delivery: not_applicable
+  language: en
+  finding: >-
+    CASEL defines social and emotional learning as "the process through which all young people and
+    adults acquire and apply the knowledge, skills, and attitudes to develop healthy identities,
+    manage emotions and achieve personal and collective goals, feel and show empathy for others,
+    establish and maintain supportive relationships, and make responsible and caring decisions",
+    and organises it into five core competence areas, each defined on the page: self-awareness
+    ("the abilities to understand one's own emotions, thoughts, and values and how they influence
+    behavior across contexts"), self-management ("the abilities to manage one's emotions, thoughts,
+    and behaviors effectively in different situations and to achieve goals and aspirations"), social
+    awareness ("the abilities to understand the perspectives of and empathize with others,
+    including those from diverse backgrounds, cultures, and contexts"), relationship skills ("the
+    abilities to establish and maintain healthy and supportive relationships and to effectively
+    navigate settings with diverse individuals and groups") and responsible decision-making ("the
+    abilities to make caring and constructive choices about personal behavior and social
+    interactions across diverse situations"). It places these inside four nested settings -
+    classrooms, schools, families and caregivers, and communities. Nova uses this as the naming
+    scheme for its social-emotional domain, nothing more.
+  limits: >-
+    This is an organisation's own framework page, not a study and not a synthesis with citations.
+    It presents no research, and the two effectiveness claims it does make - that social and
+    emotional competence "can be enhanced using a variety of classroom-based approaches" and that
+    programmes are more effective when they extend into the home - carry no citations on the page,
+    so Nova does not rely on them; the separate empirical entry ev.sel.blewitt-2018 carries the
+    effect estimates instead. The five competences are defined for all ages at once and are not
+    operationalised into observable behaviours for 3-6 year olds, so every Nova social-emotional
+    skill indicator is Nova's own inference, not CASEL's. CASEL is a US organisation writing in
+    English about US schooling; the framework's emphasis on individual self-management and
+    autonomous decision-making is a cultural position as much as a developmental one, and nothing
+    on the page establishes that these five categories carve up social-emotional development the
+    same way for Arabic-speaking children. Three of the four named settings - schools, families,
+    communities - are outside anything Nova touches.
+
+- id: ev.sel.blewitt-2018
+  title: "Social and Emotional Learning Associated With Universal Curriculum-Based Interventions in Early Childhood Education and Care Centers: A Systematic Review and Meta-analysis"
+  citation: "Blewitt, C., Fuller-Tyszkiewicz, M., Nolan, A., Bergmeier, H., Vicary, D., Huang, T., McCabe, P., McKay, T., & Skouteris, H. (2018). JAMA Network Open, 1(8), e185727. doi:10.1001/jamanetworkopen.2018.5727"
+  url: https://pmc.ncbi.nlm.nih.gov/articles/PMC6324369/
+  verified: true
+  evidence_type: meta_analysis
+  evidence_strength: moderate
+  population: children aged 2-6 years in centre-based early childhood education and care; 79 unique studies with 18,292 participants, 63 of them in the meta-analysis; 51 studies (64.6%) from North America and 21 (26.6%) from Europe, with a few from Australia, Africa, the Middle East and South America; teachers delivered 53 of the interventions (67.1%) and specialists 22 (27.8%)
+  delivery: teacher_led
+  language: multi
+  finding: >-
+    Universal, curriculum-based social-emotional programmes in early-years centres produce real but
+    modest gains across five outcome families, compared with controls: emotional competence
+    d = 0.54 (95% CI 0.22-0.86), social competence d = 0.30 (0.18-0.42), behavioural
+    self-regulation d = 0.28 (0.11-0.46), reduced behavioural and emotional difficulties d = 0.19
+    (0.11-0.28) and early learning skills d = 0.18 (0.02-0.33). This is the age band Nova actually
+    targets, which is why it is recorded rather than a larger K-12 meta-analysis, and it is the
+    number Nova should have in mind when deciding how much a social-emotional feature can be
+    claimed to do.
+  limits: >-
+    The effects are small to moderate and the widest interval - emotional competence, 0.22 to 0.86 -
+    is wide enough that the true value could be trivial or substantial. Heterogeneity was
+    substantial (I-squared from 20.5 to 78.4 across outcome domains). Quality was mixed: only 12 of
+    the studies (16.0%) were rated high quality, 33 (44.0%) moderate and 30 (40.0%) poor, with the
+    authors noting that most downgrading came from a lack of blinding. Their own limitations list
+    is long and relevant - small samples, the difficulty of randomising in classrooms, heavy
+    reliance on teacher report rather than independent assessment, inconsistent measurement of
+    social-emotional constructs, limited parental engagement and limited follow-up data. The
+    evidence base is overwhelmingly North American and European, so it says nothing specific about
+    Arabic-speaking children. Every included intervention was a curriculum delivered in a centre by
+    a teacher or specialist; none was a tablet application, so this supports the claim that
+    social-emotional skills in this age band are teachable, and not the claim that Nova can teach
+    them.
+
+# ---------------------------------------------------------------------------
+# Spatial skill
+# ---------------------------------------------------------------------------
+
+- id: ev.spatial.uttal-2013
+  title: "The malleability of spatial skills: A meta-analysis of training studies"
+  citation: Uttal, D. H., Meadow, N. G., Tipton, E., Hand, L. L., Alden, A. R., Warren, C., & Newcombe, N. S. (2013). Psychological Bulletin, 139(2), 352-402. doi:10.1037/a0028446
+  url: https://doi.org/10.1037/a0028446
+  verified: true
+  evidence_type: meta_analysis
+  evidence_strength: moderate
+  population: 217 studies of spatial training; the abstract names sex, age and type of training among the moderators analysed but states no age band, no sample total and no countries
+  delivery: mixed
+  language: unstated
+  finding: >-
+    Spatial skill is trainable, and this is the source for that claim. "After eliminating outliers,
+    the average effect size (Hedges's g) for training relative to control was 0.47 (SE = 0.04).
+    Training effects were stable and were not affected by delays between training and posttesting.
+    Training also transferred to other spatial tasks that were not directly trained." The authors'
+    conclusion is that "spatially enriched education could pay substantial dividends in increasing
+    participation in mathematics, science, and engineering". Nova records it for one narrow
+    purpose: it licenses treating spatial skill as something a child develops with practice rather
+    than a fixed trait, which is a precondition for having a spatial domain at all.
+  limits: >-
+    Only the publisher-deposited abstract was read; APA's full text was not accessible, so the
+    moderator results - including the effect of age, which is the one Nova most needs - were NOT
+    read and are not recorded. The 217 studies span all ages, including adults, and much of the
+    spatial-training literature is on adults and adolescents, so 0.47 is not an estimate for
+    3-6 year olds. The reported transfer is to other spatial tasks, which is near transfer within
+    a domain; the abstract makes no claim that it reaches mathematics or schooling, and Nova does
+    not read one into it - ev.spatial.hawes-2022 is the entry that addresses that question and
+    reports a smaller number. The database closed around 2012. Nothing in the abstract distinguishes
+    digital from physical training, or speaks to Arabic-speaking children.
+
+- id: ev.spatial.hawes-2022
+  title: "Effects of spatial training on mathematics performance: A meta-analysis"
+  citation: Hawes, Z., Gilligan-Lee, K. A., & Mix, K. S. (2022). Developmental Psychology, 58(1), 112-137. doi:10.1037/dev0001281
+  url: https://doi.org/10.1037/dev0001281
+  verified: true
+  evidence_type: meta_analysis
+  evidence_strength: moderate
+  population: 29 studies using controlled pre-post designs to test the effect of spatial training on mathematics, N = 3,765, k = 89 effect sizes; participants ranged from 3 to 20 years
+  delivery: mixed
+  language: unstated
+  finding: >-
+    This is the causal version of the spatial-mathematics question, and the answer is a qualified
+    yes with three warnings Nova has to heed. "The average effect size (Hedges's g) of training
+    relative to control conditions was .28 (SE = .07)", while the same training moved spatial
+    thinking itself more (g = .49). Age, use of concrete manipulatives and type of transfer all
+    moderated the effect. "As the age of participants increased from 3 to 20 years, the effects of
+    spatial training also increased in size" - so the benefit is smallest at exactly Nova's ages.
+    "Spatial training paradigms that used concrete materials (e.g., manipulatives) were more
+    effective than those that did not (e.g., computerized training)" - so the delivery mode Nova
+    uses is the less effective one. And "Larger transfer effects were observed for mathematics
+    outcomes more closely aligned to the spatial training delivered compared to outcomes more
+    distally related" - near transfer again. Analyses of publication bias and selective outcome
+    reporting were non-significant, which is a mark in the meta-analysis's favour. The authors
+    conclude that spatial training works but that the field has "a poor understanding of the
+    mechanisms that support transfer".
+  limits: >-
+    Only the publisher-deposited abstract was read; APA's full text was not accessible, so the
+    moderator tables, the heterogeneity statistics and the authors' own limitations section were
+    not read and no number beyond the abstract is recorded. Twenty-nine studies is a small base for
+    the number of moderators tested, and the pooled g = .28 is small. Every one of the three
+    significant moderators points against Nova's case rather than for it: youngest children gained
+    least, computerised training was less effective than concrete materials, and transfer was
+    largest where the maths outcome most resembled the training. Nothing in the abstract addresses
+    language or Arabic-speaking children. Nova therefore records spatial work as plausibly useful
+    for mathematics and explicitly does not claim that a spatial game raises a child's mathematics.
+
+- id: ev.spatial.atit-2022
+  title: "Examining the relations between spatial skills and mathematical performance: A meta-analysis"
+  citation: Atit, K., Power, J. R., Pigott, T., Lee, J., Geer, E. A., Uttal, D. H., Ganley, C. M., & Sorby, S. A. (2022). Psychonomic Bulletin & Review, 29(3), 699-720. doi:10.3758/s13423-021-02012-w
+  url: https://link.springer.com/content/pdf/10.3758/s13423-021-02012-w.pdf
+  verified: true
+  evidence_type: meta_analysis
+  evidence_strength: moderate
+  population: two meta-analyses synthesising 45 articles relating spatial skills to mathematical performance across grade levels; the included samples were "largely from the USA and other Western nations", with only seven studies from Eastern countries (China and Russia)
+  delivery: not_applicable
+  language: en
+  finding: >-
+    The correlational counterpart to ev.spatial.hawes-2022: how tightly are spatial and
+    mathematical skill actually related? "Results revealed a positive moderate association between
+    spatial and mathematical skills (r = .36, robust standard error = 0.035, tau-squared = 0.039)."
+    Neither gender nor grade level significantly moderated the association, so the relation is not
+    peculiar to one age band. A second, meta-analytic structural equation model found that
+    domain-general fluid reasoning and verbal skills mediated the relation, "but a unique relation
+    between the spatial and mathematical skills remained" - which is the honest version of the
+    claim: spatial and mathematical skill share something beyond general reasoning, but general
+    reasoning explains part of what looks like a specifically spatial link. The authors' own
+    implication is that "bolstering spatial skills in conjunction with fluid reasoning and verbal
+    skills may provide a greater boost to students' mathematical achievement than developing
+    spatial skills alone".
+  limits: >-
+    This is an association, not an effect: r = .36 across 45 articles says that children who are
+    better at spatial tasks tend to be better at mathematics, and on its own it cannot show that
+    improving one improves the other - the training meta-analysis is the separate evidence for
+    that, and it reports a much smaller g = .28. Part of even this association is carried by fluid
+    reasoning and verbal skill rather than by anything spatial. The authors state that their
+    samples "were largely from the USA and other Western nations" with only seven studies from
+    China and Russia, that the search was restricted to English-language literature, and that "the
+    lack of international diversity of the participants in the selected studies potentially biases
+    our results"; nothing here is about Arabic-speaking children. Grade level did not moderate the
+    relation, but the included studies span to postsecondary, so this is not an estimate specific
+    to 3-6 year olds. Nothing in it concerns digital delivery.
