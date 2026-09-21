@@ -3002,6 +3002,16 @@ def test_summary_counts_cited_edges():
         {"skill": "math.count.one-to-one-5", "evidence_refs": ["ev.test.meta"]}
     ]
     assert "cited: 1, design inference: 0" in summary(spec)
+
+
+def test_report_flag_does_not_crash_on_schema_invalid_data(tmp_path, capsys):
+    spec = make_spec()
+    del spec.skills[0]["deep_scope"]
+    data = write_data(tmp_path, spec)
+    assert main(["--data", str(data), "--report"]) == 1
+    out = capsys.readouterr().out
+    assert "ERROR [schema]" in out
+    assert "error(s)" in out
 ```
 
 - [ ] **Step 2: Run the test to verify it fails**
@@ -3133,7 +3143,7 @@ def main(argv: list[str] | None = None) -> int:
     for issue in issues:
         print(issue)
     error_count = sum(1 for issue in issues if issue.level == "error")
-    if args.report:
+    if args.report and not any(issue.rule in ("schema", "unique-id") for issue in issues):
         print(summary(spec))
     print(f"{error_count} error(s), {len(issues) - error_count} warning(s)")
     return 1 if error_count else 0
@@ -3171,7 +3181,7 @@ Exit code is 1 when any error is found. Warnings do not fail the run.
 - [ ] **Step 4: Run the full test suite and the CLI**
 
 Run: `.venv/Scripts/python.exe -m pytest -q`
-Expected: `115 passed`.
+Expected: `116 passed`.
 
 Run: `.venv/Scripts/python.exe -m nova_validate --report`
 Expected (data dir has only the schemas so far):
@@ -4255,7 +4265,7 @@ Run from `tools/validate`:
 .venv/Scripts/python.exe -m nova_validate --report
 ```
 
-Expected: `115 passed`, then `0 error(s)`. Record the report's counts (skills, deep-scope skills, games, transfer tasks, rules, parameters by status) in chapter 08.
+Expected: `116 passed`, then `0 error(s)`. Record the report's counts (skills, deep-scope skills, games, transfer tasks, rules, parameters by status) in chapter 08.
 
 - [ ] **Step 2: Check each spec "Definition of done" item against the evidence**
 
