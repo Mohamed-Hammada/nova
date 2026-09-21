@@ -14,14 +14,14 @@
   unit: proportion of correct responses
   status: provisional
   basis: design_inference
-  rationale: Above what guessing gives on a small choice set, so some real understanding is plausible.
+  rationale: A starting value above zero. Chance level depends on how many choices a game offers (0.5 with two choices), so a game with few choices needs its own, higher emerging threshold; this default is not safe for two-choice games.
   calibration_plan: Compare with chance level per game and with an adult-rated criterion in the pilot.
 - id: param.default.developing-accuracy
   value: 0.6
   unit: proportion of correct responses
   status: provisional
   basis: design_inference
-  rationale: Clearly above chance but still error-prone.
+  rationale: Meant to sit clearly above chance, which holds only for games with several choices; a game with two choices needs its own, higher threshold.
   calibration_plan: Set from the pilot distribution of accuracy in children an adult rates as developing.
 - id: param.default.secure-accuracy
   value: 0.85
@@ -29,7 +29,7 @@
   status: provisional
   basis: design_inference
   rationale: High and consistent accuracy is the working meaning of secure.
-  calibration_plan: Calibrate against adult-rated mastery and retention on a delayed probe in the pilot.
+  calibration_plan: Calibrate against adult-rated mastery and retention on a delayed probe in the pilot. With min-trials at 6 this is effectively 6 of 6 correct, so the pilot should also test a longer window.
 - id: param.default.secure-max-hints-per-trial
   value: 0.2
   unit: hints per trial
@@ -37,6 +37,13 @@
   basis: design_inference
   rationale: Secure means little support is needed, so hints must be rare.
   calibration_plan: Set from pilot data on how hint use relates to success on an unsupported probe.
+- id: param.default.secure-max-adult-assist-per-trial
+  value: 0.2
+  unit: adult assists per trial
+  status: provisional
+  basis: design_inference
+  rationale: Secure means little support is needed, so adult help must be rare.
+  calibration_plan: Set from pilot data on how adult help relates to success on an unsupported probe.
 - id: param.default.transfer-pass-accuracy
   value: 0.7
   unit: proportion of correct responses
@@ -63,5 +70,5 @@
   unit: days
   status: provisional
   basis: design_inference
-  rationale: A week is long enough that success is not just short-term recall, and short enough to schedule.
+  rationale: A week is assumed long enough that success is not just short-term recall, and short enough to schedule.
   calibration_plan: Compare 3, 7 and 14 day intervals in the pilot for retention signal and drop-out.

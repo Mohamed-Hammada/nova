@@ -5,14 +5,14 @@
   secondary_skills: []
   objective: Give the bear exactly the number of apples it asks for.
   mechanic_id: drag-to-count
-  mechanic: The bear asks for a number of apples; the child drags apples onto its plate one at a time while each number is spoken.
+  mechanic: The bear asks for a number of apples; a pile with more apples than requested is on the table; the child drags apples onto the bear's plate one at a time and must stop at the requested number.
   evidence_basis: judgment
   evidence_refs: [ev.design.drag-to-count-mechanic]
   difficulty:
     varied: [item_complexity, distractors]
     anchors:
       item_complexity: ["requests of 1 to 3", "requests of 1 to 5"]
-      distractors: ["only the requested apples on the table", "extra apples on the table"]
+      distractors: ["only apples in the pile", "apples mixed with pears; only apples count"]
     rungs:
       - id: r1
         values: {item_complexity: 0, distractors: 0, working_memory_load: 0, rule_complexity: 0, abstraction: 0, cognitive_load: 0, independence: 0}

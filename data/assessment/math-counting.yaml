@@ -7,12 +7,12 @@
       parameters: [param.default.min-trials, param.default.emerging-accuracy]
       requires_dimensions: [performance]
     developing:
-      description: Accuracy above the developing threshold, with hints still in use.
+      description: Accuracy above the developing threshold but the secure conditions are not yet met (hints or adult help still used, or accuracy below the secure threshold).
       parameters: [param.default.min-trials, param.default.developing-accuracy]
       requires_dimensions: [performance]
     secure:
-      description: Accuracy above the secure threshold with hints and adult help rare, over at least min-trials responses.
-      parameters: [param.default.min-trials, param.default.secure-accuracy, param.default.secure-max-hints-per-trial]
+      description: Accuracy above the secure threshold with hints and adult help both rare, over at least min-trials responses.
+      parameters: [param.default.min-trials, param.default.secure-accuracy, param.default.secure-max-hints-per-trial, param.default.secure-max-adult-assist-per-trial]
       requires_dimensions: [performance, independence]
     transfer:
       description: Secure, plus a passed cross_game or cross_context probe at or above the transfer pass mark. A passed delayed probe raises confidence and does not change the state.
@@ -27,12 +27,12 @@
       parameters: [param.default.min-trials, param.default.emerging-accuracy]
       requires_dimensions: [performance]
     developing:
-      description: Accuracy above the developing threshold, with hints still in use.
+      description: Accuracy above the developing threshold but the secure conditions are not yet met (hints or adult help still used, or accuracy below the secure threshold).
       parameters: [param.default.min-trials, param.default.developing-accuracy]
       requires_dimensions: [performance]
     secure:
-      description: Accuracy above the secure threshold with hints and adult help rare, over at least min-trials responses.
-      parameters: [param.default.min-trials, param.default.secure-accuracy, param.default.secure-max-hints-per-trial]
+      description: Accuracy above the secure threshold with hints and adult help both rare, over at least min-trials responses.
+      parameters: [param.default.min-trials, param.default.secure-accuracy, param.default.secure-max-hints-per-trial, param.default.secure-max-adult-assist-per-trial]
       requires_dimensions: [performance, independence]
     transfer:
       description: Secure, plus a passed cross_game or cross_context probe at or above the transfer pass mark. A passed delayed probe raises confidence and does not change the state.
