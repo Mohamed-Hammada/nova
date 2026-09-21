@@ -1,7 +1,7 @@
 # Nova: Master Curriculum Specification (Design)
 
 Date: 2026-09-21
-Status: Draft, revision 2, for review
+Status: Approved, revision 2.1 (rev 2 plus the two clarifications below)
 Sub-project: 1 of N (curriculum spec; no app code)
 
 ## 0. Revision 2 summary
@@ -14,6 +14,11 @@ Changes from revision 1 (the skill graph, mastery states, Arabic/English separat
 4. The difficulty model is expanded into seven explicit dimensions (3.3).
 5. All thresholds, weights and cutoffs are **provisional parameters** with calibration metadata, not validated values (3.5).
 6. New core principle: engagement, completion and within-game performance are not evidence of learning or transfer (section 2).
+
+Revision 2.1 clarifications:
+
+7. The cross-game transfer requirement is now checkable: two distinct `mechanic_id`s per deep-scope skill; a reskin or same mechanic with different content never qualifies (3.4).
+8. `evidence_basis` is deterministic by precedence empirical > framework > judgment and enforced by the validator (3.6).
 
 ## 1. Purpose
 
@@ -98,7 +103,11 @@ Assessment evaluates each skill on separate dimensions and derives the mastery s
 - `cross_context`: the same skill in a different representation, modality or setting: pictorial to symbolic, screen to physical objects, one language of instruction to another for language-independent skills, or an offline task the adult reports.
 - `delayed` (optional, a modifier on either type): the probe is presented after a delay (provisionally days, not minutes), testing retention. A failed delayed probe does not demote the state. It lowers confidence and schedules review.
 
-Every deep-scope skill has at least one `cross_game` probe. It also has a `cross_context` probe where one is feasible. Delayed probes are optional per skill. The Transfer state requires a passed `cross_game` or `cross_context` probe. A passed delayed probe raises confidence.
+**Cross-game requirement.** Every deep-scope skill must be covered by **at least two distinct game mechanics**: either two games with different `mechanic_id`s, or one game plus a separately specified transfer task whose `mechanic_id` differs from that game's. A `cross_game` probe is valid only if its mechanic differs from the mechanic(s) used to practise the skill being probed. It cannot be satisfied by a reskin, by the same mechanic with different content, theme or difficulty, or by the same mechanic under a new name. `mechanic_id` comes from a controlled mechanic vocabulary kept in data (e.g. sequence-recall, sort-by-rule, drag-to-count), so "distinct" is checkable, not a judgment call.
+
+A **transfer task** is a short, separately specified task (own mechanic, own signals, own scoring) that exists to probe a skill. It need not be a full game.
+
+Every deep-scope skill also has a `cross_context` probe where one is feasible. Delayed probes are optional per skill. The Transfer state requires a passed `cross_game` or `cross_context` probe. A passed delayed probe raises confidence.
 
 **Signals.** Each logged signal is tagged `learning` or `engagement` (principle 3). Assessment rules map `learning` signals to dimension values via evidence rules, e.g. "counting to 10 secure, quantity comparison developing", not "62%". Assessment is embedded in play; there are no exam screens.
 
@@ -131,12 +140,12 @@ Evidence **type** says what kind of source it is. Evidence **strength** says how
 
 **Strength** (`strong | moderate | emerging`), assigned by a written rubric. It considers quality, consistency across studies, and *directness*: match to the age group, the outcome, the delivery mode (digital versus teacher-led) and the language. Caps: `expert_consensus` is at most `moderate`, and `design_inference` is at most `emerging`. Findings in English or from other populations are not assumed to hold for Arabic-speaking children.
 
-**Evidence basis.** Each skill and each game declares `evidence_basis`:
-- `empirical`: cites at least one empirical-class evidence entry
-- `framework`: strongest cited evidence is framework-class
-- `judgment`: cites only judgment-class evidence
+**Evidence basis.** Each skill and each game declares `evidence_basis`. The value is fully determined by the cited evidence, with fixed precedence **empirical > framework > judgment**:
+1. If any cited evidence is empirical-class, the basis is `empirical`.
+2. Otherwise, if any cited evidence is framework-class, the basis is `framework`.
+3. Otherwise the basis is `judgment`.
 
-A validator recomputes the basis from the cited evidence and errors on any mismatch. Judgment is a legitimate basis, since much of the spec (skill ordering, game mechanics) is inference, but it is always visible and never counted as empirical.
+The validator recomputes the basis by this rule and errors on any mismatch with the declared value. A skill or game that cites no evidence is also an error: a `judgment` basis must cite at least one `expert_consensus` or `design_inference` entry, so it is explicit. Basis records the *class* of evidence only. How much weight it deserves is the separate strength field, and the reporting rule below still requires strength of at least `moderate`. Judgment is a legitimate basis, since much of the spec (skill ordering, game mechanics) is inference, but it is always visible and never counted as empirical.
 
 **Two levels of claim.** Skill evidence is about the skill: its importance and developmental ordering. Game evidence is about the mechanic: whether this kind of game plausibly builds the skill. A game with no direct evidence for its mechanic declares `judgment`, which is the common case.
 
@@ -144,7 +153,7 @@ A validator recomputes the basis from the cited evidence and errors on any misma
 
 ### 3.7 Game spec (YAML)
 - primary and secondary skills
-- learning objective and mechanic
+- learning objective and mechanic, with a `mechanic_id` from the controlled vocabulary (3.4)
 - `evidence_basis` and `evidence_refs` for the mechanic (3.6)
 - difficulty ladder as vectors over the dimensions in 3.3, plus the dimensions held fixed
 - scaffolding: hints and a short prompt for an adult
@@ -202,11 +211,12 @@ App code, UI, game engine, art and audio, backend, dashboard implementation, pri
 
 The validator passes:
 - no cycles in the skill graph; every reference resolves
-- every skill and game declares `evidence_basis`, and it matches the class of its cited evidence
+- every skill and game cites evidence, declares `evidence_basis`, and the declaration equals the value computed by the precedence rule empirical > framework > judgment
 - every evidence entry has a valid `evidence_type` and `evidence_strength`, and respects the caps
 - every parameter has metadata and is `provisional` unless it links a calibration study
 - no assessment rule consumes an `engagement` signal
-- every deep-scope skill has at least one game spec, an assessment rule and a `cross_game` transfer probe
+- every deep-scope skill has at least one game spec and an assessment rule
+- every deep-scope skill is covered by at least two distinct `mechanic_id`s (two games, or one game plus a transfer task on a different mechanic), and every `cross_game` probe's `mechanic_id` differs from the mechanic(s) practising the probed skill
 
 And:
 - Every evidence entry traces to a source verified against the primary publication.
