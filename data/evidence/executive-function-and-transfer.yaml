@@ -8,8 +8,8 @@
 
 - id: ev.transfer.harvard-cdc-2011
   title: 'Building the Brain''s "Air Traffic Control" System: How Early Experiences Shape the Development of Executive Function (Working Paper No. 11), with the InBrief summary'
-  citation: "National Scientific Council on the Developing Child / Center on the Developing Child at Harvard University (2011). Working Paper No. 11, and InBrief - Executive Function: Skills for Life and Learning. Harvard University, Cambridge, Massachusetts."
-  url: https://developingchild.harvard.edu/resources/working-paper/building-the-brains-air-traffic-control-system-how-early-experiences-shape-the-development-of-executive-function/
+  citation: "National Scientific Council on the Developing Child / Center on the Developing Child at Harvard University (2011). Building the Brain's \"Air Traffic Control\" System: How Early Experiences Shape the Development of Executive Function. Working Paper No. 11. Harvard University, Cambridge, Massachusetts. All three definitions below are quoted from Working Paper No. 11, p. 2. The separate InBrief summary of the same working paper uses different terms and is cited only for that."
+  url: https://developingchild.harvard.edu/wp-content/uploads/2024/10/How-Early-Experiences-Shape-the-Development-of-Executive-Function.pdf
   verified: true
   evidence_type: developmental_framework
   evidence_strength: moderate
@@ -17,48 +17,70 @@
   delivery: not_applicable
   language: en
   finding: >-
-    The Center's synthesis names three component skills of executive function and self-regulation:
-    working memory, "the ability to hold and manipulate information in mind"; inhibitory control,
-    "the capacity to resist acting on impulse and to control behavior"; and cognitive flexibility,
-    "the ability to adjust to new demands, priorities, or perspectives". It uses the air-traffic-
-    control metaphor for how the three work together, describes rapid growth in these capacities
-    during early childhood with important growth in the preschool years, and describes them as built
-    through practice, adult scaffolding and games of increasing challenge. This three-part split is
-    the structure Nova uses for its executive-function domain, and it confirms the original brief's
+    Working Paper No. 11 states that "Among scientists who study these functions, three dimensions
+    are frequently highlighted: Working Memory, Inhibitory Control, and Cognitive or Mental
+    Flexibility", and defines each on page 2. "WORKING MEMORY is the capacity to hold and
+    manipulate information in our heads over short periods of time." "INHIBITORY CONTROL is the
+    skill we use to master and filter our thoughts and impulses so we can resist temptations,
+    distractions, and habits and to pause and think before we act." "COGNITIVE OR MENTAL
+    FLEXIBILITY is the capacity to nimbly switch gears and adjust to changed demands, priorities,
+    or perspectives." It uses the air-traffic-control metaphor for how the three work together and
+    describes them as built through practice and adult scaffolding. This three-part split is the
+    structure Nova uses for its executive-function domain, and it confirms the original brief's
     description of the Harvard materials.
   limits: >-
-    A research synthesis by a scientific council, not a primary study and not an evaluation: it
-    supports the vocabulary and the broad developmental picture, never a claim that any particular
-    activity builds any particular component. It says nothing about digital delivery, about the
-    order in which Nova should teach the three, or about Arabic-speaking children, and it does not
-    establish that the three components are cleanly separable in children as young as 3 (see
-    ev.transfer.scionti-2020, whose authors argue executive functions are less modular at this age).
+    The Center's own terminology is not stable across its publications, and Nova's wording follows
+    Working Paper No. 11 rather than the shorter InBrief summary of it, which names the three as
+    "working memory, mental flexibility, and self-control" and does not use the terms "inhibitory
+    control" or "cognitive flexibility" at all. Anyone rechecking this entry must open the working
+    paper PDF, not the InBrief. A research synthesis by a scientific council, not a primary study
+    and not an evaluation: it supports the vocabulary and the broad developmental picture, never a
+    claim that any particular activity builds any particular component. The paper itself says that
+    "In most real-life situations, these three functions are not entirely distinct, but, rather,
+    they work together to produce competent executive functioning", so Nova's three separate
+    executive-function skill groups are a design convenience the source does not underwrite - and
+    it does not establish that the three are cleanly separable in children as young as 3 (see
+    ev.transfer.scionti-2020, whose authors argue executive functions are less modular at this
+    age). It says nothing about digital delivery, about the order in which Nova should teach the
+    three, or about Arabic-speaking children.
 
 - id: ev.transfer.melby-lervag-2016
   title: 'Working Memory Training Does Not Improve Performance on Measures of Intelligence or Other Measures of "Far Transfer": Evidence From a Meta-Analytic Review'
   citation: Melby-Lervåg, M., Redick, T. S., & Hulme, C. (2016). Perspectives on Psychological Science, 11(4), 512-534. doi:10.1177/1745691616635612
-  url: https://ora.ox.ac.uk/objects/uuid:daa9a729-f17b-4e45-97c0-cff5075ea404
+  url: https://pmc.ncbi.nlm.nih.gov/articles/4968033/
   verified: true
   evidence_type: meta_analysis
   evidence_strength: moderate
-  population: 87 publications with 145 experimental comparisons of working-memory training, spanning children and adults (typically developing and clinical samples)
+  population: 87 publications with 145 experimental comparisons of working-memory training, spanning children, adults and older adults, both typically developing samples and samples with learning disorders
   delivery: mixed
   language: en
   finding: >-
-    Immediately after training there were reliable improvements on measures of intermediate
-    transfer - verbal and visuospatial working memory, that is, tasks resembling the trained task.
-    For measures of far transfer (nonverbal ability, verbal ability, word decoding, reading
-    comprehension, arithmetic) "there was no convincing evidence of any reliable improvements when
-    working memory training was compared with a treated control condition". The authors conclude
-    that working-memory training produces "short-term, specific training effects that do not
-    generalize to measures of 'real-world' cognitive skills".
+    The effect shrinks as the outcome moves away from the trained task, and vanishes. Against
+    treated control groups, near transfer to the trained task was large (g = 0.80 [0.62, 0.97]);
+    intermediate transfer to other working-memory measures was small but reliable (verbal working
+    memory g = 0.31 [0.19, 0.42]; visuospatial working memory g = 0.28 [0.16, 0.40]); and far
+    transfer was absent - nonverbal ability g = 0.05 [-0.02, 0.13], verbal ability g = 0.05
+    [-0.07, 0.17], arithmetic g = 0.06 [-0.08, 0.19]. The authors state that for far-transfer
+    measures "there was no convincing evidence of any reliable improvements when working memory
+    training was compared with a treated control condition", and conclude that working-memory
+    training produces "short-term, specific training effects that do not generalize to measures of
+    'real-world' cognitive skills". The gap between the untreated-control estimate for near
+    transfer (g = 1.88 [1.33, 2.42]) and the treated-control estimate (g = 0.80) is itself a
+    lesson for Nova's own evaluation design: more than half of the apparent effect disappears once
+    the control group is given something to do.
   limits: >-
     The interventions are working-memory drills, not the mixed play-based games Nova builds, and the
-    samples span children and adults rather than 3-6 year olds specifically, so this is a warning
-    about a mechanism rather than a measurement of Nova. It shows the absence of a demonstrated far
-    transfer effect, which is not the same as proof that no transfer is ever possible under any
-    training regime - see ev.transfer.barnett-ceci-2002 on why a single far-transfer effect size is
-    the wrong question. English-language literature; no Arabic-specific estimate.
+    samples span children, adults and older adults rather than 3-6 year olds specifically, so this
+    is a warning about a mechanism rather than a measurement of Nova. The authors report that for
+    verbal working memory "children and older adults show significantly larger effects of training
+    than adults", so the age picture is not flat, but no estimate specific to preschoolers is given.
+    They also caution that "many of the studies included in the meta-analyses we have reported here
+    contain small sample sizes, which result in very low power", and that "only studies using
+    treated control groups provide a sound basis for claiming support for specific causal effects".
+    It shows the absence of a demonstrated far-transfer effect, which is not the same as proof that
+    no transfer is ever possible under any training regime - see ev.transfer.barnett-ceci-2002 on
+    why a single far-transfer effect size is the wrong question. English-language literature; no
+    Arabic-specific estimate.
 
 - id: ev.transfer.sala-2019
   title: "Near and Far Transfer in Cognitive Training: A Second-Order Meta-Analysis"
@@ -66,7 +88,7 @@
   url: https://pure.fujita-hu.ac.jp/en/publications/near-and-far-transfer-in-cognitive-training-a-second-order-meta-a/
   verified: true
   evidence_type: meta_analysis
-  evidence_strength: moderate
+  evidence_strength: emerging
   population: a meta-analysis of meta-analyses of cognitive-training programmes across children, adults and older adults (models of 99, 119 and 233 effect sizes)
   delivery: mixed
   language: en
@@ -79,7 +101,12 @@
     thus an invariant of human cognition". This is the single most important entry behind Nova's
     rule that in-game improvement is never treated as evidence of transfer.
   limits: >-
-    A second-order meta-analysis inherits the weaknesses of the meta-analyses it pools, including
+    Abstract only; full text not read. Collabra is fully open access, but the UC Press article
+    page, its PDF endpoint and the authors' OSF deposit all refused automated access, so only the
+    abstract on the authors' institutional repository record was read; the models, the list of
+    pooled meta-analyses and the authors' own limitations were not seen, and the conduct of the
+    analysis cannot be judged - hence 'emerging'. A second-order meta-analysis inherits the
+    weaknesses of the meta-analyses it pools, including
     their variable control conditions. It concerns discrete cognitive-training programmes, not
     curriculum-embedded or play-based learning, and it aggregates across ages rather than isolating
     3-6 year olds. It bears on transfer of *trained cognitive capacity*; it does not say that taught
@@ -91,7 +118,7 @@
   url: https://www.research.ed.ac.uk/en/publications/a-meta-analysis-of-the-experimental-evidence-on-the-near-and-far-/
   verified: true
   evidence_type: meta_analysis
-  evidence_strength: moderate
+  evidence_strength: emerging
   population: children in experimental studies training a component of executive function (the abstract does not state the age band; k = 43 comparisons for near transfer, k = 17 for far transfer)
   delivery: mixed
   language: en
@@ -104,7 +131,10 @@
     executive function skills in isolation". For Nova this means a game that trains inhibition must
     not be credited with building cognitive flexibility.
   limits: >-
-    The abstract Nova verified does not state the age range of the included children, so this entry
+    Abstract only; full text not read. APA's full text was not accessible, so the search protocol,
+    the moderator analyses, the heterogeneity statistics and the authors' own limitations were not
+    read and the conduct of the meta-analysis cannot be judged - hence 'emerging'. The abstract
+    does not state the age range of the included children, so this entry
     must not be read as specific to 3-6 year olds; the preschool-specific picture is in
     ev.transfer.scionti-2020, which reached a partly different conclusion about transfer between
     executive domains in younger children. Only 17 comparisons contributed to the far-transfer

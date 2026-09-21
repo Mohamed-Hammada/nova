@@ -89,9 +89,9 @@
 - id: ev.programs.randolph-2023
   title: "Montessori education's impact on academic and nonacademic outcomes: A systematic review"
   citation: Randolph, J. J., Bryson, A., Menon, L., Henderson, D. K., Kureethara Manuel, A., Michaels, S., Rosenstein, D. L. W., McPherson, W., O'Grady, R., & Lillard, A. S. (2023). Campbell Systematic Reviews, 19(3), e1330.
-  url: https://www.campbellcollaboration.org/review/montessori-impact-on-academic-and-nonacademic-outcomes/
+  url: https://pmc.ncbi.nlm.nih.gov/articles/10406168/
   verified: true
-  evidence_type: systematic_review
+  evidence_type: meta_analysis
   evidence_strength: moderate
   population: students from preschool to high school in 32 studies published 1970-2020, across eight countries (18 studies in the USA, 4 in Turkey, 3 in Switzerland, one each in England, France, Malaysia, Oman, Iran, the Philippines and Thailand)
   delivery: teacher_led
@@ -103,12 +103,21 @@
     including self-regulation (executive function), well-being at school, social skills and
     creativity". Effects were "greater for randomized than non-randomized study designs, greater for
     preschool and elementary school than for middle and high school, and greater for private
-    Montessori compared to public Montessori settings". Nova takes from this that a structured,
-    child-chosen, self-correcting materials environment has measurable non-academic as well as
-    academic effects in the early years.
+    Montessori compared to public Montessori settings". The full text gives the pooled values
+    behind those fractions: composite academic g = 0.24 (general academic ability g = 0.26,
+    mathematics g = 0.22, language g = 0.17, social studies g = 0.06) and composite non-academic
+    g = 0.33 (inner experience of school g = 0.41, executive function g = 0.36, creativity
+    g = 0.26, social skills g = 0.23). Nova takes from this that a structured, child-chosen,
+    self-correcting materials environment has measurable non-academic as well as academic effects
+    in the early years.
   limits: >-
     This compares whole school environments, not any single mechanic, so it cannot attribute the
-    effect to child-choice, to self-correcting materials or to mixed-age grouping. The larger effect
+    effect to child-choice, to self-correcting materials or to mixed-age grouping. The effects are
+    small: the largest academic component is g = 0.26 and social studies is g = 0.06. The authors
+    themselves report "a lack of small sample-size studies in favor of traditional education, which
+    could be an indicator of publication bias", though their sensitivity analysis left the findings
+    robust, and they grade several non-academic domains - inner experience of school and social
+    skills - as low-quality evidence, which is where the larger numbers sit. The larger effect
     in private settings and the wide date range (1970-2020) both raise selection and era confounds.
     It is entirely teacher-led and physical: no included study is a tablet game. One included study
     was in Oman, so the review is not exclusively Western, but it provides no separate estimate for
@@ -140,25 +149,38 @@
 
 - id: ev.programs.wwc-creative-curriculum-2013
   title: "What Works Clearinghouse intervention report: The Creative Curriculum for Preschool, Fourth Edition"
-  citation: What Works Clearinghouse (2013, updated March 2013). Early Childhood Education intervention report - The Creative Curriculum for Preschool, Fourth Edition. Institute of Education Sciences, U.S. Department of Education.
-  url: https://ies.ed.gov/ncee/wwc/Intervention/483
+  citation: "What Works Clearinghouse (updated March 2013). Early Childhood Education intervention report: The Creative Curriculum for Preschool, Fourth Edition. Institute of Education Sciences, U.S. Department of Education. Research Summary p. 4, Table 1 p. 2, Program Information p. 3."
+  url: https://ies.ed.gov/ncee/wwc/Docs/InterventionReports/wwc_creativecurriculum_081109.pdf
   verified: true
   evidence_type: systematic_review
   evidence_strength: emerging
-  population: preschool children; two studies met WWC design standards, covering about 363 children (from the Preschool Curriculum Evaluation Research Consortium, 2008)
+  population: preschool children; of 14 studies identified, two met WWC evidence standards (one randomised controlled trial without reservations, one with reservations, both from the Preschool Curriculum Evaluation Research Consortium, 2008), together covering 364 children in 11 full-day preschools in Georgia, North Carolina and Tennessee
   delivery: teacher_led
   language: en
   finding: >-
-    The WWC reviewed the evidence on The Creative Curriculum for Preschool (Fourth Edition) and
-    found only two studies meeting its design standards. Across all four outcome domains it
-    reviewed - general mathematics achievement, oral language, phonological processing and print
-    knowledge - the WWC rated the curriculum "No discernible effects", which it defines as "no
-    evidence that intervention had an effect on outcomes"; no improvement index could be reported
-    for any domain. This is the honest counterweight to programme marketing: a widely used
-    commercial early-years curriculum showed no measurable effect on the outcomes tested.
+    The report states that "The WWC identified 14 studies that investigated the effects of The
+    Creative Curriculum for Preschool, Fourth Edition, on the school readiness of preschool
+    children", that four were reviewed against group design standards, that two met the standards
+    (one without reservations, one with), that "Two studies do not meet WWC evidence standards" and
+    that "The remaining ten studies do not meet WWC eligibility screens for review in this topic
+    area". On the two that qualified, the verdict is blunt: "The Creative Curriculum for Preschool,
+    Fourth Edition, was found to have no discernible effects on oral language, print knowledge,
+    phonological processing, or math for preschool children." Table 1 gives the average improvement
+    indices behind that rating - oral language +2 (range -6 to +9), print knowledge -2 (-7 to +8),
+    phonological processing -2 (-4 to +1) and math +2 (-5 to +8) percentile points - with the
+    extent of evidence rated "medium to large" in all four domains. This is the honest counterweight
+    to programme marketing: a widely used commercial early-years curriculum, reviewed against a
+    fixed standard, showed no measurable effect on the outcomes tested.
   limits: >-
-    Two studies is a thin evidence base, and the reviewed fourth edition has since been superseded
-    by a fifth edition that the WWC did not evaluate, so this is not a current verdict on the
-    product now sold. "No discernible effect" against the comparison curricula used in those studies
-    is not the same as "no effect"; the comparison condition was other preschool provision, not
-    nothing. US, English, teacher-led.
+    Two qualifying studies is a thin evidence base, and both come from the same source (the PCER
+    Consortium, 2008), so the four "medium to large" extent-of-evidence ratings rest on one
+    research programme. The report itself records that the product reviewed is not the product now
+    sold: "In July 2011, the developer released The Creative Curriculum for Preschool, Fifth
+    Edition, as part of The Creative Curriculum System for Preschool. No effectiveness studies of
+    this updated, expanded curriculum have been completed. Therefore, this intervention report
+    focuses on the Fourth Edition." So this is not a current verdict. "No discernible effects"
+    against the comparison curricula used in those studies is not the same as "no effect"; the
+    comparison condition was other preschool provision, not nothing, and the improvement-index
+    ranges straddle zero in both directions rather than sitting below it. The report is from 2013
+    and its conclusions, in the WWC's own words, "may change as new research becomes available".
+    US, English, teacher-led.

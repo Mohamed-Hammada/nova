@@ -71,7 +71,7 @@
 - id: ev.screens.aap-2026
   title: "Digital Ecosystems, Children, and Adolescents: Policy Statement"
   citation: Munzer, T., Parga-Belinkie, J., Milkovich, L. M., Tomopoulos, S., Ajumobi, T., Cross, C., Gerwin, R., Madigan, S., & Council on Communications and Media (2026). Pediatrics, 157(2), e2025075320. doi:10.1542/peds.2025-075320
-  url: https://www.healthychildren.org/English/family-life/Media/Pages/helping-kids-thrive-in-a-digital-world-AAP-policy-explained.aspx
+  url: https://pmc.ncbi.nlm.nih.gov/articles/PMC13122503/
   verified: true
   evidence_type: expert_consensus
   evidence_strength: moderate
@@ -79,24 +79,37 @@
   delivery: digital
   language: en
   finding: >-
-    The American Academy of Pediatrics' current policy statement deliberately moves away from a
-    single screen-time number. Its abstract states that "when this digital ecosystem
-    is designed with children's unique developmental needs in mind, it can support learning and
-    well-being", while ecosystems "that prioritize engagement and commercialization often encourage
-    prolonged use, which in turn can displace healthy behaviors (eg, movement behaviors, sleep)",
-    and concludes that "'media and children' cannot be viewed solely through the lens of individual
-    child behaviors or screen limits alone". AAP's own guidance for families states that "infants
-    under 18 months learn best from real-world interactions" and that "heavy solo screen use can
-    affect their developing language and social skills", and advises caregivers to watch and play
-    alongside children, to seek "quality content that puts kids first", and to keep screen-free
-    zones and times. For Nova this endorses three design commitments: an explicit adult-alongside
-    role, content quality over minutes, and no engagement-maximising design.
+    The American Academy of Pediatrics' current policy statement moves away from a single
+    screen-time number without abandoning numbers altogether. Under "Set time boundaries" it states
+    that "The amount of screen media time spent per child might vary based on each family, their
+    needs, and school nights versus weekends", and that "Time limits might range from <1 hour/day
+    for toddlers and preschoolers to 1 to 2 hours/day or more of entertainment (not school-related)
+    media for school-aged children and teens" - so for Nova's 3-5 year olds AAP's own figure is
+    under one hour a day, offered as guidance to be fitted to a family rather than as a cap. It
+    adds that "The most important considerations are high-quality content and prioritizing healthy
+    activities (eg, sleep, play, physical activity, reading)", that "Infants do not learn from
+    digital media, but occasionally viewing brief, high-quality videos (e.g., Sesame Street) is not
+    detrimental", and that families should "Avoid screen exposures an hour before bedtime and
+    devices in the bedroom". The statement's abstract frames the wider argument: "when this digital
+    ecosystem is designed with children's unique developmental needs in mind, it can support
+    learning and well-being", while ecosystems "that prioritize engagement and commercialization
+    often encourage prolonged use, which in turn can displace healthy behaviors (eg, movement
+    behaviors, sleep)", and "'media and children' cannot be viewed solely through the lens of
+    individual child behaviors or screen limits alone". For Nova this endorses three design
+    commitments - an explicit adult-alongside role, content quality over minutes, and no
+    engagement-maximising design - and one numeric one: a session budget that fits inside an hour a
+    day for the 3-5 band.
   limits: >-
     Expert consensus, capped at 'moderate'; it is a professional position informed by evidence, not
-    an evaluation, and it measures nothing about Nova. Nova verified the abstract and AAP's own
-    family-facing explanation of the policy; the full Pediatrics text was behind a paywall (HTTP
-    403) and its detailed recommendation tables were not read, so no numeric limit for ages 2-5 is
-    recorded here and none should be attributed to AAP from this entry. It is a US statement in
-    English and reflects the US media environment; it makes no Arabic- or Gulf-specific
-    recommendation. Note the tension with ev.screens.who-2019, which does still set an hourly limit
-    for 2-4 year olds: Nova designs to the stricter of the two.
+    an evaluation, and it measures nothing about Nova. The full policy statement was read in the
+    open-access copy on PubMed Central (the Pediatrics site itself returned HTTP 403); the
+    supporting technical report was not read. AAP's figure is explicitly a range offered for
+    discussion - "might range from" - not a threshold, and the statement tells clinicians to
+    "discuss limits that fit a family's routine", so Nova must not present "<1 hour/day" as an AAP
+    rule. It is a US statement in English and reflects the US media environment; it makes no
+    Arabic- or Gulf-specific recommendation, and it sets no threshold for learning outcomes. Note
+    that AAP and ev.screens.who-2019 agree rather than conflict at Nova's youngest ages: WHO
+    recommends no more than one hour of sedentary screen time for 2-4 year olds and AAP puts
+    toddlers and preschoolers at under an hour a day. The two differ in kind, not in number - WHO
+    issues a bounded recommendation, AAP an explicitly family-negotiated range - and Nova designs
+    to the one-hour figure both point at.

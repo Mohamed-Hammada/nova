@@ -188,11 +188,11 @@
 
 - id: ev.literacy.haj-2026
   title: "Investigating the role of Arabic diglossia-centered multi-domain intervention (ADMIN) in enhancing Palestinian-Arabic speaking kindergarten children's emergent literacy"
-  citation: "Haj, L., Schiff, R., Ghawi-Dakwar, O., & Saiegh-Haddad, E. (2026). Reading and Writing (advance online publication; received 28 May 2025, accepted 14 January 2026). doi:10.1007/s11145-026-10766-9. Open access, CC BY 4.0."
+  citation: "Haj, L., Schiff, R., Ghawi-Dakwar, O., & Saiegh-Haddad, E. (2026). Reading and Writing (advance online publication; received 28 May 2025, accepted 14 January 2026). doi:10.1007/s11145-026-10766-9. Open access, CC BY 4.0. A published Correction exists: doi:10.1007/s11145-026-10905-2, read in full."
   url: https://link.springer.com/content/pdf/10.1007/s11145-026-10766-9.pdf
   verified: true
   evidence_type: rct
-  evidence_strength: moderate
+  evidence_strength: emerging
   population: 403 monolingual Palestinian-Arabic-speaking kindergarten children in Israel (189 boys, 214 girls), aged 57-70 months (M = 64.4, SD = 3.1), from mid-to-low SES kindergartens, with no reported hearing or vision impairment and no diagnosed developmental disability; 250 in the experimental group across 50 classrooms and 153 controls across 13 classrooms
   delivery: teacher_led
   language: ar
@@ -215,14 +215,30 @@
     morphological awareness), on letter-name and letter-sound knowledge, and on all three
     executive-function components.
   limits: >-
-    The control group improved too, and substantially: within-group pre-post effect sizes ran
-    d = 0.20 to 0.65 (Spoken Arabic) and d = 0.26 to 0.86 (Standard Arabic and letter knowledge)
-    for controls, against d = 0.56 to 1.69 for the experimental group. The value added by the
-    programme is therefore the interaction term, and no standardised between-group effect size
-    appears in the results text or the tables that were read; the raw experimental-group d values
-    must not be read as the programme's effect. The allocation was unbalanced in a way that
-    matters - 50 experimental classrooms of five children each against 13 control classrooms of 5
-    to 16 - which is many clusters on one side and few on the other. The authors' own limitations
+    A published Correction to this article exists (doi:10.1007/s11145-026-10905-2) and was read in
+    full. It is minor and does not change the conclusions: two reference placeholders were
+    resolved, one asterisk was added to a significance marker in Table 4, and two control-group
+    effect-size ranges were corrected downward - "(d = 0.20 to d = 0.81)" to "(d = 0.20 to
+    d = 0.65)" and "(d = 0.26 to d = 0.86)" to "(d = 0.26 to d = 0.75)". The PDF read for this
+    entry is the corrected version and carries the corrected values, so the numbers below are
+    post-correction. That a peer-reviewed article needed two of its reported effect-size ranges
+    corrected is, however, part of why this entry is rated 'emerging' rather than 'moderate'; the
+    other part is that the full text is the only source for every claim here and no independent
+    replication exists.
+    The control group improved too, and substantially: within-group pre-post effect sizes for
+    controls ran d = 0.20 to 0.65 on Spoken Arabic tasks, d = 0.26 to 0.75 on Standard Arabic
+    metalinguistic and lexical tasks and d = 0.78 to 0.86 on letter knowledge, against d = 0.65 to
+    1.69, d = 0.56 to 1.44 and d = 1.50 to 1.52 respectively for the experimental group. The value
+    added by the programme is therefore the interaction term, and no standardised between-group
+    effect size appears in the results text or the tables that were read; the raw
+    experimental-group d values must not be read as the programme's effect. On randomisation, the
+    paper states that "Children were randomly allocated to two groups" and that "Randomization was
+    conducted at the kindergarten level, with each kindergarten assigned to either experimental or
+    control condition", so the type `rct` is supported by an explicit statement - but the paper
+    does not say how the five children per experimental kindergarten were selected from within
+    each classroom, and that within-cluster selection is unexplained. The allocation was also
+    unbalanced in a way that matters - 50 experimental classrooms of five children each against 13
+    control classrooms of 5 to 16 - which is many clusters on one side and few on the other. The authors' own limitations
     are that outcomes are immediate post-intervention only, with no follow-up into primary school;
     that children's informal home language and literacy background was not modelled; and that the
     sample is Palestinian-Arabic speakers in Israel, so "generalization to other Arabic-speaking
@@ -294,10 +310,10 @@
     early Arabic literacy, and its closing sentence is the honest statement of where this field
     stands - the pedagogy has largely not been evaluated.
   limits: >-
-    Only the published abstract was read, confirmed identically on the DOAJ record and on the
-    Crossref and OpenAlex records; ScienceDirect returned HTTP 403, so the 101 included studies,
-    the screening flow and the authors' own limitations were not seen, and nothing beyond the
-    abstract is recorded. It is a descriptive synthesis with no pooled effect sizes and no quality
+    Abstract only; full text not read. The published abstract was read and confirmed identically on
+    the DOAJ record and on the Crossref and OpenAlex records; ScienceDirect returned HTTP 403, so
+    the 101 included studies, the screening flow and the authors' own limitations were not seen,
+    nothing beyond the abstract is recorded, and the conduct of the review cannot be judged. It is a descriptive synthesis with no pooled effect sizes and no quality
     appraisal visible in the abstract, and it includes grey literature, so the evidence base behind
     the five themes is of unknown and probably mixed quality. Its search stops at 2021. A
     corrigendum exists and its content was not read; the published abstract also carries an

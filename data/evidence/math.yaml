@@ -14,9 +14,9 @@
   url: https://doi.org/10.1016/j.edurev.2026.100830
   verified: true
   evidence_type: meta_analysis
-  evidence_strength: moderate
+  evidence_strength: emerging
   population: preschool and kindergarten children in 74 studies published 2000-2025, classified by dominant pedagogical emphasis as intentional teaching (k = 56) or exploratory play (k = 18), yielding 566 effect sizes; the abstract states no age band and names no countries
-  delivery: teacher_led
+  delivery: mixed
   language: unstated
   finding: >-
     Both pedagogical approaches were associated with positive effects on children's learning, and
@@ -31,14 +31,15 @@
     that a playful, goal-carrying maths activity can produce learning, and it is also a warning:
     the effect on exactly the skills Nova's counting slice targets is the smallest one reported.
   limits: >-
-    Only the publisher-deposited abstract was read. ScienceDirect returned HTTP 403 to every
-    automated request, including for the open-access PDF, so the methods, the list of included
-    studies, the heterogeneity statistics and the authors' own limitations section were NOT read
-    and nothing beyond the abstract is recorded here. The effects are small to moderate and they
-    fade. Nothing in the abstract identifies the delivery mode of the included interventions as
-    digital, states the children's ages, names the countries or names the languages of
-    instruction, so none of that is claimed; the pre-primary classroom context implies adult-led
-    delivery, which is what is recorded. The finding that exploratory play only worked with
+    Abstract only; full text not read. ScienceDirect returned HTTP 403 to every automated request,
+    including for the open-access CC BY-NC-ND PDF, so the methods, the list of included studies,
+    the heterogeneity statistics, the risk-of-bias appraisal and the authors' own limitations
+    section were NOT read, nothing beyond the publisher-deposited abstract is recorded here, and
+    the quality of the meta-analysis cannot be judged - which is why this entry is rated
+    'emerging' despite its size. The effects are small to moderate and they fade. The abstract does
+    not state the delivery mode of the included interventions, the children's ages, the countries
+    or the languages of instruction, so none of that is claimed and `delivery` is recorded as
+    'mixed' rather than inferred from the pre-primary setting. The finding that exploratory play only worked with
     contextual scenarios, and did not move non-maths outcomes at all, is a direct argument against
     assuming any spillover from a maths game to other domains.
 
@@ -48,7 +49,7 @@
   url: https://eric.ed.gov/?id=EJ1510312
   verified: true
   evidence_type: systematic_review
-  evidence_strength: moderate
+  evidence_strength: emerging
   population: 101 mathematics interventions for preschool-aged children (3-6 years) conducted across 25 countries over the past 25 years; half of the studies targeted children from low-SES backgrounds
   delivery: mixed
   language: multi
@@ -69,13 +70,15 @@
     child who gets better at a trained maths task usually does not, on this evidence, get better
     at maths.
   limits: >-
-    This is a descriptive systematic review, not a meta-analysis: it characterises and appraises
-    the 101 interventions and reports the proportion with positive outcomes, but it pools no
-    effect sizes, so "over 90% positive" is a vote count and is vulnerable to publication bias -
-    a point the review's own catalogue of methodological weakness reinforces. The author-provided
-    abstract was read in full on the ERIC record; the Springer full text redirected to an
-    authentication endpoint and was not read, so the per-country breakdown, the list of the 101
-    interventions and the review's own discussion section were not seen. The 25 countries are not
+    Abstract only; full text not read. The author-provided abstract was read in full on the ERIC
+    record, but the Springer full text redirected to an authentication endpoint, so the
+    per-country breakdown, the list of the 101 interventions, the quality-appraisal detail and the
+    review's own discussion and limitations were not seen, and the conduct of the review cannot be
+    judged - hence 'emerging' rather than 'moderate', despite how directly the finding bears on
+    Nova. This is a descriptive systematic review, not a meta-analysis: it characterises and
+    appraises the 101 interventions and reports the proportion with positive outcomes, but it pools
+    no effect sizes, so "over 90% positive" is a vote count and is vulnerable to publication bias -
+    a point the review's own catalogue of methodological weakness reinforces. The 25 countries are not
     named in the abstract and no statement is made about Arabic-speaking children or about digital
     delivery, so nothing is claimed for either.
 
@@ -108,7 +111,12 @@
     This is a consensus committee synthesis, not a primary study and not a meta-analysis: it
     reports no pooled effect size and does not establish the ordering experimentally, and its
     teaching-learning paths are explicitly described as approximate, age-indexed steps, not as an
-    invariant sequence every child follows. It is a US report about US early-childhood education,
+    invariant sequence every child follows. It supports the ordering but not Nova's ages: the
+    report puts all four number-core components, one-to-one counting correspondences among them,
+    and their coordination "to count n things and, later, say the number counted" inside Step 1,
+    "ages 2 and 3", with Step 2 at age 4 extending them to larger numbers. Nova's `age_range` of
+    [3, 4] for one-to-one correspondence and [4, 5] for cardinality is therefore Nova's own
+    judgment, set later than the NRC's steps, and must not be attributed to this source. It is a US report about US early-childhood education,
     written in English, and the report itself notes that number-word structure differs across
     languages; nothing in it addresses Arabic number words or Arabic-speaking children, and
     nothing in it addresses digital delivery - the paths it describes are for adults working with

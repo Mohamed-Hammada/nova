@@ -98,8 +98,8 @@
   url: https://doi.org/10.1037/a0028446
   verified: true
   evidence_type: meta_analysis
-  evidence_strength: moderate
-  population: 217 studies of spatial training; the abstract names sex, age and type of training among the moderators analysed but states no age band, no sample total and no countries
+  evidence_strength: emerging
+  population: 217 studies of spatial training; the abstract names sex, age and type of training among the moderators analysed but states no age band, no sample total, no literature window and no countries
   delivery: mixed
   language: unstated
   finding: >-
@@ -112,14 +112,17 @@
     purpose: it licenses treating spatial skill as something a child develops with practice rather
     than a fixed trait, which is a precondition for having a spatial domain at all.
   limits: >-
-    Only the publisher-deposited abstract was read; APA's full text was not accessible, so the
-    moderator results - including the effect of age, which is the one Nova most needs - were NOT
-    read and are not recorded. The 217 studies span all ages, including adults, and much of the
-    spatial-training literature is on adults and adolescents, so 0.47 is not an estimate for
+    Abstract only; full text not read. APA's full text was not accessible and no open-access copy
+    exists, so the search protocol, the moderator results - including the effect of age, which is
+    the one Nova most needs - the heterogeneity statistics and the authors' own limitations were
+    NOT read, and the quality of the meta-analysis cannot be judged; that is why it is rated
+    'emerging' despite 217 studies. The 217 studies span all ages, including adults, and much of
+    the spatial-training literature is on adults and adolescents, so 0.47 is not an estimate for
     3-6 year olds. The reported transfer is to other spatial tasks, which is near transfer within
     a domain; the abstract makes no claim that it reaches mathematics or schooling, and Nova does
     not read one into it - ev.spatial.hawes-2022 is the entry that addresses that question and
-    reports a smaller number. The database closed around 2012. Nothing in the abstract distinguishes
+    reports a smaller number. No statement is made here about the literature window the review
+    covered, because the abstract does not give one. Nothing in the abstract distinguishes
     digital from physical training, or speaks to Arabic-speaking children.
 
 - id: ev.spatial.hawes-2022
@@ -128,7 +131,7 @@
   url: https://doi.org/10.1037/dev0001281
   verified: true
   evidence_type: meta_analysis
-  evidence_strength: moderate
+  evidence_strength: emerging
   population: 29 studies using controlled pre-post designs to test the effect of spatial training on mathematics, N = 3,765, k = 89 effect sizes; participants ranged from 3 to 20 years
   delivery: mixed
   language: unstated
@@ -148,9 +151,11 @@
     conclude that spatial training works but that the field has "a poor understanding of the
     mechanisms that support transfer".
   limits: >-
-    Only the publisher-deposited abstract was read; APA's full text was not accessible, so the
-    moderator tables, the heterogeneity statistics and the authors' own limitations section were
-    not read and no number beyond the abstract is recorded. Twenty-nine studies is a small base for
+    Abstract only; full text not read. Unpaywall lists this article as hybrid open access, but the
+    only location it gives is the APA landing page, which redirects to PsycNet and serves no text,
+    so the moderator tables, the heterogeneity statistics and the authors' own limitations section
+    were not read, no number beyond the publisher-deposited abstract is recorded, and the quality
+    of the meta-analysis cannot be judged - hence 'emerging'. Twenty-nine studies is a small base for
     the number of moderators tested, and the pooled g = .28 is small. Every one of the three
     significant moderators points against Nova's case rather than for it: youngest children gained
     least, computerised training was less effective than concrete materials, and transfer was
