@@ -68,7 +68,7 @@ def main(argv: list[str] | None = None) -> int:
     for issue in issues:
         print(issue)
     error_count = sum(1 for issue in issues if issue.level == "error")
-    if args.report:
+    if args.report and not any(issue.rule in ("schema", "unique-id") for issue in issues):
         print(summary(spec))
     print(f"{error_count} error(s), {len(issues) - error_count} warning(s)")
     return 1 if error_count else 0

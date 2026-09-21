@@ -87,3 +87,13 @@ def test_summary_counts_cited_edges():
         {"skill": "math.count.one-to-one-5", "evidence_refs": ["ev.test.meta"]}
     ]
     assert "cited: 1, design inference: 0" in summary(spec)
+
+
+def test_report_flag_does_not_crash_on_schema_invalid_data(tmp_path, capsys):
+    spec = make_spec()
+    del spec.skills[0]["deep_scope"]
+    data = write_data(tmp_path, spec)
+    assert main(["--data", str(data), "--report"]) == 1
+    out = capsys.readouterr().out
+    assert "ERROR [schema]" in out
+    assert "error(s)" in out
