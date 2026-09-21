@@ -1,0 +1,175 @@
+# Early literacy: English, and Arabic.
+#
+# Nova runs Arabic and English as separate tracks, and the evidence behind them is not
+# comparable. The English entries rest on large, well-known meta-analyses. The Arabic entries
+# are fewer, smaller and mostly not of a type this spec's closed list handles well; see
+# docs/curriculum/research-log.md, "Sources that need a spec change", and read the limits on
+# each Arabic entry before citing it.
+#
+# Nothing in the English entries is assumed to carry over to Arabic. Where an English source
+# says something directly relevant to that question - and the National Reading Panel does - it
+# is recorded in that source's own limits.
+#
+# Every entry here was checked by opening the URL recorded on it.
+
+# ---------------------------------------------------------------------------
+# English early literacy, and phonological awareness
+# ---------------------------------------------------------------------------
+
+- id: ev.literacy.nelp-2008
+  title: "Developing Early Literacy: Report of the National Early Literacy Panel. A Scientific Synthesis of Early Literacy Development and Implications for Intervention"
+  citation: National Early Literacy Panel (2008). Washington, DC. National Institute for Literacy / National Center for Family Literacy. Predictor correlations, chapter 2; code-focused intervention effects, chapter 3 and Table 3.1.
+  url: https://www.nichd.nih.gov/sites/default/files/publications/pubs/documents/NELPReport09.pdf
+  verified: true
+  evidence_type: meta_analysis
+  evidence_strength: moderate
+  population: children from birth to age 5 and kindergarteners; about 500 research articles screened from more than 8,000, across correlational studies of predictors and experimental/quasi-experimental studies of instruction (code-focused n = 78, shared reading n = 19, parent and home n = 32, preschool/kindergarten programmes n = 33, language enhancement n = 28)
+  delivery: mixed
+  language: en
+  finding: >-
+    Two results matter to Nova. First, on what predicts later reading: six variables had "medium to
+    large predictive relationships with later measures of literacy development" and kept their
+    predictive power after IQ and SES were accounted for - alphabet knowledge, phonological
+    awareness, rapid automatic naming of letters or digits, rapid automatic naming of objects or
+    colours, writing or writing one's name, and phonological memory. The pooled correlations with
+    later decoding were: alphabet knowledge r = 0.50 (52 studies, 7,570 children), writing/writing
+    name r = 0.49 (10 studies, 1,650 children), phonological awareness r = 0.40 (69 studies, 8,443
+    children), rapid naming of letters/digits r = 0.40 (12 studies, 2,081), oral language r = 0.33
+    (63 studies, 9,358) and concepts about print r = 0.34 (12 studies, 2,604). Alphabet knowledge
+    and writing were significantly stronger predictors of decoding than phonological awareness was,
+    and phonological awareness was in turn stronger than concepts about print or oral language.
+    Second, on what instruction does: code-focused interventions had "significant and moderate to
+    large effects across a broad spectrum of early literacy outcomes", and "the largest impact of
+    code-focused interventions was on PA, with an average ES of 0.82". This is the source behind
+    Nova's choice of alphabet knowledge, phonological awareness and name-writing as English
+    literacy skills, and behind the ordering that puts letter knowledge at least as early as
+    phonological awareness.
+  limits: >-
+    These are correlations among predictors, not causes: a child who scores higher on phonological
+    awareness at four tends to decode better later, which does not by itself show that raising
+    phonological awareness raises decoding - the intervention meta-analyses are the separate
+    evidence for that, and they were mostly not run on the same children. The panel searched only
+    studies "published in refereed journals in the English language", so nothing here speaks to
+    Arabic-speaking children or to an Arabic orthography; the phonological-awareness result in
+    particular depends on the relation between a language's sounds and its script and cannot be
+    carried across. The panel notes that most code-focused interventions were delivered
+    individually or in small groups, or the studies did not say, so "it is not possible, on the
+    basis of these analyses, to determine the effectiveness of whole-class or large-group
+    code-focused instruction with young children" - and still less of unattended tablet play. The
+    panel found significant heterogeneity in most of the predictor correlations. The report is from
+    2008 and its database is older than that.
+
+- id: ev.literacy.nrp-phonemic-awareness-2000
+  title: "Report of the National Reading Panel: Teaching Children to Read. Chapter 2, Part I: Phonemic Awareness Instruction"
+  citation: National Reading Panel (2000). Teaching Children to Read - Reports of the Subgroups. NIH Pub. No. 00-4754. Washington, DC. National Institute of Child Health and Human Development. Chapter 2, Part I, pp. 2-1 to 2-6. The meta-analysis was also published as Ehri et al. (2001), Reading Research Quarterly, 36(3), 250-287.
+  url: https://www.nichd.nih.gov/sites/default/files/publications/pubs/nrp/Documents/report.pdf
+  verified: true
+  evidence_type: meta_analysis
+  evidence_strength: moderate
+  population: preschool through 6th grade, from 1,962 screened articles; 52 articles yielding 96 treatment-control comparisons of phonemic-awareness instruction against another form of instruction or regular classroom instruction
+  delivery: mixed
+  language: en
+  finding: >-
+    Teaching children to manipulate phonemes in spoken words works, and its benefit reaches
+    reading. "The overall effect size on PA outcomes was large, 0.86. The overall effect size on
+    reading outcomes was moderate, 0.53. The overall effect on spelling was also moderate, 0.59."
+    Effects were still significant on follow-up tests several months after training ended, and on
+    standardised as well as experimenter-devised tests. Several moderators bear directly on Nova's
+    design: effect sizes "were larger when children received focused and explicit instruction on
+    one or two PA skills than when they were taught a combination of three or more"; teaching
+    phoneme manipulation with letters beat teaching it in speech alone; small groups beat
+    individual or whole-class instruction; treatments of 5 to 18 hours beat both shorter and longer
+    ones; "Classroom teachers were very effective in teaching PA to children. Also, computers were
+    effective"; and "Students in the lower grades, preschool, and kindergarten, showed larger
+    effect sizes in acquiring PA than children in 1st grade and above". The panel also reports a
+    clean negative control that is worth keeping: "Effects of training did not generalize to
+    performance on math tests, indicating that halo/Hawthorne effects did not account for the
+    findings" - which is also a reminder that a literacy gain is a literacy gain and nothing more.
+  limits: >-
+    Directly relevant to Nova's English track and no further. The panel states plainly that
+    "Children learning to read in English showed larger effects than children learning to read in
+    other alphabetic languages", both for acquiring phonemic awareness and for transfer to reading,
+    which is exactly the reason Nova may not assume this result for Arabic. Although computer
+    formats were effective, the panel adds that in classroom-teacher and computer studies "the
+    degree of transfer was less than that achieved in experimentally controlled studies" - real
+    settings produced smaller effects than research settings, and Nova is a real setting with even
+    less adult supervision than either. Effects were small or null in places: for low-achieving
+    readers in grades 2-6 the effect on reading did not differ from chance, and the effect on
+    spelling for disabled readers was not significantly different from zero. The database is from
+    2000 or earlier and was screened only for English-language refereed journals; the panel did not
+    conduct a formal publication-bias analysis, and its conclusions have been contested in later
+    re-analyses that Nova has not read.
+
+- id: ev.literacy.nrp-phonics-2000
+  title: "Report of the National Reading Panel: Teaching Children to Read. Chapter 2, Part II: Phonics Instruction"
+  citation: National Reading Panel (2000). Teaching Children to Read - Reports of the Subgroups. NIH Pub. No. 00-4754. Washington, DC. National Institute of Child Health and Human Development. Chapter 2, Part II, pp. 2-89 to 2-100.
+  url: https://www.nichd.nih.gov/sites/default/files/publications/pubs/nrp/Documents/ch2-II.pdf
+  verified: true
+  evidence_type: meta_analysis
+  evidence_strength: moderate
+  population: children from kindergarten to 6th grade; 38 studies yielding 66 treatment-control comparisons of systematic phonics instruction against unsystematic or no phonics instruction
+  delivery: teacher_led
+  language: en
+  finding: >-
+    "The mean overall effect size produced by phonics instruction was moderate in size and
+    statistically greater than zero, d = 0.44." The age pattern is the part Nova needs: "Phonics
+    instruction taught early proved much more effective than phonics instruction introduced after
+    first grade. Mean effect sizes were kindergarten d = 0.56; first grade d = 0.54; 2nd through
+    6th grades d = 0.27." For children at risk the early effects were larger still - d = 0.58 for
+    at-risk kindergarteners and d = 0.74 for at-risk first-graders. The panel also states that
+    "To be effective, systematic phonics instruction introduced in kindergarten must be
+    appropriately designed for learners and must begin with foundational knowledge involving
+    letters and phonemic awareness", which is the ordering Nova's English track uses: letters and
+    phonemic awareness first, then letter-sound decoding.
+  limits: >-
+    This is about English, whose alphabetic code is what "phonics" means here; the result says
+    nothing about Arabic, whose orthography represents consonants and long vowels with short vowels
+    written as optional diacritics, and Nova does not carry it across. The effect is moderate, not
+    transformative, and it is not uniform: phonics failed to help low-achieving readers in grades
+    2-6 (d = 0.15, not statistically greater than chance, from only eight comparisons in three
+    studies) and helped diagnosed disabled readers only modestly (d = 0.32). Almost all of this
+    instruction was delivered by a person - tutoring d = 0.57, small group d = 0.43, whole class
+    d = 0.39 - and none of it establishes that a tablet can substitute. The database closed in 2000
+    and shares the age and publication-bias caveats recorded on the phonemic-awareness entry.
+
+- id: ev.literacy.cusiter-2025
+  title: "Combined Language and Code Emergent Literacy Intervention for At-Risk Preschool Children: A Systematic Meta-Analytic Review"
+  citation: Cusiter, J., Short, K., Webb, A., & Munro, N. (2025). Child Development, 96(4), 1519-1545. doi:10.1111/cdev.14252
+  url: https://pmc.ncbi.nlm.nih.gov/articles/PMC12208012/
+  verified: true
+  evidence_type: meta_analysis
+  evidence_strength: moderate
+  population: 29 randomised controlled trials published before March 2023, reporting 43 interventions with 9,333 children aged 4-6 years who were at risk - either identified with a speech and/or language disorder or at risk of literacy failure on socioeconomic or academic grounds (55% male; 45% African American, 30% Hispanic, 20% White, 5% other); 25 of the 29 studies were conducted in the USA, with one each from Israel, Australia, Canada and Costa Rica
+  delivery: teacher_led
+  language: en
+  finding: >-
+    This is the source the original brief cited for "a small overall effect on phonological
+    awareness", and it does contain such an effect, though the paper is about something wider:
+    interventions that combine language work (vocabulary, grammar, morphology, inferencing) with
+    code work (phonological awareness, letter knowledge, print concepts) for at-risk preschoolers.
+    The composite effects were small - language g = 0.11 [0.03, 0.18] and code g = 0.23 [0.15,
+    0.31] - and the phonological-awareness-specific pooled effect was "small (g = 0.32, 95% CI
+    [0.18, 0.45], p < 0.01)" from 46 effect sizes across 21 studies, with substantial heterogeneity
+    (I-squared = 71%). Within phonological awareness the subgroups split sharply: composite
+    phonological-awareness measures moved almost not at all (g = 0.08), while the specific,
+    trainable skills moved a little - blending and elision g = 0.26, first-sound identification and
+    alliteration g = 0.24. Language subskills behaved the same way: proximal vocabulary, the words
+    actually taught, g = 0.53, against distal (standardised) vocabulary g = 0.08. Interventions
+    that gave code and language equal emphasis did at least as well on both as those weighted to
+    one. For Nova this is a caution, not an endorsement: these programmes move the narrow skill
+    that was trained, and barely move the broad measure.
+  limits: >-
+    The overall effects are small, the heterogeneity is high (I-squared = 71%, still 64% after
+    removing the five studies flagged as possible sources of publication bias), and the authors
+    themselves report that publication bias was detected. The population is at-risk 4-6 year olds,
+    overwhelmingly in the USA, and the review could not separate children with a diagnosed speech
+    or language disorder from children at risk on socioeconomic grounds, so the effects cannot be
+    attributed to either group. Delivery was almost entirely human: 39 of 43 interventions were
+    preschool-based and 32 were delivered by a preschool educator, with only 2 of 43 delivered by a
+    computer, so this is not evidence about software. The authors flag variable dosage reporting
+    and variable reporting of intervention targets as threats to their own coding. Nothing here is
+    about Arabic or about children learning to read in a language other than English (aside from
+    single studies in Israel and Costa Rica, whose results are not reported separately). The gap
+    between proximal g = 0.53 and distal g = 0.08 vocabulary, and between specific
+    phonological-awareness skills and the phonological-awareness composite, is the same
+    near-transfer-only pattern that ev.math.munez-2026 reports for mathematics.
