@@ -74,7 +74,7 @@ Exit code is 0 when there are no errors. Warnings (for example a rung that chang
 
 **Data layout and ids.** One list of records per YAML file; any file under a directory is loaded. Skills go in `data/skills/<domain>/<topic>.yaml`, games in `data/games/<domain>/<topic>.yaml`, and so on. Ids are lower-case with dots, for example `math.count.cardinality`, `game.math.bear-apples`, `task.math.count-objects-at-home`, `rule.math.count.cardinality`, `ev.design.counting-progression`, `param.default.min-trials`. Skill id prefixes used here: `math.`, `ef.`, `mem.`, `att.`, `lit.ar.`, `lit.en.`, `lang.oral.`, `cog.`, `ps.`, `vs.`, `fm.`, `soc.`, `cre.`, `sci.`.
 
-**Worked examples.** Task 10 creates a complete, validator-checked counting slice (2 skills, 2 games, 1 transfer task, 2 assessment rules, 9 default parameters, evidence, i18n in English and Arabic). It is the template for every record type. Copy its shape exactly.
+**Worked examples.** Task 10 creates a complete, validator-checked counting slice (2 skills, 2 games, 1 transfer task, 2 assessment rules, 10 default parameters, evidence, i18n in English and Arabic). It is the template for every record type. Copy its shape exactly.
 
 **Cluster procedure** (used by Tasks 13-17 and referred to as "Cluster procedure A-G"). For each deep cluster:
 
@@ -3413,14 +3413,14 @@ This task creates real data files. They are the templates every later content ta
   unit: proportion of correct responses
   status: provisional
   basis: design_inference
-  rationale: Above what guessing gives on a small choice set, so some real understanding is plausible.
+  rationale: A starting value above zero. Chance level depends on how many choices a game offers (0.5 with two choices), so a game with few choices needs its own, higher emerging threshold; this default is not safe for two-choice games.
   calibration_plan: Compare with chance level per game and with an adult-rated criterion in the pilot.
 - id: param.default.developing-accuracy
   value: 0.6
   unit: proportion of correct responses
   status: provisional
   basis: design_inference
-  rationale: Clearly above chance but still error-prone.
+  rationale: Meant to sit clearly above chance, which holds only for games with several choices; a game with two choices needs its own, higher threshold.
   calibration_plan: Set from the pilot distribution of accuracy in children an adult rates as developing.
 - id: param.default.secure-accuracy
   value: 0.85
@@ -3428,7 +3428,7 @@ This task creates real data files. They are the templates every later content ta
   status: provisional
   basis: design_inference
   rationale: High and consistent accuracy is the working meaning of secure.
-  calibration_plan: Calibrate against adult-rated mastery and retention on a delayed probe in the pilot.
+  calibration_plan: Calibrate against adult-rated mastery and retention on a delayed probe in the pilot. With min-trials at 6 this is effectively 6 of 6 correct, so the pilot should also test a longer window.
 - id: param.default.secure-max-hints-per-trial
   value: 0.2
   unit: hints per trial
@@ -3436,6 +3436,13 @@ This task creates real data files. They are the templates every later content ta
   basis: design_inference
   rationale: Secure means little support is needed, so hints must be rare.
   calibration_plan: Set from pilot data on how hint use relates to success on an unsupported probe.
+- id: param.default.secure-max-adult-assist-per-trial
+  value: 0.2
+  unit: adult assists per trial
+  status: provisional
+  basis: design_inference
+  rationale: Secure means little support is needed, so adult help must be rare.
+  calibration_plan: Set from pilot data on how adult help relates to success on an unsupported probe.
 - id: param.default.transfer-pass-accuracy
   value: 0.7
   unit: proportion of correct responses
@@ -3462,7 +3469,7 @@ This task creates real data files. They are the templates every later content ta
   unit: days
   status: provisional
   basis: design_inference
-  rationale: A week is long enough that success is not just short-term recall, and short enough to schedule.
+  rationale: A week is assumed long enough that success is not just short-term recall, and short enough to schedule.
   calibration_plan: Compare 3, 7 and 14 day intervals in the pilot for retention signal and drop-out.
 ```
 
@@ -3551,14 +3558,14 @@ This task creates real data files. They are the templates every later content ta
   secondary_skills: []
   objective: Give the bear exactly the number of apples it asks for.
   mechanic_id: drag-to-count
-  mechanic: The bear asks for a number of apples; the child drags apples onto its plate one at a time while each number is spoken.
+  mechanic: The bear asks for a number of apples; a pile with more apples than requested is on the table; the child drags apples onto the bear's plate one at a time and must stop at the requested number.
   evidence_basis: judgment
   evidence_refs: [ev.design.drag-to-count-mechanic]
   difficulty:
     varied: [item_complexity, distractors]
     anchors:
       item_complexity: ["requests of 1 to 3", "requests of 1 to 5"]
-      distractors: ["only the requested apples on the table", "extra apples on the table"]
+      distractors: ["only apples in the pile", "apples mixed with pears; only apples count"]
     rungs:
       - id: r1
         values: {item_complexity: 0, distractors: 0, working_memory_load: 0, rule_complexity: 0, abstraction: 0, cognitive_load: 0, independence: 0}
@@ -3661,12 +3668,12 @@ This task creates real data files. They are the templates every later content ta
       parameters: [param.default.min-trials, param.default.emerging-accuracy]
       requires_dimensions: [performance]
     developing:
-      description: Accuracy above the developing threshold, with hints still in use.
+      description: Accuracy above the developing threshold but the secure conditions are not yet met (hints or adult help still used, or accuracy below the secure threshold).
       parameters: [param.default.min-trials, param.default.developing-accuracy]
       requires_dimensions: [performance]
     secure:
-      description: Accuracy above the secure threshold with hints and adult help rare, over at least min-trials responses.
-      parameters: [param.default.min-trials, param.default.secure-accuracy, param.default.secure-max-hints-per-trial]
+      description: Accuracy above the secure threshold with hints and adult help both rare, over at least min-trials responses.
+      parameters: [param.default.min-trials, param.default.secure-accuracy, param.default.secure-max-hints-per-trial, param.default.secure-max-adult-assist-per-trial]
       requires_dimensions: [performance, independence]
     transfer:
       description: Secure, plus a passed cross_game or cross_context probe at or above the transfer pass mark. A passed delayed probe raises confidence and does not change the state.
@@ -3681,12 +3688,12 @@ This task creates real data files. They are the templates every later content ta
       parameters: [param.default.min-trials, param.default.emerging-accuracy]
       requires_dimensions: [performance]
     developing:
-      description: Accuracy above the developing threshold, with hints still in use.
+      description: Accuracy above the developing threshold but the secure conditions are not yet met (hints or adult help still used, or accuracy below the secure threshold).
       parameters: [param.default.min-trials, param.default.developing-accuracy]
       requires_dimensions: [performance]
     secure:
-      description: Accuracy above the secure threshold with hints and adult help rare, over at least min-trials responses.
-      parameters: [param.default.min-trials, param.default.secure-accuracy, param.default.secure-max-hints-per-trial]
+      description: Accuracy above the secure threshold with hints and adult help both rare, over at least min-trials responses.
+      parameters: [param.default.min-trials, param.default.secure-accuracy, param.default.secure-max-hints-per-trial, param.default.secure-max-adult-assist-per-trial]
       requires_dimensions: [performance, independence]
     transfer:
       description: Secure, plus a passed cross_game or cross_context probe at or above the transfer pass mark. A passed delayed probe raises confidence and does not change the state.
@@ -3730,7 +3737,7 @@ skills: 2 (deep_scope: 2)
   evidence_basis: empirical=0, framework=0, judgment=2
 prerequisite edges: 1 (cited: 0, design inference: 1)
 games: 2  transfer tasks: 1  assessment rules: 2
-parameters: provisional=9, pilot_calibrated=0, validated=0
+parameters: provisional=10, pilot_calibrated=0, validated=0
 0 error(s), 0 warning(s)
 ```
 
