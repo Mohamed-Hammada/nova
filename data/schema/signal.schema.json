@@ -1,0 +1,12 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Logged signal",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["id", "kind", "description"],
+  "properties": {
+    "id": { "type": "string", "pattern": "^[a-z0-9_-]+$" },
+    "kind": { "enum": ["learning", "engagement"] },
+    "description": { "type": "string", "minLength": 1 }
+  }
+}

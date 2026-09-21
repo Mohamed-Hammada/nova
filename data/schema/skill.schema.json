@@ -1,0 +1,71 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Skill node",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "id", "domains", "name_key", "description_key", "prerequisites", "age_range",
+    "indicators", "evidence_basis", "evidence_refs", "scope", "deep_scope"
+  ],
+  "properties": {
+    "id": { "type": "string", "pattern": "^[a-z0-9_]+(\\.[a-z0-9_-]+)+$" },
+    "domains": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "enum": [
+          "cognitive", "executive_function", "language_literacy", "math",
+          "problem_solving", "memory", "attention", "visual_spatial",
+          "fine_motor", "social_emotional", "creativity", "science_exploration"
+        ]
+      }
+    },
+    "name_key": { "type": "string", "minLength": 1 },
+    "description_key": { "type": "string", "minLength": 1 },
+    "prerequisites": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["skill"],
+        "properties": {
+          "skill": { "type": "string" },
+          "evidence_refs": { "type": "array", "items": { "type": "string" } }
+        }
+      }
+    },
+    "age_range": {
+      "type": "array",
+      "minItems": 2,
+      "maxItems": 2,
+      "items": { "type": "number", "minimum": 2, "maximum": 8 }
+    },
+    "indicators": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "evidence_basis": { "enum": ["empirical", "framework", "judgment"] },
+    "evidence_refs": { "type": "array", "minItems": 1, "items": { "type": "string" } },
+    "scope": { "enum": ["universal", "language-specific"] },
+    "language": { "type": "string", "pattern": "^[a-z]{2,3}$" },
+    "slot": {
+      "enum": [
+        "listening", "vocabulary", "phonological_awareness", "print_concepts",
+        "letter_knowledge", "sound_mapping", "word_building", "early_reading"
+      ]
+    },
+    "deep_scope": { "type": "boolean" }
+  },
+  "allOf": [
+    {
+      "if": { "properties": { "scope": { "const": "language-specific" } }, "required": ["scope"] },
+      "then": { "required": ["language"] }
+    },
+    {
+      "if": { "properties": { "scope": { "const": "universal" } }, "required": ["scope"] },
+      "then": { "not": { "anyOf": [{ "required": ["language"] }, { "required": ["slot"] }] } }
+    }
+  ]
+}

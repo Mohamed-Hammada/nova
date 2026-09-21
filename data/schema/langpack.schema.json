@@ -1,0 +1,35 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Language pack",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["id", "name", "status", "script", "slots_filled", "instruction_voice"],
+  "properties": {
+    "id": { "type": "string", "pattern": "^[a-z]{2,3}$" },
+    "name": { "type": "string", "minLength": 1 },
+    "status": { "enum": ["complete", "in_progress", "contract_only"] },
+    "script": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["direction", "joining", "diacritics", "tonal", "notes"],
+      "properties": {
+        "direction": { "enum": ["ltr", "rtl"] },
+        "joining": { "type": "boolean" },
+        "diacritics": { "type": "boolean" },
+        "tonal": { "type": "boolean" },
+        "notes": { "type": "string", "minLength": 1 }
+      }
+    },
+    "slots_filled": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "enum": [
+          "listening", "vocabulary", "phonological_awareness", "print_concepts",
+          "letter_knowledge", "sound_mapping", "word_building", "early_reading"
+        ]
+      }
+    },
+    "instruction_voice": { "type": "string", "minLength": 1 }
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Calibration parameter",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["id", "value", "unit", "status", "basis", "rationale", "calibration_plan"],
+  "properties": {
+    "id": { "type": "string", "pattern": "^[a-z0-9_]+(\\.[a-z0-9_-]+)+$" },
+    "value": { "type": ["number", "string", "boolean"] },
+    "unit": { "type": "string", "minLength": 1 },
+    "status": { "enum": ["provisional", "pilot_calibrated", "validated"] },
+    "basis": { "enum": ["design_inference", "borrowed_from_literature", "prior_pilot"] },
+    "evidence_refs": { "type": "array", "items": { "type": "string" } },
+    "rationale": { "type": "string", "minLength": 1 },
+    "calibration_plan": { "type": "string", "minLength": 1 },
+    "calibration_study": { "type": ["string", "null"] }
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Evidence entry",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "id", "title", "citation", "verified", "evidence_type", "evidence_strength",
+    "population", "delivery", "language", "finding", "limits"
+  ],
+  "properties": {
+    "id": { "type": "string", "pattern": "^[a-z0-9_]+(\\.[a-z0-9_-]+)+$" },
+    "title": { "type": "string", "minLength": 1 },
+    "citation": { "type": "string", "minLength": 1 },
+    "url": { "type": "string", "minLength": 1 },
+    "verified": { "type": "boolean" },
+    "evidence_type": {
+      "enum": [
+        "systematic_review", "meta_analysis", "rct", "quasi_experimental",
+        "developmental_framework", "program_evidence", "expert_consensus", "design_inference"
+      ]
+    },
+    "evidence_strength": { "enum": ["emerging", "moderate", "strong"] },
+    "population": { "type": "string", "minLength": 1 },
+    "delivery": { "enum": ["teacher_led", "digital", "mixed", "home", "not_applicable"] },
+    "language": { "type": "string", "minLength": 1 },
+    "finding": { "type": "string", "minLength": 1 },
+    "limits": { "type": "string", "minLength": 1 }
+  }
+}

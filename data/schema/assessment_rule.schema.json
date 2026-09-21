@@ -1,0 +1,40 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Assessment rule",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["id", "skill", "inputs", "state_criteria"],
+  "$defs": {
+    "criterion": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["description", "parameters", "requires_dimensions"],
+      "properties": {
+        "description": { "type": "string", "minLength": 1 },
+        "parameters": { "type": "array", "items": { "type": "string" } },
+        "requires_dimensions": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "enum": ["performance", "independence", "transfer"] }
+        }
+      }
+    }
+  },
+  "properties": {
+    "id": { "type": "string", "pattern": "^[a-z0-9_]+(\\.[a-z0-9_-]+)+$" },
+    "skill": { "type": "string" },
+    "inputs": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "type": "string" } },
+    "state_criteria": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["emerging", "developing", "secure", "transfer"],
+      "properties": {
+        "emerging": { "$ref": "#/$defs/criterion" },
+        "developing": { "$ref": "#/$defs/criterion" },
+        "secure": { "$ref": "#/$defs/criterion" },
+        "transfer": { "$ref": "#/$defs/criterion" }
+      }
+    }
+  }
+}

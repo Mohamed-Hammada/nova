@@ -1,0 +1,138 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Game spec",
+  "type": "object",
+  "$defs": {
+    "anchor_labels": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "type": "string", "minLength": 1 }
+    }
+  },
+  "additionalProperties": false,
+  "required": [
+    "id", "name_key", "age_range", "primary_skills", "secondary_skills", "objective",
+    "mechanic_id", "mechanic", "evidence_basis", "evidence_refs", "difficulty",
+    "scaffolding", "signals", "progression", "transfer_probes", "language_dependencies"
+  ],
+  "properties": {
+    "id": { "type": "string", "pattern": "^[a-z0-9_]+(\\.[a-z0-9_-]+)+$" },
+    "name_key": { "type": "string", "minLength": 1 },
+    "age_range": {
+      "type": "array",
+      "minItems": 2,
+      "maxItems": 2,
+      "items": { "type": "number", "minimum": 2, "maximum": 8 }
+    },
+    "primary_skills": { "type": "array", "minItems": 1, "items": { "type": "string" } },
+    "secondary_skills": { "type": "array", "items": { "type": "string" } },
+    "objective": { "type": "string", "minLength": 1 },
+    "mechanic_id": { "type": "string", "pattern": "^[a-z0-9_-]+$" },
+    "mechanic": { "type": "string", "minLength": 1 },
+    "evidence_basis": { "enum": ["empirical", "framework", "judgment"] },
+    "evidence_refs": { "type": "array", "minItems": 1, "items": { "type": "string" } },
+    "difficulty": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["varied", "anchors", "rungs"],
+      "properties": {
+        "anchors": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "item_complexity": { "$ref": "#/$defs/anchor_labels" },
+            "distractors": { "$ref": "#/$defs/anchor_labels" },
+            "working_memory_load": { "$ref": "#/$defs/anchor_labels" },
+            "rule_complexity": { "$ref": "#/$defs/anchor_labels" },
+            "abstraction": { "$ref": "#/$defs/anchor_labels" },
+            "cognitive_load": { "$ref": "#/$defs/anchor_labels" },
+            "independence": { "$ref": "#/$defs/anchor_labels" }
+          }
+        },
+        "varied": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "enum": [
+              "item_complexity", "distractors", "working_memory_load", "rule_complexity",
+              "abstraction", "cognitive_load", "independence"
+            ]
+          }
+        },
+        "rungs": {
+          "type": "array",
+          "minItems": 2,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["id", "values"],
+            "properties": {
+              "id": { "type": "string", "minLength": 1 },
+              "values": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "item_complexity", "distractors", "working_memory_load", "rule_complexity",
+                  "abstraction", "cognitive_load", "independence"
+                ],
+                "properties": {
+                  "item_complexity": { "type": "integer", "minimum": 0 },
+                  "distractors": { "type": "integer", "minimum": 0 },
+                  "working_memory_load": { "type": "integer", "minimum": 0 },
+                  "rule_complexity": { "type": "integer", "minimum": 0 },
+                  "abstraction": { "type": "integer", "minimum": 0 },
+                  "cognitive_load": { "type": "integer", "minimum": 0 },
+                  "independence": { "type": "integer", "minimum": 0 }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "scaffolding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["hints", "adult_prompt"],
+      "properties": {
+        "hints": { "type": "array", "minItems": 1, "items": { "type": "string", "minLength": 1 } },
+        "adult_prompt": { "type": "string", "minLength": 1 }
+      }
+    },
+    "signals": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "type": "string" } },
+    "progression": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["advance_parameter", "retreat_parameter"],
+      "properties": {
+        "advance_parameter": { "type": "string" },
+        "retreat_parameter": { "type": "string" }
+      }
+    },
+    "transfer_probes": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "type", "delayed", "skill", "mechanic_id", "task_ref", "changes", "preserved"],
+        "properties": {
+          "id": { "type": "string", "minLength": 1 },
+          "type": { "enum": ["cross_game", "cross_context"] },
+          "delayed": { "type": "boolean" },
+          "skill": { "type": "string" },
+          "mechanic_id": { "type": "string", "pattern": "^[a-z0-9_-]+$" },
+          "task_ref": { "type": "string" },
+          "changes": { "type": "string", "minLength": 1 },
+          "preserved": { "type": "string", "minLength": 1 }
+        }
+      }
+    },
+    "offline_extension": { "type": "string", "minLength": 1 },
+    "language_dependencies": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": { "type": "string", "pattern": "^[a-z]{2,3}$" }
+    }
+  }
+}
