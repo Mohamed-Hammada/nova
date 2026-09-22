@@ -39,7 +39,7 @@ final gameRuntimeProvider = Provider<GameRuntime>((ref) {
     collector: SignalCollector(content, bus),
     assessment: const AssessmentEngine(),
     mastery: const MasteryEngine(),
-    adaptive: const AdaptiveProgressionEngine(const RuleBasedAdaptiveModel()),
+    adaptive: const AdaptiveProgressionEngine(RuleBasedAdaptiveModel()),
     persistence: ref.watch(persistencePortProvider),
     clock: ref.watch(clockPortProvider),
   );

@@ -81,7 +81,7 @@ GameRuntime _buildRuntime(ContentRuntime content, InMemoryPersistencePort persis
     collector: SignalCollector(content, bus),
     assessment: const AssessmentEngine(),
     mastery: const MasteryEngine(),
-    adaptive: const AdaptiveProgressionEngine(const RuleBasedAdaptiveModel()),
+    adaptive: const AdaptiveProgressionEngine(RuleBasedAdaptiveModel()),
     persistence: persistence,
     clock: clock,
   );
