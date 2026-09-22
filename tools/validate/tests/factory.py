@@ -352,6 +352,10 @@ def make_spec() -> Spec:
         "en": {key: f"English text for {key}" for key in keys},
         "ar": {key: f"نص عربي لـ {key}" for key in keys},
     }
+    audio = {
+        "en": {key: f"assets/audio/en/{key}.mp3" for key in keys},
+        "ar": {key: f"assets/audio/ar/{key}.mp3" for key in keys},
+    }
 
     return Spec(
         skills=skills,
@@ -364,6 +368,7 @@ def make_spec() -> Spec:
         mechanics=mechanics,
         signals=signals,
         i18n=i18n,
+        audio=audio,
     )
 
 
@@ -385,3 +390,5 @@ def write_spec(spec: Spec, root: Path) -> None:
     dump(root / "signals.yaml", spec.signals)
     for language, table in spec.i18n.items():
         dump(root / "i18n" / f"{language}.yaml", table)
+    for language, table in spec.audio.items():
+        dump(root / "audio" / f"{language}.yaml", table)

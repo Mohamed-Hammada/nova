@@ -12,8 +12,12 @@ from .model import Issue, Record, Spec, error, index_by_id
 
 
 def _default_baseline_path() -> Path:
-    # tools/validate/nova_validate/id_lifecycle_rules.py -> tools/validate/id_baseline.json
-    return Path(__file__).resolve().parents[1] / "id_baseline.json"
+    # The baseline is a ledger OF data/, so it lives alongside it, not in
+    # tools/validate/. cli.py always passes an explicit path derived from
+    # whatever --data root is in use; this default only matters for direct,
+    # non-CLI callers.
+    # tools/validate/nova_validate/id_lifecycle_rules.py -> <repo root>/data/id_baseline.json
+    return Path(__file__).resolve().parents[3] / "data" / "id_baseline.json"
 
 
 def _load_baseline(path: Path) -> dict[str, list[str]]:

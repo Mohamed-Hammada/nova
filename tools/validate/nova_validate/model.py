@@ -105,6 +105,7 @@ class Spec:
     mechanics: list[Record] = field(default_factory=list)
     signals: list[Record] = field(default_factory=list)
     i18n: dict[str, dict[str, str]] = field(default_factory=dict)
+    audio: dict[str, dict[str, str]] = field(default_factory=dict)
 
 
 def index_by_id(records: list[Record]) -> dict[str, Record]:

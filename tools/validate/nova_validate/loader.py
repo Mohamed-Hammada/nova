@@ -25,6 +25,7 @@ RECORD_FILES = {
 }
 
 I18N_LANGUAGES = ("en", "ar")
+AUDIO_LANGUAGES = ("en", "ar")
 
 
 def _read_yaml(path: Path):
@@ -51,15 +52,19 @@ def _load_dir(directory: Path) -> list[Record]:
     return records
 
 
-def _load_i18n(directory: Path) -> dict[str, dict[str, str]]:
+def _load_flat_table(directory: Path, languages: tuple[str, ...]) -> dict[str, dict[str, str]]:
     table: dict[str, dict[str, str]] = {}
-    for language in I18N_LANGUAGES:
+    for language in languages:
         path = directory / f"{language}.yaml"
         data = _read_yaml(path) if path.is_file() else None
         if data is not None and not isinstance(data, dict):
             raise ValueError(f"{path}: must be a flat YAML mapping of key -> string")
         table[language] = data or {}
     return table
+
+
+def _load_i18n(directory: Path) -> dict[str, dict[str, str]]:
+    return _load_flat_table(directory, I18N_LANGUAGES)
 
 
 def load_spec(data_root: Path) -> Spec:
@@ -70,4 +75,8 @@ def load_spec(data_root: Path) -> Spec:
     for attr, filename in RECORD_FILES.items():
         path = root / filename
         fields[attr] = _load_list(path) if path.is_file() else []
-    return Spec(i18n=_load_i18n(root / "i18n"), **fields)
+    return Spec(
+        i18n=_load_i18n(root / "i18n"),
+        audio=_load_flat_table(root / "audio", AUDIO_LANGUAGES),
+        **fields,
+    )

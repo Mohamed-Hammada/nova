@@ -48,6 +48,13 @@ def test_reads_utf8_arabic(tmp_path):
     assert load_spec(tmp_path).i18n["ar"]["skill.a.name"] == "العد"
 
 
+def test_loads_audio_manifest(tmp_path):
+    write(tmp_path / "audio" / "en.yaml", "skill.a.name: assets/audio/en/skill.a.name.mp3\n")
+    spec = load_spec(tmp_path)
+    assert spec.audio["en"]["skill.a.name"] == "assets/audio/en/skill.a.name.mp3"
+    assert spec.audio["ar"] == {}
+
+
 def test_factory_specs_are_independent():
     first, second = make_spec(), make_spec()
     first.skills[0]["indicators"].append("changed")
@@ -62,3 +69,4 @@ def test_factory_spec_round_trips_through_disk(tmp_path):
     assert loaded.games == original.games
     assert get(loaded.langpacks, "ar")["script"]["direction"] == "rtl"
     assert loaded.i18n == original.i18n
+    assert loaded.audio == original.audio

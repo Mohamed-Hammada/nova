@@ -6,6 +6,7 @@ import sys
 from pathlib import Path
 
 from .assessment_rules import check_assessment_rules
+from .audio_rules import check_audio
 from .coverage_rules import check_deep_coverage, check_probes
 from .evidence_rules import check_evidence_basis, check_evidence_entries
 from .game_rules import check_games
@@ -31,8 +32,14 @@ SEMANTIC_CHECKS = (
     check_deep_coverage,
     check_langpacks,
     check_i18n,
-    check_id_lifecycle,
+    check_audio,
 )
+
+# check_id_lifecycle is deliberately NOT in SEMANTIC_CHECKS / run_all: it
+# needs a baseline file path derived from the actual --data root in use
+# (data_root/id_baseline.json), which run_all's uniform check(spec) -> issues
+# signature has no way to carry. main() calls it separately, once, with that
+# path -- see below.
 
 
 def run_all(spec: Spec, schema_dir: Path) -> list[Issue]:
@@ -67,14 +74,18 @@ def main(argv: list[str] | None = None) -> int:
         print(evidence_table(spec))
         return 0
 
+    baseline_path = args.data / "id_baseline.json"
     issues = run_all(spec, args.data / "schema")
+    if not any(issue.level == "error" for issue in issues):
+        issues += check_id_lifecycle(spec, baseline_path)
+
     if args.update_baseline:
         error_count = sum(1 for issue in issues if issue.level == "error")
         if error_count:
             print(f"Refusing to update the baseline: {error_count} error(s) present.")
             return 1
-        write_baseline(spec)
-        print("Updated tools/validate/id_baseline.json")
+        write_baseline(spec, baseline_path)
+        print(f"Updated {baseline_path}")
         return 0
     for issue in issues:
         print(issue)
