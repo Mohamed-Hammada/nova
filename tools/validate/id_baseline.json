@@ -1,0 +1,10 @@
+{
+  "games": [
+    "game.math.bear-apples",
+    "game.math.number-match"
+  ],
+  "skills": [
+    "math.count.cardinality",
+    "math.count.one-to-one-5"
+  ]
+}

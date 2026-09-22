@@ -133,6 +133,8 @@
       "type": "array",
       "uniqueItems": true,
       "items": { "type": "string", "pattern": "^[a-z]{2,3}$" }
-    }
+    },
+    "deprecated": { "type": "boolean" },
+    "superseded_by": { "type": ["string", "null"] }
   }
 }

@@ -56,7 +56,9 @@
         "letter_knowledge", "sound_mapping", "word_building", "early_reading"
       ]
     },
-    "deep_scope": { "type": "boolean" }
+    "deep_scope": { "type": "boolean" },
+    "deprecated": { "type": "boolean" },
+    "superseded_by": { "type": ["string", "null"] }
   },
   "allOf": [
     {

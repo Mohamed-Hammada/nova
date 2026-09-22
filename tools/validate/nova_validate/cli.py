@@ -11,6 +11,7 @@ from .evidence_rules import check_evidence_basis, check_evidence_entries
 from .game_rules import check_games
 from .graph_rules import check_skill_graph
 from .i18n_rules import check_i18n
+from .id_lifecycle_rules import check_id_lifecycle, write_baseline
 from .langpack_rules import check_langpacks
 from .loader import load_spec
 from .model import Issue, Spec
@@ -30,6 +31,7 @@ SEMANTIC_CHECKS = (
     check_deep_coverage,
     check_langpacks,
     check_i18n,
+    check_id_lifecycle,
 )
 
 
@@ -57,6 +59,7 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--data", type=Path, default=default_data_root(), help="data directory (default: <repo>/data)")
     parser.add_argument("--report", action="store_true", help="print counts after validating")
     parser.add_argument("--evidence-table", action="store_true", help="print the evidence table as Markdown and exit")
+    parser.add_argument("--update-baseline", action="store_true", help="record the current id set as the baseline (only after a clean validation)")
     args = parser.parse_args(argv)
 
     spec = load_spec(args.data)
@@ -65,6 +68,14 @@ def main(argv: list[str] | None = None) -> int:
         return 0
 
     issues = run_all(spec, args.data / "schema")
+    if args.update_baseline:
+        error_count = sum(1 for issue in issues if issue.level == "error")
+        if error_count:
+            print(f"Refusing to update the baseline: {error_count} error(s) present.")
+            return 1
+        write_baseline(spec)
+        print("Updated tools/validate/id_baseline.json")
+        return 0
     for issue in issues:
         print(issue)
     error_count = sum(1 for issue in issues if issue.level == "error")
