@@ -4,8 +4,13 @@ import 'package:nova_app/core/assessment/dimension_estimate.dart';
 import 'package:nova_app/core/mastery/mastery_record.dart';
 
 import 'in_memory_persistence_port.dart';
+import 'persistence_port_contract.dart';
 
 void main() {
+  // The fake GameRuntime tests rely on must honour the same contract as the
+  // real adapters, or those tests would prove behaviour production lacks.
+  persistencePortContract('in-memory fake', () async => PersistenceHarness(InMemoryPersistencePort()));
+
   test('returns exactly what was saved for mastery, dimensions, and rung state', () async {
     final port = InMemoryPersistencePort();
     final now = DateTime(2026, 1, 1);

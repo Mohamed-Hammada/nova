@@ -1,111 +1,324 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
-import 'package:nova_app/core/mechanics/game_mechanic.dart';
-import 'package:nova_app/core/mechanics/raw_events.dart';
+import 'package:nova_app/ui/design/tokens.dart';
 
-/// All counting logic lives here, in plain Dart -- unit-testable without
-/// pumping a widget. DragToCountView below only turns gestures into calls
-/// on this controller and renders the plate/apples.
-///
-/// This mechanic has no continuous animation loop -- it is a discrete
-/// drag-and-drop interaction -- so it is implemented with plain Flutter
-/// Draggable/DragTarget rather than Flame. Flame (declared as a dependency,
-/// Task 4) remains the chosen engine for the app and is exercised starting
-/// with a future continuous/timed mechanic (Plan 2's catch-target), where
-/// its game-loop is what actually earns its keep.
-class DragToCountController implements GameMechanic {
-  DragToCountController({required this.requestedTotal, DateTime Function()? now}) : _now = now ?? DateTime.now;
+// The mechanic's logic is plain Dart in core/; re-exported so existing
+// imports of this file keep resolving DragToCountController.
+export 'package:nova_app/core/mechanics/drag_to_count.dart';
 
-  final int requestedTotal;
-  final DateTime Function() _now;
-  final _controller = StreamController<RawMechanicEvent>.broadcast();
-
-  int _runningTotal = 0;
-  int _hintsThisTrial = 0;
-
-  int get runningTotal => _runningTotal;
-
-  @override
-  String get mechanicId => 'drag-to-count';
-
-  @override
-  Stream<RawMechanicEvent> get rawEvents => _controller.stream;
-
-  @override
-  void start({required int rngSeed}) {
-    _runningTotal = 0;
-    _hintsThisTrial = 0;
-  }
-
-  /// Called when the child drags one apple onto the plate.
-  void placeItem() {
-    _runningTotal += 1;
-    _controller.add(ItemPlaced(runningTotal: _runningTotal, requestedTotal: requestedTotal, usedHint: false, at: _now()));
-  }
-
-  void useHint() => _hintsThisTrial += 1;
-
-  /// Called when the child taps "Done".
-  void submitTrial() {
-    final correct = _runningTotal == requestedTotal;
-    _controller.add(TrialSubmitted(correct: correct, hintsUsedThisTrial: _hintsThisTrial, at: _now()));
-  }
-
-  @override
-  void dispose() => _controller.close();
+/// One item on the table or the plate, as the view sees it.
+class DragToCountItem {
+  const DragToCountItem({required this.id, required this.isDistractor, required this.onPlate});
+  final int id;
+  final bool isDistractor;
+  final bool onPlate;
 }
 
+/// Everything game-specific about how drag-to-count looks and reads: the
+/// same view renders bear-and-apples today and could render
+/// squirrel-and-acorns tomorrow without changing this file.
+class DragToCountSkin {
+  const DragToCountSkin({
+    required this.itemBuilder,
+    required this.plateBuilder,
+    required this.itemLabel,
+    required this.itemOnPlateLabel,
+    required this.giveHint,
+    required this.takeBackHint,
+    required this.plateLabel,
+    required this.plateEmptyLabel,
+    required this.pileLabel,
+    required this.formatNumber,
+  });
+
+  final Widget Function(BuildContext context, DragToCountItem item, double size) itemBuilder;
+  final Widget Function(BuildContext context, bool highlighted, Widget contents) plateBuilder;
+  final String Function(DragToCountItem item) itemLabel;
+  final String Function(DragToCountItem item) itemOnPlateLabel;
+  final String giveHint;
+  final String takeBackHint;
+  final String plateLabel;
+  final String plateEmptyLabel;
+  final String pileLabel;
+  final String Function(int value) formatNumber;
+}
+
+/// The Flutter face of drag-to-count. Stateless: it renders [items] and
+/// reports intents through [onPlace]/[onRemove]; the session's view model
+/// owns the state and forwards each intent to DragToCountController.
+///
+/// Dragging is never the only way to act. Every item is also a button: a tap,
+/// a click, or Enter/Space when it has keyboard focus moves it to the plate,
+/// and the same on the plate takes it back -- so children who cannot yet
+/// drag, switch-access users, screen-reader users and keyboard users can all
+/// play. Items dropped anywhere but the other zone are not counted.
 class DragToCountView extends StatelessWidget {
-  const DragToCountView({super.key, required this.controller, required this.appleCount});
-  final DragToCountController controller;
-  final int appleCount;
+  const DragToCountView({
+    super.key,
+    required this.items,
+    required this.skin,
+    required this.onPlace,
+    required this.onRemove,
+    this.enabled = true,
+    this.showCount = false,
+    this.plateHeader,
+  });
+
+  final List<DragToCountItem> items;
+  final DragToCountSkin skin;
+  final ValueChanged<int> onPlace;
+  final ValueChanged<int> onRemove;
+
+  /// False while feedback is showing: the board is visible but frozen.
+  final bool enabled;
+
+  /// Numbers the target items on the plate (1, 2, 3...). Only on while a hint
+  /// is active -- an always-visible count would do the counting for the
+  /// child.
+  final bool showCount;
+
+  /// Shown above the plate (e.g. the bear making the request).
+  final Widget? plateHeader;
 
   @override
   Widget build(BuildContext context) {
-    return Semantics(
-      label: 'Drag apples onto the plate for the bear',
-      child: Column(
-        children: [
-          Wrap(
-            spacing: 12,
+    final pile = items.where((i) => !i.onPlate).toList();
+    final plate = items.where((i) => i.onPlate).toList();
+
+    return LayoutBuilder(builder: (context, constraints) {
+      final wide = constraints.maxWidth >= 720;
+      final itemSize = constraints.maxWidth < 380 ? NovaSize.childTouch : NovaSize.gameItem;
+      final plateZone = _PlateZone(
+        items: plate, skin: skin, itemSize: itemSize, enabled: enabled, showCount: showCount,
+        header: plateHeader, onPlace: onPlace, onRemove: onRemove,
+      );
+      final pileZone = _PileZone(items: pile, skin: skin, itemSize: itemSize, enabled: enabled, onPlace: onPlace, onRemove: onRemove);
+
+      // Wide: table and plate side by side (table on the reading-start side,
+      // so the motion follows reading direction and mirrors under RTL).
+      // Narrow: plate above table, so the bear and plate stay in view.
+      return wide
+          // Both zones as tall as the taller one, even inside a scroll view.
+          ? IntrinsicHeight(
+              child: Row(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
+                Expanded(child: pileZone),
+                const SizedBox(width: NovaSpace.lg),
+                Expanded(child: plateZone),
+              ]),
+            )
+          : Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
+              plateZone,
+              const SizedBox(height: NovaSpace.md),
+              pileZone,
+            ]);
+    });
+  }
+}
+
+class _PileZone extends StatelessWidget {
+  const _PileZone({required this.items, required this.skin, required this.itemSize, required this.enabled, required this.onPlace, required this.onRemove});
+  final List<DragToCountItem> items;
+  final DragToCountSkin skin;
+  final double itemSize;
+  final bool enabled;
+  final ValueChanged<int> onPlace;
+  final ValueChanged<int> onRemove;
+
+  @override
+  Widget build(BuildContext context) {
+    // Accepts items dragged back off the plate.
+    return DragTarget<int>(
+      key: const ValueKey('drag-to-count.pile'),
+      onWillAcceptWithDetails: (d) => enabled && _isOnPlate(d.data),
+      onAcceptWithDetails: (d) => onRemove(d.data),
+      builder: (context, candidates, _) => Semantics(
+        container: true,
+        label: skin.pileLabel,
+        child: Container(
+          decoration: BoxDecoration(
+            color: NovaPalette.table,
+            borderRadius: BorderRadius.circular(NovaRadius.lg),
+            border: Border.all(
+              color: candidates.isNotEmpty ? Theme.of(context).colorScheme.primary : Colors.transparent,
+              width: 3,
+            ),
+          ),
+          padding: const EdgeInsets.all(NovaSpace.md),
+          alignment: Alignment.center,
+          child: Wrap(
+            alignment: WrapAlignment.center,
+            spacing: NovaSpace.sm,
+            runSpacing: NovaSpace.sm,
             children: [
-              for (var i = 0; i < appleCount; i++)
-                Draggable<int>(
-                  data: i,
-                  feedback: const _Apple(),
-                  childWhenDragging: const SizedBox(width: 48, height: 48),
-                  child: const _Apple(),
+              for (final item in items)
+                _ItemButton(
+                  key: ValueKey('drag-to-count.item.${item.id}'),
+                  item: item, skin: skin, size: itemSize, enabled: enabled,
+                  label: skin.itemLabel(item), hint: skin.giveHint,
+                  onActivate: () => onPlace(item.id),
                 ),
             ],
           ),
-          const SizedBox(height: 24),
-          // Placing an item only counts when it is actually dropped on the
-          // plate -- Draggable.onDragEnd fires on ANY drag end regardless of
-          // where it lands, which previously counted a drag started and
-          // released anywhere on screen. DragTarget.onAcceptWithDetails only
-          // fires when the drop lands on this target.
-          DragTarget<int>(
-            onAcceptWithDetails: (_) => controller.placeItem(),
-            builder: (context, candidate, rejected) => const _Plate(),
+        ),
+      ),
+    );
+  }
+
+  bool _isOnPlate(int id) => !items.any((i) => i.id == id);
+}
+
+class _PlateZone extends StatelessWidget {
+  const _PlateZone({
+    required this.items, required this.skin, required this.itemSize, required this.enabled,
+    required this.showCount, required this.header, required this.onPlace, required this.onRemove,
+  });
+  final List<DragToCountItem> items;
+  final DragToCountSkin skin;
+  final double itemSize;
+  final bool enabled;
+  final bool showCount;
+  final Widget? header;
+  final ValueChanged<int> onPlace;
+  final ValueChanged<int> onRemove;
+
+  @override
+  Widget build(BuildContext context) {
+    var targetNumber = 0;
+    final contents = items.isEmpty
+        ? SizedBox(
+            height: itemSize,
+            child: Center(child: Text(skin.plateEmptyLabel, style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: NovaPalette.inkMuted))),
+          )
+        : Wrap(
+            alignment: WrapAlignment.center,
+            spacing: NovaSpace.xs,
+            runSpacing: NovaSpace.xs,
+            children: [
+              for (final item in items)
+                _ItemButton(
+                  key: ValueKey('drag-to-count.plate-item.${item.id}'),
+                  item: item, skin: skin, size: itemSize, enabled: enabled,
+                  label: skin.itemOnPlateLabel(item), hint: skin.takeBackHint,
+                  badge: showCount && !item.isDistractor ? skin.formatNumber(++targetNumber) : null,
+                  onActivate: () => onRemove(item.id),
+                ),
+            ],
+          );
+
+    // Placing only counts when the drop lands on this target: DragTarget
+    // acceptance, not Draggable.onDragEnd (which fires wherever a drag ends).
+    return DragTarget<int>(
+      key: const ValueKey('drag-to-count.plate'),
+      onWillAcceptWithDetails: (d) => enabled && !items.any((i) => i.id == d.data),
+      onAcceptWithDetails: (d) => onPlace(d.data),
+      builder: (context, candidates, _) => Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          ?header,
+          Semantics(
+            container: true,
+            label: skin.plateLabel,
+            // A steady minimum size, so the plate does not shrink and jump
+            // as items arrive (it still grows when many are on it).
+            child: ConstrainedBox(
+              constraints: BoxConstraints(minWidth: itemSize * 4 + NovaSpace.xl),
+              child: skin.plateBuilder(context, candidates.isNotEmpty, contents),
+            ),
           ),
-          const SizedBox(height: 24),
-          ElevatedButton(onPressed: controller.submitTrial, child: const Text('Done')),
         ],
       ),
     );
   }
 }
 
-class _Apple extends StatelessWidget {
-  const _Apple();
+/// A game item that is both draggable and a button.
+class _ItemButton extends StatelessWidget {
+  const _ItemButton({
+    super.key,
+    required this.item,
+    required this.skin,
+    required this.size,
+    required this.enabled,
+    required this.label,
+    required this.hint,
+    required this.onActivate,
+    this.badge,
+  });
+
+  final DragToCountItem item;
+  final DragToCountSkin skin;
+  final double size;
+  final bool enabled;
+  final String label;
+  final String hint;
+  final VoidCallback onActivate;
+  final String? badge;
+
   @override
-  Widget build(BuildContext context) =>
-      Container(width: 48, height: 48, decoration: const BoxDecoration(color: Colors.red, shape: BoxShape.circle));
+  Widget build(BuildContext context) {
+    final art = skin.itemBuilder(context, item, size);
+    final visual = Stack(clipBehavior: Clip.none, children: [
+      art,
+      if (badge != null)
+        PositionedDirectional(
+          top: -4,
+          end: -4,
+          child: Container(
+            constraints: const BoxConstraints(minWidth: 30, minHeight: 30),
+            alignment: Alignment.center,
+            decoration: BoxDecoration(
+              color: Theme.of(context).colorScheme.primary,
+              shape: BoxShape.circle,
+              border: Border.all(color: Colors.white, width: 2),
+            ),
+            child: Text(badge!, style: Theme.of(context).textTheme.labelLarge?.copyWith(color: Colors.white)),
+          ),
+        ),
+    ]);
+
+    // The label/hint merge with the InkResponse's own tap and focus actions,
+    // so screen readers can activate the item; only the drawing (and the
+    // badge, which the label already carries) is hidden from them.
+    final button = Semantics(
+      button: true,
+      enabled: enabled,
+      label: badge == null ? label : '$label, $badge',
+      hint: hint,
+      child: Material(
+        type: MaterialType.transparency,
+        child: InkResponse(
+          onTap: enabled ? onActivate : null,
+          radius: size * 0.6,
+          child: ExcludeSemantics(
+            child: _PopIn(child: Padding(padding: const EdgeInsets.all(NovaSpace.xxs), child: visual)),
+          ),
+        ),
+      ),
+    );
+
+    if (!enabled) return button;
+    return Draggable<int>(
+      data: item.id,
+      feedback: Material(type: MaterialType.transparency, child: Transform.scale(scale: 1.15, child: art)),
+      childWhenDragging: Opacity(opacity: 0.25, child: Padding(padding: const EdgeInsets.all(NovaSpace.xxs), child: art)),
+      child: button,
+    );
+  }
 }
 
-class _Plate extends StatelessWidget {
-  const _Plate();
+/// Items scale in when they appear in a zone, so the child sees that the
+/// move happened. Instant under reduced motion.
+class _PopIn extends StatelessWidget {
+  const _PopIn({required this.child});
+  final Widget child;
+
   @override
-  Widget build(BuildContext context) => Container(width: 200, height: 80, color: Colors.brown.shade100);
+  Widget build(BuildContext context) {
+    return TweenAnimationBuilder<double>(
+      tween: Tween(begin: 0.6, end: 1),
+      duration: NovaMotion.of(context, NovaMotion.medium),
+      curve: NovaMotion.emphasized,
+      builder: (context, scale, child) => Transform.scale(scale: scale, child: child),
+      child: child,
+    );
+  }
 }

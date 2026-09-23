@@ -2,7 +2,9 @@ import 'package:nova_app/core/adaptive/adaptive_decision.dart';
 import 'package:nova_app/core/adaptive/adaptive_progression_engine.dart';
 import 'package:nova_app/core/assessment/assessment_engine.dart';
 import 'package:nova_app/core/content/content_runtime.dart';
+import 'package:nova_app/core/content/criterion_parameters.dart';
 import 'package:nova_app/core/mastery/mastery_engine.dart';
+import 'package:nova_app/core/mastery/mastery_record.dart';
 import 'package:nova_app/core/mechanics/raw_events.dart';
 import 'package:nova_app/core/ports/clock_port.dart';
 import 'package:nova_app/core/ports/persistence_port.dart';
@@ -10,6 +12,7 @@ import 'package:nova_app/core/signals/signal.dart';
 import 'package:nova_app/core/signals/signal_bus.dart';
 import 'package:nova_app/core/signals/signal_collector.dart';
 
+import 'session_plan.dart';
 import 'signal_mapping.dart';
 
 /// The single orchestration point: content -> mechanic raw events ->
@@ -47,6 +50,31 @@ class GameRuntime {
   final AdaptiveProgressionEngine _adaptive;
   final PersistencePort _persistence;
   final ClockPort _clock;
+
+  /// What the next session of [gameId] should be: the rung the Adaptive
+  /// Engine last committed for this child (the first rung before any
+  /// session), and enough trials for the skill's assessment rule to evaluate
+  /// every state -- its `min-trials` parameter, read from content.
+  Future<SessionPlan> planSession({required String childId, required String gameId, required String skillId}) async {
+    final game = _content.game(gameId);
+    final rungId = await _currentRungId(childId: childId, gameId: gameId);
+    final trialCount = minTrialsFor(_content.assessmentRuleFor(skillId), _content.allParameters()) ?? 1;
+    return SessionPlan(childId: childId, game: game, skillId: skillId, rung: game.rungsById[rungId]!, trialCount: trialCount);
+  }
+
+  /// Read-only view of a skill's mastery for presentation (e.g. the grown-ups'
+  /// progress screen), so no widget ever reaches PersistencePort itself.
+  Future<MasteryRecord?> currentMastery({required String childId, required String skillId}) =>
+      _persistence.currentMastery(childId: childId, skillId: skillId);
+
+  /// The persisted rung, or the first rung when there is none yet -- or when
+  /// the persisted id is no longer in the game's ladder (content changed
+  /// since it was saved), rather than carrying a dangling id forward.
+  Future<String> _currentRungId({required String childId, required String gameId}) async {
+    final game = _content.game(gameId);
+    final saved = await _persistence.currentRung(childId: childId, gameId: gameId);
+    return saved != null && game.rungsById.containsKey(saved) ? saved : game.rungIds.first;
+  }
 
   Future<AdaptiveDecision> completeSession({
     required String childId,
@@ -88,7 +116,7 @@ class GameRuntime {
     );
 
     final game = _content.game(gameId);
-    final currentRung = await _persistence.currentRung(childId: childId, gameId: gameId) ?? game.rungIds.first;
+    final currentRung = await _currentRungId(childId: childId, gameId: gameId);
     final decision = _adaptive.recommend(
       childId: childId, game: game, rungIds: game.rungIds, currentRungId: currentRung,
       recentPerformance: performance, parameters: parameters,

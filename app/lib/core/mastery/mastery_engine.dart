@@ -1,4 +1,5 @@
 import 'package:nova_app/core/assessment/dimension_estimate.dart';
+import 'package:nova_app/core/content/criterion_parameters.dart';
 import 'package:nova_app/core/content/models.dart';
 
 import 'mastery_record.dart';
@@ -88,15 +89,8 @@ class MasteryEngine {
     );
   }
 
-  num? _find(Criterion criterion, Map<String, Parameter> parameters, String suffix) {
-    for (final id in criterion.parameterIds) {
-      if (id.contains(suffix)) {
-        final parameter = parameters[id];
-        if (parameter != null) return parameter.value as num;
-      }
-    }
-    return null;
-  }
+  num? _find(Criterion criterion, Map<String, Parameter> parameters, String suffix) =>
+      criterionParameter(criterion, parameters, suffix);
 
   double _confidenceFrom(DimensionEstimate performance) {
     final trials = (performance.metrics['trials'] ?? 0).toDouble();
