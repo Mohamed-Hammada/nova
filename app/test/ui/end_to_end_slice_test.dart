@@ -104,8 +104,12 @@ void main() {
 
     // One correct trial: the fixture's game has a single apple slot and a
     // requested total of 1 for rung r1 (see GameScreen's rung-to-request
-    // mapping below).
-    await tester.drag(find.byType(Draggable<int>).first, const Offset(0, 300));
+    // mapping below). The drag must actually land on the plate's DragTarget
+    // to count (drag_to_count_mechanic.dart), so the delta is computed from
+    // real widget positions rather than an arbitrary offset.
+    final appleCenter = tester.getCenter(find.byType(Draggable<int>).first);
+    final plateCenter = tester.getCenter(find.byType(DragTarget<int>));
+    await tester.drag(find.byType(Draggable<int>).first, plateCenter - appleCenter);
     await tester.pumpAndSettle();
     await tester.tap(find.text('Done'));
     await tester.pumpAndSettle();

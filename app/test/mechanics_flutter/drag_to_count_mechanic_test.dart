@@ -54,9 +54,25 @@ void main() {
     final controller = DragToCountController(requestedTotal: 1, now: () => DateTime(2026, 1, 1));
     await tester.pumpWidget(MaterialApp(home: Scaffold(body: DragToCountView(controller: controller, appleCount: 1))));
 
-    await tester.drag(find.byType(Draggable<int>).first, const Offset(0, 300));
+    // Drag by the exact delta from the apple to the plate's center, so this
+    // test actually exercises DragTarget acceptance rather than assuming an
+    // arbitrary offset happens to land on it.
+    final appleCenter = tester.getCenter(find.byType(Draggable<int>).first);
+    final plateCenter = tester.getCenter(find.byType(DragTarget<int>));
+    await tester.drag(find.byType(Draggable<int>).first, plateCenter - appleCenter);
     await tester.pumpAndSettle();
 
     expect(controller.runningTotal, 1);
+  });
+
+  testWidgets('dragging an apple and releasing it away from the plate does NOT count it', (tester) async {
+    final controller = DragToCountController(requestedTotal: 1, now: () => DateTime(2026, 1, 1));
+    await tester.pumpWidget(MaterialApp(home: Scaffold(body: DragToCountView(controller: controller, appleCount: 1))));
+
+    // A small drag that stays well clear of the plate must not be accepted.
+    await tester.drag(find.byType(Draggable<int>).first, const Offset(5, 5));
+    await tester.pumpAndSettle();
+
+    expect(controller.runningTotal, 0);
   });
 }

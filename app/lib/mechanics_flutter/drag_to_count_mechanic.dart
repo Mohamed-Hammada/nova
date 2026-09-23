@@ -75,14 +75,18 @@ class DragToCountView extends StatelessWidget {
                   data: i,
                   feedback: const _Apple(),
                   childWhenDragging: const SizedBox(width: 48, height: 48),
-                  onDragEnd: (_) => controller.placeItem(),
                   child: const _Apple(),
                 ),
             ],
           ),
           const SizedBox(height: 24),
+          // Placing an item only counts when it is actually dropped on the
+          // plate -- Draggable.onDragEnd fires on ANY drag end regardless of
+          // where it lands, which previously counted a drag started and
+          // released anywhere on screen. DragTarget.onAcceptWithDetails only
+          // fires when the drop lands on this target.
           DragTarget<int>(
-            onAcceptWithDetails: (_) {},
+            onAcceptWithDetails: (_) => controller.placeItem(),
             builder: (context, candidate, rejected) => const _Plate(),
           ),
           const SizedBox(height: 24),
