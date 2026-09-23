@@ -60,3 +60,6 @@ class GameAudioCues {
     }
   }
 }
+
+/// Convenience alias for [GameAudioCues].
+typedef GameAudioCue = GameAudioCues;

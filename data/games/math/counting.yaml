@@ -63,7 +63,7 @@
       id: bear
       name_key: game.math.bear-apples.character
       default_state: idle
-      states: [idle, happy, thinking, celebrating]
+      states: [idle, happy, thinking, encourage, celebrate, confused]
     target_container:
       id: basket
       label_key: game.math.bear-apples.basket

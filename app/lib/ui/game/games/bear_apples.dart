@@ -18,6 +18,8 @@ final bearApplesGame = PlayableGame(
   signalMapper: bearApplesSignalMapper,
   skin: _skin,
   receiver: (context, mood, requested) => _BearWithRequest(mood: mood, requested: requested),
+  companionReceiver: (context, state, requested, {bool pointing = false}) =>
+      _BearWithRequest(visualState: state, requested: requested, pointing: pointing),
   prompt: (context, requested) => context.l10n.gamePrompt(requested, NovaNumbers.format(context, requested)),
   howTo: (context) => context.l10n.gameHowTo,
   cardArt: (context) => const _CardArt(),
@@ -47,23 +49,34 @@ DragToCountSkin _skin(BuildContext context) {
   );
 }
 
-/// The bear with a speech bubble holding the requested number: large enough
+/// The bear companion with a speech bubble holding the requested number: large enough
 /// for a pre-reader to recognise the numeral, and paired with the written
 /// prompt (and narration, when its audio asset exists).
 class _BearWithRequest extends StatelessWidget {
-  const _BearWithRequest({required this.mood, required this.requested});
-  final BearMood mood;
+  const _BearWithRequest({
+    this.mood,
+    this.visualState,
+    required this.requested,
+    this.pointing = false,
+  });
+
+  final BearMood? mood;
+  final CharacterVisualState? visualState;
   final int requested;
+  final bool pointing;
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final compact = NovaWidthClass.of(context) == NovaWidthClass.compact;
-    final state = switch (mood) {
-      BearMood.happy => CharacterVisualState.happy,
-      BearMood.thinking => CharacterVisualState.thinking,
-      BearMood.waiting => CharacterVisualState.idle,
-    };
+    final state = visualState ??
+        (mood == null
+            ? CharacterVisualState.idle
+            : switch (mood!) {
+                BearMood.happy => CharacterVisualState.happy,
+                BearMood.thinking => CharacterVisualState.thinking,
+                BearMood.waiting => CharacterVisualState.idle,
+              });
 
     final requestBubble = Container(
       padding: const EdgeInsets.symmetric(horizontal: NovaSpace.lg, vertical: NovaSpace.xs),
@@ -97,12 +110,13 @@ class _BearWithRequest extends StatelessWidget {
 
     return Padding(
       padding: const EdgeInsets.only(bottom: NovaSpace.sm),
-      child: GameCharacter(
+      child: InteractiveCharacter(
         characterId: 'bear',
         state: state,
         size: compact ? 88 : 116,
         semanticLabel: context.l10n.bearLabel,
         requestWidget: requestBubble,
+        pointing: pointing,
       ),
     );
   }

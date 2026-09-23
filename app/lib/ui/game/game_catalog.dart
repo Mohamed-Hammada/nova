@@ -17,6 +17,7 @@ class PlayableGame {
     required this.signalMapper,
     required this.skin,
     required this.receiver,
+    this.companionReceiver,
     required this.prompt,
     required this.howTo,
     required this.cardArt,
@@ -31,8 +32,11 @@ class PlayableGame {
   final SignalMapper signalMapper;
   final DragToCountSkin Function(BuildContext context) skin;
 
-  /// The character the child is helping, shown above the plate.
+  /// The character the child is helping, shown above the plate (legacy signature).
   final Widget Function(BuildContext context, BearMood mood, int requested) receiver;
+
+  /// Rich character companion receiver supporting full [CharacterVisualState] and active gestures.
+  final Widget Function(BuildContext context, CharacterVisualState state, int requested, {bool pointing})? companionReceiver;
 
   /// The request, written out (e.g. "Give the bear 3 apples").
   final String Function(BuildContext context, int requested) prompt;

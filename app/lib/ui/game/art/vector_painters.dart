@@ -10,11 +10,15 @@ class VectorArtPainters {
   const VectorArtPainters._();
 
   static CustomPainter characterPainter(String characterId, CharacterVisualState state) {
-    if (characterId == 'bear') {
-      return BearVectorPainter(state);
+    switch (characterId.toLowerCase()) {
+      case 'bunny':
+      case 'rabbit':
+      case 'pip':
+        return BunnyVectorPainter(state);
+      case 'bear':
+      default:
+        return BearVectorPainter(state);
     }
-    // Generic fallback character painter
-    return BearVectorPainter(state);
   }
 
   static CustomPainter objectPainter(String objectId) {
@@ -214,6 +218,14 @@ class BearVectorPainter extends CustomPainter {
           false,
           mouth,
         );
+      case CharacterVisualState.encourage:
+        canvas.drawArc(
+          Rect.fromCenter(center: Offset(w * 0.5, h * 0.69), width: w * 0.20, height: h * 0.12),
+          0.2,
+          math.pi - 0.4,
+          false,
+          mouth,
+        );
       case CharacterVisualState.idle:
         canvas.drawArc(
           Rect.fromCenter(center: Offset(w * 0.5, h * 0.70), width: w * 0.14, height: h * 0.08),
@@ -224,11 +236,101 @@ class BearVectorPainter extends CustomPainter {
         );
       case CharacterVisualState.thinking:
         canvas.drawLine(Offset(w * 0.44, h * 0.75), Offset(w * 0.56, h * 0.74), mouth);
+      case CharacterVisualState.confused:
+        canvas.drawOval(Rect.fromCenter(center: Offset(w * 0.5, h * 0.72), width: w * 0.08, height: h * 0.08), mouth);
     }
   }
 
   @override
   bool shouldRepaint(covariant BearVectorPainter oldDelegate) => oldDelegate.state != state;
+}
+
+class BunnyVectorPainter extends CustomPainter {
+  const BunnyVectorPainter(this.state);
+  final CharacterVisualState state;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final w = size.width, h = size.height;
+    final fur = Paint()..color = const Color(0xFFFAF7F2);
+    final furShade = Paint()..color = const Color(0xFFE8E1DA);
+    final pink = Paint()..color = const Color(0xFFFFB6C1);
+    final pinkNose = Paint()..color = const Color(0xFFF58CA0);
+    final ink = Paint()..color = NovaPalette.ink;
+
+    // Ears
+    final earAngles = switch (state) {
+      CharacterVisualState.happy || CharacterVisualState.celebrate => [-0.25, 0.25],
+      CharacterVisualState.thinking => [-0.35, 0.05],
+      CharacterVisualState.confused => [-0.38, 0.02],
+      _ => [-0.18, 0.18],
+    };
+
+    for (int i = 0; i < 2; i++) {
+      final base = Offset(w * (i == 0 ? 0.38 : 0.62), h * 0.35);
+      canvas.save();
+      canvas.translate(base.dx, base.dy);
+      canvas.rotate(earAngles[i]);
+      canvas.drawOval(Rect.fromCenter(center: Offset(0, -h * 0.22), width: w * 0.18, height: h * 0.42), fur);
+      canvas.drawOval(Rect.fromCenter(center: Offset(0, -h * 0.22), width: w * 0.10, height: h * 0.32), pink);
+      canvas.restore();
+    }
+
+    // Head
+    canvas.drawOval(Rect.fromCenter(center: Offset(w * 0.5, h * 0.58), width: w * 0.75, height: h * 0.60), fur);
+    canvas.drawCircle(Offset(w * 0.22, h * 0.64), w * 0.14, furShade);
+    canvas.drawCircle(Offset(w * 0.78, h * 0.64), w * 0.14, furShade);
+
+    // Eyes
+    final eyeY = h * 0.52;
+    if (state == CharacterVisualState.happy || state == CharacterVisualState.celebrate) {
+      final stroke = Paint()
+        ..color = NovaPalette.ink
+        ..style = PaintingStyle.stroke
+        ..strokeWidth = w * 0.035
+        ..strokeCap = StrokeCap.round;
+      for (final x in [0.36, 0.64]) {
+        canvas.drawArc(
+          Rect.fromCenter(center: Offset(w * x, eyeY + h * 0.01), width: w * 0.11, height: h * 0.09),
+          math.pi,
+          math.pi,
+          false,
+          stroke,
+        );
+      }
+    } else {
+      for (final x in [0.36, 0.64]) {
+        final radius = (state == CharacterVisualState.confused && x == 0.64) ? w * 0.05 : w * 0.042;
+        canvas.drawCircle(Offset(w * x, eyeY), radius, ink);
+        canvas.drawCircle(Offset(w * x + w * 0.012, eyeY - h * 0.012), w * 0.015, Paint()..color = Colors.white);
+      }
+    }
+
+    // Nose
+    canvas.drawOval(Rect.fromCenter(center: Offset(w * 0.5, h * 0.63), width: w * 0.10, height: h * 0.07), pinkNose);
+
+    // Mouth
+    final mouth = Paint()
+      ..color = NovaPalette.ink
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = w * 0.028
+      ..strokeCap = StrokeCap.round;
+
+    if (state == CharacterVisualState.confused) {
+      canvas.drawOval(Rect.fromCenter(center: Offset(w * 0.5, h * 0.72), width: w * 0.06, height: h * 0.07), mouth);
+    } else {
+      canvas.drawArc(
+        Rect.fromCenter(center: Offset(w * 0.5, h * 0.70), width: w * 0.16, height: h * 0.09),
+        0.2,
+        math.pi - 0.4,
+        false,
+        mouth,
+      );
+    }
+  }
+
+  @override
+  bool shouldRepaint(covariant BunnyVectorPainter oldDelegate) => oldDelegate.state != state;
 }
 
 class BasketVectorPainter extends CustomPainter {

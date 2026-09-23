@@ -53,7 +53,10 @@ class _GameScreenState extends ConsumerState<GameScreen> {
     )..addListener(_onSessionChanged);
     // Cues read the language lazily, so resolve it before the first cue.
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (mounted) _session.start();
+      if (mounted) {
+        GameArt.preload(context, characterId: _game.characterId);
+        _session.start();
+      }
     });
   }
 
@@ -129,6 +132,23 @@ class _PlayView extends StatelessWidget {
         _ => BearMood.waiting,
       };
 
+  CharacterVisualState get _characterState {
+    if (session.feedback != null) {
+      return switch (session.feedback!) {
+        TrialFeedback.correct => CharacterVisualState.celebrate,
+        TrialFeedback.tryAgain || TrialFeedback.onlyTargets => CharacterVisualState.confused,
+        TrialFeedback.moveOn => CharacterVisualState.encourage,
+      };
+    }
+    if (session.hintVisible) {
+      return CharacterVisualState.thinking;
+    }
+    if (session.targetsOnPlate > 0) {
+      return CharacterVisualState.happy;
+    }
+    return CharacterVisualState.idle;
+  }
+
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
@@ -154,6 +174,22 @@ class _PlayView extends StatelessWidget {
           child: Stack(
             clipBehavior: Clip.none,
             children: [
+              // Subtle illustrated environment background for the scene
+              Positioned.fill(
+                child: Padding(
+                  padding: const EdgeInsets.only(top: 80.0),
+                  child: Opacity(
+                    opacity: 0.12,
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(NovaRadius.lg),
+                      child: GameArt.environment(
+                        environmentId: game.backgroundId,
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
@@ -180,7 +216,14 @@ class _PlayView extends StatelessWidget {
                     skin: game.skin(context),
                     enabled: playing,
                     showCount: session.hintVisible,
-                    plateHeader: game.receiver(context, _mood, trial.requested),
+                    plateHeader: game.companionReceiver != null
+                        ? game.companionReceiver!(
+                            context,
+                            _characterState,
+                            trial.requested,
+                            pointing: session.hintVisible,
+                          )
+                        : game.receiver(context, _mood, trial.requested),
                     onPlace: session.place,
                     onRemove: session.remove,
                   ),

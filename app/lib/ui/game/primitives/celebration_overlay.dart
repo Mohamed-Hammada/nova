@@ -162,3 +162,6 @@ class _CelebrationOverlayState extends State<CelebrationOverlay> with SingleTick
     );
   }
 }
+
+/// Convenience alias for [CelebrationOverlay].
+typedef Celebration = CelebrationOverlay;

@@ -368,10 +368,10 @@ def render_bear(path: Path, state: str = "idle"):
                         canvas.blend_pixel(x, y, pink_ear_r, pink_ear_g, pink_ear_b, i_alpha)
 
     # Head (warm rounded dome)
-    head_tilt = 0.08 if state == "thinking" else 0.0
+    head_tilt = 0.08 if state == "thinking" else (-0.08 if state in ("confused", "gentle_retry") else (0.04 if state == "encourage" else 0.0))
     for y in range(H):
         for x in range(W):
-            # Apply tilt for thinking state
+            # Apply tilt for thinking / confused state
             px = x - cx
             py = y - (cy - 10)
             rx = px * math.cos(head_tilt) - py * math.sin(head_tilt)
@@ -428,7 +428,7 @@ def render_bear(path: Path, state: str = "idle"):
     eye_y = cy - 14
     eye_offset_x = 32
 
-    if state in ("happy", "celebrating"):
+    if state in ("happy", "celebrating", "celebrate"):
         # Happy crescent eyes (curved upwards arcs ^ ^)
         for side in (-1, 1):
             ex = cx + side * eye_offset_x
@@ -438,7 +438,6 @@ def render_bear(path: Path, state: str = "idle"):
                     py = y - (eye_y + 2)
                     rx = px * math.cos(head_tilt) - py * math.sin(head_tilt)
                     ry = px * math.sin(head_tilt) + py * math.cos(head_tilt)
-                    # Inverted U: top arc of ellipse
                     d_arc = abs(math.hypot(rx / 13.0, (ry + 3) / 9.0) - 1.0) - 0.22
                     if ry > -1: # Cull bottom half so it is open at bottom
                         d_arc = 1.0
@@ -472,6 +471,79 @@ def render_bear(path: Path, state: str = "idle"):
                     c_alpha = smoothstep(0.08, -0.08, d_cheek) * 0.45
                     if c_alpha > 0:
                         canvas.blend_pixel(x, y, 245, 110, 110, c_alpha)
+
+    elif state == "encourage":
+        # Warm, encouraging, reassuring open eyes with bright catchlights
+        for side in (-1, 1):
+            ex = cx + side * eye_offset_x
+            for y in range(H):
+                for x in range(W):
+                    px = x - ex
+                    py = y - eye_y
+                    rx = px * math.cos(head_tilt) - py * math.sin(head_tilt)
+                    ry = px * math.sin(head_tilt) + py * math.cos(head_tilt)
+                    d_eye = math.hypot(rx / 10.0, ry / 11.0) - 0.95
+                    e_alpha = smoothstep(0.05, -0.05, d_eye)
+                    if e_alpha > 0:
+                        if (rx + 3) ** 2 + (ry + 3) ** 2 < 14:
+                            canvas.blend_pixel(x, y, 255, 255, 255, e_alpha)
+                        else:
+                            canvas.blend_pixel(x, y, ink_r, ink_g, ink_b, e_alpha)
+
+        # Supportive wide warm smile
+        for y in range(H):
+            for x in range(W):
+                px = x - cx
+                py = y - (muzzle_cy + 9)
+                rx = px * math.cos(head_tilt) - py * math.sin(head_tilt)
+                ry = px * math.sin(head_tilt) + py * math.cos(head_tilt)
+                d_smile = abs(math.hypot(rx / 18.0, (ry - 1) / 9.0) - 1.0) - 0.20
+                if ry < 1:
+                    d_smile = 1.0
+                s_alpha = smoothstep(0.05, -0.05, d_smile)
+                if s_alpha > 0:
+                    canvas.blend_pixel(x, y, ink_r, ink_g, ink_b, s_alpha)
+
+        # Soft warm cheeks
+        for side in (-1, 1):
+            ch_x = cx + side * 48
+            for y in range(H):
+                for x in range(W):
+                    d_cheek = math.hypot((x - ch_x) / 13.0, (y - (cy + 16)) / 8.0) - 0.9
+                    c_alpha = smoothstep(0.08, -0.08, d_cheek) * 0.4
+                    if c_alpha > 0:
+                        canvas.blend_pixel(x, y, 250, 120, 115, c_alpha)
+
+    elif state in ("confused", "gentle_retry"):
+        # Gentle curious / questioning eyes (one slightly raised brow)
+        for side in (-1, 1):
+            ex = cx + side * eye_offset_x
+            eye_raise = -3 if side == 1 else 0
+            for y in range(H):
+                for x in range(W):
+                    px = x - ex
+                    py = y - (eye_y + eye_raise)
+                    rx = px * math.cos(head_tilt) - py * math.sin(head_tilt)
+                    ry = px * math.sin(head_tilt) + py * math.cos(head_tilt)
+                    d_eye = math.hypot(rx / (9.5 if side == 1 else 8.5), ry / 10.0) - 0.95
+                    e_alpha = smoothstep(0.05, -0.05, d_eye)
+                    if e_alpha > 0:
+                        if (rx + 2) ** 2 + (ry + 2) ** 2 < 8:
+                            canvas.blend_pixel(x, y, 255, 255, 255, e_alpha)
+                        else:
+                            canvas.blend_pixel(x, y, ink_r, ink_g, ink_b, e_alpha)
+
+        # Reassuring curious soft rounded 'o' mouth (never a frown!)
+        for y in range(H):
+            for x in range(W):
+                px = x - cx
+                py = y - (muzzle_cy + 11)
+                rx = px * math.cos(head_tilt) - py * math.sin(head_tilt)
+                ry = px * math.sin(head_tilt) + py * math.cos(head_tilt)
+                d_mouth = math.hypot(rx / 8.0, ry / 9.0) - 0.95
+                m_alpha = smoothstep(0.05, -0.05, d_mouth)
+                if m_alpha > 0:
+                    canvas.blend_pixel(x, y, ink_r, ink_g, ink_b, m_alpha)
 
     elif state == "thinking":
         # Thoughtful looking-up eyes
@@ -534,7 +606,7 @@ def render_bear(path: Path, state: str = "idle"):
                     canvas.blend_pixel(x, y, ink_r, ink_g, ink_b, s_alpha)
 
     # Paws
-    if state == "celebrating":
+    if state in ("celebrating", "celebrate"):
         # Raised happy celebration paws
         for side in (-1, 1):
             paw_x = cx + side * 85
@@ -545,6 +617,34 @@ def render_bear(path: Path, state: str = "idle"):
                     p_alpha = smoothstep(0.05, -0.05, d_paw)
                     if p_alpha > 0:
                         canvas.blend_pixel(x, y, fur_r, fur_g, fur_b, p_alpha)
+    elif state == "encourage":
+        # One paw gently raised in friendly encouragement wave, other resting
+        paw1_x, paw1_y = cx - 65, cy + 28
+        paw2_x, paw2_y = cx + 48, cy + 72
+        for y in range(H):
+            for x in range(W):
+                d1 = math.hypot((x - paw1_x) / 18.0, (y - paw1_y) / 16.0) - 0.95
+                p1_alpha = smoothstep(0.05, -0.05, d1)
+                if p1_alpha > 0:
+                    canvas.blend_pixel(x, y, fur_r, fur_g, fur_b, p1_alpha)
+                d2 = math.hypot((x - paw2_x) / 18.0, (y - paw2_y) / 14.0) - 0.95
+                p2_alpha = smoothstep(0.05, -0.05, d2)
+                if p2_alpha > 0:
+                    canvas.blend_pixel(x, y, fur_r, fur_g, fur_b, p2_alpha)
+    elif state in ("confused", "gentle_retry"):
+        # One paw thoughtfully at chin, other resting
+        paw1_x, paw1_y = cx + 32, cy + 42
+        paw2_x, paw2_y = cx - 48, cy + 72
+        for y in range(H):
+            for x in range(W):
+                d1 = math.hypot((x - paw1_x) / 17.0, (y - paw1_y) / 15.0) - 0.95
+                p1_alpha = smoothstep(0.05, -0.05, d1)
+                if p1_alpha > 0:
+                    canvas.blend_pixel(x, y, fur_r, fur_g, fur_b, p1_alpha)
+                d2 = math.hypot((x - paw2_x) / 18.0, (y - paw2_y) / 14.0) - 0.95
+                p2_alpha = smoothstep(0.05, -0.05, d2)
+                if p2_alpha > 0:
+                    canvas.blend_pixel(x, y, fur_r, fur_g, fur_b, p2_alpha)
     else:
         # Relaxed rounded paws in front
         for side in (-1, 1):
@@ -761,24 +861,257 @@ def render_picnic_blanket(path: Path):
     canvas.save(path)
 
 
+def render_bunny(path: Path, state: str = "idle"):
+    W, H = 256, 256
+    canvas = Canvas(W, H)
+    cx, cy = 128, 142
+
+    fur_r, fur_g, fur_b = 250, 247, 242
+    pink_r, pink_g, pink_b = 255, 182, 193
+    pink_nose_r, pink_nose_g, pink_nose_b = 245, 140, 160
+    ink_r, ink_g, ink_b = 45, 38, 32
+
+    # Body
+    for y in range(H):
+        for x in range(W):
+            nx = (x - cx) / 62.0
+            ny = (y - (cy + 65)) / 48.0
+            d_body = math.hypot(nx, ny) - 0.95
+            b_alpha = smoothstep(0.04, -0.04, d_body)
+            if b_alpha > 0:
+                canvas.blend_pixel(x, y, fur_r, fur_g, fur_b, b_alpha)
+
+    # Ears (Left and Right tall perked bunny ears)
+    ear_angles = {
+        "idle": (-0.18, 0.18),
+        "happy": (-0.22, 0.22),
+        "celebrate": (-0.26, 0.26),
+        "celebrating": (-0.26, 0.26),
+        "thinking": (-0.35, 0.05),
+        "encourage": (-0.15, 0.25),
+        "confused": (-0.38, 0.02),
+        "gentle_retry": (-0.38, 0.02),
+    }.get(state, (-0.18, 0.18))
+
+    for idx, (ear_base_x, ear_rot) in enumerate([((cx - 26), ear_angles[0]), ((cx + 26), ear_angles[1])]):
+        base_y = cy - 38
+        for y in range(H):
+            for x in range(W):
+                px = x - ear_base_x
+                py = y - base_y
+                rx = px * math.cos(ear_rot) - py * math.sin(ear_rot)
+                ry = px * math.sin(ear_rot) + py * math.cos(ear_rot)
+                nx = rx / 20.0
+                ny = (ry + 52) / 54.0
+                d_ear = math.hypot(nx, ny) - 0.95
+                e_alpha = smoothstep(0.04, -0.04, d_ear)
+                if e_alpha > 0:
+                    canvas.blend_pixel(x, y, fur_r, fur_g, fur_b, e_alpha)
+                    # Inner pink
+                    d_inner = math.hypot(nx / 0.55, (ny + 0.05) / 0.85) - 0.95
+                    i_alpha = smoothstep(0.04, -0.04, d_inner)
+                    if i_alpha > 0:
+                        canvas.blend_pixel(x, y, pink_r, pink_g, pink_b, i_alpha)
+
+    # Head (fluffy round bunny cheeks)
+    head_tilt = 0.08 if state == "thinking" else (-0.08 if state in ("confused", "gentle_retry") else (0.04 if state == "encourage" else 0.0))
+    for y in range(H):
+        for x in range(W):
+            px = x - cx
+            py = y - (cy - 5)
+            rx = px * math.cos(head_tilt) - py * math.sin(head_tilt)
+            ry = px * math.sin(head_tilt) + py * math.cos(head_tilt)
+            nx = rx / 68.0
+            ny = ry / 58.0
+            d_head = math.hypot(nx, ny) - 0.95
+            if ry > 0:
+                d_head -= 0.12 * math.exp(-((ry - 18) ** 2) / 200.0)
+            h_alpha = smoothstep(0.03, -0.03, d_head)
+            if h_alpha > 0:
+                shade = 0.96 + 0.04 * math.cos(nx * 1.5)
+                canvas.blend_pixel(x, y, int(fur_r * shade), int(fur_g * shade), int(fur_b * shade), h_alpha)
+
+    # Nose (soft cute pink button)
+    for y in range(H):
+        for x in range(W):
+            px = x - cx
+            py = y - (cy + 10)
+            rx = px * math.cos(head_tilt) - py * math.sin(head_tilt)
+            ry = px * math.sin(head_tilt) + py * math.cos(head_tilt)
+            d_nose = math.hypot(rx / 10.0, ry / 7.0) - 0.95
+            n_alpha = smoothstep(0.05, -0.05, d_nose)
+            if n_alpha > 0:
+                canvas.blend_pixel(x, y, pink_nose_r, pink_nose_g, pink_nose_b, n_alpha)
+
+    # Eyes & Expressions
+    eye_y = cy - 8
+    eye_offset_x = 28
+
+    if state in ("happy", "celebrate", "celebrating"):
+        # Happy crescent eyes
+        for side in (-1, 1):
+            ex = cx + side * eye_offset_x
+            for y in range(H):
+                for x in range(W):
+                    px = x - ex
+                    py = y - (eye_y + 1)
+                    rx = px * math.cos(head_tilt) - py * math.sin(head_tilt)
+                    ry = px * math.sin(head_tilt) + py * math.cos(head_tilt)
+                    d_arc = abs(math.hypot(rx / 11.0, (ry + 2) / 8.0) - 1.0) - 0.22
+                    if ry > -1:
+                        d_arc = 1.0
+                    a_alpha = smoothstep(0.05, -0.05, d_arc)
+                    if a_alpha > 0:
+                        canvas.blend_pixel(x, y, ink_r, ink_g, ink_b, a_alpha)
+
+        # Cheerful open smiling mouth
+        for y in range(H):
+            for x in range(W):
+                px = x - cx
+                py = y - (cy + 22)
+                rx = px * math.cos(head_tilt) - py * math.sin(head_tilt)
+                ry = px * math.sin(head_tilt) + py * math.cos(head_tilt)
+                d_mouth = math.hypot(rx / 14.0, ry / 10.0) - 0.95
+                if ry < 0:
+                    d_mouth = 1.0
+                m_alpha = smoothstep(0.05, -0.05, d_mouth)
+                if m_alpha > 0:
+                    canvas.blend_pixel(x, y, 235, 95, 110, m_alpha)
+
+        # Rosy cheeks
+        for side in (-1, 1):
+            ch_x = cx + side * 42
+            for y in range(H):
+                for x in range(W):
+                    d_cheek = math.hypot((x - ch_x) / 13.0, (y - (cy + 14)) / 8.0) - 0.9
+                    c_alpha = smoothstep(0.08, -0.08, d_cheek) * 0.45
+                    if c_alpha > 0:
+                        canvas.blend_pixel(x, y, 255, 160, 175, c_alpha)
+
+    elif state in ("confused", "gentle_retry"):
+        for side in (-1, 1):
+            ex = cx + side * eye_offset_x
+            eye_raise = -3 if side == 1 else 0
+            for y in range(H):
+                for x in range(W):
+                    px = x - ex
+                    py = y - (eye_y + eye_raise)
+                    rx = px * math.cos(head_tilt) - py * math.sin(head_tilt)
+                    ry = px * math.sin(head_tilt) + py * math.cos(head_tilt)
+                    d_eye = math.hypot(rx / (9.0 if side == 1 else 7.5), ry / 9.0) - 0.95
+                    e_alpha = smoothstep(0.05, -0.05, d_eye)
+                    if e_alpha > 0:
+                        if (rx + 2) ** 2 + (ry + 2) ** 2 < 8:
+                            canvas.blend_pixel(x, y, 255, 255, 255, e_alpha)
+                        else:
+                            canvas.blend_pixel(x, y, ink_r, ink_g, ink_b, e_alpha)
+
+        for y in range(H):
+            for x in range(W):
+                px = x - cx
+                py = y - (cy + 22)
+                rx = px * math.cos(head_tilt) - py * math.sin(head_tilt)
+                ry = px * math.sin(head_tilt) + py * math.cos(head_tilt)
+                d_mouth = math.hypot(rx / 6.0, ry / 7.0) - 0.95
+                m_alpha = smoothstep(0.05, -0.05, d_mouth)
+                if m_alpha > 0:
+                    canvas.blend_pixel(x, y, ink_r, ink_g, ink_b, m_alpha)
+
+    else: # idle, thinking, encourage
+        for side in (-1, 1):
+            ex = cx + side * eye_offset_x
+            for y in range(H):
+                for x in range(W):
+                    px = x - ex
+                    py = y - eye_y
+                    rx = px * math.cos(head_tilt) - py * math.sin(head_tilt)
+                    ry = px * math.sin(head_tilt) + py * math.cos(head_tilt)
+                    d_eye = math.hypot(rx / 8.5, ry / 9.5) - 0.95
+                    e_alpha = smoothstep(0.05, -0.05, d_eye)
+                    if e_alpha > 0:
+                        if (rx + 2) ** 2 + (ry + 2) ** 2 < 9:
+                            canvas.blend_pixel(x, y, 255, 255, 255, e_alpha)
+                        else:
+                            canvas.blend_pixel(x, y, ink_r, ink_g, ink_b, e_alpha)
+
+        # Sweet gentle mouth
+        for y in range(H):
+            for x in range(W):
+                px = x - cx
+                py = y - (cy + 20)
+                d_smile = abs(math.hypot(px / 12.0, (py - 1) / 6.0) - 1.0) - 0.18
+                if py < 1:
+                    d_smile = 1.0
+                s_alpha = smoothstep(0.05, -0.05, d_smile)
+                if s_alpha > 0:
+                    canvas.blend_pixel(x, y, ink_r, ink_g, ink_b, s_alpha)
+
+        # Soft cheeks
+        for side in (-1, 1):
+            ch_x = cx + side * 42
+            for y in range(H):
+                for x in range(W):
+                    d_cheek = math.hypot((x - ch_x) / 12.0, (y - (cy + 14)) / 7.0) - 0.9
+                    c_alpha = smoothstep(0.08, -0.08, d_cheek) * 0.35
+                    if c_alpha > 0:
+                        canvas.blend_pixel(x, y, 255, 175, 185, c_alpha)
+
+    # Paws
+    if state in ("celebrate", "celebrating"):
+        for side in (-1, 1):
+            paw_x = cx + side * 70
+            paw_y = cy - 10
+            for y in range(H):
+                for x in range(W):
+                    d_paw = math.hypot((x - paw_x) / 14.0, (y - paw_y) / 14.0) - 0.95
+                    p_alpha = smoothstep(0.05, -0.05, d_paw)
+                    if p_alpha > 0:
+                        canvas.blend_pixel(x, y, fur_r, fur_g, fur_b, p_alpha)
+    else:
+        for side in (-1, 1):
+            paw_x = cx + side * 34
+            paw_y = cy + 58
+            for y in range(H):
+                for x in range(W):
+                    d_paw = math.hypot((x - paw_x) / 14.0, (y - paw_y) / 12.0) - 0.95
+                    p_alpha = smoothstep(0.05, -0.05, d_paw)
+                    if p_alpha > 0:
+                        canvas.blend_pixel(x, y, fur_r, fur_g, fur_b, p_alpha)
+
+    canvas.save(path)
+
+
 def main():
     root = Path(__file__).resolve().parents[1]
     art_dir = root / "app" / "assets" / "art"
 
     assets = {
+        # Bear character
         art_dir / "characters" / "bear_idle.png": lambda p: render_bear(p, "idle"),
         art_dir / "characters" / "bear_happy.png": lambda p: render_bear(p, "happy"),
         art_dir / "characters" / "bear_thinking.png": lambda p: render_bear(p, "thinking"),
+        art_dir / "characters" / "bear_encourage.png": lambda p: render_bear(p, "encourage"),
         art_dir / "characters" / "bear_celebrate.png": lambda p: render_bear(p, "celebrating"),
+        art_dir / "characters" / "bear_confused.png": lambda p: render_bear(p, "confused"),
+        # Bunny character (Pip)
+        art_dir / "characters" / "bunny_idle.png": lambda p: render_bunny(p, "idle"),
+        art_dir / "characters" / "bunny_happy.png": lambda p: render_bunny(p, "happy"),
+        art_dir / "characters" / "bunny_thinking.png": lambda p: render_bunny(p, "thinking"),
+        art_dir / "characters" / "bunny_encourage.png": lambda p: render_bunny(p, "encourage"),
+        art_dir / "characters" / "bunny_celebrate.png": lambda p: render_bunny(p, "celebrate"),
+        art_dir / "characters" / "bunny_confused.png": lambda p: render_bunny(p, "confused"),
+        # Environments
         art_dir / "environments" / "forest_clearing_bg.png": render_meadow_background,
         art_dir / "environments" / "tree_branch.png": render_tree_branch,
         art_dir / "environments" / "picnic_blanket.png": render_picnic_blanket,
         art_dir / "environments" / "cloud_fluffy.png": render_cloud,
         art_dir / "environments" / "sun_warm.png": render_sun,
+        # Objects
         art_dir / "objects" / "apple.png": render_apple,
         art_dir / "objects" / "pear.png": render_pear,
         art_dir / "objects" / "basket.png": lambda p: render_basket(p, front_only=False),
         art_dir / "objects" / "basket_rim.png": lambda p: render_basket(p, front_only=True),
+        # Feedback
         art_dir / "feedback" / "star_gold.png": render_star,
         art_dir / "feedback" / "sparkle.png": render_sparkle,
     }

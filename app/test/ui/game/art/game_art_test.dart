@@ -9,12 +9,22 @@ void main() {
       expect(GameArt.characterAsset('bear', CharacterVisualState.idle), contains('bear_idle.png'));
       expect(GameArt.characterAsset('bear', CharacterVisualState.happy), contains('bear_happy.png'));
       expect(GameArt.characterAsset('bear', CharacterVisualState.thinking), contains('bear_thinking.png'));
+      expect(GameArt.characterAsset('bear', CharacterVisualState.encourage), contains('bear_encourage.png'));
       expect(GameArt.characterAsset('bear', CharacterVisualState.celebrate), contains('bear_celebrate.png'));
+      expect(GameArt.characterAsset('bear', CharacterVisualState.confused), contains('bear_confused.png'));
+
+      expect(GameArt.characterAsset('bunny', CharacterVisualState.idle), contains('bunny_idle.png'));
+      expect(GameArt.characterAsset('bunny', CharacterVisualState.happy), contains('bunny_happy.png'));
+      expect(GameArt.characterAsset('bunny', CharacterVisualState.thinking), contains('bunny_thinking.png'));
+      expect(GameArt.characterAsset('bunny', CharacterVisualState.encourage), contains('bunny_encourage.png'));
+      expect(GameArt.characterAsset('bunny', CharacterVisualState.celebrate), contains('bunny_celebrate.png'));
+      expect(GameArt.characterAsset('bunny', CharacterVisualState.confused), contains('bunny_confused.png'));
 
       expect(GameArt.objectAsset('apple'), contains('apple.png'));
       expect(GameArt.objectAsset('pear'), contains('pear.png'));
 
       expect(GameArt.environmentAsset('meadow'), contains('meadow.png'));
+      expect(GameArt.environmentAsset('forest_clearing'), contains('forest_clearing_bg.png'));
       expect(GameArt.feedbackAsset('star_gold'), contains('star_gold.png'));
       expect(GameArt.feedbackAsset('sparkle'), contains('sparkle.png'));
     });
@@ -127,6 +137,15 @@ void main() {
       final p1 = BearVectorPainter(CharacterVisualState.idle);
       final p2 = BearVectorPainter(CharacterVisualState.idle);
       final p3 = BearVectorPainter(CharacterVisualState.happy);
+
+      expect(p1.shouldRepaint(p2), isFalse);
+      expect(p1.shouldRepaint(p3), isTrue);
+    });
+
+    test('BunnyVectorPainter repaints when state changes', () {
+      final p1 = BunnyVectorPainter(CharacterVisualState.idle);
+      final p2 = BunnyVectorPainter(CharacterVisualState.idle);
+      final p3 = BunnyVectorPainter(CharacterVisualState.happy);
 
       expect(p1.shouldRepaint(p2), isFalse);
       expect(p1.shouldRepaint(p3), isTrue);

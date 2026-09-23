@@ -6,21 +6,31 @@ import 'vector_painters.dart';
 /// The visual state or emotional posture of an in-game character.
 enum CharacterVisualState {
   idle,
-  happy,
   thinking,
-  celebrate;
+  encourage,
+  happy,
+  celebrate,
+  confused; // gentle_retry
 
   static CharacterVisualState fromString(String state) {
-    switch (state.toLowerCase()) {
+    switch (state.toLowerCase().replaceAll('-', '_')) {
       case 'happy':
       case 'success':
         return CharacterVisualState.happy;
       case 'thinking':
       case 'help':
         return CharacterVisualState.thinking;
+      case 'encourage':
+      case 'support':
+      case 'encouraging':
+        return CharacterVisualState.encourage;
       case 'celebrating':
       case 'celebrate':
         return CharacterVisualState.celebrate;
+      case 'confused':
+      case 'retry':
+      case 'gentle_retry':
+        return CharacterVisualState.confused;
       case 'idle':
       case 'waiting':
       default:
@@ -42,18 +52,59 @@ class GameArt {
   static String characterAsset(String characterId, CharacterVisualState state) {
     final stateName = switch (state) {
       CharacterVisualState.idle => 'idle',
-      CharacterVisualState.happy => 'happy',
       CharacterVisualState.thinking => 'thinking',
+      CharacterVisualState.encourage => 'encourage',
+      CharacterVisualState.happy => 'happy',
       CharacterVisualState.celebrate => 'celebrate',
+      CharacterVisualState.confused => 'confused',
     };
     return '$_artBase/characters/${characterId}_$stateName.png';
   }
 
-  static String environmentAsset(String environmentId) => '$_artBase/environments/$environmentId.png';
+  static String environmentAsset(String environmentId) {
+    final id = switch (environmentId) {
+      'forest_clearing' => 'forest_clearing_bg',
+      'sun' => 'sun_warm',
+      'cloud' => 'cloud_fluffy',
+      _ => environmentId,
+    };
+    return '$_artBase/environments/$id.png';
+  }
 
   static String objectAsset(String objectId) => '$_artBase/objects/$objectId.png';
 
   static String feedbackAsset(String effectId) => '$_artBase/feedback/$effectId.png';
+
+  /// Preloads standard game raster art into Flutter's image cache for instant, flicker-free rendering.
+  static Future<void> preload(BuildContext context, {String characterId = 'bear'}) async {
+    final imagesToPrecache = [
+      characterAsset(characterId, CharacterVisualState.idle),
+      characterAsset(characterId, CharacterVisualState.happy),
+      characterAsset(characterId, CharacterVisualState.thinking),
+      characterAsset(characterId, CharacterVisualState.encourage),
+      characterAsset(characterId, CharacterVisualState.celebrate),
+      characterAsset(characterId, CharacterVisualState.confused),
+      objectAsset('apple'),
+      objectAsset('pear'),
+      objectAsset('basket'),
+      objectAsset('basket_rim'),
+      environmentAsset('forest_clearing_bg'),
+      environmentAsset('tree_branch'),
+      environmentAsset('picnic_blanket'),
+      environmentAsset('cloud_fluffy'),
+      environmentAsset('sun_warm'),
+      feedbackAsset('star_gold'),
+      feedbackAsset('sparkle'),
+    ];
+
+    for (final path in imagesToPrecache) {
+      try {
+        await precacheImage(AssetImage(path), context);
+      } catch (_) {
+        // Fallbacks silently handle any missing raster assets via CustomPainters
+      }
+    }
+  }
 
   // --- Widget Builders ---
 
