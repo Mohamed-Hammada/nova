@@ -56,6 +56,29 @@
       preserved: Stating the last number counted as the total.
   offline_extension: Ask the child to set the table with exactly the right number of spoons for the people eating.
   language_dependencies: []
+  presentation:
+    theme: forest_picnic
+    background: forest_clearing
+    character:
+      id: bear
+      name_key: game.math.bear-apples.character
+      default_state: idle
+      states: [idle, happy, thinking, celebrating]
+    target_container:
+      id: basket
+      label_key: game.math.bear-apples.basket
+      empty_label_key: game.math.bear-apples.basket_empty
+    items:
+      primary:
+        id: apple
+        label_key: game.math.bear-apples.apple
+        on_target_label_key: game.math.bear-apples.apple_in_basket
+      distractor:
+        id: pear
+        label_key: game.math.bear-apples.pear
+        on_target_label_key: game.math.bear-apples.pear_in_basket
+    environment_elements: [tree_branch, sun, cloud, picnic_blanket]
+    feedback_effects: [stars, sparkles, confetti]
 - id: game.math.number-match
   name_key: game.math.number-match.name
   age_range: [4, 6]

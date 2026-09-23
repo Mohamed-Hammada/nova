@@ -134,6 +134,73 @@
       "uniqueItems": true,
       "items": { "type": "string", "pattern": "^[a-z]{2,3}$" }
     },
+    "presentation": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "theme": { "type": "string" },
+        "background": { "type": "string" },
+        "character": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["id", "states"],
+          "properties": {
+            "id": { "type": "string" },
+            "name_key": { "type": "string" },
+            "default_state": { "type": "string" },
+            "states": {
+              "type": "array",
+              "items": { "type": "string" }
+            }
+          }
+        },
+        "target_container": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["id"],
+          "properties": {
+            "id": { "type": "string" },
+            "label_key": { "type": "string" },
+            "empty_label_key": { "type": "string" }
+          }
+        },
+        "items": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["primary"],
+          "properties": {
+            "primary": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["id", "label_key", "on_target_label_key"],
+              "properties": {
+                "id": { "type": "string" },
+                "label_key": { "type": "string" },
+                "on_target_label_key": { "type": "string" }
+              }
+            },
+            "distractor": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["id", "label_key", "on_target_label_key"],
+              "properties": {
+                "id": { "type": "string" },
+                "label_key": { "type": "string" },
+                "on_target_label_key": { "type": "string" }
+              }
+            }
+          }
+        },
+        "environment_elements": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "feedback_effects": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    },
     "deprecated": { "type": "boolean" },
     "superseded_by": { "type": ["string", "null"] }
   }

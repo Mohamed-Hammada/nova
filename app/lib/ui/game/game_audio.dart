@@ -29,8 +29,34 @@ class GameAudioCues {
   static String keyFor(Game game, GameCue cue) =>
       cue == GameCue.sessionStart ? game.nameKey : '${game.id}.cue.${cue.name}';
 
+  static List<String> candidateKeysFor(Game game, GameCue cue) {
+    if (cue == GameCue.sessionStart) return [game.nameKey];
+
+    final primaryKey = '${game.id}.cue.${cue.name}';
+    final genericKey = 'cue.${cue.name}';
+
+    final aliases = switch (cue) {
+      GameCue.tryAgain => ['${game.id}.cue.retry', 'cue.retry'],
+      GameCue.sessionComplete => ['${game.id}.cue.completion', 'cue.completion'],
+      GameCue.itemPlaced || GameCue.itemRemoved => [
+          '${game.id}.cue.objectInteraction',
+          'cue.objectInteraction',
+        ],
+      GameCue.trialStart => ['${game.id}.cue.progress', 'cue.progress'],
+      _ => <String>[],
+    };
+
+    return [primaryKey, genericKey, ...aliases];
+  }
+
   void call(GameCue cue) {
-    final asset = _content.audioAsset(keyFor(_game, cue), _language());
-    if (asset != null) _audio.play(asset);
+    final lang = _language();
+    for (final key in candidateKeysFor(_game, cue)) {
+      final asset = _content.audioAsset(key, lang);
+      if (asset != null) {
+        _audio.play(asset);
+        return;
+      }
+    }
   }
 }

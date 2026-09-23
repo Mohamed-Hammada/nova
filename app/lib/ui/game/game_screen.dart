@@ -10,6 +10,7 @@ import 'bear_apples_art.dart';
 import 'game_audio.dart';
 import 'game_catalog.dart';
 import 'game_session_controller.dart';
+import 'primitives/primitives.dart';
 
 /// Hosts one session of a playable game. All session logic lives in
 /// GameSessionController; this widget wires its dependencies from the
@@ -102,6 +103,7 @@ class _GameScreenState extends ConsumerState<GameScreen> {
             );
           case GamePhase.complete:
             return _CompletionView(
+              game: _game,
               leave: leave,
               onPlayAgain: () => Navigator.of(context).pushReplacement(
                 MaterialPageRoute<void>(builder: (_) => GameScreen(gameId: widget.gameId, skillId: widget.skillId)),
@@ -146,37 +148,51 @@ class _PlayView extends StatelessWidget {
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.symmetric(vertical: NovaSpace.md),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            // A live region: each new request is announced by screen readers.
-            Semantics(
-              liveRegion: true,
-              header: true,
-              child: Text(game.prompt(context, trial.requested), style: theme.textTheme.headlineMedium, textAlign: TextAlign.center),
-            ),
-            const SizedBox(height: NovaSpace.xxs),
-            Text(
-              game.howTo(context),
-              style: theme.textTheme.bodyLarge?.copyWith(color: theme.colorScheme.onSurfaceVariant),
-              textAlign: TextAlign.center,
-            ),
-            const SizedBox(height: NovaSpace.lg),
-            DragToCountView(
-              // A new trial is a new board: no pop-in carried across trials.
-              key: ValueKey('trial-${session.trialIndex}'),
-              items: [
-                for (final item in session.items)
-                  DragToCountItem(id: item.id, isDistractor: item.isDistractor, onPlate: item.onPlate),
-              ],
-              skin: game.skin(context),
-              enabled: playing,
-              showCount: session.hintVisible,
-              plateHeader: game.receiver(context, _mood, trial.requested),
-              onPlace: session.place,
-              onRemove: session.remove,
-            ),
-          ],
+        child: GameAnimation.gentleWobble(
+          context: context,
+          active: session.feedback == TrialFeedback.tryAgain || session.feedback == TrialFeedback.onlyTargets,
+          child: Stack(
+            clipBehavior: Clip.none,
+            children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  // A live region: each new request is announced by screen readers.
+                  Semantics(
+                    liveRegion: true,
+                    header: true,
+                    child: Text(game.prompt(context, trial.requested), style: theme.textTheme.headlineMedium, textAlign: TextAlign.center),
+                  ),
+                  const SizedBox(height: NovaSpace.xxs),
+                  Text(
+                    game.howTo(context),
+                    style: theme.textTheme.bodyLarge?.copyWith(color: theme.colorScheme.onSurfaceVariant),
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: NovaSpace.lg),
+                  DragToCountView(
+                    // A new trial is a new board: no pop-in carried across trials.
+                    key: ValueKey('trial-${session.trialIndex}'),
+                    items: [
+                      for (final item in session.items)
+                        DragToCountItem(id: item.id, isDistractor: item.isDistractor, onPlate: item.onPlate),
+                    ],
+                    skin: game.skin(context),
+                    enabled: playing,
+                    showCount: session.hintVisible,
+                    plateHeader: game.receiver(context, _mood, trial.requested),
+                    onPlace: session.place,
+                    onRemove: session.remove,
+                  ),
+                ],
+              ),
+              Positioned.fill(
+                child: FeedbackEffect(
+                  active: session.feedback == TrialFeedback.correct,
+                ),
+              ),
+            ],
+          ),
         ),
       ),
       bottom: AnimatedSwitcher(
@@ -261,64 +277,28 @@ class _PlayView extends StatelessWidget {
 }
 
 class _CompletionView extends StatelessWidget {
-  const _CompletionView({required this.leave, required this.onPlayAgain});
+  const _CompletionView({required this.game, required this.leave, required this.onPlayAgain});
+  final PlayableGame game;
   final Widget leave;
   final VoidCallback onPlayAgain;
 
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
-    final theme = Theme.of(context);
     return NovaPage(
       leading: leave,
       maxWidth: 640,
-      body: Center(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.symmetric(vertical: NovaSpace.xl),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              const Center(child: BearArt(mood: BearMood.happy, size: 180)),
-              const SizedBox(height: NovaSpace.lg),
-              Semantics(
-                liveRegion: true,
-                header: true,
-                child: Text(l10n.sessionCompleteTitle, style: theme.textTheme.displaySmall, textAlign: TextAlign.center),
-              ),
-              const SizedBox(height: NovaSpace.xs),
-              Text(l10n.sessionCompleteBody, style: theme.textTheme.titleLarge, textAlign: TextAlign.center),
-              const SizedBox(height: NovaSpace.xl),
-              NovaButton(
-                label: l10n.playAgain,
-                icon: Icons.replay_rounded,
-                size: NovaButtonSize.child,
-                expand: true,
-                autofocus: true,
-                onPressed: onPlayAgain,
-              ),
-              const SizedBox(height: NovaSpace.sm),
-              NovaButton(
-                label: l10n.backHome,
-                icon: Icons.home_rounded,
-                variant: NovaButtonVariant.secondary,
-                size: NovaButtonSize.child,
-                expand: true,
-                onPressed: () => Navigator.of(context).popUntil((route) => route.isFirst),
-              ),
-              const SizedBox(height: NovaSpace.lg),
-              Center(
-                child: NovaButton(
-                  label: l10n.grownUps,
-                  icon: Icons.family_restroom_rounded,
-                  variant: NovaButtonVariant.quiet,
-                  onPressed: () => Navigator.of(context).pushReplacement(
-                    MaterialPageRoute<void>(builder: (_) => const ProgressScreen()),
-                  ),
-                ),
-              ),
-            ],
-          ),
+      body: CelebrationOverlay(
+        characterId: game.characterId,
+        title: l10n.sessionCompleteTitle,
+        subtitle: l10n.sessionCompleteBody,
+        playAgainLabel: l10n.playAgain,
+        homeLabel: l10n.backHome,
+        grownUpsLabel: l10n.grownUps,
+        onPlayAgain: onPlayAgain,
+        onHome: () => Navigator.of(context).popUntil((route) => route.isFirst),
+        onGrownUps: () => Navigator.of(context).pushReplacement(
+          MaterialPageRoute<void>(builder: (_) => const ProgressScreen()),
         ),
       ),
     );

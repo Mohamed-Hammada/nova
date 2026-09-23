@@ -80,6 +80,10 @@ flutter:
 
   assets:
     - assets/content/content_bundle.json
+    - assets/art/characters/
+    - assets/art/environments/
+    - assets/art/objects/
+    - assets/art/feedback/
 
   # Bundled so no text ever depends on a runtime font download (Flutter web
   # otherwise fetches Roboto and Noto fallbacks from Google's CDN). Noto Sans

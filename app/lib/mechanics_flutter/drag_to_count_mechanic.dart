@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:nova_app/ui/design/tokens.dart';
+import 'package:nova_app/ui/game/primitives/interactive_object.dart';
 
 // The mechanic's logic is plain Dart in core/; re-exported so existing
 // imports of this file keep resolving DragToCountController.
@@ -255,70 +256,18 @@ class _ItemButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final art = skin.itemBuilder(context, item, size);
-    final visual = Stack(clipBehavior: Clip.none, children: [
-      art,
-      if (badge != null)
-        PositionedDirectional(
-          top: -4,
-          end: -4,
-          child: Container(
-            constraints: const BoxConstraints(minWidth: 30, minHeight: 30),
-            alignment: Alignment.center,
-            decoration: BoxDecoration(
-              color: Theme.of(context).colorScheme.primary,
-              shape: BoxShape.circle,
-              border: Border.all(color: Colors.white, width: 2),
-            ),
-            child: Text(badge!, style: Theme.of(context).textTheme.labelLarge?.copyWith(color: Colors.white)),
-          ),
-        ),
-    ]);
-
-    // The label/hint merge with the InkResponse's own tap and focus actions,
-    // so screen readers can activate the item; only the drawing (and the
-    // badge, which the label already carries) is hidden from them.
-    final button = Semantics(
-      button: true,
+    return InteractiveObject(
+      id: item.id,
+      objectId: item.isDistractor ? 'pear' : 'apple',
       enabled: enabled,
-      label: badge == null ? label : '$label, $badge',
-      hint: hint,
-      child: Material(
-        type: MaterialType.transparency,
-        child: InkResponse(
-          onTap: enabled ? onActivate : null,
-          radius: size * 0.6,
-          child: ExcludeSemantics(
-            child: _PopIn(child: Padding(padding: const EdgeInsets.all(NovaSpace.xxs), child: visual)),
-          ),
-        ),
-      ),
-    );
-
-    if (!enabled) return button;
-    return Draggable<int>(
-      data: item.id,
-      feedback: Material(type: MaterialType.transparency, child: Transform.scale(scale: 1.15, child: art)),
-      childWhenDragging: Opacity(opacity: 0.25, child: Padding(padding: const EdgeInsets.all(NovaSpace.xxs), child: art)),
-      child: button,
+      label: label,
+      actionHint: hint,
+      onActivate: onActivate,
+      size: size,
+      badge: badge,
+      visual: skin.itemBuilder(context, item, size),
+      onPlate: item.onPlate,
     );
   }
 }
 
-/// Items scale in when they appear in a zone, so the child sees that the
-/// move happened. Instant under reduced motion.
-class _PopIn extends StatelessWidget {
-  const _PopIn({required this.child});
-  final Widget child;
-
-  @override
-  Widget build(BuildContext context) {
-    return TweenAnimationBuilder<double>(
-      tween: Tween(begin: 0.6, end: 1),
-      duration: NovaMotion.of(context, NovaMotion.medium),
-      curve: NovaMotion.emphasized,
-      builder: (context, scale, child) => Transform.scale(scale: scale, child: child),
-      child: child,
-    );
-  }
-}

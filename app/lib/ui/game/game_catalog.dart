@@ -20,6 +20,10 @@ class PlayableGame {
     required this.prompt,
     required this.howTo,
     required this.cardArt,
+    this.characterId = 'bear',
+    this.backgroundId = 'forest_clearing',
+    this.containerId = 'basket',
+    this.environmentElements = const ['sun', 'cloud', 'tree_branch'],
   });
 
   final String gameId;
@@ -34,6 +38,12 @@ class PlayableGame {
   final String Function(BuildContext context, int requested) prompt;
   final String Function(BuildContext context) howTo;
   final WidgetBuilder cardArt;
+
+  /// Visual theme identifiers declared in content or defaulted.
+  final String characterId;
+  final String backgroundId;
+  final String containerId;
+  final List<String> environmentElements;
 }
 
 /// Games in the bundle without an entry here are not shown: their mechanic
