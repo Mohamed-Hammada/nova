@@ -1,4 +1,3 @@
-import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:nova_app/ui/game/stage3d/fake_stage3d_transport.dart';
@@ -82,7 +81,7 @@ void main() {
             body: Stage3DView(
               transport: fakeTransport,
               items: const [],
-              onItemDropped: (_, __) {},
+              onItemDropped: (id, zone) {},
               onError: (code, msg) {
                 errorCode = code;
               },
@@ -108,8 +107,8 @@ void main() {
               characterState: CharacterVisualState.idle,
               showHintCount: false,
               items: const [],
-              onItemDropped: (_, __) {},
-              onError: (_, __) {},
+              onItemDropped: (id, zone) {},
+              onError: (code, message) {},
             ),
           ),
         ),
@@ -128,8 +127,8 @@ void main() {
               items: const [
                 StageItem(id: 'apple_2', kind: ItemKind.target, onPlate: true),
               ],
-              onItemDropped: (_, __) {},
-              onError: (_, __) {},
+              onItemDropped: (id, zone) {},
+              onError: (code, message) {},
             ),
           ),
         ),

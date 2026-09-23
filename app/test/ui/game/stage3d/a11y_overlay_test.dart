@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:nova_app/app.dart';
 import 'package:nova_app/ui/game/stage3d/a11y_overlay.dart';
 import 'package:nova_app/ui/game/stage3d/protocol/stage_messages.dart';
 
@@ -17,7 +18,7 @@ void main() {
       ];
 
       await tester.pumpWidget(
-        MaterialApp(
+        NovaMaterialApp(
           home: Scaffold(
             body: A11yOverlay(
               rects: rects,

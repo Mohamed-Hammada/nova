@@ -204,4 +204,41 @@ class AppLocalizationsEn extends AppLocalizations {
   String masteryStepOf(String current, String total) {
     return 'Step $current of $total';
   }
+
+  @override
+  String get graphicsQuality => 'Graphics Quality';
+
+  @override
+  String get graphicsAuto => 'Auto (Recommended)';
+
+  @override
+  String get graphicsAutoDesc => 'Automatically adapts to device capability';
+
+  @override
+  String get graphicsHigh => 'High';
+
+  @override
+  String get graphicsHighDesc =>
+      'Richest 3D visuals, soft shadows, and effects';
+
+  @override
+  String get graphicsMedium => 'Medium';
+
+  @override
+  String get graphicsMediumDesc => 'Balanced performance and visuals';
+
+  @override
+  String get graphicsLow => 'Low';
+
+  @override
+  String get graphicsLowDesc => 'Best for budget devices';
+
+  @override
+  String get graphics2D => '2D Mode';
+
+  @override
+  String get graphics2DDesc => 'Classic 2D sprites, saves battery';
+
+  @override
+  String get close => 'Close';
 }

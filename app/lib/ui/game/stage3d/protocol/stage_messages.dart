@@ -1,4 +1,6 @@
 import 'dart:ui';
+import 'package:nova_app/ui/game/art/game_art.dart' show CharacterVisualState;
+export 'package:nova_app/ui/game/art/game_art.dart' show CharacterVisualState;
 
 enum QualityTier {
   low,
@@ -21,33 +23,7 @@ enum QualityTier {
   String toJson() => name;
 }
 
-enum CharacterVisualState {
-  idle,
-  thinking,
-  encourage,
-  happy,
-  celebrate,
-  confused;
-
-  static CharacterVisualState fromString(String val) {
-    switch (val.toLowerCase()) {
-      case 'idle':
-        return CharacterVisualState.idle;
-      case 'thinking':
-        return CharacterVisualState.thinking;
-      case 'encourage':
-        return CharacterVisualState.encourage;
-      case 'happy':
-        return CharacterVisualState.happy;
-      case 'celebrate':
-        return CharacterVisualState.celebrate;
-      case 'confused':
-        return CharacterVisualState.confused;
-      default:
-        throw ArgumentError('Unknown CharacterVisualState: $val');
-    }
-  }
-
+extension CharacterVisualStateJson on CharacterVisualState {
   String toJson() => name;
 }
 

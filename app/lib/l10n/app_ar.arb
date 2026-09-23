@@ -64,5 +64,18 @@
   "masteryDevelopingDescription": "ينجح كثيرًا، وما زال يبني الثبات.",
   "masterySecureDescription": "ينجح بثبات ومن دون مساعدة.",
   "masteryTransferDescription": "يستخدم المهارة خارج هذه اللعبة أيضًا.",
-  "masteryStepOf": "المرحلة {current} من {total}"
+  "masteryStepOf": "المرحلة {current} من {total}",
+
+  "graphicsQuality": "جودة الرسوميات",
+  "graphicsAuto": "تلقائي (موصى به)",
+  "graphicsAutoDesc": "يتكيف تلقائياً مع قدرات الجهاز",
+  "graphicsHigh": "عالية",
+  "graphicsHighDesc": "أفضل مؤثرات ثلاثية الأبعاد وظلال ناعمة",
+  "graphicsMedium": "متوسطة",
+  "graphicsMediumDesc": "أداء ورسوميات متوازنة",
+  "graphicsLow": "منخفضة",
+  "graphicsLowDesc": "مناسبة للأجهزة البسيطة",
+  "graphics2D": "الوضع ثنائي الأبعاد",
+  "graphics2DDesc": "رسومات ثنائية الأبعاد، توفر البطارية",
+  "close": "إغلاق"
 }

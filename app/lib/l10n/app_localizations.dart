@@ -451,6 +451,78 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Step {current} of {total}'**
   String masteryStepOf(String current, String total);
+
+  /// No description provided for @graphicsQuality.
+  ///
+  /// In en, this message translates to:
+  /// **'Graphics Quality'**
+  String get graphicsQuality;
+
+  /// No description provided for @graphicsAuto.
+  ///
+  /// In en, this message translates to:
+  /// **'Auto (Recommended)'**
+  String get graphicsAuto;
+
+  /// No description provided for @graphicsAutoDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Automatically adapts to device capability'**
+  String get graphicsAutoDesc;
+
+  /// No description provided for @graphicsHigh.
+  ///
+  /// In en, this message translates to:
+  /// **'High'**
+  String get graphicsHigh;
+
+  /// No description provided for @graphicsHighDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Richest 3D visuals, soft shadows, and effects'**
+  String get graphicsHighDesc;
+
+  /// No description provided for @graphicsMedium.
+  ///
+  /// In en, this message translates to:
+  /// **'Medium'**
+  String get graphicsMedium;
+
+  /// No description provided for @graphicsMediumDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Balanced performance and visuals'**
+  String get graphicsMediumDesc;
+
+  /// No description provided for @graphicsLow.
+  ///
+  /// In en, this message translates to:
+  /// **'Low'**
+  String get graphicsLow;
+
+  /// No description provided for @graphicsLowDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Best for budget devices'**
+  String get graphicsLowDesc;
+
+  /// No description provided for @graphics2D.
+  ///
+  /// In en, this message translates to:
+  /// **'2D Mode'**
+  String get graphics2D;
+
+  /// No description provided for @graphics2DDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Classic 2D sprites, saves battery'**
+  String get graphics2DDesc;
+
+  /// No description provided for @close.
+  ///
+  /// In en, this message translates to:
+  /// **'Close'**
+  String get close;
 }
 
 class _AppLocalizationsDelegate

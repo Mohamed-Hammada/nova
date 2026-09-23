@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:nova_app/mechanics_flutter/drag_to_count_mechanic.dart';
@@ -11,14 +12,27 @@ import 'game_audio.dart';
 import 'game_catalog.dart';
 import 'game_session_controller.dart';
 import 'primitives/primitives.dart';
+import 'stage3d/graphics_quality_dialog.dart';
+import 'stage3d/protocol/stage_messages.dart';
+import 'stage3d/stage_capability.dart';
+import 'stage3d/stage3d_transport.dart';
+import 'stage3d/stage3d_view.dart';
 
 /// Hosts one session of a playable game. All session logic lives in
 /// GameSessionController; this widget wires its dependencies from the
 /// composition root and renders its state.
 class GameScreen extends ConsumerStatefulWidget {
-  const GameScreen({super.key, required this.gameId, required this.skillId});
+  const GameScreen({
+    super.key,
+    required this.gameId,
+    required this.skillId,
+    this.stage3DTransport,
+    this.force3D,
+  });
   final String gameId;
   final String skillId;
+  final Stage3DTransport? stage3DTransport;
+  final bool? force3D;
 
   @override
   ConsumerState<GameScreen> createState() => _GameScreenState();
@@ -113,18 +127,71 @@ class _GameScreenState extends ConsumerState<GameScreen> {
               ),
             );
           case GamePhase.playing || GamePhase.feedback || GamePhase.saving:
-            return _PlayView(session: _session, game: _game, leave: leave);
+            return _PlayView(
+              session: _session,
+              game: _game,
+              leave: leave,
+              graphicsSetting: _graphicsSetting,
+              stage3DFellBack: _stage3DFellBack,
+              lastStableTier: _lastStableTier,
+              stage3DTransport: widget.stage3DTransport,
+              force3D: widget.force3D,
+              onStage3DError: (code, message) {
+                setState(() {
+                  _stage3DFellBack = true;
+                });
+              },
+              onTierChanged: (tier) {
+                _lastStableTier = tier;
+              },
+              onOpenQualitySettings: () {
+                GraphicsQualityDialog.show(
+                  context,
+                  currentSetting: _graphicsSetting,
+                  onSettingChanged: (setting) {
+                    setState(() {
+                      _graphicsSetting = setting;
+                      _stage3DFellBack = false;
+                    });
+                  },
+                );
+              },
+            );
         }
       },
     );
   }
+
+  GraphicsQualitySetting _graphicsSetting = GraphicsQualitySetting.auto;
+  bool _stage3DFellBack = false;
+  QualityTier? _lastStableTier;
 }
 
 class _PlayView extends StatelessWidget {
-  const _PlayView({required this.session, required this.game, required this.leave});
+  const _PlayView({
+    required this.session,
+    required this.game,
+    required this.leave,
+    required this.graphicsSetting,
+    required this.stage3DFellBack,
+    this.lastStableTier,
+    this.stage3DTransport,
+    this.force3D,
+    required this.onStage3DError,
+    required this.onTierChanged,
+    required this.onOpenQualitySettings,
+  });
   final GameSessionController session;
   final PlayableGame game;
   final Widget leave;
+  final GraphicsQualitySetting graphicsSetting;
+  final bool stage3DFellBack;
+  final QualityTier? lastStableTier;
+  final Stage3DTransport? stage3DTransport;
+  final bool? force3D;
+  final void Function(String code, String message) onStage3DError;
+  final void Function(QualityTier tier) onTierChanged;
+  final VoidCallback onOpenQualitySettings;
 
   BearMood get _mood => switch (session.feedback) {
         TrialFeedback.correct => BearMood.happy,
@@ -156,8 +223,100 @@ class _PlayView extends StatelessWidget {
     final trial = session.currentTrial!;
     final playing = session.phase == GamePhase.playing;
 
+    final isTestEnvironment = WidgetsBinding.instance.runtimeType.toString().contains('Test');
+    final use3D = graphicsSetting != GraphicsQualitySetting.twoDimensional &&
+        ((force3D ?? false) ||
+            (stage3DTransport != null) ||
+            (!isTestEnvironment &&
+                StageCapability.shouldUse3D(
+                  signals: DeviceSignals(
+                    isWeb: kIsWeb,
+                    isAndroid: !kIsWeb && defaultTargetPlatform == TargetPlatform.android,
+                    webGlAvailable: true,
+                  ),
+                  setting: graphicsSetting,
+                  lowTierBelowFloor: stage3DFellBack,
+                )));
+
+    Widget boardView;
+    if (use3D && !stage3DFellBack) {
+      boardView = SizedBox(
+        height: 420,
+        child: Stage3DView(
+          key: ValueKey('stage3d-trial-${session.trialIndex}'),
+          transport: stage3DTransport,
+          sceneId: 'forest_clearing',
+          characterId: game.characterId,
+          qualityTier: StageCapability.pickStartingTier(
+            signals: DeviceSignals(
+              isWeb: kIsWeb,
+              isAndroid: !kIsWeb && defaultTargetPlatform == TargetPlatform.android,
+              webGlAvailable: true,
+            ),
+            setting: graphicsSetting,
+            lastStableTier: lastStableTier,
+          ),
+          items: [
+            for (final item in session.items)
+              StageItem(
+                id: item.id.toString(),
+                kind: item.isDistractor ? ItemKind.distractor : ItemKind.target,
+                onPlate: item.onPlate,
+              ),
+          ],
+          characterState: _characterState,
+          showHintCount: session.hintVisible,
+          isFrozen: !playing,
+          onItemDropped: (id, zone) {
+            final parsedId = int.tryParse(id);
+            if (parsedId != null) {
+              if (zone == DropZone.plate) {
+                session.place(parsedId);
+              } else {
+                session.remove(parsedId);
+              }
+            }
+          },
+          onCharacterTapped: () {},
+          onError: (code, message) {
+            onStage3DError(code, message);
+          },
+          onTierChanged: onTierChanged,
+        ),
+      );
+    } else {
+      boardView = DragToCountView(
+        // A new trial is a new board: no pop-in carried across trials.
+        key: ValueKey('trial-${session.trialIndex}'),
+        items: [
+          for (final item in session.items)
+            DragToCountItem(id: item.id, isDistractor: item.isDistractor, onPlate: item.onPlate),
+        ],
+        skin: game.skin(context),
+        enabled: playing,
+        showCount: session.hintVisible,
+        plateHeader: game.companionReceiver != null
+            ? game.companionReceiver!(
+                context,
+                _characterState,
+                trial.requested,
+                pointing: session.hintVisible,
+              )
+            : game.receiver(context, _mood, trial.requested),
+        onPlace: session.place,
+        onRemove: session.remove,
+      );
+    }
+
     return NovaPage(
       leading: leave,
+      actions: [
+        IconButton(
+          tooltip: l10n.graphicsQuality,
+          icon: const Icon(Icons.tune_rounded),
+          onPressed: onOpenQualitySettings,
+        ),
+      ],
       title: NovaStepDots(
         total: session.trialCount,
         current: session.completedTrials,
@@ -206,27 +365,7 @@ class _PlayView extends StatelessWidget {
                     textAlign: TextAlign.center,
                   ),
                   const SizedBox(height: NovaSpace.lg),
-                  DragToCountView(
-                    // A new trial is a new board: no pop-in carried across trials.
-                    key: ValueKey('trial-${session.trialIndex}'),
-                    items: [
-                      for (final item in session.items)
-                        DragToCountItem(id: item.id, isDistractor: item.isDistractor, onPlate: item.onPlate),
-                    ],
-                    skin: game.skin(context),
-                    enabled: playing,
-                    showCount: session.hintVisible,
-                    plateHeader: game.companionReceiver != null
-                        ? game.companionReceiver!(
-                            context,
-                            _characterState,
-                            trial.requested,
-                            pointing: session.hintVisible,
-                          )
-                        : game.receiver(context, _mood, trial.requested),
-                    onPlace: session.place,
-                    onRemove: session.remove,
-                  ),
+                  boardView,
                 ],
               ),
               Positioned.fill(

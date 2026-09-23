@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../l10n.dart';
 import 'protocol/stage_messages.dart';
 
 class A11yOverlay extends StatelessWidget {
@@ -17,12 +18,12 @@ class A11yOverlay extends StatelessWidget {
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        for (final item in rects) _buildAccessibleTarget(item),
+        for (final item in rects) _buildAccessibleTarget(context, item),
       ],
     );
   }
 
-  Widget _buildAccessibleTarget(StageLayoutItem item) {
+  Widget _buildAccessibleTarget(BuildContext context, StageLayoutItem item) {
     final rect = item.rect;
     // Enforce 64dp minimum touch target
     final width = rect.width < 64 ? 64.0 : rect.width;
@@ -36,7 +37,8 @@ class A11yOverlay extends StatelessWidget {
       width: width,
       height: height,
       child: Semantics(
-        label: 'Item ${item.id}',
+        label: context.l10n.itemApple,
+        hint: context.l10n.itemGiveHint,
         button: true,
         onTap: () {
           // Default accessible action: drop onto plate

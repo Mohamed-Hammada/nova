@@ -66,7 +66,13 @@ void main() {
   test('browser-only libraries appear only in the web connection', () {
     const webOnly = ['dart:js_interop', 'dart:html', 'package:web/', 'package:drift/wasm.dart', 'package:drift/web.dart'];
     expect(
-      _violations(lib, (p) => p != 'lib/adapters/persistence_drift/connection_web.dart', (i) => webOnly.any(i.startsWith)),
+      _violations(
+        lib,
+        (p) =>
+            p != 'lib/adapters/persistence_drift/connection_web.dart' &&
+            p != 'lib/ui/game/stage3d/web_iframe_transport_web.dart',
+        (i) => webOnly.any(i.startsWith),
+      ),
       isEmpty,
     );
   });

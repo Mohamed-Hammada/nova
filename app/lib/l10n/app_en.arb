@@ -87,5 +87,18 @@
   "masteryStepOf": "Step {current} of {total}",
   "@masteryStepOf": {
     "placeholders": {"current": {"type": "String"}, "total": {"type": "String"}}
-  }
+  },
+
+  "graphicsQuality": "Graphics Quality",
+  "graphicsAuto": "Auto (Recommended)",
+  "graphicsAutoDesc": "Automatically adapts to device capability",
+  "graphicsHigh": "High",
+  "graphicsHighDesc": "Richest 3D visuals, soft shadows, and effects",
+  "graphicsMedium": "Medium",
+  "graphicsMediumDesc": "Balanced performance and visuals",
+  "graphicsLow": "Low",
+  "graphicsLowDesc": "Best for budget devices",
+  "graphics2D": "2D Mode",
+  "graphics2DDesc": "Classic 2D sprites, saves battery",
+  "close": "Close"
 }

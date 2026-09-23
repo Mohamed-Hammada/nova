@@ -204,4 +204,40 @@ class AppLocalizationsAr extends AppLocalizations {
   String masteryStepOf(String current, String total) {
     return 'المرحلة $current من $total';
   }
+
+  @override
+  String get graphicsQuality => 'جودة الرسوميات';
+
+  @override
+  String get graphicsAuto => 'تلقائي (موصى به)';
+
+  @override
+  String get graphicsAutoDesc => 'يتكيف تلقائياً مع قدرات الجهاز';
+
+  @override
+  String get graphicsHigh => 'عالية';
+
+  @override
+  String get graphicsHighDesc => 'أفضل مؤثرات ثلاثية الأبعاد وظلال ناعمة';
+
+  @override
+  String get graphicsMedium => 'متوسطة';
+
+  @override
+  String get graphicsMediumDesc => 'أداء ورسوميات متوازنة';
+
+  @override
+  String get graphicsLow => 'منخفضة';
+
+  @override
+  String get graphicsLowDesc => 'مناسبة للأجهزة البسيطة';
+
+  @override
+  String get graphics2D => 'الوضع ثنائي الأبعاد';
+
+  @override
+  String get graphics2DDesc => 'رسومات ثنائية الأبعاد، توفر البطارية';
+
+  @override
+  String get close => 'إغلاق';
 }
