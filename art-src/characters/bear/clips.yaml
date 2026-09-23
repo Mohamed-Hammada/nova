@@ -1,0 +1,11 @@
+character: bear
+clips:
+  idle: idle
+  idle_alt: idle_alt
+  think: think
+  encourage: encourage
+  happy: happy
+  celebrate: celebrate
+  confused: confused
+  tap_react: tap_react
+  point: point

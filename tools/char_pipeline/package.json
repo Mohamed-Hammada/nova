@@ -1,0 +1,14 @@
+{
+  "name": "nova-char-pipeline",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "validate": "node validate.mjs bear",
+    "process": "node process.mjs bear",
+    "generate": "node generate_placeholder_bear.mjs"
+  },
+  "dependencies": {
+    "yaml": "^2.4.5"
+  }
+}
