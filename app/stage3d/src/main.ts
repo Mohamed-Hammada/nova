@@ -53,6 +53,7 @@ function animate(currentTime: number): void {
 }
 
 async function handleInit(msg: Extract<HostToStageMessage, { type: 'init' }>): Promise<void> {
+  console.log('[Stage3D] handleInit starting with tier:', msg.qualityTier, 'char:', msg.characterId);
   const container = document.getElementById('stage-container');
   if (!container) {
     sendMessage({
@@ -130,6 +131,7 @@ async function handleInit(msg: Extract<HostToStageMessage, { type: 'init' }>): P
     // Start render loop
     requestAnimationFrame(animate);
 
+    console.log('[Stage3D] Sending ready message!');
     // Send ready message
     sendMessage({
       v: 1,
@@ -145,6 +147,7 @@ async function handleInit(msg: Extract<HostToStageMessage, { type: 'init' }>): P
       rects: sceneDirector.computeLayoutRects(),
     });
   } catch (err: unknown) {
+    console.error('[Stage3D] handleInit error:', err);
     const errorMsg = err instanceof Error ? err.message : String(err);
     sendMessage({
       v: 1,
@@ -161,6 +164,7 @@ window.addEventListener('message', async (event: MessageEvent) => {
 
   try {
     const msg = decodeMessage(rawData) as HostToStageMessage;
+    console.log('[Stage3D] Received message from host:', msg.type);
     switch (msg.type) {
       case 'init':
         await handleInit(msg);
@@ -214,7 +218,16 @@ window.addEventListener('message', async (event: MessageEvent) => {
   }
 });
 
+function notifyLoaded(): void {
+  if (window.parent && window.parent !== window) {
+    window.parent.postMessage(JSON.stringify({ v: 1, type: 'stageLoaded' }), '*');
+  }
+}
+
 // Notify parent host that window is loaded and listening
 window.addEventListener('load', () => {
   console.log('[Stage3D] Host window loaded, ready for init message.');
+  notifyLoaded();
 });
+
+notifyLoaded();

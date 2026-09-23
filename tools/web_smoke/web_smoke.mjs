@@ -124,18 +124,26 @@ async function waitFor(cdp, predicate, what, timeoutMs = 20000) {
 
 // Clicks the centre of the first semantics node whose own label is [label],
 // with real mouse events (the same path a child's tap takes).
-async function click(cdp, label, { index = 0 } = {}) {
-  const rect = await evaluate(cdp, `(() => {
-    const nodes = [...document.querySelectorAll('flt-semantics')].filter((n) => {
-      const own = [...n.childNodes].filter((c) => c.nodeType === 3 || c.tagName === 'SPAN').map((c) => c.textContent).join('').trim();
-      return (own === ${JSON.stringify(label)} || n.getAttribute('aria-label') === ${JSON.stringify(label)}) && n.getAttribute('aria-disabled') !== 'true';
-    });
-    const n = nodes[${index}];
-    if (!n) return null;
-    const r = n.getBoundingClientRect();
-    return { x: r.left + r.width / 2, y: r.top + r.height / 2 };
-  })()`);
-  if (!rect) fail(`no enabled "${label}" on screen`);
+async function click(cdp, label, { index = 0, timeoutMs = 8000 } = {}) {
+  const end = Date.now() + timeoutMs;
+  let rect = null;
+  while (Date.now() < end) {
+    rect = await evaluate(cdp, `(() => {
+      const nodes = [...document.querySelectorAll('flt-semantics')].filter((n) => {
+        const own = [...n.childNodes].filter((c) => c.nodeType === 3 || c.tagName === 'SPAN').map((c) => c.textContent).join('').trim();
+        return (own === ${JSON.stringify(label)} || n.getAttribute('aria-label') === ${JSON.stringify(label)}) && n.getAttribute('aria-disabled') !== 'true';
+      });
+      const n = nodes[${index}];
+      if (!n) return null;
+      const r = n.getBoundingClientRect();
+      return { x: r.left + r.width / 2, y: r.top + r.height / 2 };
+    })()`);
+    if (rect) break;
+    await sleep(150);
+  }
+  if (!rect) {
+    fail(`no enabled "${label}" on screen`);
+  }
   for (const type of ['mouseMoved', 'mousePressed', 'mouseReleased']) {
     await cdp.send('Input.dispatchMouseEvent', { type, x: rect.x, y: rect.y, button: 'left', buttons: type === 'mousePressed' ? 1 : 0, clickCount: 1 });
   }

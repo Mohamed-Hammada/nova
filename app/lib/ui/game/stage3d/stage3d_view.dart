@@ -189,6 +189,7 @@ class Stage3DViewState extends State<Stage3DView> {
         if (_isReady)
           A11yOverlay(
             rects: _layoutRects,
+            items: widget.items,
             onItemActivated: (id, zone) => widget.onItemDropped(id, zone),
             onCharacterTapped: widget.onCharacterTapped,
           ),

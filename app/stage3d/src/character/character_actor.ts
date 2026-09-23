@@ -39,11 +39,13 @@ export class CharacterActor {
   }
 
   public async load(): Promise<void> {
-    const loader = new GLTFLoader();
     const modelUrl = `models/${this.characterId}.${this.tier}.glb`;
-
-    const gltf = await loader.loadAsync(modelUrl);
-    const model = gltf.scene;
+    console.log('[Stage3D] characterActor loading:', modelUrl);
+    try {
+      const loader = new GLTFLoader();
+      const gltf = await loader.loadAsync(modelUrl);
+      console.log('[Stage3D] model loaded:', modelUrl, gltf.scene ? 'scene ok' : 'no scene');
+      const model = gltf.scene;
 
     model.traverse((child) => {
       if ((child as THREE.Mesh).isMesh) {
@@ -65,7 +67,11 @@ export class CharacterActor {
       }
       this.playState('idle');
     }
+  } catch (err) {
+    console.error('[Stage3D] characterActor load error:', err);
+    throw err;
   }
+}
 
   public setState(state: CharacterVisualState, pointAt?: 'basket' | 'pile'): void {
     this.currentState = state;
