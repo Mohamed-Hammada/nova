@@ -18,7 +18,7 @@ class WebIframeTransport implements Stage3DTransport {
   final List<StageMessage> _queued = [];
   Timer? _flushTimer;
   InitMessage? _initMessage;
-  bool _initSent = false;
+  bool _isReady = false;
 
   WebIframeTransport({String? iframeSrc})
       : _viewType = 'stage3d-iframe-${_nextViewId++}',
@@ -41,9 +41,8 @@ class WebIframeTransport implements Stage3DTransport {
     }
   }
 
-  void _sendInitIfNeeded() {
-    if (!_initSent && _initMessage != null && _iframe?.contentWindow != null) {
-      _initSent = true;
+  void _sendInit() {
+    if (!_isReady && _initMessage != null && _iframe?.contentWindow != null) {
       _post(_initMessage!);
     }
   }
@@ -60,8 +59,8 @@ class WebIframeTransport implements Stage3DTransport {
     _iframe!.addEventListener(
       'load',
       (web.Event e) {
-        _sendInitIfNeeded();
-        _flush();
+        _sendInit();
+        if (_isReady) _flush();
       }.toJS,
     );
 
@@ -70,9 +69,10 @@ class WebIframeTransport implements Stage3DTransport {
       (int viewId) => _iframe!,
     );
 
-    _flushTimer = Timer.periodic(const Duration(milliseconds: 100), (timer) {
-      _sendInitIfNeeded();
-      if (_queued.isNotEmpty) {
+    _flushTimer = Timer.periodic(const Duration(milliseconds: 150), (timer) {
+      if (!_isReady) {
+        _sendInit();
+      } else if (_queued.isNotEmpty) {
         _flush();
       }
     });
@@ -91,14 +91,15 @@ class WebIframeTransport implements Stage3DTransport {
         final str = (data as JSString).toDart;
         final json = jsonDecode(str) as Map<String, dynamic>;
         if (json['type'] == 'stageLoaded') {
-          _sendInitIfNeeded();
-          _flush();
+          _sendInit();
           return;
         }
 
         final stageMsg = StageMessage.fromJson(json);
         if (stageMsg is ReadyMessage) {
+          _isReady = true;
           _flushTimer?.cancel();
+          _flush();
         }
         _messageController.add(stageMsg);
       } catch (_) {
@@ -111,11 +112,10 @@ class WebIframeTransport implements Stage3DTransport {
   void send(StageMessage message) {
     if (message is InitMessage) {
       _initMessage = message;
-      _initSent = false;
-      _sendInitIfNeeded();
+      _sendInit();
       return;
     }
-    if (_iframe?.contentWindow == null) {
+    if (!_isReady || _iframe?.contentWindow == null) {
       _queued.add(message);
       return;
     }

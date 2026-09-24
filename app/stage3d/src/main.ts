@@ -29,6 +29,7 @@ let governor: QualityGovernor | null = null;
 
 let isFrozen = false;
 let lastFrameTime = performance.now();
+let isInitialized = false;
 
 function animate(currentTime: number): void {
   requestAnimationFrame(animate);
@@ -53,6 +54,24 @@ function animate(currentTime: number): void {
 }
 
 async function handleInit(msg: Extract<HostToStageMessage, { type: 'init' }>): Promise<void> {
+  if (isInitialized) {
+    console.log('[Stage3D] Already initialized, re-sending ready message');
+    sendMessage({
+      v: 1,
+      type: 'ready',
+      protocolVersion: 1,
+      tier: governor?.currentTier ?? msg.qualityTier,
+    });
+    if (sceneDirector) {
+      sendMessage({
+        v: 1,
+        type: 'layout',
+        rects: sceneDirector.computeLayoutRects(),
+      });
+    }
+    return;
+  }
+  isInitialized = true;
   console.log('[Stage3D] handleInit starting with tier:', msg.qualityTier, 'char:', msg.characterId);
   const container = document.getElementById('stage-container');
   if (!container) {
