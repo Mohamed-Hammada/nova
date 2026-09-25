@@ -1189,6 +1189,312 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Explore {place}'**
   String exploreCategory(String place);
+
+  /// No description provided for @onboardingHello.
+  ///
+  /// In en, this message translates to:
+  /// **'Hi! I\'m {name}.'**
+  String onboardingHello(String name);
+
+  /// No description provided for @onboardingAskName.
+  ///
+  /// In en, this message translates to:
+  /// **'What\'s your name?'**
+  String get onboardingAskName;
+
+  /// No description provided for @onboardingNameHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Your name'**
+  String get onboardingNameHint;
+
+  /// No description provided for @onboardingAskAge.
+  ///
+  /// In en, this message translates to:
+  /// **'How old are you?'**
+  String get onboardingAskAge;
+
+  /// No description provided for @yearsOld.
+  ///
+  /// In en, this message translates to:
+  /// **'years old'**
+  String get yearsOld;
+
+  /// No description provided for @onboardingNext.
+  ///
+  /// In en, this message translates to:
+  /// **'Next'**
+  String get onboardingNext;
+
+  /// No description provided for @onboardingBack.
+  ///
+  /// In en, this message translates to:
+  /// **'Back'**
+  String get onboardingBack;
+
+  /// No description provided for @onboardingReady.
+  ///
+  /// In en, this message translates to:
+  /// **'Your adventure begins, {name}!'**
+  String onboardingReady(String name);
+
+  /// No description provided for @onboardingReadyNoName.
+  ///
+  /// In en, this message translates to:
+  /// **'Your adventure begins!'**
+  String get onboardingReadyNoName;
+
+  /// No description provided for @onboardingFirstStop.
+  ///
+  /// In en, this message translates to:
+  /// **'First stop: {stage}'**
+  String onboardingFirstStop(String stage);
+
+  /// No description provided for @letsGo.
+  ///
+  /// In en, this message translates to:
+  /// **'Let\'s go!'**
+  String get letsGo;
+
+  /// No description provided for @myJourney.
+  ///
+  /// In en, this message translates to:
+  /// **'My journey'**
+  String get myJourney;
+
+  /// No description provided for @youAreHere.
+  ///
+  /// In en, this message translates to:
+  /// **'You are here'**
+  String get youAreHere;
+
+  /// No description provided for @stageDoneCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{done} of {total} done'**
+  String stageDoneCount(String done, String total);
+
+  /// No description provided for @nextAdventure.
+  ///
+  /// In en, this message translates to:
+  /// **'Next adventure'**
+  String get nextAdventure;
+
+  /// No description provided for @todaysAdventure.
+  ///
+  /// In en, this message translates to:
+  /// **'Today\'s adventure'**
+  String get todaysAdventure;
+
+  /// No description provided for @exploreMore.
+  ///
+  /// In en, this message translates to:
+  /// **'Explore more'**
+  String get exploreMore;
+
+  /// No description provided for @stageComplete.
+  ///
+  /// In en, this message translates to:
+  /// **'You finished this adventure!'**
+  String get stageComplete;
+
+  /// No description provided for @newAdventure.
+  ///
+  /// In en, this message translates to:
+  /// **'A new adventure is waiting!'**
+  String get newAdventure;
+
+  /// No description provided for @journeyAllDone.
+  ///
+  /// In en, this message translates to:
+  /// **'You finished the whole journey! Replay any adventure.'**
+  String get journeyAllDone;
+
+  /// No description provided for @statusCompleted.
+  ///
+  /// In en, this message translates to:
+  /// **'Done'**
+  String get statusCompleted;
+
+  /// No description provided for @statusLocked.
+  ///
+  /// In en, this message translates to:
+  /// **'Locked'**
+  String get statusLocked;
+
+  /// No description provided for @statusNext.
+  ///
+  /// In en, this message translates to:
+  /// **'Next'**
+  String get statusNext;
+
+  /// No description provided for @statusMastered.
+  ///
+  /// In en, this message translates to:
+  /// **'Star player'**
+  String get statusMastered;
+
+  /// No description provided for @statusAvailable.
+  ///
+  /// In en, this message translates to:
+  /// **'Ready to play'**
+  String get statusAvailable;
+
+  /// No description provided for @statusEarlier.
+  ///
+  /// In en, this message translates to:
+  /// **'Earlier adventure'**
+  String get statusEarlier;
+
+  /// No description provided for @roleRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Main'**
+  String get roleRequired;
+
+  /// No description provided for @rolePractice.
+  ///
+  /// In en, this message translates to:
+  /// **'Practice'**
+  String get rolePractice;
+
+  /// No description provided for @roleChallenge.
+  ///
+  /// In en, this message translates to:
+  /// **'Challenge'**
+  String get roleChallenge;
+
+  /// No description provided for @roleOptional.
+  ///
+  /// In en, this message translates to:
+  /// **'Bonus'**
+  String get roleOptional;
+
+  /// No description provided for @roleReview.
+  ///
+  /// In en, this message translates to:
+  /// **'Review'**
+  String get roleReview;
+
+  /// No description provided for @unlockHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Finish the games before it to open this one.'**
+  String get unlockHint;
+
+  /// No description provided for @weAreIn.
+  ///
+  /// In en, this message translates to:
+  /// **'We\'re exploring {stage}!'**
+  String weAreIn(String stage);
+
+  /// No description provided for @childAge.
+  ///
+  /// In en, this message translates to:
+  /// **'Child\'s age'**
+  String get childAge;
+
+  /// No description provided for @changeAgeHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'The journey adapts to the new age. Nothing your child has done is removed.'**
+  String get changeAgeHelp;
+
+  /// No description provided for @journeyStage.
+  ///
+  /// In en, this message translates to:
+  /// **'Journey stage'**
+  String get journeyStage;
+
+  /// No description provided for @developmentalAreas.
+  ///
+  /// In en, this message translates to:
+  /// **'Developmental areas'**
+  String get developmentalAreas;
+
+  /// No description provided for @areasNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Share of journey activities completed so far. This is not a score or an assessment.'**
+  String get areasNote;
+
+  /// No description provided for @activityHistory.
+  ///
+  /// In en, this message translates to:
+  /// **'Activity history'**
+  String get activityHistory;
+
+  /// No description provided for @noHistoryYet.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing played yet.'**
+  String get noHistoryYet;
+
+  /// No description provided for @playedTimes.
+  ///
+  /// In en, this message translates to:
+  /// **'Played {count} times'**
+  String playedTimes(String count);
+
+  /// No description provided for @domainSocialEmotional.
+  ///
+  /// In en, this message translates to:
+  /// **'Feelings & friends'**
+  String get domainSocialEmotional;
+
+  /// No description provided for @domainLanguage.
+  ///
+  /// In en, this message translates to:
+  /// **'Language'**
+  String get domainLanguage;
+
+  /// No description provided for @domainEarlyLiteracy.
+  ///
+  /// In en, this message translates to:
+  /// **'Early reading'**
+  String get domainEarlyLiteracy;
+
+  /// No description provided for @domainAuditory.
+  ///
+  /// In en, this message translates to:
+  /// **'Sounds & listening'**
+  String get domainAuditory;
+
+  /// No description provided for @domainNumeracy.
+  ///
+  /// In en, this message translates to:
+  /// **'Numbers'**
+  String get domainNumeracy;
+
+  /// No description provided for @domainMemory.
+  ///
+  /// In en, this message translates to:
+  /// **'Memory'**
+  String get domainMemory;
+
+  /// No description provided for @domainAttention.
+  ///
+  /// In en, this message translates to:
+  /// **'Attention'**
+  String get domainAttention;
+
+  /// No description provided for @domainProblemSolving.
+  ///
+  /// In en, this message translates to:
+  /// **'Problem solving'**
+  String get domainProblemSolving;
+
+  /// No description provided for @decreaseAge.
+  ///
+  /// In en, this message translates to:
+  /// **'Younger'**
+  String get decreaseAge;
+
+  /// No description provided for @increaseAge.
+  ///
+  /// In en, this message translates to:
+  /// **'Older'**
+  String get increaseAge;
 }
 
 class _AppLocalizationsDelegate

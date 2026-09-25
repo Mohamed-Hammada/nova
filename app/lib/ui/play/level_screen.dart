@@ -28,9 +28,14 @@ import 'trial_views.dart';
 /// through GameRuntime -- the same content -> signals -> assessment ->
 /// mastery -> adaptive pipeline as before -- and records the stars earned.
 class LevelScreen extends ConsumerStatefulWidget {
-  const LevelScreen({super.key, required this.journey, required this.levelIndex, this.seed, this.rungOverride});
+  const LevelScreen({super.key, required this.journey, required this.levelIndex, this.seed, this.rungOverride, this.onFinished});
   final Journey journey;
   final int levelIndex;
+
+  /// Called once all rounds are played, with the stars and first-try
+  /// accuracy. Journey activities record their completion through it;
+  /// without it the level's stars are saved directly.
+  final Future<void> Function(int stars, double accuracy)? onFinished;
 
   /// Fixed seed for tests; otherwise every play of a level is a new mix.
   final int? seed;
@@ -193,7 +198,12 @@ class _LevelScreenState extends ConsumerState<LevelScreen> {
     _guide.react(Reaction.cheer);
     _guide.setMood(CharacterMood.celebrating, hold: const Duration(milliseconds: 2600));
     _speak(context.l10n.youDidIt);
-    await ref.read(playerStatePortProvider).saveLevel(childId: currentChildId, levelId: _level.id, stars: s.stars);
+    final onFinished = widget.onFinished;
+    if (onFinished != null) {
+      await onFinished(s.stars, s.accuracy);
+    } else {
+      await ref.read(playerStatePortProvider).saveLevel(childId: currentChildId, levelId: _level.id, stars: s.stars);
+    }
     await ref
         .read(gameRuntimeProvider)
         .completeSession(

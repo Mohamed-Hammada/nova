@@ -4,7 +4,9 @@ import 'package:nova_app/providers.dart';
 
 import '../design/nova_design.dart';
 import '../game/stage3d/stage_capability.dart';
+import '../journey/journey_providers.dart';
 import '../l10n.dart';
+import '../play/visual_view.dart';
 import '../theme/labels.dart';
 import 'capabilities.dart';
 
@@ -58,6 +60,8 @@ class GrownUpSettings extends ConsumerWidget {
         children: [
           Semantics(header: true, child: Text(l10n.settingsTitle, style: theme.textTheme.titleLarge)),
           const SizedBox(height: NovaSpace.xs),
+          const _AgeSetting(),
+          const Divider(height: NovaSpace.lg),
           toggleRow(Icons.record_voice_over_rounded, l10n.spokenPrompts, l10n.spokenPromptsDesc, ref.watch(speechEnabledProvider),
               (on) => ref.read(speechEnabledProvider.notifier).state = on),
           toggleRow(Icons.mic_rounded, l10n.voiceAnswers, l10n.voiceAnswersDesc, ref.watch(voiceAnswersProvider) && voiceAnswersSupported,
@@ -84,5 +88,51 @@ class GrownUpSettings extends ConsumerWidget {
         ],
       ),
     );
+  }
+}
+
+/// The child's age, changed only here (or in "About me"). The journey
+/// re-positions for the new age; every record of what the child has done
+/// is kept.
+class _AgeSetting extends ConsumerWidget {
+  const _AgeSetting();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = context.l10n;
+    final theme = Theme.of(context);
+    final lang = ref.watch(languageProvider);
+    final age = ref.watch(childAgeProvider);
+    void set(int a) => setChildAge(ref, a.clamp(2, 8));
+    return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+      Row(children: [
+        Icon(Icons.cake_rounded, color: theme.colorScheme.primary),
+        const SizedBox(width: NovaSpace.md),
+        Expanded(child: Text(l10n.childAge, style: theme.textTheme.titleMedium)),
+        IconButton.outlined(
+          key: const ValueKey('settings.age.down'),
+          tooltip: l10n.decreaseAge,
+          onPressed: age == null || age <= 2 ? null : () => set(age - 1),
+          icon: const Icon(Icons.remove_rounded),
+        ),
+        SizedBox(
+          width: 88,
+          child: Text(
+            age == null ? '–' : '${numeral(age, lang)} ${l10n.yearsOld}',
+            key: const ValueKey('settings.age.value'),
+            textAlign: TextAlign.center,
+            style: theme.textTheme.titleMedium,
+          ),
+        ),
+        IconButton.outlined(
+          key: const ValueKey('settings.age.up'),
+          tooltip: l10n.increaseAge,
+          onPressed: age == null || age >= 8 ? null : () => set(age + 1),
+          icon: const Icon(Icons.add_rounded),
+        ),
+      ]),
+      const SizedBox(height: NovaSpace.xxs),
+      Text(l10n.changeAgeHelp, style: theme.textTheme.bodySmall),
+    ]);
   }
 }

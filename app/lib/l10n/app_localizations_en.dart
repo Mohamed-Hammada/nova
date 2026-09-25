@@ -631,4 +631,172 @@ class AppLocalizationsEn extends AppLocalizations {
   String exploreCategory(String place) {
     return 'Explore $place';
   }
+
+  @override
+  String onboardingHello(String name) {
+    return 'Hi! I\'m $name.';
+  }
+
+  @override
+  String get onboardingAskName => 'What\'s your name?';
+
+  @override
+  String get onboardingNameHint => 'Your name';
+
+  @override
+  String get onboardingAskAge => 'How old are you?';
+
+  @override
+  String get yearsOld => 'years old';
+
+  @override
+  String get onboardingNext => 'Next';
+
+  @override
+  String get onboardingBack => 'Back';
+
+  @override
+  String onboardingReady(String name) {
+    return 'Your adventure begins, $name!';
+  }
+
+  @override
+  String get onboardingReadyNoName => 'Your adventure begins!';
+
+  @override
+  String onboardingFirstStop(String stage) {
+    return 'First stop: $stage';
+  }
+
+  @override
+  String get letsGo => 'Let\'s go!';
+
+  @override
+  String get myJourney => 'My journey';
+
+  @override
+  String get youAreHere => 'You are here';
+
+  @override
+  String stageDoneCount(String done, String total) {
+    return '$done of $total done';
+  }
+
+  @override
+  String get nextAdventure => 'Next adventure';
+
+  @override
+  String get todaysAdventure => 'Today\'s adventure';
+
+  @override
+  String get exploreMore => 'Explore more';
+
+  @override
+  String get stageComplete => 'You finished this adventure!';
+
+  @override
+  String get newAdventure => 'A new adventure is waiting!';
+
+  @override
+  String get journeyAllDone =>
+      'You finished the whole journey! Replay any adventure.';
+
+  @override
+  String get statusCompleted => 'Done';
+
+  @override
+  String get statusLocked => 'Locked';
+
+  @override
+  String get statusNext => 'Next';
+
+  @override
+  String get statusMastered => 'Star player';
+
+  @override
+  String get statusAvailable => 'Ready to play';
+
+  @override
+  String get statusEarlier => 'Earlier adventure';
+
+  @override
+  String get roleRequired => 'Main';
+
+  @override
+  String get rolePractice => 'Practice';
+
+  @override
+  String get roleChallenge => 'Challenge';
+
+  @override
+  String get roleOptional => 'Bonus';
+
+  @override
+  String get roleReview => 'Review';
+
+  @override
+  String get unlockHint => 'Finish the games before it to open this one.';
+
+  @override
+  String weAreIn(String stage) {
+    return 'We\'re exploring $stage!';
+  }
+
+  @override
+  String get childAge => 'Child\'s age';
+
+  @override
+  String get changeAgeHelp =>
+      'The journey adapts to the new age. Nothing your child has done is removed.';
+
+  @override
+  String get journeyStage => 'Journey stage';
+
+  @override
+  String get developmentalAreas => 'Developmental areas';
+
+  @override
+  String get areasNote =>
+      'Share of journey activities completed so far. This is not a score or an assessment.';
+
+  @override
+  String get activityHistory => 'Activity history';
+
+  @override
+  String get noHistoryYet => 'Nothing played yet.';
+
+  @override
+  String playedTimes(String count) {
+    return 'Played $count times';
+  }
+
+  @override
+  String get domainSocialEmotional => 'Feelings & friends';
+
+  @override
+  String get domainLanguage => 'Language';
+
+  @override
+  String get domainEarlyLiteracy => 'Early reading';
+
+  @override
+  String get domainAuditory => 'Sounds & listening';
+
+  @override
+  String get domainNumeracy => 'Numbers';
+
+  @override
+  String get domainMemory => 'Memory';
+
+  @override
+  String get domainAttention => 'Attention';
+
+  @override
+  String get domainProblemSolving => 'Problem solving';
+
+  @override
+  String get decreaseAge => 'Younger';
+
+  @override
+  String get increaseAge => 'Older';
 }

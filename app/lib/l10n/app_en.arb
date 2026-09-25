@@ -444,5 +444,101 @@
         "type": "String"
       }
     }
-  }
+  },
+  "onboardingHello": "Hi! I'm {name}.",
+  "@onboardingHello": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "onboardingAskName": "What's your name?",
+  "onboardingNameHint": "Your name",
+  "onboardingAskAge": "How old are you?",
+  "yearsOld": "years old",
+  "onboardingNext": "Next",
+  "onboardingBack": "Back",
+  "onboardingReady": "Your adventure begins, {name}!",
+  "@onboardingReady": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "onboardingReadyNoName": "Your adventure begins!",
+  "onboardingFirstStop": "First stop: {stage}",
+  "@onboardingFirstStop": {
+    "placeholders": {
+      "stage": {
+        "type": "String"
+      }
+    }
+  },
+  "letsGo": "Let's go!",
+  "myJourney": "My journey",
+  "youAreHere": "You are here",
+  "stageDoneCount": "{done} of {total} done",
+  "@stageDoneCount": {
+    "placeholders": {
+      "done": {
+        "type": "String"
+      },
+      "total": {
+        "type": "String"
+      }
+    }
+  },
+  "nextAdventure": "Next adventure",
+  "todaysAdventure": "Today's adventure",
+  "exploreMore": "Explore more",
+  "stageComplete": "You finished this adventure!",
+  "newAdventure": "A new adventure is waiting!",
+  "journeyAllDone": "You finished the whole journey! Replay any adventure.",
+  "statusCompleted": "Done",
+  "statusLocked": "Locked",
+  "statusNext": "Next",
+  "statusMastered": "Star player",
+  "statusAvailable": "Ready to play",
+  "statusEarlier": "Earlier adventure",
+  "roleRequired": "Main",
+  "rolePractice": "Practice",
+  "roleChallenge": "Challenge",
+  "roleOptional": "Bonus",
+  "roleReview": "Review",
+  "unlockHint": "Finish the games before it to open this one.",
+  "weAreIn": "We're exploring {stage}!",
+  "@weAreIn": {
+    "placeholders": {
+      "stage": {
+        "type": "String"
+      }
+    }
+  },
+  "childAge": "Child's age",
+  "changeAgeHelp": "The journey adapts to the new age. Nothing your child has done is removed.",
+  "journeyStage": "Journey stage",
+  "developmentalAreas": "Developmental areas",
+  "areasNote": "Share of journey activities completed so far. This is not a score or an assessment.",
+  "activityHistory": "Activity history",
+  "noHistoryYet": "Nothing played yet.",
+  "playedTimes": "Played {count} times",
+  "@playedTimes": {
+    "placeholders": {
+      "count": {
+        "type": "String"
+      }
+    }
+  },
+  "domainSocialEmotional": "Feelings & friends",
+  "domainLanguage": "Language",
+  "domainEarlyLiteracy": "Early reading",
+  "domainAuditory": "Sounds & listening",
+  "domainNumeracy": "Numbers",
+  "domainMemory": "Memory",
+  "domainAttention": "Attention",
+  "domainProblemSolving": "Problem solving",
+  "decreaseAge": "Younger",
+  "increaseAge": "Older"
 }

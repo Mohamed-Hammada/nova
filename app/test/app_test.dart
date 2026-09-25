@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:nova_app/bootstrap.dart';
+import 'package:nova_app/ui/journey/onboarding_screen.dart';
 
 import 'support/fixture_content.dart';
 import 'support/pump_app.dart';
@@ -24,7 +25,8 @@ void main() {
     ));
     expect(find.text('Getting ready…'), findsOneWidget);
     await tester.pumpAndSettle();
-    expect(find.text("Bear's Apples"), findsOneWidget);
+    // A first launch (no saved age) opens onboarding.
+    expect(find.byType(OnboardingScreen), findsOneWidget);
   });
 
   testWidgets('a content bundle that fails to load shows a recoverable error, and retry recovers', (tester) async {
@@ -40,7 +42,7 @@ void main() {
 
     await tester.tap(find.widgetWithText(FilledButton, 'Try again'));
     await tester.pumpAndSettle();
-    expect(find.text("Bear's Apples"), findsOneWidget);
+    expect(find.byType(OnboardingScreen), findsOneWidget);
     expect(attempts, 2);
   });
 }

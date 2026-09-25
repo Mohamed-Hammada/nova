@@ -3,6 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:nova_app/core/mastery/mastery_record.dart';
 import 'package:nova_app/providers.dart';
+import 'package:nova_app/ui/journey/journey_labels.dart';
+import 'package:nova_app/ui/journey/journey_providers.dart';
+import 'package:nova_app/ui/play/visual_view.dart';
 import 'package:nova_app/ui/design/nova_design.dart';
 import 'package:nova_app/ui/l10n.dart';
 import 'package:nova_app/ui/shell/language_menu.dart';
@@ -50,6 +53,7 @@ class ProgressScreen extends ConsumerWidget {
           // spec 3.5/3.6), and Nova's claims are non-clinical.
           NovaFeedbackBanner(kind: NovaFeedbackKind.info, message: l10n.progressDisclaimer),
           const SizedBox(height: NovaSpace.lg),
+          const _JourneyReport(),
           for (final skillId in skillIds) ...[
             _SkillProgressCard(skillId: skillId),
             const SizedBox(height: NovaSpace.md),
@@ -174,6 +178,75 @@ class _Ladder extends StatelessWidget {
             ]),
           ),
       ],
+    );
+  }
+}
+
+/// For grown-ups: where the child is in the journey, how the developmental
+/// areas are covered so far (a share of activities, not a score), and
+/// every activity played -- history is never removed.
+class _JourneyReport extends ConsumerWidget {
+  const _JourneyReport();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final progress = ref.watch(journeyProgressProvider);
+    if (progress == null) return const SizedBox.shrink();
+    final l10n = context.l10n;
+    final theme = Theme.of(context);
+    final content = ref.watch(contentRuntimeProvider);
+    final lang = ref.watch(languageProvider);
+    final curriculum = ref.watch(curriculumProvider);
+    final records = [...?ref.watch(activityRecordsProvider).value?.values]..sort((a, b) => b.lastPlayedAt.compareTo(a.lastPlayedAt));
+    final stage = progress.current;
+    return Padding(
+      padding: const EdgeInsets.only(bottom: NovaSpace.md),
+      child: NovaCard(
+        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          Semantics(header: true, child: Text(l10n.journeyStage, style: theme.textTheme.titleLarge)),
+          const SizedBox(height: NovaSpace.xxs),
+          Text(
+            '${contentText(content, stage.stage.nameKey, lang)} · ${l10n.stageDoneCount(numeral(stage.requiredDone, lang), numeral(stage.requiredTotal, lang))}',
+            style: theme.textTheme.bodyLarge,
+          ),
+          const SizedBox(height: NovaSpace.md),
+          Text(l10n.developmentalAreas, style: theme.textTheme.titleMedium),
+          const SizedBox(height: NovaSpace.xs),
+          for (final d in progress.domains)
+            Padding(
+              padding: const EdgeInsets.only(bottom: NovaSpace.xs),
+              child: Row(children: [
+                SizedBox(width: 150, child: Text(domainLabel(l10n, d.domain), style: theme.textTheme.bodyMedium)),
+                Expanded(
+                  child: Semantics(
+                    label: '${domainLabel(l10n, d.domain)}: ${numeral(d.done, lang)} / ${numeral(d.total, lang)}',
+                    excludeSemantics: true,
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(NovaRadius.pill),
+                      child: LinearProgressIndicator(value: d.fraction, minHeight: 10),
+                    ),
+                  ),
+                ),
+                const SizedBox(width: NovaSpace.xs),
+                Text('${numeral(d.done, lang)}/${numeral(d.total, lang)}', style: theme.textTheme.labelMedium),
+              ]),
+            ),
+          Text(l10n.areasNote, style: theme.textTheme.bodySmall),
+          const SizedBox(height: NovaSpace.md),
+          Text(l10n.activityHistory, style: theme.textTheme.titleMedium),
+          const SizedBox(height: NovaSpace.xs),
+          if (records.isEmpty) Text(l10n.noHistoryYet, style: theme.textTheme.bodyMedium),
+          for (final r in records.take(12))
+            if (curriculum.activity(r.activityId) case final a?)
+              ListTile(
+                contentPadding: EdgeInsets.zero,
+                leading: Icon(r.completed ? Icons.check_circle_rounded : Icons.timelapse_rounded, color: r.completed ? NovaPalette.success : theme.colorScheme.outline),
+                title: Text(content.hasGame(a.gameFor(lang)) ? contentText(content, content.game(a.gameFor(lang)).nameKey, lang) : a.id),
+                subtitle: Text('${domainLabel(l10n, a.domain)} · ${roleLabel(l10n, a.role)} · ${l10n.playedTimes(numeral(r.attempts, lang))}'),
+                trailing: r.bestStars > 0 ? Text('★ ${numeral(r.bestStars, lang)}', style: theme.textTheme.labelLarge) : null,
+              ),
+        ]),
+      ),
     );
   }
 }

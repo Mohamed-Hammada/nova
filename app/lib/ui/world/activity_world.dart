@@ -150,6 +150,9 @@ enum ActivityCategory {
         movement => l10n.catMovementTag,
       };
 
+  /// The place a curriculum stage is set in (the spec's stage `place`).
+  static ActivityCategory fromPlace(String place) => ActivityCategory.values.firstWhere((c) => c.name == place, orElse: () => numbers);
+
   /// Which place an activity belongs to, from its id and mechanic.
   static ActivityCategory of(Game game) {
     final id = game.id;

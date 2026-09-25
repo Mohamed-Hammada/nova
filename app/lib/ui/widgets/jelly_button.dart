@@ -70,11 +70,16 @@ class _JellyButtonState extends State<JellyButton> with TickerProviderStateMixin
               ),
             if (widget.icon != null && widget.label != null) SizedBox(width: widget.size * 0.14),
             if (widget.label != null)
-              Text(
+              Flexible(
+                child: Text(
                 widget.label!,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+                textAlign: TextAlign.center,
                 style: novaText(widget.size * 0.36, weight: 800, color: Colors.white).copyWith(
                   shadows: const [Shadow(color: Color(0x55000000), offset: Offset(0, 2), blurRadius: 3)],
                 ),
+              ),
               ),
           ],
         );

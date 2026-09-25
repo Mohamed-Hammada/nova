@@ -244,8 +244,11 @@ class NovaTrailProgress extends StatelessWidget {
       label: semanticLabel,
       excludeSemantics: true,
       child: LayoutBuilder(builder: (context, box) {
-        final stone = math.min(28.0, (box.maxWidth - 6 * (count - 1)) / count);
-        return Row(
+        final stone = math.max(10.0, math.min(28.0, (box.maxWidth - 6 * (count - 1)) / count));
+        // Long activities (many quick rounds) scale the trail down to fit.
+        return FittedBox(
+          fit: BoxFit.scaleDown,
+          child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
             for (var i = 0; i < count; i++) ...[
@@ -265,6 +268,7 @@ class NovaTrailProgress extends StatelessWidget {
               ),
             ],
           ],
+          ),
         );
       }),
     );

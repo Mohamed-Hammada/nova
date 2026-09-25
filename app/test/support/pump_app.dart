@@ -43,6 +43,8 @@ Future<AppHarness> pumpNovaApp(
   Locale? locale,
   Size size = const Size(1280, 900),
   bool disableAnimations = false,
+  // The child's age; null starts at first-launch onboarding.
+  int? age = 4,
 }) async {
   tester.view.physicalSize = size * tester.view.devicePixelRatio;
   addTearDown(tester.view.resetPhysicalSize);
@@ -62,6 +64,7 @@ Future<AppHarness> pumpNovaApp(
   ]);
   addTearDown(container.dispose);
   if (locale != null) container.read(localeProvider.notifier).state = locale;
+  if (age != null) container.read(childAgeProvider.notifier).state = age;
 
   // Start from a clean tree, so a second pump in one test gets a fresh
   // Navigator rather than the previous app's route stack.
