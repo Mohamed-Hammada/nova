@@ -1,0 +1,5 @@
+# Thresholds for games with two choices, where chance is 50 percent. PROVISIONAL, like every parameter.
+- {id: param.two-choice.emerging-accuracy, value: 0.6, unit: proportion of correct responses, status: provisional, basis: design_inference, rationale: 'Games with two choices have a 50 percent chance level,
+    so the default 0.4 emerging threshold is below chance for them (see param.default.emerging-accuracy).', calibration_plan: Set from pilot data against chance level and an adult-rated criterion.}
+- {id: param.two-choice.developing-accuracy, value: 0.7, unit: proportion of correct responses, status: provisional, basis: design_inference, rationale: Kept clearly above the 50 percent chance level of
+    two-choice games., calibration_plan: Set from the pilot distribution of accuracy in children an adult rates as developing.}

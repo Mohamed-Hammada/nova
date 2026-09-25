@@ -10,6 +10,7 @@ import 'package:nova_app/providers.dart';
 import 'app.dart';
 import 'ui/design/nova_design.dart';
 import 'ui/l10n.dart';
+import 'ui/settings/settings_sync.dart';
 
 /// What the app needs before its first real screen.
 class BootResult {
@@ -34,25 +35,54 @@ Future<BootResult> loadBootResult() async {
 /// state if it fails, then hands the loaded content to the app through the
 /// composition root's provider overrides.
 class NovaBootstrap extends StatefulWidget {
-  const NovaBootstrap({super.key, this.load = loadBootResult});
+  const NovaBootstrap({super.key, this.load = loadBootResult, this.overrides = const []});
 
   final Future<BootResult> Function() load;
+
+  /// Extra provider overrides (tests swap in fake ports here).
+  final List<Override> overrides;
 
   @override
   State<NovaBootstrap> createState() => _NovaBootstrapState();
 }
 
 class _NovaBootstrapState extends State<NovaBootstrap> {
-  late Future<BootResult> _boot;
+  late Future<ProviderContainer> _boot;
+  ProviderContainer? _container;
 
   @override
   void initState() {
     super.initState();
-    _boot = widget.load();
+    _boot = _start();
+  }
+
+  @override
+  void dispose() {
+    _container?.dispose();
+    super.dispose();
+  }
+
+  /// Loads content, then the saved settings, so the first frame already
+  /// shows the child's name, language and world rather than the defaults.
+  Future<ProviderContainer> _start() async {
+    final result = await widget.load();
+    final container = ProviderContainer(overrides: [
+      contentRuntimeProvider.overrideWithValue(result.content),
+      bundledAssetsProvider.overrideWithValue(result.bundledAssets),
+      ...widget.overrides,
+    ]);
+    try {
+      await loadSettings(container, container.read(playerStatePortProvider)).timeout(const Duration(seconds: 3));
+    } catch (_) {
+      // First run, or storage unavailable: start with the defaults.
+    }
+    _container?.dispose();
+    _container = container;
+    return container;
   }
 
   void _retry() {
-    final boot = widget.load();
+    final boot = _start();
     setState(() {
       _boot = boot;
     });
@@ -60,18 +90,12 @@ class _NovaBootstrapState extends State<NovaBootstrap> {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<BootResult>(
+    return FutureBuilder<ProviderContainer>(
       future: _boot,
       builder: (context, snapshot) {
-        final result = snapshot.data;
-        if (result != null) {
-          return ProviderScope(
-            overrides: [
-              contentRuntimeProvider.overrideWithValue(result.content),
-              bundledAssetsProvider.overrideWithValue(result.bundledAssets),
-            ],
-            child: const NovaApp(),
-          );
+        final container = snapshot.data;
+        if (container != null) {
+          return UncontrolledProviderScope(container: container, child: const NovaApp());
         }
         if (snapshot.hasError) {
           debugPrint('Nova failed to load its content bundle: ${snapshot.error}');

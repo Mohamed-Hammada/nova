@@ -67,6 +67,11 @@ STRENGTH_RANK = {name: rank for rank, name in enumerate(EVIDENCE_STRENGTHS, star
 # Judgment-class evidence can never be rated above these caps.
 STRENGTH_CAPS = {"expert_consensus": "moderate", "design_inference": "emerging"}
 
+# Every age group's journey must offer at least this many levels (product requirement).
+MIN_JOURNEY_LEVELS = 50
+# Journeys together must cover every age from here to there.
+JOURNEY_AGE_SPAN = (2, 8)
+
 # Deep-coverage set (spec 3.1): these domains, plus Arabic and English literacy,
 # for skills whose age range starts before DEEP_AGE_WINDOW[1] and ends after [0].
 DEEP_DOMAINS = frozenset({"executive_function", "memory", "math"})
@@ -106,6 +111,7 @@ class Spec:
     signals: list[Record] = field(default_factory=list)
     i18n: dict[str, dict[str, str]] = field(default_factory=dict)
     audio: dict[str, dict[str, str]] = field(default_factory=dict)
+    journeys: list[Record] = field(default_factory=list)
 
 
 def index_by_id(records: list[Record]) -> dict[str, Record]:

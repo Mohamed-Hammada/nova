@@ -1,3 +1,4 @@
+import 'package:nova_app/ui/settings/grown_up_settings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:nova_app/core/mastery/mastery_record.dart';
@@ -34,7 +35,7 @@ class ProgressScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = context.l10n;
     final theme = Theme.of(context);
-    final skillIds = {for (final game in ref.watch(playableGamesProvider)) ...game.primarySkillIds}.toList();
+    final skillIds = {for (final game in ref.watch(allPlayableGamesProvider)) ...game.primarySkillIds}.toList();
 
     return NovaPage(
       title: Text(l10n.progressTitle),
@@ -53,6 +54,8 @@ class ProgressScreen extends ConsumerWidget {
             _SkillProgressCard(skillId: skillId),
             const SizedBox(height: NovaSpace.md),
           ],
+          const SizedBox(height: NovaSpace.md),
+          const GrownUpSettings(),
         ],
       ),
     );

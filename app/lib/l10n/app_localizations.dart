@@ -523,6 +523,456 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Close'**
   String get close;
+
+  /// The guide character introduces itself.
+  ///
+  /// In en, this message translates to:
+  /// **'Hi! I\'m {name}!'**
+  String greeting(String name);
+
+  /// No description provided for @greetingNamed.
+  ///
+  /// In en, this message translates to:
+  /// **'Hi {child}! I\'m {name}!'**
+  String greetingNamed(String child, String name);
+
+  /// Age group 2-3.
+  ///
+  /// In en, this message translates to:
+  /// **'Little Stars'**
+  String get bandTiny;
+
+  /// Age group 4-5.
+  ///
+  /// In en, this message translates to:
+  /// **'Explorers'**
+  String get bandExplorer;
+
+  /// Age group 6-8.
+  ///
+  /// In en, this message translates to:
+  /// **'Champions'**
+  String get bandChampion;
+
+  /// No description provided for @ageYears.
+  ///
+  /// In en, this message translates to:
+  /// **'{range} years'**
+  String ageYears(String range);
+
+  /// number is already formatted for the locale.
+  ///
+  /// In en, this message translates to:
+  /// **'Level {number}'**
+  String levelLabel(String number);
+
+  /// No description provided for @levelDone.
+  ///
+  /// In en, this message translates to:
+  /// **'Level complete!'**
+  String get levelDone;
+
+  /// No description provided for @backToMap.
+  ///
+  /// In en, this message translates to:
+  /// **'Map'**
+  String get backToMap;
+
+  /// No description provided for @journeyTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'My Journey'**
+  String get journeyTitle;
+
+  /// No description provided for @journeySubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} levels to explore'**
+  String journeySubtitle(String count);
+
+  /// No description provided for @chapter.
+  ///
+  /// In en, this message translates to:
+  /// **'Chapter {number}'**
+  String chapter(String number);
+
+  /// No description provided for @starsCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} of {total} stars'**
+  String starsCount(String count, String total);
+
+  /// No description provided for @moreGames.
+  ///
+  /// In en, this message translates to:
+  /// **'More games'**
+  String get moreGames;
+
+  /// No description provided for @settingsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Settings'**
+  String get settingsTitle;
+
+  /// No description provided for @spokenPrompts.
+  ///
+  /// In en, this message translates to:
+  /// **'Spoken instructions'**
+  String get spokenPrompts;
+
+  /// No description provided for @spokenPromptsDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'The characters read every instruction aloud.'**
+  String get spokenPromptsDesc;
+
+  /// No description provided for @voiceAnswers.
+  ///
+  /// In en, this message translates to:
+  /// **'Answer by voice (microphone)'**
+  String get voiceAnswers;
+
+  /// No description provided for @voiceAnswersDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Your child can say answers out loud. Speech is recognised on this device only; nothing is recorded or sent.'**
+  String get voiceAnswersDesc;
+
+  /// No description provided for @cameraPlay.
+  ///
+  /// In en, this message translates to:
+  /// **'Face play (camera)'**
+  String get cameraPlay;
+
+  /// No description provided for @cameraPlayDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'The characters can see your child smile, look around and play peekaboo. Faces are processed on this device only; no picture is saved or sent.'**
+  String get cameraPlayDesc;
+
+  /// No description provided for @notOnThisDevice.
+  ///
+  /// In en, this message translates to:
+  /// **'Not available on this device.'**
+  String get notOnThisDevice;
+
+  /// No description provided for @permissionDenied.
+  ///
+  /// In en, this message translates to:
+  /// **'Permission was not given. You can allow it in the device settings.'**
+  String get permissionDenied;
+
+  /// No description provided for @didntCatch.
+  ///
+  /// In en, this message translates to:
+  /// **'I didn\'t catch that. Say it again, or tap!'**
+  String get didntCatch;
+
+  /// No description provided for @sayIt.
+  ///
+  /// In en, this message translates to:
+  /// **'Say it!'**
+  String get sayIt;
+
+  /// No description provided for @listening.
+  ///
+  /// In en, this message translates to:
+  /// **'Listening…'**
+  String get listening;
+
+  /// No description provided for @aboutMe.
+  ///
+  /// In en, this message translates to:
+  /// **'About me'**
+  String get aboutMe;
+
+  /// No description provided for @myName.
+  ///
+  /// In en, this message translates to:
+  /// **'My name'**
+  String get myName;
+
+  /// No description provided for @typeName.
+  ///
+  /// In en, this message translates to:
+  /// **'Type your name'**
+  String get typeName;
+
+  /// No description provided for @howOld.
+  ///
+  /// In en, this message translates to:
+  /// **'How old am I?'**
+  String get howOld;
+
+  /// No description provided for @myFriend.
+  ///
+  /// In en, this message translates to:
+  /// **'My friend'**
+  String get myFriend;
+
+  /// No description provided for @myWorld.
+  ///
+  /// In en, this message translates to:
+  /// **'My world'**
+  String get myWorld;
+
+  /// No description provided for @automatic.
+  ///
+  /// In en, this message translates to:
+  /// **'Auto'**
+  String get automatic;
+
+  /// No description provided for @languageLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Language'**
+  String get languageLabel;
+
+  /// No description provided for @worldCandyMeadow.
+  ///
+  /// In en, this message translates to:
+  /// **'Candy Meadow'**
+  String get worldCandyMeadow;
+
+  /// No description provided for @worldSunnyForest.
+  ///
+  /// In en, this message translates to:
+  /// **'Sunny Forest'**
+  String get worldSunnyForest;
+
+  /// No description provided for @worldSpaceLab.
+  ///
+  /// In en, this message translates to:
+  /// **'Space Lab'**
+  String get worldSpaceLab;
+
+  /// No description provided for @greatJob.
+  ///
+  /// In en, this message translates to:
+  /// **'Amazing!'**
+  String get greatJob;
+
+  /// No description provided for @niceTry.
+  ///
+  /// In en, this message translates to:
+  /// **'Nice try!'**
+  String get niceTry;
+
+  /// No description provided for @repeatInstruction.
+  ///
+  /// In en, this message translates to:
+  /// **'Say it again'**
+  String get repeatInstruction;
+
+  /// No description provided for @closeLevel.
+  ///
+  /// In en, this message translates to:
+  /// **'Leave level'**
+  String get closeLevel;
+
+  /// No description provided for @levelLocked.
+  ///
+  /// In en, this message translates to:
+  /// **'Level {number}, locked'**
+  String levelLocked(String number);
+
+  /// No description provided for @levelOpen.
+  ///
+  /// In en, this message translates to:
+  /// **'Level {number}'**
+  String levelOpen(String number);
+
+  /// No description provided for @promptMatchNumber.
+  ///
+  /// In en, this message translates to:
+  /// **'Find the group with {n}.'**
+  String promptMatchNumber(String n);
+
+  /// No description provided for @promptPickMore.
+  ///
+  /// In en, this message translates to:
+  /// **'Which one has more?'**
+  String get promptPickMore;
+
+  /// No description provided for @promptPickFewer.
+  ///
+  /// In en, this message translates to:
+  /// **'Which one has fewer?'**
+  String get promptPickFewer;
+
+  /// No description provided for @promptWhatNext.
+  ///
+  /// In en, this message translates to:
+  /// **'What comes next?'**
+  String get promptWhatNext;
+
+  /// No description provided for @promptWhatNextTower.
+  ///
+  /// In en, this message translates to:
+  /// **'Which tower comes next?'**
+  String get promptWhatNextTower;
+
+  /// No description provided for @promptSameFeeling.
+  ///
+  /// In en, this message translates to:
+  /// **'Who feels the same?'**
+  String get promptSameFeeling;
+
+  /// No description provided for @promptHowFeel.
+  ///
+  /// In en, this message translates to:
+  /// **'{story} How do they feel?'**
+  String promptHowFeel(String story);
+
+  /// No description provided for @promptListenFind.
+  ///
+  /// In en, this message translates to:
+  /// **'Listen, then find the picture.'**
+  String get promptListenFind;
+
+  /// No description provided for @promptFindWord.
+  ///
+  /// In en, this message translates to:
+  /// **'Find the {word}.'**
+  String promptFindWord(String word);
+
+  /// No description provided for @promptRhyme.
+  ///
+  /// In en, this message translates to:
+  /// **'What rhymes with {word}?'**
+  String promptRhyme(String word);
+
+  /// No description provided for @promptFirstLetter.
+  ///
+  /// In en, this message translates to:
+  /// **'Which letter does {word} start with?'**
+  String promptFirstLetter(String word);
+
+  /// No description provided for @promptBlend.
+  ///
+  /// In en, this message translates to:
+  /// **'{parts}… What word is it?'**
+  String promptBlend(String parts);
+
+  /// No description provided for @promptReadFind.
+  ///
+  /// In en, this message translates to:
+  /// **'Read the word, then find its picture.'**
+  String get promptReadFind;
+
+  /// No description provided for @promptLetterSmall.
+  ///
+  /// In en, this message translates to:
+  /// **'Find the small letter for {letter}.'**
+  String promptLetterSmall(String letter);
+
+  /// No description provided for @promptLetterJoined.
+  ///
+  /// In en, this message translates to:
+  /// **'Find {letter} at the start of a word.'**
+  String promptLetterJoined(String letter);
+
+  /// No description provided for @promptDragCount.
+  ///
+  /// In en, this message translates to:
+  /// **'Give {name} {n} {thing}!'**
+  String promptDragCount(String name, String n, String thing);
+
+  /// No description provided for @promptTapCount.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap each one to count, then choose how many.'**
+  String get promptTapCount;
+
+  /// No description provided for @promptJoin.
+  ///
+  /// In en, this message translates to:
+  /// **'Watch closely. How many now?'**
+  String get promptJoin;
+
+  /// No description provided for @promptNumberLine.
+  ///
+  /// In en, this message translates to:
+  /// **'Where does {n} go? Tap the line.'**
+  String promptNumberLine(String n);
+
+  /// No description provided for @promptSortColour.
+  ///
+  /// In en, this message translates to:
+  /// **'Sort by colour!'**
+  String get promptSortColour;
+
+  /// No description provided for @promptSortShape.
+  ///
+  /// In en, this message translates to:
+  /// **'Sort by shape!'**
+  String get promptSortShape;
+
+  /// No description provided for @promptSortBorder.
+  ///
+  /// In en, this message translates to:
+  /// **'Gold border: sort by shape. No border: by colour.'**
+  String get promptSortBorder;
+
+  /// No description provided for @promptNewRule.
+  ///
+  /// In en, this message translates to:
+  /// **'New rule!'**
+  String get promptNewRule;
+
+  /// No description provided for @promptPairs.
+  ///
+  /// In en, this message translates to:
+  /// **'Find the matching pairs.'**
+  String get promptPairs;
+
+  /// No description provided for @promptSimonWatch.
+  ///
+  /// In en, this message translates to:
+  /// **'Watch the lights…'**
+  String get promptSimonWatch;
+
+  /// No description provided for @promptSimonGo.
+  ///
+  /// In en, this message translates to:
+  /// **'Now you! Tap them in the same order.'**
+  String get promptSimonGo;
+
+  /// No description provided for @promptFeedFish.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap to feed the fish. Wait when a shark comes!'**
+  String get promptFeedFish;
+
+  /// No description provided for @promptCatch.
+  ///
+  /// In en, this message translates to:
+  /// **'Catch every one that matches!'**
+  String get promptCatch;
+
+  /// No description provided for @promptClap.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap the drum once for each part of the word.'**
+  String get promptClap;
+
+  /// No description provided for @promptPrintStart.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap where the reading starts.'**
+  String get promptPrintStart;
+
+  /// No description provided for @promptPrintFollow.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap the words in reading order.'**
+  String get promptPrintFollow;
+
+  /// No description provided for @promptBuild.
+  ///
+  /// In en, this message translates to:
+  /// **'Build the word for the picture.'**
+  String get promptBuild;
 }
 
 class _AppLocalizationsDelegate

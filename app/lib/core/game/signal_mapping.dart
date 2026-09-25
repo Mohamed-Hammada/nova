@@ -38,3 +38,7 @@ List<SignalDraft> bearApplesSignalMapper(RawMechanicEvent event) {
     ItemPlaced() || ItemRemoved() => const [],
   };
 }
+
+/// The mapping for every trial-based game played through PlaySession: the
+/// same rules as bear-apples (first submission is the accuracy sample).
+List<SignalDraft> trialSignalMapper(RawMechanicEvent event) => bearApplesSignalMapper(event);

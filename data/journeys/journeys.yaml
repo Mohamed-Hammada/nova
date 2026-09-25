@@ -1,0 +1,213 @@
+# Journeys: the level map for each age group. Each level plays one game (or, for literacy, the game for the
+# child's language). Inside a level the Adaptive Engine still chooses the rung; a level never sets difficulty.
+# skin only changes the pictured objects in counting games.
+- id: journey.tiny
+  name_key: journey.tiny.name
+  age_range: [2, 3]
+  levels:
+  - {id: tiny-001, game: game.math.bunny-carrots, skin: carrots}
+  - id: tiny-002
+    games_by_language: {en: game.lit.en.word-hunt, ar: game.lit.ar.word-hunt}
+  - {id: tiny-003, game: game.cog.color-sort}
+  - {id: tiny-004, game: game.sel.feelings-friends}
+  - {id: tiny-005, game: game.memory.peekaboo-pairs}
+  - {id: tiny-006, game: game.math.bunny-carrots, skin: shells}
+  - id: tiny-007
+    games_by_language: {en: game.lit.en.listen-and-find, ar: game.lit.ar.listen-and-find}
+  - {id: tiny-008, game: game.cog.color-sort}
+  - id: tiny-009
+    games_by_language: {en: game.lit.en.word-hunt, ar: game.lit.ar.word-hunt}
+  - {id: tiny-010, game: game.memory.peekaboo-pairs}
+  - {id: tiny-011, game: game.math.bunny-carrots, skin: stars}
+  - {id: tiny-012, game: game.sel.feelings-friends}
+  - id: tiny-013
+    games_by_language: {en: game.lit.en.listen-and-find, ar: game.lit.ar.listen-and-find}
+  - {id: tiny-014, game: game.cog.color-sort}
+  - {id: tiny-015, game: game.memory.peekaboo-pairs}
+  - id: tiny-016
+    games_by_language: {en: game.lit.en.word-hunt, ar: game.lit.ar.word-hunt}
+  - {id: tiny-017, game: game.math.bunny-carrots, skin: carrots}
+  - {id: tiny-018, game: game.sel.feelings-friends}
+  - id: tiny-019
+    games_by_language: {en: game.lit.en.listen-and-find, ar: game.lit.ar.listen-and-find}
+  - {id: tiny-020, game: game.memory.peekaboo-pairs}
+  - {id: tiny-021, game: game.math.bear-apples, skin: flowers}
+  - id: tiny-022
+    games_by_language: {en: game.lit.en.clap-syllables, ar: game.lit.ar.clap-syllables}
+  - {id: tiny-023, game: game.memory.simon-lights}
+  - {id: tiny-024, game: game.cog.color-sort}
+  - id: tiny-025
+    games_by_language: {en: game.lit.en.word-hunt, ar: game.lit.ar.word-hunt}
+  - {id: tiny-026, game: game.math.bear-apples, skin: fish}
+  - {id: tiny-027, game: game.sel.feelings-friends}
+  - id: tiny-028
+    games_by_language: {en: game.lit.en.book-explorer, ar: game.lit.ar.book-explorer}
+  - {id: tiny-029, game: game.memory.simon-lights}
+  - id: tiny-030
+    games_by_language: {en: game.lit.en.listen-and-find, ar: game.lit.ar.listen-and-find}
+  - {id: tiny-031, game: game.ef.feed-the-fish}
+  - {id: tiny-032, game: game.math.bear-apples, skin: apples}
+  - id: tiny-033
+    games_by_language: {en: game.lit.en.clap-syllables, ar: game.lit.ar.clap-syllables}
+  - {id: tiny-034, game: game.math.pattern-train}
+  - {id: tiny-035, game: game.memory.peekaboo-pairs}
+  - id: tiny-036
+    games_by_language: {en: game.lit.en.word-hunt, ar: game.lit.ar.word-hunt}
+  - {id: tiny-037, game: game.ef.feed-the-fish}
+  - id: tiny-038
+    games_by_language: {en: game.lit.en.book-explorer, ar: game.lit.ar.book-explorer}
+  - {id: tiny-039, game: game.math.more-or-less, skin: hearts}
+  - {id: tiny-040, game: game.sel.feelings-friends}
+  - {id: tiny-041, game: game.math.more-or-less, skin: carrots}
+  - {id: tiny-042, game: game.memory.simon-lights}
+  - id: tiny-043
+    games_by_language: {en: game.lit.en.listen-and-find, ar: game.lit.ar.listen-and-find}
+  - {id: tiny-044, game: game.math.pattern-train}
+  - {id: tiny-045, game: game.ef.feed-the-fish}
+  - id: tiny-046
+    games_by_language: {en: game.lit.en.clap-syllables, ar: game.lit.ar.clap-syllables}
+  - {id: tiny-047, game: game.math.bear-apples, skin: hearts}
+  - {id: tiny-048, game: game.memory.peekaboo-pairs}
+  - id: tiny-049
+    games_by_language: {en: game.lit.en.book-explorer, ar: game.lit.ar.book-explorer}
+  - {id: tiny-050, game: game.math.pattern-train}
+- id: journey.explorer
+  name_key: journey.explorer.name
+  age_range: [4, 5]
+  levels:
+  - {id: explorer-001, game: game.math.bear-apples, skin: carrots}
+  - id: explorer-002
+    games_by_language: {en: game.lit.en.word-hunt, ar: game.lit.ar.word-hunt}
+  - {id: explorer-003, game: game.math.more-or-less, skin: stars}
+  - {id: explorer-004, game: game.sel.feelings-friends}
+  - id: explorer-005
+    games_by_language: {en: game.lit.en.clap-syllables, ar: game.lit.ar.clap-syllables}
+  - {id: explorer-006, game: game.memory.peekaboo-pairs}
+  - {id: explorer-007, game: game.math.pattern-train}
+  - id: explorer-008
+    games_by_language: {en: game.lit.en.listen-and-find, ar: game.lit.ar.listen-and-find}
+  - {id: explorer-009, game: game.ef.feed-the-fish}
+  - {id: explorer-010, game: game.math.bear-apples, skin: fish}
+  - id: explorer-011
+    games_by_language: {en: game.lit.en.letter-pairs, ar: game.lit.ar.letter-forms}
+  - {id: explorer-012, game: game.math.number-match, skin: balls}
+  - id: explorer-013
+    games_by_language: {en: game.lit.en.book-explorer, ar: game.lit.ar.book-explorer}
+  - {id: explorer-014, game: game.memory.simon-lights}
+  - {id: explorer-015, game: game.cog.color-sort}
+  - id: explorer-016
+    games_by_language: {en: game.lit.en.rhyme-time, ar: game.lit.ar.rhyme-time}
+  - {id: explorer-017, game: game.math.more-or-less, skin: carrots}
+  - id: explorer-018
+    games_by_language: {en: game.lit.en.letter-catch, ar: game.lit.ar.letter-catch}
+  - {id: explorer-019, game: game.ef.sort-switch}
+  - {id: explorer-020, game: game.math.number-match, skin: balls}
+  - {id: explorer-021, game: game.math.number-catch}
+  - id: explorer-022
+    games_by_language: {en: game.lit.en.first-sound, ar: game.lit.ar.first-sound}
+  - {id: explorer-023, game: game.math.pattern-train}
+  - {id: explorer-024, game: game.memory.simon-lights}
+  - id: explorer-025
+    games_by_language: {en: game.lit.en.letter-pairs, ar: game.lit.ar.letter-forms}
+  - {id: explorer-026, game: game.ef.feed-the-fish}
+  - id: explorer-027
+    games_by_language: {en: game.lit.en.rhyme-time, ar: game.lit.ar.rhyme-time}
+  - {id: explorer-028, game: game.math.number-catch}
+  - {id: explorer-029, game: game.sel.feelings-friends}
+  - {id: explorer-030, game: game.ef.sort-switch}
+  - {id: explorer-031, game: game.math.star-count, skin: hearts}
+  - id: explorer-032
+    games_by_language: {en: game.lit.en.letter-catch, ar: game.lit.ar.letter-catch}
+  - {id: explorer-033, game: game.math.number-match, skin: carrots}
+  - id: explorer-034
+    games_by_language: {en: game.lit.en.first-sound, ar: game.lit.ar.first-sound}
+  - {id: explorer-035, game: game.memory.peekaboo-pairs}
+  - {id: explorer-036, game: game.math.add-take-away}
+  - id: explorer-037
+    games_by_language: {en: game.lit.en.clap-syllables, ar: game.lit.ar.clap-syllables}
+  - {id: explorer-038, game: game.ef.sort-switch}
+  - id: explorer-039
+    games_by_language: {en: game.lit.en.sound-blender, ar: game.lit.ar.sound-blender}
+  - {id: explorer-040, game: game.math.star-count, skin: apples}
+  - id: explorer-041
+    games_by_language: {en: game.lit.en.word-builder, ar: game.lit.ar.word-builder}
+  - {id: explorer-042, game: game.math.add-take-away}
+  - {id: explorer-043, game: game.memory.simon-lights}
+  - {id: explorer-044, game: game.sel.how-would-they-feel}
+  - {id: explorer-045, game: game.math.number-catch}
+  - id: explorer-046
+    games_by_language: {en: game.lit.en.sound-blender, ar: game.lit.ar.sound-blender}
+  - {id: explorer-047, game: game.ef.feed-the-fish}
+  - {id: explorer-048, game: game.math.pattern-train}
+  - id: explorer-049
+    games_by_language: {en: game.lit.en.word-builder, ar: game.lit.ar.word-builder}
+  - {id: explorer-050, game: game.math.add-take-away}
+- id: journey.champion
+  name_key: journey.champion.name
+  age_range: [6, 8]
+  levels:
+  - {id: champion-001, game: game.math.number-catch}
+  - id: champion-002
+    games_by_language: {en: game.lit.en.letter-pairs, ar: game.lit.ar.letter-forms}
+  - {id: champion-003, game: game.math.star-count, skin: stars}
+  - {id: champion-004, game: game.memory.simon-lights}
+  - id: champion-005
+    games_by_language: {en: game.lit.en.first-sound, ar: game.lit.ar.first-sound}
+  - {id: champion-006, game: game.math.pattern-train}
+  - {id: champion-007, game: game.ef.feed-the-fish}
+  - id: champion-008
+    games_by_language: {en: game.lit.en.sound-blender, ar: game.lit.ar.sound-blender}
+  - {id: champion-009, game: game.math.add-take-away}
+  - {id: champion-010, game: game.sel.how-would-they-feel}
+  - id: champion-011
+    games_by_language: {en: game.lit.en.word-builder, ar: game.lit.ar.word-builder}
+  - {id: champion-012, game: game.math.add-take-away}
+  - {id: champion-013, game: game.ef.sort-switch}
+  - {id: champion-014, game: game.math.number-line-hop}
+  - id: champion-015
+    games_by_language: {en: game.lit.en.word-pictures, ar: game.lit.ar.word-pictures}
+  - {id: champion-016, game: game.memory.simon-lights}
+  - {id: champion-017, game: game.math.pattern-builder}
+  - id: champion-018
+    games_by_language: {en: game.lit.en.sound-blender, ar: game.lit.ar.sound-blender}
+  - {id: champion-019, game: game.math.star-count, skin: stars}
+  - {id: champion-020, game: game.sel.how-would-they-feel}
+  - id: champion-021
+    games_by_language: {en: game.lit.en.word-pictures, ar: game.lit.ar.word-pictures}
+  - {id: champion-022, game: game.math.space-shop}
+  - {id: champion-023, game: game.math.number-line-hop}
+  - id: champion-024
+    games_by_language: {en: game.lit.en.word-builder, ar: game.lit.ar.word-builder}
+  - {id: champion-025, game: game.ef.feed-the-fish}
+  - {id: champion-026, game: game.math.pattern-builder}
+  - id: champion-027
+    games_by_language: {en: game.lit.en.word-pictures, ar: game.lit.ar.word-pictures}
+  - {id: champion-028, game: game.memory.simon-lights}
+  - {id: champion-029, game: game.math.add-take-away}
+  - {id: champion-030, game: game.ef.sort-switch}
+  - {id: champion-031, game: game.math.space-shop}
+  - id: champion-032
+    games_by_language: {en: game.lit.en.word-pictures, ar: game.lit.ar.word-pictures}
+  - {id: champion-033, game: game.math.number-line-hop}
+  - {id: champion-034, game: game.sel.how-would-they-feel}
+  - id: champion-035
+    games_by_language: {en: game.lit.en.word-builder, ar: game.lit.ar.word-builder}
+  - {id: champion-036, game: game.math.pattern-builder}
+  - {id: champion-037, game: game.ef.feed-the-fish}
+  - {id: champion-038, game: game.math.space-shop}
+  - id: champion-039
+    games_by_language: {en: game.lit.en.word-pictures, ar: game.lit.ar.word-pictures}
+  - {id: champion-040, game: game.memory.simon-lights}
+  - {id: champion-041, game: game.math.number-line-hop}
+  - {id: champion-042, game: game.ef.sort-switch}
+  - id: champion-043
+    games_by_language: {en: game.lit.en.word-pictures, ar: game.lit.ar.word-pictures}
+  - {id: champion-044, game: game.math.space-shop}
+  - {id: champion-045, game: game.math.pattern-builder}
+  - id: champion-046
+    games_by_language: {en: game.lit.en.word-builder, ar: game.lit.ar.word-builder}
+  - {id: champion-047, game: game.memory.simon-lights}
+  - {id: champion-048, game: game.math.space-shop}
+  - id: champion-049
+    games_by_language: {en: game.lit.en.word-pictures, ar: game.lit.ar.word-pictures}
+  - {id: champion-050, game: game.math.number-line-hop}

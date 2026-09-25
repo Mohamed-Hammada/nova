@@ -65,3 +65,13 @@
   description: Retell a story or a sequence of events in order, aloud, to an adult.
 - id: oral-sound-game
   description: Adult-led spoken game about sounds in words, with no screen (for example, I spy with the first sound).
+- id: join-separate
+  description: Watch items join or leave a group, then say how many there are now.
+- id: hear-and-point
+  description: Hear a spoken word and point to the picture it names.
+- id: print-follow
+  description: Show where reading starts on a printed line and follow the words in reading order.
+- id: build-word
+  description: Drag letter tiles into slots, in order, to build a pictured or spoken word.
+- id: read-and-match
+  description: Read a short printed word, with no audio, and choose the picture it names.

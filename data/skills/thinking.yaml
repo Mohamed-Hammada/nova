@@ -1,0 +1,58 @@
+# Written with the Nova authoring helper, then maintained by hand. Every entry here is judgment-class
+# (design inference) until the research task links verified evidence.
+- id: cognitive.sort.one-rule
+  domains: [cognitive]
+  name_key: skill.cognitive.sort.one-rule.name
+  description_key: skill.cognitive.sort.one-rule.description
+  prerequisites: []
+  age_range: [2, 4]
+  indicators: [Puts all red things together, Sorts by shape when colours are mixed]
+  evidence_basis: judgment
+  evidence_refs: [ev.design.ef-games]
+  scope: universal
+  deep_scope: false
+- id: memory.visual.pairs
+  domains: [memory]
+  name_key: skill.memory.visual.pairs.name
+  description_key: skill.memory.visual.pairs.description
+  prerequisites: []
+  age_range: [2, 5]
+  indicators: [Returns to a card seen earlier to make a pair, Finds pairs with fewer wrong turns over time]
+  evidence_basis: judgment
+  evidence_refs: [ev.design.ef-games]
+  scope: universal
+  deep_scope: true
+- id: memory.sequence.recall
+  domains: [memory]
+  name_key: skill.memory.sequence.recall.name
+  description_key: skill.memory.sequence.recall.description
+  prerequisites: []
+  age_range: [3, 8]
+  indicators: [Repeats 2 to 3 items in order, Repeats 5 or more items in order by age 7 to 8]
+  evidence_basis: judgment
+  evidence_refs: [ev.design.ef-games]
+  scope: universal
+  deep_scope: true
+- id: ef.inhibition.go-no-go
+  domains: [executive_function]
+  name_key: skill.ef.inhibition.go-no-go.name
+  description_key: skill.ef.inhibition.go-no-go.description
+  prerequisites: []
+  age_range: [3, 8]
+  indicators: [Holds back on the no-go picture most of the time, Keeps holding back when the pace speeds up]
+  evidence_basis: judgment
+  evidence_refs: [ev.design.ef-games]
+  scope: universal
+  deep_scope: true
+- id: ef.flexibility.switch-rule
+  domains: [executive_function]
+  name_key: skill.ef.flexibility.switch-rule.name
+  description_key: skill.ef.flexibility.switch-rule.description
+  prerequisites:
+  - {skill: cognitive.sort.one-rule}
+  age_range: [4, 8]
+  indicators: [Switches from colour to shape after the cue, Switches back and forth following a cue on each card]
+  evidence_basis: judgment
+  evidence_refs: [ev.design.ef-games]
+  scope: universal
+  deep_scope: true

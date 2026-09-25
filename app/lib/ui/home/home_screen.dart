@@ -6,7 +6,14 @@ import 'package:nova_app/ui/design/nova_design.dart';
 import 'package:nova_app/ui/game/game_catalog.dart';
 import 'package:nova_app/ui/game/game_screen.dart';
 import 'package:nova_app/ui/l10n.dart';
+import 'package:nova_app/ui/characters/character_rig.dart';
+import 'package:nova_app/ui/characters/character_view.dart';
 import 'package:nova_app/ui/progress/progress_screen.dart';
+import 'package:nova_app/ui/settings/face_play.dart';
+import 'package:nova_app/ui/play/game_art.dart';
+import 'package:nova_app/ui/play/journey_card.dart';
+import 'package:nova_app/ui/play/level_screen.dart';
+import 'package:nova_app/ui/settings/profile_screen.dart';
 import 'package:nova_app/ui/shell/language_menu.dart';
 
 class HomeScreen extends ConsumerWidget {
@@ -15,7 +22,16 @@ class HomeScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = context.l10n;
-    final games = ref.watch(playableGamesProvider);
+    final band = ref.watch(ageBandProvider);
+    final language = context.contentLanguage;
+    // Games made for the child's age group and language; games with a
+    // dedicated screen (the catalog) are always offered.
+    final games = [
+      for (final g in ref.watch(allPlayableGamesProvider))
+        if (playableGames.containsKey(g.id) ||
+            (band.overlaps(g.ageRange) && (g.languageDependencies.isEmpty || g.languageDependencies.contains(language))))
+          g,
+    ];
     final theme = Theme.of(context);
     final compact = NovaWidthClass.of(context) == NovaWidthClass.compact;
 
@@ -38,10 +54,12 @@ class HomeScreen extends ConsumerWidget {
           : ListView(
               padding: const EdgeInsets.symmetric(vertical: NovaSpace.lg),
               children: [
-                Semantics(header: true, child: Text(l10n.homeGreeting, style: theme.textTheme.headlineMedium)),
-                const SizedBox(height: NovaSpace.xs),
-                Text(l10n.homeSubtitle, style: theme.textTheme.bodyLarge?.copyWith(color: theme.colorScheme.onSurfaceVariant)),
+                const _Greeting(),
                 const SizedBox(height: NovaSpace.lg),
+                const JourneyCard(),
+                const SizedBox(height: NovaSpace.lg),
+                Semantics(header: true, child: Text(l10n.moreGames, style: theme.textTheme.titleLarge)),
+                const SizedBox(height: NovaSpace.sm),
                 _GameGrid(games: games),
               ],
             ),
@@ -87,7 +105,14 @@ class _GameCard extends ConsumerWidget {
     return NovaCard(
       semanticLabel: '$name. ${l10n.playGame}',
       onTap: () => Navigator.of(context).push(
-        MaterialPageRoute<void>(builder: (_) => GameScreen(gameId: game.id, skillId: skillId)),
+        MaterialPageRoute<void>(
+          builder: (_) => playableGames.containsKey(game.id)
+              ? GameScreen(gameId: game.id, skillId: skillId)
+              : LevelScreen(
+                  journey: Journey(id: 'journey.free', nameKey: '', ageRange: game.ageRange, levels: [JourneyLevel(id: 'free-${game.id}', gameId: game.id)]),
+                  levelIndex: 0,
+                ),
+        ),
       ),
       padding: EdgeInsets.zero,
       child: Column(
@@ -97,7 +122,7 @@ class _GameCard extends ConsumerWidget {
             height: 150,
             color: theme.colorScheme.primaryContainer,
             alignment: Alignment.center,
-            child: playableGames[game.id]!.cardArt(context),
+            child: playableGames[game.id]?.cardArt(context) ?? gameArt(game, 150, language),
           ),
           Padding(
             padding: const EdgeInsets.all(NovaSpace.lg),
@@ -121,6 +146,72 @@ class _GameCard extends ConsumerWidget {
           ),
         ],
       ),
+    );
+  }
+}
+
+/// The child's companion says hello (by name, once the child has set one),
+/// with the way into "About me".
+class _Greeting extends ConsumerStatefulWidget {
+  const _Greeting();
+
+  @override
+  ConsumerState<_Greeting> createState() => _GreetingState();
+}
+
+class _GreetingState extends ConsumerState<_Greeting> {
+  final _guide = CharacterController();
+
+  @override
+  void dispose() {
+    _guide.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = context.l10n;
+    final theme = Theme.of(context);
+    final companion = ref.watch(companionProvider);
+    final rtl = Directionality.of(context) == TextDirection.rtl;
+    final name = rtl ? companion.displayNameAr : companion.displayName;
+    final child = ref.watch(childNameProvider).trim();
+    return Row(
+      children: [
+        SizedBox(
+          width: 110,
+          height: 124,
+          child: Stack(children: [
+            Positioned.fill(
+              child: GestureDetector(
+                onTap: () => _guide.react(Reaction.wave),
+                child: CharacterView(key: ValueKey(companion), kind: companion, controller: _guide, entrance: Reaction.wave),
+              ),
+            ),
+            PositionedDirectional(top: 0, end: 0, child: FacePlay(controller: _guide)),
+          ]),
+        ),
+        const SizedBox(width: NovaSpace.md),
+        Expanded(
+          child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            Semantics(header: true, child: Text(l10n.homeGreeting, style: theme.textTheme.headlineMedium)),
+            const SizedBox(height: NovaSpace.xs),
+            Text(
+              child.isEmpty ? l10n.greeting(name) : l10n.greetingNamed(child, name),
+              style: theme.textTheme.titleMedium?.copyWith(color: theme.colorScheme.primary),
+            ),
+            const SizedBox(height: NovaSpace.xxs),
+            Text(l10n.homeSubtitle, style: theme.textTheme.bodyLarge?.copyWith(color: theme.colorScheme.onSurfaceVariant)),
+            const SizedBox(height: NovaSpace.xs),
+            NovaButton(
+              label: l10n.aboutMe,
+              icon: Icons.face_rounded,
+              variant: NovaButtonVariant.quiet,
+              onPressed: () => Navigator.of(context).push(MaterialPageRoute<void>(builder: (_) => const ProfileScreen())),
+            ),
+          ]),
+        ),
+      ],
     );
   }
 }

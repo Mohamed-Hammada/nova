@@ -101,6 +101,13 @@ class GameSessionController extends ChangeNotifier {
   bool _disposed = false;
 
   GamePhase get phase => _phase;
+
+  /// Share of trials answered correctly on the first try (for journey stars;
+  /// the same first-attempt rule as the accuracy signal).
+  double get firstTryAccuracy {
+    final first = _events.whereType<TrialSubmitted>().where((e) => e.attempt == 1).toList();
+    return first.isEmpty ? 0 : first.where((e) => e.correct).length / first.length;
+  }
   SessionPlan? get plan => _plan;
   int get trialCount => _trials.length;
   int get trialIndex => _trialIndex;

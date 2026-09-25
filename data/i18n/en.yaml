@@ -5,3 +5,129 @@ skill.math.count.cardinality.description: Understands that the last number count
 game.math.bear-apples.name: Bear's Apples
 game.math.number-match.name: Number Match
 task.math.count-objects-at-home.name: Count things at home
+skill.math.count.to-3.name: Count up to 3
+skill.math.count.to-3.description: Counts groups of up to 3 objects, one number word for each.
+skill.math.compare.more-fewer.name: More or fewer
+skill.math.compare.more-fewer.description: Tells which of two groups has more or fewer objects.
+skill.math.numeral.recognize-10.name: Know the numbers 1 to 10
+skill.math.numeral.recognize-10.description: Recognises the written numerals 1 to 10.
+skill.math.pattern.repeat.name: Continue a pattern
+skill.math.pattern.repeat.description: Continues a repeating pattern of colours or shapes.
+skill.math.count.to-20.name: Count to 20
+skill.math.count.to-20.description: Counts groups of up to 20 objects accurately.
+skill.math.add-sub.within-10.name: Add and take away within 10
+skill.math.add-sub.within-10.description: Works out how many there are after some are added or taken away, within 10.
+skill.math.add-sub.within-20.name: Add and take away within 20
+skill.math.add-sub.within-20.description: Adds and subtracts within 20, including crossing ten.
+skill.math.numberline.to-20.name: Numbers on a line
+skill.math.numberline.to-20.description: Places numbers up to 20 on a number line.
+skill.math.pattern.grow.name: Growing patterns
+skill.math.pattern.grow.description: Continues patterns that grow by a fixed amount each step.
+task.math.compare-at-home.name: Which pile has more?
+task.math.number-hunt.name: Number hunt
+task.math.patterns-at-home.name: Make a pattern
+task.math.count-big-at-home.name: Count a big pile
+task.math.add-at-home.name: Snack maths
+game.math.bunny-carrots.name: Bunny's Carrots
+game.math.more-or-less.name: More or Less
+game.math.number-catch.name: Number Balloons
+game.math.pattern-train.name: Pattern Train
+game.math.pattern-builder.name: Tower Patterns
+game.math.star-count.name: Star Count
+game.math.add-take-away.name: Busy Nest
+game.math.space-shop.name: Space Gems
+game.math.number-line-hop.name: Frog Hop
+skill.cognitive.sort.one-rule.name: Sort by one rule
+skill.cognitive.sort.one-rule.description: Sorts things into groups by colour or by shape.
+skill.memory.visual.pairs.name: Remember where things are
+skill.memory.visual.pairs.description: Remembers where hidden pictures are to find matching pairs.
+skill.memory.sequence.recall.name: Remember an order
+skill.memory.sequence.recall.description: Repeats a short sequence in the same order.
+skill.ef.inhibition.go-no-go.name: Stop and think
+skill.ef.inhibition.go-no-go.description: Acts on one signal and holds back on another.
+skill.ef.flexibility.switch-rule.name: Switch the rule
+skill.ef.flexibility.switch-rule.description: Sorts by one rule, then switches to a new rule when told.
+task.memory.hide-and-find.name: Hide and find
+task.memory.copy-tower.name: Copy the tower
+task.ef.freeze-dance.name: Freeze dance
+task.ef.sort-switch-at-home.name: Sort and switch
+game.cog.color-sort.name: Tidy-Up Time
+game.ef.sort-switch.name: Switch Sort
+game.memory.peekaboo-pairs.name: Peekaboo Pairs
+game.memory.simon-lights.name: Light Parade
+game.ef.feed-the-fish.name: Feed the Fish
+skill.sel.emotion.faces.name: Name feelings from faces
+skill.sel.emotion.faces.description: Recognises happy, sad, surprised and angry faces.
+skill.sel.emotion.situations.name: How would they feel?
+skill.sel.emotion.situations.description: Predicts how someone might feel in an everyday situation.
+game.sel.feelings-friends.name: Feelings Friends
+game.sel.how-would-they-feel.name: How Do They Feel?
+skill.lit.en.listening.name: Listen and understand (English)
+skill.lit.en.listening.description: Understands short spoken sentences and stories in English.
+skill.lit.en.vocabulary.name: Know everyday words (English)
+skill.lit.en.vocabulary.description: Knows the English words for everyday things.
+skill.lit.en.syllables.name: Clap the syllables (English)
+skill.lit.en.syllables.description: Splits spoken English words into syllables.
+skill.lit.en.rhyme.name: Hear rhymes (English)
+skill.lit.en.rhyme.description: Hears which English words rhyme.
+skill.lit.en.print-direction.name: How print works (English)
+skill.lit.en.print-direction.description: Knows that English is read from left to right, top to bottom.
+skill.lit.en.letter-case.name: Capital and small letters
+skill.lit.en.letter-case.description: Matches each capital English letter to its small letter.
+skill.lit.en.first-sounds.name: First sounds and letters (English)
+skill.lit.en.first-sounds.description: Knows which English letter a spoken word starts with.
+skill.lit.en.build-words.name: Build words (English)
+skill.lit.en.build-words.description: Blends sounds and puts letters together to make short English words.
+skill.lit.en.read-words.name: Read first words (English)
+skill.lit.en.read-words.description: Reads short, common English words.
+task.lit.en.retell.name: Tell the story back (English)
+task.lit.en.find-what-i-name.name: Find what I name (English)
+task.lit.en.sound-games.name: Sound games (English)
+task.lit.en.book-hunt.name: Book hunt (English)
+game.lit.en.listen-and-find.name: Listen and Find
+game.lit.en.word-hunt.name: Word Hunt
+game.lit.en.clap-syllables.name: Clap the Beat
+game.lit.en.rhyme-time.name: Rhyme Time
+game.lit.en.book-explorer.name: Book Explorer
+game.lit.en.letter-pairs.name: Letter Pairs
+game.lit.en.letter-catch.name: Letter Bubbles
+game.lit.en.first-sound.name: First Sounds
+game.lit.en.word-builder.name: Word Builder
+game.lit.en.sound-blender.name: Sound Blender
+game.lit.en.word-pictures.name: Word Pictures
+skill.lit.ar.listening.name: Listen and understand (Arabic)
+skill.lit.ar.listening.description: Understands short spoken sentences and stories in Arabic.
+skill.lit.ar.vocabulary.name: Know everyday words (Arabic)
+skill.lit.ar.vocabulary.description: Knows the Arabic words for everyday things.
+skill.lit.ar.syllables.name: Clap the syllables (Arabic)
+skill.lit.ar.syllables.description: Splits spoken Arabic words into syllables.
+skill.lit.ar.rhyme.name: Hear rhymes (Arabic)
+skill.lit.ar.rhyme.description: Hears which Arabic words rhyme.
+skill.lit.ar.print-direction.name: How print works (Arabic)
+skill.lit.ar.print-direction.description: Knows that Arabic is read from right to left, top to bottom.
+skill.lit.ar.letter-forms.name: Letter shapes (Arabic)
+skill.lit.ar.letter-forms.description: Recognises an Arabic letter in its separate and joined forms.
+skill.lit.ar.first-sounds.name: First sounds and letters (Arabic)
+skill.lit.ar.first-sounds.description: Knows which Arabic letter a spoken word starts with.
+skill.lit.ar.build-words.name: Build words (Arabic)
+skill.lit.ar.build-words.description: Blends sounds and puts letters together to make short Arabic words.
+skill.lit.ar.read-words.name: Read first words (Arabic)
+skill.lit.ar.read-words.description: Reads short, common Arabic words.
+task.lit.ar.retell.name: Tell the story back (Arabic)
+task.lit.ar.find-what-i-name.name: Find what I name (Arabic)
+task.lit.ar.sound-games.name: Sound games (Arabic)
+task.lit.ar.book-hunt.name: Book hunt (Arabic)
+game.lit.ar.listen-and-find.name: Listen and Find
+game.lit.ar.word-hunt.name: Word Hunt
+game.lit.ar.clap-syllables.name: Clap the Beat
+game.lit.ar.rhyme-time.name: Rhyme Time
+game.lit.ar.book-explorer.name: Book Explorer
+game.lit.ar.letter-forms.name: Letter Shapes
+game.lit.ar.letter-catch.name: Letter Bubbles
+game.lit.ar.first-sound.name: First Sounds
+game.lit.ar.word-builder.name: Word Builder
+game.lit.ar.sound-blender.name: Sound Blender
+game.lit.ar.word-pictures.name: Word Pictures
+journey.tiny.name: Little Stars' Journey
+journey.explorer.name: Explorers' Journey
+journey.champion.name: Champions' Journey

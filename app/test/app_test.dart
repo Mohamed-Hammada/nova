@@ -16,6 +16,7 @@ void main() {
 
   testWidgets('boot shows a loading state, then the app once content is loaded', (tester) async {
     await tester.pumpWidget(NovaBootstrap(
+      overrides: deviceFreeOverrides(),
       load: () => Future.delayed(const Duration(milliseconds: 50), () => BootResult(content: fixtureContent())),
     ));
     expect(find.text('Getting ready…'), findsOneWidget);
@@ -25,7 +26,7 @@ void main() {
 
   testWidgets('a content bundle that fails to load shows a recoverable error, and retry recovers', (tester) async {
     var attempts = 0;
-    await tester.pumpWidget(NovaBootstrap(load: () async {
+    await tester.pumpWidget(NovaBootstrap(overrides: deviceFreeOverrides(), load: () async {
       attempts++;
       if (attempts == 1) throw StateError('bundle missing');
       return BootResult(content: fixtureContent());

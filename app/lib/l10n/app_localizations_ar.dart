@@ -240,4 +240,270 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get close => 'إغلاق';
+
+  @override
+  String greeting(String name) {
+    return 'مرحبًا! أنا $name!';
+  }
+
+  @override
+  String greetingNamed(String child, String name) {
+    return 'مرحبًا يا $child! أنا $name!';
+  }
+
+  @override
+  String get bandTiny => 'النجوم الصغيرة';
+
+  @override
+  String get bandExplorer => 'المستكشفون';
+
+  @override
+  String get bandChampion => 'الأبطال';
+
+  @override
+  String ageYears(String range) {
+    return '$range سنوات';
+  }
+
+  @override
+  String levelLabel(String number) {
+    return 'المستوى $number';
+  }
+
+  @override
+  String get levelDone => 'أنهيت المستوى!';
+
+  @override
+  String get backToMap => 'الخريطة';
+
+  @override
+  String get journeyTitle => 'رحلتي';
+
+  @override
+  String journeySubtitle(String count) {
+    return '$count مستوى للاستكشاف';
+  }
+
+  @override
+  String chapter(String number) {
+    return 'الفصل $number';
+  }
+
+  @override
+  String starsCount(String count, String total) {
+    return '$count من $total نجمة';
+  }
+
+  @override
+  String get moreGames => 'ألعاب أخرى';
+
+  @override
+  String get settingsTitle => 'الإعدادات';
+
+  @override
+  String get spokenPrompts => 'التعليمات المسموعة';
+
+  @override
+  String get spokenPromptsDesc => 'تقرأ الشخصيات كل تعليمة بصوت عالٍ.';
+
+  @override
+  String get voiceAnswers => 'الإجابة بالصوت (الميكروفون)';
+
+  @override
+  String get voiceAnswersDesc =>
+      'يمكن لطفلك قول الإجابات بصوت عالٍ. يُتعرّف على الكلام على هذا الجهاز فقط؛ لا يُسجَّل أو يُرسَل أي شيء.';
+
+  @override
+  String get cameraPlay => 'اللعب بالوجه (الكاميرا)';
+
+  @override
+  String get cameraPlayDesc =>
+      'تستطيع الشخصيات رؤية ابتسامة طفلك واللعب معه. تُعالج الوجوه على هذا الجهاز فقط؛ لا تُحفظ أي صورة ولا تُرسَل.';
+
+  @override
+  String get notOnThisDevice => 'غير متاح على هذا الجهاز.';
+
+  @override
+  String get permissionDenied =>
+      'لم يُمنح الإذن. يمكنك السماح به من إعدادات الجهاز.';
+
+  @override
+  String get didntCatch => 'لم أسمع جيدًا. قلها مرة أخرى أو المس!';
+
+  @override
+  String get sayIt => 'قلها!';
+
+  @override
+  String get listening => 'أستمع…';
+
+  @override
+  String get aboutMe => 'عنّي';
+
+  @override
+  String get myName => 'اسمي';
+
+  @override
+  String get typeName => 'اكتب اسمك';
+
+  @override
+  String get howOld => 'كم عمري؟';
+
+  @override
+  String get myFriend => 'صديقي';
+
+  @override
+  String get myWorld => 'عالمي';
+
+  @override
+  String get automatic => 'تلقائي';
+
+  @override
+  String get languageLabel => 'اللغة';
+
+  @override
+  String get worldCandyMeadow => 'مرج الحلوى';
+
+  @override
+  String get worldSunnyForest => 'الغابة المشمسة';
+
+  @override
+  String get worldSpaceLab => 'مختبر الفضاء';
+
+  @override
+  String get greatJob => 'رائع!';
+
+  @override
+  String get niceTry => 'محاولة جميلة!';
+
+  @override
+  String get repeatInstruction => 'أعد التعليمة';
+
+  @override
+  String get closeLevel => 'اخرج من المستوى';
+
+  @override
+  String levelLocked(String number) {
+    return 'المستوى $number، مقفل';
+  }
+
+  @override
+  String levelOpen(String number) {
+    return 'المستوى $number';
+  }
+
+  @override
+  String promptMatchNumber(String n) {
+    return 'ابحث عن المجموعة التي فيها $n.';
+  }
+
+  @override
+  String get promptPickMore => 'أيّها فيه أكثر؟';
+
+  @override
+  String get promptPickFewer => 'أيّها فيه أقل؟';
+
+  @override
+  String get promptWhatNext => 'ماذا يأتي بعد ذلك؟';
+
+  @override
+  String get promptWhatNextTower => 'أي برج يأتي بعد ذلك؟';
+
+  @override
+  String get promptSameFeeling => 'من يشعر بالشعور نفسه؟';
+
+  @override
+  String promptHowFeel(String story) {
+    return '$story بماذا يشعر؟';
+  }
+
+  @override
+  String get promptListenFind => 'استمع، ثم ابحث عن الصورة.';
+
+  @override
+  String promptFindWord(String word) {
+    return 'ابحث عن: $word';
+  }
+
+  @override
+  String promptRhyme(String word) {
+    return 'ما الذي يتّفق في القافية مع $word؟';
+  }
+
+  @override
+  String promptFirstLetter(String word) {
+    return 'بأي حرف تبدأ كلمة $word؟';
+  }
+
+  @override
+  String promptBlend(String parts) {
+    return '$parts… ما هي الكلمة؟';
+  }
+
+  @override
+  String get promptReadFind => 'اقرأ الكلمة، ثم ابحث عن صورتها.';
+
+  @override
+  String promptLetterSmall(String letter) {
+    return 'ابحث عن الحرف الصغير للحرف $letter.';
+  }
+
+  @override
+  String promptLetterJoined(String letter) {
+    return 'ابحث عن الحرف $letter في أول الكلمة.';
+  }
+
+  @override
+  String promptDragCount(String name, String n, String thing) {
+    return 'أعطِ $name $n ($thing)!';
+  }
+
+  @override
+  String get promptTapCount => 'المس كل واحدة لتعدّها، ثم اختر كم عددها.';
+
+  @override
+  String get promptJoin => 'راقب جيدًا. كم العدد الآن؟';
+
+  @override
+  String promptNumberLine(String n) {
+    return 'أين يقع العدد $n؟ المس الخط.';
+  }
+
+  @override
+  String get promptSortColour => 'صنّف حسب اللون!';
+
+  @override
+  String get promptSortShape => 'صنّف حسب الشكل!';
+
+  @override
+  String get promptSortBorder => 'إطار ذهبي: حسب الشكل. بلا إطار: حسب اللون.';
+
+  @override
+  String get promptNewRule => 'قاعدة جديدة!';
+
+  @override
+  String get promptPairs => 'ابحث عن الأزواج المتطابقة.';
+
+  @override
+  String get promptSimonWatch => 'راقب الأضواء…';
+
+  @override
+  String get promptSimonGo => 'دورك الآن! المسها بالترتيب نفسه.';
+
+  @override
+  String get promptFeedFish => 'المس لتطعم السمك. انتظر إذا جاء القرش!';
+
+  @override
+  String get promptCatch => 'التقط كل ما يطابق!';
+
+  @override
+  String get promptClap => 'اضرب الطبل مرة لكل مقطع في الكلمة.';
+
+  @override
+  String get promptPrintStart => 'المس المكان الذي تبدأ منه القراءة.';
+
+  @override
+  String get promptPrintFollow => 'المس الكلمات بترتيب القراءة.';
+
+  @override
+  String get promptBuild => 'ركّب كلمة الصورة.';
 }

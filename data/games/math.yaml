@@ -1,0 +1,282 @@
+# Written with the Nova authoring helper, then maintained by hand. Every entry here is judgment-class
+# (design inference) until the research task links verified evidence.
+- id: game.math.bunny-carrots
+  name_key: game.math.bunny-carrots.name
+  age_range: [2, 3]
+  primary_skills: [math.count.to-3]
+  secondary_skills: []
+  objective: Give the bunny exactly the carrots she asks for.
+  mechanic_id: drag-to-count
+  mechanic: The bunny asks for one, two or three carrots; the child drags carrots onto her plate and stops at the number asked.
+  evidence_basis: judgment
+  evidence_refs: [ev.design.drag-to-count-mechanic]
+  difficulty:
+    varied: [item_complexity, distractors]
+    anchors:
+      item_complexity: [requests of 1 or 2, requests of 1 to 3]
+      distractors: [only carrots, carrots mixed with radishes; only carrots count]
+    rungs:
+    - id: r1
+      values: {item_complexity: 0, distractors: 0, working_memory_load: 0, rule_complexity: 0, abstraction: 0, cognitive_load: 0, independence: 0}
+    - id: r2
+      values: {item_complexity: 1, distractors: 0, working_memory_load: 0, rule_complexity: 0, abstraction: 0, cognitive_load: 0, independence: 0}
+    - id: r3
+      values: {item_complexity: 1, distractors: 1, working_memory_load: 0, rule_complexity: 0, abstraction: 0, cognitive_load: 0, independence: 0}
+  scaffolding:
+    hints: [Each carrot glows as its number is spoken., The bunny holds up fingers for the number she wants.]
+    adult_prompt: Ask the child to hand you one or two real things, then say how many you have.
+  signals: [accuracy, hints_used, retries, error_type, completion]
+  progression: {advance_parameter: param.default.advance-accuracy, retreat_parameter: param.default.retreat-accuracy}
+  transfer_probes: []
+  language_dependencies: []
+- id: game.math.more-or-less
+  name_key: game.math.more-or-less.name
+  age_range: [3, 6]
+  primary_skills: [math.compare.more-fewer]
+  secondary_skills: []
+  objective: Pick the basket with more (or fewer).
+  mechanic_id: compare-quantities
+  mechanic: Two baskets with different numbers of things appear; the child taps the one with more, or with fewer when asked.
+  evidence_basis: judgment
+  evidence_refs: [ev.design.choice-mechanics]
+  difficulty:
+    varied: [item_complexity, rule_complexity]
+    anchors:
+      item_complexity: [groups of 1 to 4 that differ by at least 2, groups of 1 to 6 that differ by 1 or 2, groups of up to 10 that differ by 1]
+      rule_complexity: [always asks which has more, asks for more or fewer]
+    rungs:
+    - id: r1
+      values: {item_complexity: 0, distractors: 0, working_memory_load: 0, rule_complexity: 0, abstraction: 0, cognitive_load: 0, independence: 0}
+    - id: r2
+      values: {item_complexity: 1, distractors: 0, working_memory_load: 0, rule_complexity: 0, abstraction: 0, cognitive_load: 0, independence: 0}
+    - id: r3
+      values: {item_complexity: 1, distractors: 0, working_memory_load: 0, rule_complexity: 1, abstraction: 0, cognitive_load: 0, independence: 0}
+    - id: r4
+      values: {item_complexity: 2, distractors: 0, working_memory_load: 0, rule_complexity: 1, abstraction: 0, cognitive_load: 0, independence: 0}
+  scaffolding:
+    hints: [The objects line up in pairs so the extra ones stand out., The question is repeated with a gesture for more or fewer.]
+    adult_prompt: "Ask: how did you know that basket has more? Let the child count to check."
+  signals: [accuracy, hints_used, retries, error_type, completion]
+  progression: {advance_parameter: param.default.advance-accuracy, retreat_parameter: param.default.retreat-accuracy}
+  transfer_probes:
+  - {id: probe.compare-at-home, type: cross_game, delayed: false, skill: math.compare.more-fewer, mechanic_id: physical-counting, task_ref: task.math.compare-at-home, changes: 'From screen baskets to real
+      piles on the table, with an adult asking.', preserved: Choosing the group with more or fewer.}
+  language_dependencies: []
+- id: game.math.number-catch
+  name_key: game.math.number-catch.name
+  age_range: [4, 7]
+  primary_skills: [math.numeral.recognize-10]
+  secondary_skills: []
+  objective: Catch every balloon with the number shown.
+  mechanic_id: catch-target
+  mechanic: Balloons with numerals float up; the child taps only the ones showing the target number.
+  evidence_basis: judgment
+  evidence_refs: [ev.design.choice-mechanics]
+  difficulty:
+    varied: [item_complexity, distractors]
+    anchors:
+      item_complexity: [numerals 1 to 5, numerals 1 to 10]
+      distractors: [other numerals look different from the target, 'look-alike numerals appear (6 and 9, 1 and 7)']
+    rungs:
+    - id: r1
+      values: {item_complexity: 0, distractors: 0, working_memory_load: 0, rule_complexity: 0, abstraction: 0, cognitive_load: 0, independence: 0}
+    - id: r2
+      values: {item_complexity: 1, distractors: 0, working_memory_load: 0, rule_complexity: 0, abstraction: 0, cognitive_load: 0, independence: 0}
+    - id: r3
+      values: {item_complexity: 1, distractors: 1, working_memory_load: 0, rule_complexity: 0, abstraction: 0, cognitive_load: 0, independence: 0}
+  scaffolding:
+    hints: [The target number is shown big at the top., Correct balloons sparkle for a moment before they rise.]
+    adult_prompt: Point to a number on a clock or a book and ask the child to name it.
+  signals: [accuracy, hints_used, retries, error_type, completion]
+  progression: {advance_parameter: param.default.advance-accuracy, retreat_parameter: param.default.retreat-accuracy}
+  transfer_probes:
+  - {id: probe.number-hunt, type: cross_game, delayed: false, skill: math.numeral.recognize-10, mechanic_id: physical-hunt, task_ref: task.math.number-hunt, changes: From balloons on screen to numerals
+      on real objects at home., preserved: Recognising a named numeral from 1 to 10.}
+  language_dependencies: []
+- id: game.math.pattern-train
+  name_key: game.math.pattern-train.name
+  age_range: [3, 6]
+  primary_skills: [math.pattern.repeat]
+  secondary_skills: []
+  objective: Finish the pattern on the train.
+  mechanic_id: pattern-continue
+  mechanic: Train carriages carry a repeating pattern; the child picks what goes in the empty carriage.
+  evidence_basis: judgment
+  evidence_refs: [ev.design.choice-mechanics]
+  difficulty:
+    varied: [item_complexity, abstraction]
+    anchors:
+      item_complexity: [AB patterns, ABC patterns, AAB and ABB patterns]
+      abstraction: [patterns of colour only, patterns of shape and colour together]
+    rungs:
+    - id: r1
+      values: {item_complexity: 0, distractors: 0, working_memory_load: 0, rule_complexity: 0, abstraction: 0, cognitive_load: 0, independence: 0}
+    - id: r2
+      values: {item_complexity: 1, distractors: 0, working_memory_load: 0, rule_complexity: 0, abstraction: 0, cognitive_load: 0, independence: 0}
+    - id: r3
+      values: {item_complexity: 2, distractors: 0, working_memory_load: 0, rule_complexity: 0, abstraction: 0, cognitive_load: 0, independence: 0}
+    - id: r4
+      values: {item_complexity: 2, distractors: 0, working_memory_load: 0, rule_complexity: 0, abstraction: 1, cognitive_load: 0, independence: 0}
+  scaffolding:
+    hints: ['The pattern is said aloud as a chant (red, blue, red, blue...).', The repeating unit is outlined.]
+    adult_prompt: Clap or stamp a pattern together and ask what comes next.
+  signals: [accuracy, hints_used, retries, error_type, completion]
+  progression: {advance_parameter: param.default.advance-accuracy, retreat_parameter: param.default.retreat-accuracy}
+  transfer_probes:
+  - {id: probe.patterns-at-home, type: cross_game, delayed: false, skill: math.pattern.repeat, mechanic_id: physical-build, task_ref: task.math.patterns-at-home, changes: From train carriages to real objects
+      laid out by the child., preserved: Continuing a repeating unit.}
+  language_dependencies: []
+- id: game.math.pattern-builder
+  name_key: game.math.pattern-builder.name
+  age_range: [6, 8]
+  primary_skills: [math.pattern.grow]
+  secondary_skills: []
+  objective: Build the next step of the growing tower.
+  mechanic_id: pattern-continue
+  mechanic: Towers of blocks grow step by step; the child picks the tower that comes next.
+  evidence_basis: judgment
+  evidence_refs: [ev.design.choice-mechanics]
+  difficulty:
+    varied: [item_complexity, distractors]
+    anchors:
+      item_complexity: [repeating patterns with a unit of four, growing patterns that add one each step, growing patterns that add two each step]
+      distractors: [three choices, four choices]
+    rungs:
+    - id: r1
+      values: {item_complexity: 0, distractors: 0, working_memory_load: 0, rule_complexity: 0, abstraction: 0, cognitive_load: 0, independence: 0}
+    - id: r2
+      values: {item_complexity: 1, distractors: 0, working_memory_load: 0, rule_complexity: 0, abstraction: 0, cognitive_load: 0, independence: 0}
+    - id: r3
+      values: {item_complexity: 1, distractors: 1, working_memory_load: 0, rule_complexity: 0, abstraction: 0, cognitive_load: 0, independence: 0}
+    - id: r4
+      values: {item_complexity: 2, distractors: 1, working_memory_load: 0, rule_complexity: 0, abstraction: 0, cognitive_load: 0, independence: 0}
+  scaffolding:
+    hints: [Each step's new blocks are highlighted., The step numbers are shown under the towers.]
+    adult_prompt: Build a staircase with blocks together and ask how many the next step needs.
+  signals: [accuracy, hints_used, retries, error_type, completion]
+  progression: {advance_parameter: param.default.advance-accuracy, retreat_parameter: param.default.retreat-accuracy}
+  transfer_probes: []
+  language_dependencies: []
+- id: game.math.star-count
+  name_key: game.math.star-count.name
+  age_range: [5, 7]
+  primary_skills: [math.count.to-20]
+  secondary_skills: []
+  objective: Count the stars in the sky.
+  mechanic_id: tap-to-count
+  mechanic: Stars appear; the child taps each star once as it is counted, then chooses how many there are.
+  evidence_basis: judgment
+  evidence_refs: [ev.design.counting-progression]
+  difficulty:
+    varied: [item_complexity]
+    anchors:
+      item_complexity: [6 to 10 stars in a row, 6 to 10 scattered stars, 11 to 20 scattered stars]
+    rungs:
+    - id: r1
+      values: {item_complexity: 0, distractors: 0, working_memory_load: 0, rule_complexity: 0, abstraction: 0, cognitive_load: 0, independence: 0}
+    - id: r2
+      values: {item_complexity: 1, distractors: 0, working_memory_load: 0, rule_complexity: 0, abstraction: 0, cognitive_load: 0, independence: 0}
+    - id: r3
+      values: {item_complexity: 2, distractors: 0, working_memory_load: 0, rule_complexity: 0, abstraction: 0, cognitive_load: 0, independence: 0}
+  scaffolding:
+    hints: [Tapped stars stay lit so the child can see what is counted., The number word is shown next to each tapped star.]
+    adult_prompt: Count a big pile of real things together, moving each one aside as it is counted.
+  signals: [accuracy, hints_used, retries, error_type, completion]
+  progression: {advance_parameter: param.default.advance-accuracy, retreat_parameter: param.default.retreat-accuracy}
+  transfer_probes:
+  - {id: probe.count-big-at-home, type: cross_game, delayed: false, skill: math.count.to-20, mechanic_id: physical-counting, task_ref: task.math.count-big-at-home, changes: 'From stars on screen to a real
+      pile, counted aloud.', preserved: Counting past 10 and keeping track.}
+  language_dependencies: []
+- id: game.math.add-take-away
+  name_key: game.math.add-take-away.name
+  age_range: [5, 8]
+  primary_skills: [math.add-sub.within-10]
+  secondary_skills: []
+  objective: Work out how many are in the nest now.
+  mechanic_id: join-separate
+  mechanic: Birds fly into or out of a nest; the child chooses how many birds are in the nest now.
+  evidence_basis: judgment
+  evidence_refs: [ev.design.join-separate-mechanic]
+  difficulty:
+    varied: [item_complexity, abstraction]
+    anchors:
+      item_complexity: [adding within 5, adding and taking away within 10]
+      abstraction: [birds stay visible, the nest is covered and a number sentence is shown]
+    rungs:
+    - id: r1
+      values: {item_complexity: 0, distractors: 0, working_memory_load: 0, rule_complexity: 0, abstraction: 0, cognitive_load: 0, independence: 0}
+    - id: r2
+      values: {item_complexity: 1, distractors: 0, working_memory_load: 0, rule_complexity: 0, abstraction: 0, cognitive_load: 0, independence: 0}
+    - id: r3
+      values: {item_complexity: 1, distractors: 0, working_memory_load: 0, rule_complexity: 0, abstraction: 1, cognitive_load: 0, independence: 0}
+  scaffolding:
+    hints: [The birds are counted aloud as they move., The number sentence builds up as the birds move.]
+    adult_prompt: Tell a story with snacks (3 grapes and 2 more) and ask how many now before counting.
+  signals: [accuracy, hints_used, retries, error_type, completion]
+  progression: {advance_parameter: param.default.advance-accuracy, retreat_parameter: param.default.retreat-accuracy}
+  transfer_probes:
+  - {id: probe.add-at-home, type: cross_game, delayed: false, skill: math.add-sub.within-10, mechanic_id: physical-counting, task_ref: task.math.add-at-home, changes: From birds on screen to real snacks
+      with some hidden., preserved: Working out how many after adding or taking away.}
+  language_dependencies: []
+- id: game.math.space-shop
+  name_key: game.math.space-shop.name
+  age_range: [6, 8]
+  primary_skills: [math.add-sub.within-20]
+  secondary_skills: []
+  objective: Help the robot count its space gems.
+  mechanic_id: join-separate
+  mechanic: Gems are added to or taken from the robot's bag; the child chooses the new total.
+  evidence_basis: judgment
+  evidence_refs: [ev.design.join-separate-mechanic]
+  difficulty:
+    varied: [item_complexity, abstraction]
+    anchors:
+      item_complexity: [totals up to 15 without crossing ten, totals up to 20 crossing ten]
+      abstraction: [gems shown, number sentence only]
+    rungs:
+    - id: r1
+      values: {item_complexity: 0, distractors: 0, working_memory_load: 0, rule_complexity: 0, abstraction: 0, cognitive_load: 0, independence: 0}
+    - id: r2
+      values: {item_complexity: 0, distractors: 0, working_memory_load: 0, rule_complexity: 0, abstraction: 1, cognitive_load: 0, independence: 0}
+    - id: r3
+      values: {item_complexity: 1, distractors: 0, working_memory_load: 0, rule_complexity: 0, abstraction: 1, cognitive_load: 0, independence: 0}
+  scaffolding:
+    hints: [Ten-frames show how the gems fill up to ten., The first number is said and the child counts on.]
+    adult_prompt: "Ask: 8 and 5 more, how could you make ten first?"
+  signals: [accuracy, hints_used, retries, error_type, completion]
+  progression: {advance_parameter: param.default.advance-accuracy, retreat_parameter: param.default.retreat-accuracy}
+  transfer_probes:
+  - {id: probe.add20-at-home, type: cross_game, delayed: false, skill: math.add-sub.within-20, mechanic_id: physical-counting, task_ref: task.math.add-at-home, changes: From gems on screen to real objects
+      at home., preserved: Adding and taking away past ten.}
+  language_dependencies: []
+- id: game.math.number-line-hop
+  name_key: game.math.number-line-hop.name
+  age_range: [6, 8]
+  primary_skills: [math.numberline.to-20]
+  secondary_skills: []
+  objective: Help the frog hop to the right number.
+  mechanic_id: number-line-place
+  mechanic: A number is shown; the child taps where it goes on the number line and the frog hops there.
+  evidence_basis: judgment
+  evidence_refs: [ev.design.number-line-mechanic]
+  difficulty:
+    varied: [item_complexity, abstraction]
+    anchors:
+      item_complexity: [line from 0 to 10, line from 0 to 20]
+      abstraction: [every mark is labelled, every fifth mark is labelled, only the ends are labelled]
+    rungs:
+    - id: r1
+      values: {item_complexity: 0, distractors: 0, working_memory_load: 0, rule_complexity: 0, abstraction: 0, cognitive_load: 0, independence: 0}
+    - id: r2
+      values: {item_complexity: 0, distractors: 0, working_memory_load: 0, rule_complexity: 0, abstraction: 1, cognitive_load: 0, independence: 0}
+    - id: r3
+      values: {item_complexity: 1, distractors: 0, working_memory_load: 0, rule_complexity: 0, abstraction: 1, cognitive_load: 0, independence: 0}
+    - id: r4
+      values: {item_complexity: 1, distractors: 0, working_memory_load: 0, rule_complexity: 0, abstraction: 2, cognitive_load: 0, independence: 0}
+  scaffolding:
+    hints: [The frog counts the hops aloud., The halfway mark lights up.]
+    adult_prompt: Draw a line with 0 and 10 at the ends and ask where 5 would go.
+  signals: [accuracy, hints_used, retries, error_type, completion]
+  progression: {advance_parameter: param.default.advance-accuracy, retreat_parameter: param.default.retreat-accuracy}
+  transfer_probes: []
+  language_dependencies: []

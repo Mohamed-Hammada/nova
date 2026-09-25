@@ -241,4 +241,272 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get close => 'Close';
+
+  @override
+  String greeting(String name) {
+    return 'Hi! I\'m $name!';
+  }
+
+  @override
+  String greetingNamed(String child, String name) {
+    return 'Hi $child! I\'m $name!';
+  }
+
+  @override
+  String get bandTiny => 'Little Stars';
+
+  @override
+  String get bandExplorer => 'Explorers';
+
+  @override
+  String get bandChampion => 'Champions';
+
+  @override
+  String ageYears(String range) {
+    return '$range years';
+  }
+
+  @override
+  String levelLabel(String number) {
+    return 'Level $number';
+  }
+
+  @override
+  String get levelDone => 'Level complete!';
+
+  @override
+  String get backToMap => 'Map';
+
+  @override
+  String get journeyTitle => 'My Journey';
+
+  @override
+  String journeySubtitle(String count) {
+    return '$count levels to explore';
+  }
+
+  @override
+  String chapter(String number) {
+    return 'Chapter $number';
+  }
+
+  @override
+  String starsCount(String count, String total) {
+    return '$count of $total stars';
+  }
+
+  @override
+  String get moreGames => 'More games';
+
+  @override
+  String get settingsTitle => 'Settings';
+
+  @override
+  String get spokenPrompts => 'Spoken instructions';
+
+  @override
+  String get spokenPromptsDesc =>
+      'The characters read every instruction aloud.';
+
+  @override
+  String get voiceAnswers => 'Answer by voice (microphone)';
+
+  @override
+  String get voiceAnswersDesc =>
+      'Your child can say answers out loud. Speech is recognised on this device only; nothing is recorded or sent.';
+
+  @override
+  String get cameraPlay => 'Face play (camera)';
+
+  @override
+  String get cameraPlayDesc =>
+      'The characters can see your child smile, look around and play peekaboo. Faces are processed on this device only; no picture is saved or sent.';
+
+  @override
+  String get notOnThisDevice => 'Not available on this device.';
+
+  @override
+  String get permissionDenied =>
+      'Permission was not given. You can allow it in the device settings.';
+
+  @override
+  String get didntCatch => 'I didn\'t catch that. Say it again, or tap!';
+
+  @override
+  String get sayIt => 'Say it!';
+
+  @override
+  String get listening => 'Listening…';
+
+  @override
+  String get aboutMe => 'About me';
+
+  @override
+  String get myName => 'My name';
+
+  @override
+  String get typeName => 'Type your name';
+
+  @override
+  String get howOld => 'How old am I?';
+
+  @override
+  String get myFriend => 'My friend';
+
+  @override
+  String get myWorld => 'My world';
+
+  @override
+  String get automatic => 'Auto';
+
+  @override
+  String get languageLabel => 'Language';
+
+  @override
+  String get worldCandyMeadow => 'Candy Meadow';
+
+  @override
+  String get worldSunnyForest => 'Sunny Forest';
+
+  @override
+  String get worldSpaceLab => 'Space Lab';
+
+  @override
+  String get greatJob => 'Amazing!';
+
+  @override
+  String get niceTry => 'Nice try!';
+
+  @override
+  String get repeatInstruction => 'Say it again';
+
+  @override
+  String get closeLevel => 'Leave level';
+
+  @override
+  String levelLocked(String number) {
+    return 'Level $number, locked';
+  }
+
+  @override
+  String levelOpen(String number) {
+    return 'Level $number';
+  }
+
+  @override
+  String promptMatchNumber(String n) {
+    return 'Find the group with $n.';
+  }
+
+  @override
+  String get promptPickMore => 'Which one has more?';
+
+  @override
+  String get promptPickFewer => 'Which one has fewer?';
+
+  @override
+  String get promptWhatNext => 'What comes next?';
+
+  @override
+  String get promptWhatNextTower => 'Which tower comes next?';
+
+  @override
+  String get promptSameFeeling => 'Who feels the same?';
+
+  @override
+  String promptHowFeel(String story) {
+    return '$story How do they feel?';
+  }
+
+  @override
+  String get promptListenFind => 'Listen, then find the picture.';
+
+  @override
+  String promptFindWord(String word) {
+    return 'Find the $word.';
+  }
+
+  @override
+  String promptRhyme(String word) {
+    return 'What rhymes with $word?';
+  }
+
+  @override
+  String promptFirstLetter(String word) {
+    return 'Which letter does $word start with?';
+  }
+
+  @override
+  String promptBlend(String parts) {
+    return '$parts… What word is it?';
+  }
+
+  @override
+  String get promptReadFind => 'Read the word, then find its picture.';
+
+  @override
+  String promptLetterSmall(String letter) {
+    return 'Find the small letter for $letter.';
+  }
+
+  @override
+  String promptLetterJoined(String letter) {
+    return 'Find $letter at the start of a word.';
+  }
+
+  @override
+  String promptDragCount(String name, String n, String thing) {
+    return 'Give $name $n $thing!';
+  }
+
+  @override
+  String get promptTapCount => 'Tap each one to count, then choose how many.';
+
+  @override
+  String get promptJoin => 'Watch closely. How many now?';
+
+  @override
+  String promptNumberLine(String n) {
+    return 'Where does $n go? Tap the line.';
+  }
+
+  @override
+  String get promptSortColour => 'Sort by colour!';
+
+  @override
+  String get promptSortShape => 'Sort by shape!';
+
+  @override
+  String get promptSortBorder =>
+      'Gold border: sort by shape. No border: by colour.';
+
+  @override
+  String get promptNewRule => 'New rule!';
+
+  @override
+  String get promptPairs => 'Find the matching pairs.';
+
+  @override
+  String get promptSimonWatch => 'Watch the lights…';
+
+  @override
+  String get promptSimonGo => 'Now you! Tap them in the same order.';
+
+  @override
+  String get promptFeedFish => 'Tap to feed the fish. Wait when a shark comes!';
+
+  @override
+  String get promptCatch => 'Catch every one that matches!';
+
+  @override
+  String get promptClap => 'Tap the drum once for each part of the word.';
+
+  @override
+  String get promptPrintStart => 'Tap where the reading starts.';
+
+  @override
+  String get promptPrintFollow => 'Tap the words in reading order.';
+
+  @override
+  String get promptBuild => 'Build the word for the picture.';
 }

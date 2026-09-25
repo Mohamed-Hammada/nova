@@ -4,7 +4,7 @@ An evidence-informed child development platform for ages 2-8 (Arabic and English
 languages later through language packs). This repository holds two sub-projects: **1. the Master
 Curriculum Specification** (the skill graph, games, assessment rules and language packs as YAML, a
 Python validator that enforces the rules, and explanatory chapters) and **2. the Game Platform
-vertical slice** (a client-side, offline-first Flutter app that plays one real game end to end
+vertical slice** (a client-side, offline-first Flutter app for Android and the web that plays one real game end to end
 through the full content -> assessment -> mastery -> adaptive -> persistence pipeline).
 
 ## Where things are
@@ -16,7 +16,7 @@ through the full content -> assessment -> mastery -> adaptive -> persistence pip
 | `docs/superpowers/designs/2026-09-22-nova-game-platform-design.md` | The game platform architecture. |
 | `docs/superpowers/plans/2026-09-22-nova-game-platform-vertical-slice.md` | The task-by-task plan that built `app/` and `tools/content_compiler/`. |
 | `docs/curriculum/` | The eight explanatory chapters and the research log. |
-| `data/` | The specification itself: `schema/` (JSON Schemas) plus YAML for skills, games, transfer tasks, evidence, parameters, assessment rules, language packs, mechanics, signals, i18n and audio. |
+| `data/` | The specification itself: `schema/` (JSON Schemas) plus YAML for skills, games, transfer tasks, evidence, parameters, assessment rules, language packs, mechanics, signals, journeys (the 50-level map per age group), i18n and audio. |
 | `tools/validate/` | The validator (Python) and its tests. |
 | `tools/content_compiler/` | Compiles validated `data/` into `app/assets/content/content_bundle.json`, the app's runtime content. |
 | `app/` | The Flutter app (Android, iOS, desktop and web from one codebase). See "App layout" below. |
@@ -101,6 +101,13 @@ in the web connection; widgets never import persistence, assessment, mastery or 
 UI code contains no hardcoded user-visible strings. UI strings live in `app/lib/l10n/*.arb`;
 curriculum strings (game and skill names) keep coming from the content bundle. Text direction comes
 from the locale (Arabic RTL, English LTR); all layout uses start/end geometry.
+
+The spec now covers 36 skills (math, thinking skills, feelings, and all eight literacy slots for
+both English and Arabic), 40 games and a 50-level journey for each age group (2–3, 4–5, 6–8). Every
+new record is judgment-class (design inference, `verified: false`) until the research task links
+verified evidence. The app plays every journey game offline, with animated 3D characters, spoken
+prompts, optional voice answers and face play (on-device only, off until a grown-up allows them),
+and per-child settings. See `app/README.md`.
 
 ## Ground rules for any agent working here
 

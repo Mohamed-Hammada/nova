@@ -6,3 +6,98 @@ The Flutter client: offline-first, no backend. Build, run and test it through th
 
 Before running `flutter test` or `flutter run` directly from this folder, generate the content
 bundle once with `../scripts/regenerate_content_bundle.sh` (or `..\scripts\regenerate_content_bundle.bat`).
+
+The Flutter client for Nova: Android, iOS, web and desktop from one codebase, fully offline.
+See the root `README.md` for how the content bundle is built, and
+`docs/superpowers/designs/2026-09-22-nova-game-platform-design.md` for the architecture.
+
+## Layout
+
+| Path | What it is |
+|---|---|
+| `lib/core/` | Pure-Dart domain: content, signals, assessment, mastery, adaptive, game runtime. No Flutter. |
+| `lib/adapters/` | Platform adapters behind the core's ports (SQLite via drift, audio, content asset, clock). |
+| `lib/mechanics_flutter/` | Playable mechanics. Logic lives in a plain-Dart controller; the view only renders and forwards gestures. |
+| `lib/ui/` | Everything the child and parent see (below). |
+
+## The presentation layer (`lib/ui/`)
+
+| Path | What it is |
+|---|---|
+| `theme/age_band.dart` | The three age groups (2–3, 4–5, 6–8). Each has a guide character, a world, and an interface scale (bigger targets for younger children). Which games appear still comes from each game's `age_range` in the spec. |
+| `design/` | The design system (tokens, theme, `NovaPage`, `NovaCard`, `NovaButton`, feedback and state views) used by the grown-up and chrome screens. |
+| `theme/nova_theme.dart`, `theme/labels.dart` | Play-screen typography (bundled Noto Sans with Noto Sans Arabic, the same families as the design system) and world colours; `labels.dart` maps enums (age group, world, graphics setting) to localized names. All interface text lives in `lib/l10n/app_en.arb` and `app_ar.arb`; curriculum text still comes from the content bundle. |
+| `theme/motion.dart` | `AmbientMotion`: switches looping decorative animation off for reduced-motion users and for widget tests. One-shot feedback animations always play. |
+| `characters/character_rig.dart` | A small real-time 3D renderer. Each character is a rig of ellipsoids with joints (head, arms, legs, ears, tail, antenna). Every frame it poses, projects and depth-sorts the parts, then shades them with key, fill, bounce, rim and specular light. Eyes, mouths and brows are surface details that turn with the head. No image assets are needed. |
+| `characters/character_view.dart` | Animation: idle breathing, blinking and glancing around, head-tracking (`lookAt`), and one-shot reactions (`happy`, `cheer`, `wave`, `eat`, `encourage`), built from squash-and-stretch, anticipation and eased envelopes. |
+| `scene/world_backdrop.dart` | The animated worlds: Candy Meadow (2–3), Sunny Forest (4–5), Cosmic Lab (6–8). Parallax hills, a light source with bloom, clouds or stars, particles and a vignette. |
+| `widgets/` | Pressable 3D buttons, tilting game cards, speech bubbles, one-shot confetti, glossy apple/plate/star props. |
+| `home/home_screen.dart` | Home: the companion greeting, the journey card, and every game for the child's age and language. |
+| `game/` | Dedicated game screens (the catalog, starting with *Bear's Apples* on the 3D stage) and their session controller. |
+| `progress/progress_screen.dart` | The grown-ups view: skill progress, then settings (spoken prompts, voice answers, face play, graphics quality). |
+| `settings/` | About me (name, age, companion, world, language), grown-up settings and the permission flow, and `settings_sync.dart`, which loads saved settings at boot and saves each change. |
+
+### Characters
+
+| Character | Age group | Role |
+|---|---|---|
+| Luna the bunny | 2–3 | Guide |
+| Pip the fox | 4–5 | Guide |
+| Orbit the robot | 6–8 | Guide |
+| Bruno the bear | all | Host of *Bear's Apples*: watches the dragged apple, eats, cheers or encourages |
+
+To add a character, add a `CharacterKind`, a model (a list of `Part`s plus joint pivots) in
+`character_rig.dart`, and its names. The animation layer works for any model.
+
+## Games and journeys (`lib/core/play/`, `lib/ui/play/`)
+
+- `trial_factory.dart` turns a game's current rung (chosen by the Adaptive Engine and stored per game)
+  into seeded rounds, reading the rung's values against that game's anchors in `data/games`. Every
+  game the journeys use has a builder; tests check each rung of each game in both languages.
+- `session.dart` (`PlaySession`) is the generic `GameMechanic`: views report each response and it
+  emits the same `TrialSubmitted` events as before, so assessment, mastery and adaptation are
+  unchanged. Stars (1-3 from accuracy) are an engagement reward only.
+- `lexicon.dart` and `stories.dart` hold the interim English/Arabic word lists, syllables, rhymes and
+  short stories. They are working choices to be reviewed by language specialists and moved into the
+  language packs when narration is recorded.
+- `trial_views.dart` has one view per interaction; `level_screen.dart` runs a level (prompt, hint,
+  repeat, voice answer, guide reactions, star reward); `journey_screen.dart` is the level map and `journey_card.dart` its entry on Home. Levels whose game has a dedicated catalog screen open that screen, and still earn stars.
+
+## Settings and personalisation
+
+- About me (tap the avatar chip): name, exact age, companion, world, language.
+- Grown-ups (press and hold): spoken instructions, voice answers, face play, graphics quality
+  (`ui/theme/graphics.dart`: Low keeps backgrounds still and lighting simple for older phones).
+- Saved through `PlayerStatePort` (drift tables `level_progress_rows`, `setting_rows`; schema v2
+  migration) and loaded before the first frame (`ui/settings/settings_sync.dart`).
+
+## Voice and face (privacy by design)
+
+- Spoken prompts use the device's text-to-speech (`adapters/speech/`). No permission needed.
+- Voice answers (`adapters/device/device_ports_native.dart`) use `speech_to_text` with
+  `onDevice: true`; if the device can only recognise speech in the cloud, the feature reports itself
+  unavailable. `core/play/voice_match.dart` maps what was heard to an answer (numbers, pictures,
+  letters, feelings in both languages); a spoken answer is scored exactly like a tap.
+- Face play uses the front camera at low resolution with ML Kit's bundled on-device face detector.
+  Only a few numbers (face position, smile and eye-open likelihoods) leave the detector; no frame is
+  kept, shown or sent. The guide looks at the child, smiles back and plays peekaboo
+  (`core/play/face_buddy.dart`); a camera badge is visible whenever the camera runs.
+- Both are off until a grown-up switches them on, which triggers the OS permission prompt. Neither is
+  offered on the web (browser speech recognition is cloud-based, and there is no on-device face
+  detector there); the web build uses stubs, so the native plugins never enter it.
+- Android manifest and iOS `Info.plist` declare the microphone and camera use. On iOS, ML Kit needs a
+  deployment target of 15.5 or later in the Podfile.
+
+## Web
+
+`flutter build web` works. Storage uses SQLite compiled to WebAssembly: `web/sqlite3.wasm` and
+`web/drift_worker.js` are committed, and their versions must match the `sqlite3` and `drift`
+entries in `pubspec.lock`. The rendering engine (CanvasKit) is loaded from the app's own
+`canvaskit/` folder, not Google's CDN (see `web/index.html`), so the web app has no third-party
+runtime dependency.
+
+## Tests
+
+`flutter test` (or `../scripts/test_app.sh`, which regenerates the content bundle first). Widget
+tests switch off looping ambient animation through `ambientMotionProvider`, so `pumpAndSettle`
+can settle.

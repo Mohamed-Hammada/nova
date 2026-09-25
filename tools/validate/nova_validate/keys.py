@@ -15,4 +15,6 @@ def required_text_keys(spec: Spec) -> list[tuple[str, str]]:
         needed.append((f"game:{game['id']}", game["name_key"]))
     for task in spec.transfer_tasks:
         needed.append((f"transfer_task:{task['id']}", task["name_key"]))
+    for journey in spec.journeys:
+        needed.append((f"journey:{journey['id']}", journey["name_key"]))
     return needed

@@ -1,0 +1,42 @@
+# Written with the Nova authoring helper, then maintained by hand. Every entry here is judgment-class
+# (design inference) until the research task links verified evidence.
+- id: task.math.compare-at-home
+  name_key: task.math.compare-at-home.name
+  age_range: [3, 5]
+  skills: [math.compare.more-fewer]
+  mechanic_id: physical-counting
+  description: The adult makes two small piles of real things (spoons, blocks); the child says which pile has more, then which has fewer.
+  signals: [accuracy, adult_assist, error_type]
+  scoring: The adult marks each answer correct or not, and whether the child counted to check.
+- id: task.math.number-hunt
+  name_key: task.math.number-hunt.name
+  age_range: [4, 6]
+  skills: [math.numeral.recognize-10]
+  mechanic_id: physical-hunt
+  description: The adult names a number from 1 to 10; the child finds it on something real (a clock, a remote, a book page, a door).
+  signals: [accuracy, adult_assist, error_type]
+  scoring: The adult marks whether the child found the right numeral without help.
+- id: task.math.patterns-at-home
+  name_key: task.math.patterns-at-home.name
+  age_range: [3, 6]
+  skills: [math.pattern.repeat]
+  mechanic_id: physical-build
+  description: The adult starts a pattern with real objects (spoon, fork, spoon, fork); the child adds the next three.
+  signals: [accuracy, adult_assist, error_type]
+  scoring: The adult marks each added object correct or not.
+- id: task.math.count-big-at-home
+  name_key: task.math.count-big-at-home.name
+  age_range: [5, 7]
+  skills: [math.count.to-20]
+  mechanic_id: physical-counting
+  description: The adult pours 11 to 20 small things (pasta, buttons) on the table; the child counts them and says how many.
+  signals: [accuracy, adult_assist, error_type]
+  scoring: The adult marks whether the total was right and whether the child kept track of counted items.
+- id: task.math.add-at-home
+  name_key: task.math.add-at-home.name
+  age_range: [5, 8]
+  skills: [math.add-sub.within-10, math.add-sub.within-20]
+  mechanic_id: physical-counting
+  description: The adult tells a short story with real objects (3 grapes, then 2 more) and asks how many now, with some objects hidden in a cup.
+  signals: [accuracy, adult_assist, error_type]
+  scoring: The adult marks each answer correct or not.

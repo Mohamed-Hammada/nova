@@ -28,11 +28,16 @@ class GameScreen extends ConsumerStatefulWidget {
     required this.skillId,
     this.stage3DTransport,
     this.force3D,
+    this.onComplete,
   });
   final String gameId;
   final String skillId;
   final Stage3DTransport? stage3DTransport;
   final bool? force3D;
+
+  /// Called once when a session has been saved, with first-try accuracy
+  /// (used by journey levels to award stars).
+  final void Function(double accuracy)? onComplete;
 
   @override
   ConsumerState<GameScreen> createState() => _GameScreenState();
@@ -42,6 +47,7 @@ class _GameScreenState extends ConsumerState<GameScreen> {
   late final PlayableGame _game = playableGames[widget.gameId]!;
   late final GameSessionController _session;
   String _language = 'en';
+  bool _reported = false;
 
   @override
   void initState() {
@@ -82,7 +88,11 @@ class _GameScreenState extends ConsumerState<GameScreen> {
 
   void _onSessionChanged() {
     // A completed session changed persisted mastery: drop cached reads.
-    if (_session.phase == GamePhase.complete) ref.invalidate(masteryProvider);
+    if (_session.phase == GamePhase.complete && !_reported) {
+      _reported = true;
+      ref.invalidate(masteryProvider);
+      widget.onComplete?.call(_session.firstTryAccuracy);
+    }
   }
 
   @override
@@ -123,7 +133,7 @@ class _GameScreenState extends ConsumerState<GameScreen> {
               game: _game,
               leave: leave,
               onPlayAgain: () => Navigator.of(context).pushReplacement(
-                MaterialPageRoute<void>(builder: (_) => GameScreen(gameId: widget.gameId, skillId: widget.skillId)),
+                MaterialPageRoute<void>(builder: (_) => GameScreen(gameId: widget.gameId, skillId: widget.skillId, onComplete: widget.onComplete)),
               ),
             );
           case GamePhase.playing || GamePhase.feedback || GamePhase.saving:
@@ -131,7 +141,7 @@ class _GameScreenState extends ConsumerState<GameScreen> {
               session: _session,
               game: _game,
               leave: leave,
-              graphicsSetting: _graphicsSetting,
+              graphicsSetting: ref.watch(graphicsSettingProvider),
               stage3DFellBack: _stage3DFellBack,
               lastStableTier: _lastStableTier,
               stage3DTransport: widget.stage3DTransport,
@@ -147,10 +157,10 @@ class _GameScreenState extends ConsumerState<GameScreen> {
               onOpenQualitySettings: () {
                 GraphicsQualityDialog.show(
                   context,
-                  currentSetting: _graphicsSetting,
+                  currentSetting: ref.read(graphicsSettingProvider),
                   onSettingChanged: (setting) {
+                    ref.read(graphicsSettingProvider.notifier).state = setting;
                     setState(() {
-                      _graphicsSetting = setting;
                       _stage3DFellBack = false;
                     });
                   },
@@ -162,7 +172,6 @@ class _GameScreenState extends ConsumerState<GameScreen> {
     );
   }
 
-  GraphicsQualitySetting _graphicsSetting = GraphicsQualitySetting.auto;
   bool _stage3DFellBack = false;
   QualityTier? _lastStableTier;
 }

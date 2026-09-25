@@ -5,14 +5,20 @@ import 'package:nova_app/providers.dart';
 import 'ui/design/nova_design.dart';
 import 'ui/home/home_screen.dart';
 import 'ui/l10n.dart';
+import 'ui/settings/settings_sync.dart';
+import 'ui/theme/graphics.dart';
+import 'ui/theme/motion.dart';
 
 /// The MaterialApp configuration every Nova surface shares -- including the
 /// boot screens shown before content has loaded -- so theme, localization and
 /// text direction are identical everywhere.
 class NovaMaterialApp extends StatelessWidget {
-  const NovaMaterialApp({super.key, required this.home, this.locale});
+  const NovaMaterialApp({super.key, required this.home, this.locale, this.builder});
 
   final Widget home;
+
+  /// Wraps every route (settings, graphics and motion scopes).
+  final TransitionBuilder? builder;
 
   /// Null follows the device's languages (resolved to a supported one).
   final Locale? locale;
@@ -27,6 +33,7 @@ class NovaMaterialApp extends StatelessWidget {
       supportedLocales: NovaLocales.supported,
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       localeListResolutionCallback: (deviceLocales, _) => NovaLocales.resolve(deviceLocales),
+      builder: builder,
       home: home,
     );
   }
@@ -37,6 +44,16 @@ class NovaApp extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return NovaMaterialApp(locale: ref.watch(localeProvider), home: const HomeScreen());
+    return NovaMaterialApp(
+      locale: ref.watch(localeProvider),
+      builder: (context, child) => AmbientMotion(
+        enabled: ref.watch(ambientMotionProvider),
+        child: Graphics(
+          quality: ref.watch(graphicsProvider),
+          child: SettingsSync(child: child!),
+        ),
+      ),
+      home: const HomeScreen(),
+    );
   }
 }
