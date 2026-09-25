@@ -1,4 +1,5 @@
 import 'package:drift/drift.dart';
+import 'package:nova_app/core/journey/journey_models.dart';
 import 'package:nova_app/core/ports/player_state_port.dart';
 
 import 'database.dart';
@@ -22,6 +23,40 @@ class DriftPlayerStatePort implements PlayerStatePort {
           LevelProgressRowsCompanion.insert(childId: childId, levelId: levelId, stars: stars, updatedAt: _now()),
         );
   }
+
+  @override
+  Future<List<ActivityRecord>> activityRecords({required String childId}) async {
+    final rows = await (_db.select(_db.activityRecordRows)..where((r) => r.childId.equals(childId))).get();
+    return [
+      for (final r in rows)
+        ActivityRecord(
+          childId: r.childId,
+          activityId: r.activityId,
+          firstStartedAt: r.firstStartedAt,
+          lastPlayedAt: r.lastPlayedAt,
+          firstCompletedAt: r.firstCompletedAt,
+          attempts: r.attempts,
+          completions: r.completions,
+          bestStars: r.bestStars,
+          lastAccuracy: r.lastAccuracy,
+        ),
+    ];
+  }
+
+  @override
+  Future<void> saveActivityRecord(ActivityRecord record) => _db.into(_db.activityRecordRows).insertOnConflictUpdate(
+        ActivityRecordRowsCompanion.insert(
+          childId: record.childId,
+          activityId: record.activityId,
+          firstStartedAt: record.firstStartedAt,
+          lastPlayedAt: record.lastPlayedAt,
+          firstCompletedAt: Value(record.firstCompletedAt),
+          attempts: record.attempts,
+          completions: record.completions,
+          bestStars: record.bestStars,
+          lastAccuracy: Value(record.lastAccuracy),
+        ),
+      );
 
   @override
   Future<String?> setting(String key) async =>

@@ -31,6 +31,8 @@ class ContentRuntime {
   /// Every game in the bundle, in bundle order.
   List<Game> get games => List.unmodifiable(_bundle.games);
 
+  bool hasSkill(String id) => _skillsById.containsKey(id);
+
   Skill skill(String id) => _skillsById[id] ?? (throw ArgumentError('no such skill: $id'));
   List<Journey> get journeys => _bundle.journeys;
 

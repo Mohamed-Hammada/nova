@@ -43,6 +43,8 @@ Future<AppHarness> pumpNovaApp(
   Locale? locale,
   Size size = const Size(1280, 900),
   bool disableAnimations = false,
+  // The child's age; null starts at first-launch onboarding.
+  int? age = 4,
 }) async {
   tester.view.physicalSize = size * tester.view.devicePixelRatio;
   addTearDown(tester.view.resetPhysicalSize);
@@ -62,6 +64,7 @@ Future<AppHarness> pumpNovaApp(
   ]);
   addTearDown(container.dispose);
   if (locale != null) container.read(localeProvider.notifier).state = locale;
+  if (age != null) container.read(childAgeProvider.notifier).state = age;
 
   // Start from a clean tree, so a second pump in one test gets a fresh
   // Navigator rather than the previous app's route stack.
@@ -73,10 +76,22 @@ Future<AppHarness> pumpNovaApp(
 
 /// Opens the first game from Home and waits for the first trial.
 Future<void> openBearApples(WidgetTester tester, {String name = "Bear's Apples"}) async {
-  // The game grid sits below the greeting and the journey card.
-  await tester.scrollUntilVisible(find.text(name), 200, scrollable: find.byType(Scrollable).first);
-  await tester.ensureVisible(find.text(name));
+  // Home -> Number Meadow (the place for counting games) -> the activity.
+  await openPlace(tester, 'numbers');
+  final station = find.byKey(const ValueKey('station.game.math.bear-apples'));
+  await tester.ensureVisible(station);
   await tester.pumpAndSettle();
-  await tester.tap(find.text(name));
+  expect(find.descendant(of: station, matching: find.text(name)), findsOneWidget);
+  await tester.tap(station);
+  await tester.pumpAndSettle();
+}
+
+/// Opens one place of the world from Home, e.g. 'numbers'.
+Future<void> openPlace(WidgetTester tester, String place) async {
+  final finder = find.byKey(ValueKey('place.$place'));
+  await tester.scrollUntilVisible(finder, 200, scrollable: find.byType(Scrollable).first);
+  await tester.ensureVisible(finder);
+  await tester.pumpAndSettle();
+  await tester.tap(finder);
   await tester.pumpAndSettle();
 }

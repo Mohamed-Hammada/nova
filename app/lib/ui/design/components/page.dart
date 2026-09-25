@@ -47,8 +47,11 @@ class NovaPage extends StatelessWidget {
           ),
         );
 
+    final scenic = NovaPageBackdrop.isOn(context);
     return Scaffold(
+      backgroundColor: scenic ? Colors.transparent : null,
       appBar: AppBar(
+        backgroundColor: scenic ? Colors.transparent : null,
         title: title,
         leading: leading,
         actions: [...actions, SizedBox(width: gutter - NovaSpace.xs)],
@@ -65,4 +68,15 @@ class NovaPage extends StatelessWidget {
       ),
     );
   }
+}
+
+/// Marks that a page sits in front of a storybook scene: [NovaPage]s below
+/// it drop their plain background so the scene shows through.
+class NovaPageBackdrop extends InheritedWidget {
+  const NovaPageBackdrop({super.key, required super.child});
+
+  static bool isOn(BuildContext context) => context.dependOnInheritedWidgetOfExactType<NovaPageBackdrop>() != null;
+
+  @override
+  bool updateShouldNotify(NovaPageBackdrop oldWidget) => false;
 }

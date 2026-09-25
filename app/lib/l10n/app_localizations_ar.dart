@@ -506,4 +506,293 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get promptBuild => 'ركّب كلمة الصورة.';
+
+  @override
+  String welcomeBack(String name) {
+    return 'أهلًا بعودتك يا $name!';
+  }
+
+  @override
+  String get welcomeBackNoName => 'أهلًا بعودتك!';
+
+  @override
+  String get letsExplore => 'هيّا نستكشف معًا.';
+
+  @override
+  String companionHello(String name) {
+    return 'أنا $name. إلى أين نذهب اليوم؟';
+  }
+
+  @override
+  String get continueJourney => 'تابع رحلتك';
+
+  @override
+  String get startJourney => 'ابدأ رحلتك';
+
+  @override
+  String get placesToExplore => 'أماكن نستكشفها';
+
+  @override
+  String activitiesCount(String count) {
+    return 'الأنشطة: $count';
+  }
+
+  @override
+  String get myTreasures => 'كنوزي';
+
+  @override
+  String starsCollected(String count) {
+    return 'النجوم: $count';
+  }
+
+  @override
+  String levelsExplored(String count) {
+    return 'المستويات المكتملة: $count';
+  }
+
+  @override
+  String get badgeFirstSteps => 'الخطوة الأولى';
+
+  @override
+  String get badgeStarCatcher => 'صائد النجوم';
+
+  @override
+  String get badgeExplorer => 'المستكشف الكبير';
+
+  @override
+  String get badgeLocked => 'واصل اللعب لتفتح هذه';
+
+  @override
+  String get catNumbers => 'مرج الأرقام';
+
+  @override
+  String get catLanguage => 'غابة الحكايات';
+
+  @override
+  String get catSounds => 'وادي الأصوات';
+
+  @override
+  String get catFeelings => 'حديقة المشاعر';
+
+  @override
+  String get catMemory => 'خليج الذاكرة';
+
+  @override
+  String get catDiscovery => 'تلّ الاكتشاف';
+
+  @override
+  String get catMovement => 'بركة الحركة';
+
+  @override
+  String get catNumbersTag => 'نعدّ ونقارن ونكتشف الأنماط';
+
+  @override
+  String get catLanguageTag => 'كلمات وحروف وحكايات';
+
+  @override
+  String get catSoundsTag => 'قوافٍ وإيقاعات وأصوات';
+
+  @override
+  String get catFeelingsTag => 'نفهم مشاعر أصدقائنا';
+
+  @override
+  String get catMemoryTag => 'نتذكّر ونطابق ونكرّر';
+
+  @override
+  String get catDiscoveryTag => 'نصنّف ونبدّل ونفكّر';
+
+  @override
+  String get catMovementTag => 'عيون سريعة وأيادٍ حذرة';
+
+  @override
+  String get newActivity => 'جديد';
+
+  @override
+  String get tryAgainGently => 'لنحاول مرة أخرى!';
+
+  @override
+  String get almostThere => 'اقتربت! أنت قادر على ذلك.';
+
+  @override
+  String get youDidIt => 'أحسنت!';
+
+  @override
+  String roundProgress(String current, String total) {
+    return 'الجولة $current من $total';
+  }
+
+  @override
+  String get journeyMap => 'خريطة الرحلة';
+
+  @override
+  String exploreCategory(String place) {
+    return 'استكشف $place';
+  }
+
+  @override
+  String onboardingHello(String name) {
+    return 'مرحبًا! أنا $name.';
+  }
+
+  @override
+  String get onboardingAskName => 'ما اسمك؟';
+
+  @override
+  String get onboardingNameHint => 'اسمك';
+
+  @override
+  String get onboardingAskAge => 'كم عمرك؟';
+
+  @override
+  String get yearsOld => 'سنوات';
+
+  @override
+  String get onboardingNext => 'التالي';
+
+  @override
+  String get onboardingBack => 'رجوع';
+
+  @override
+  String onboardingReady(String name) {
+    return 'تبدأ مغامرتك يا $name!';
+  }
+
+  @override
+  String get onboardingReadyNoName => 'تبدأ مغامرتك!';
+
+  @override
+  String onboardingFirstStop(String stage) {
+    return 'المحطة الأولى: $stage';
+  }
+
+  @override
+  String get letsGo => 'هيّا بنا!';
+
+  @override
+  String get myJourney => 'رحلتي';
+
+  @override
+  String get youAreHere => 'أنت هنا';
+
+  @override
+  String stageDoneCount(String done, String total) {
+    return 'أنجزت $done من $total';
+  }
+
+  @override
+  String get nextAdventure => 'المغامرة التالية';
+
+  @override
+  String get todaysAdventure => 'مغامرة اليوم';
+
+  @override
+  String get exploreMore => 'استكشف المزيد';
+
+  @override
+  String get stageComplete => 'أنهيت هذه المغامرة!';
+
+  @override
+  String get newAdventure => 'مغامرة جديدة بانتظارك!';
+
+  @override
+  String get journeyAllDone => 'أنهيت الرحلة كلها! العب أي مغامرة من جديد.';
+
+  @override
+  String get statusCompleted => 'مكتمل';
+
+  @override
+  String get statusLocked => 'مغلق';
+
+  @override
+  String get statusNext => 'التالي';
+
+  @override
+  String get statusMastered => 'نجم';
+
+  @override
+  String get statusAvailable => 'جاهز للعب';
+
+  @override
+  String get statusEarlier => 'مغامرة سابقة';
+
+  @override
+  String get roleRequired => 'أساسي';
+
+  @override
+  String get rolePractice => 'تدريب';
+
+  @override
+  String get roleChallenge => 'تحدٍّ';
+
+  @override
+  String get roleOptional => 'إضافي';
+
+  @override
+  String get roleReview => 'مراجعة';
+
+  @override
+  String get unlockHint => 'أنهِ الألعاب التي قبلها لتفتح هذه.';
+
+  @override
+  String weAreIn(String stage) {
+    return 'نحن نستكشف $stage!';
+  }
+
+  @override
+  String get childAge => 'عمر الطفل';
+
+  @override
+  String get changeAgeHelp =>
+      'تتكيّف الرحلة مع العمر الجديد، ولا يُحذف أي شيء أنجزه طفلك.';
+
+  @override
+  String get journeyStage => 'مرحلة الرحلة';
+
+  @override
+  String get developmentalAreas => 'مجالات النمو';
+
+  @override
+  String get areasNote =>
+      'نسبة أنشطة الرحلة المكتملة حتى الآن. هذه ليست درجة ولا تقييمًا.';
+
+  @override
+  String get activityHistory => 'سجلّ الأنشطة';
+
+  @override
+  String get noHistoryYet => 'لم يُلعب أي نشاط بعد.';
+
+  @override
+  String playedTimes(String count) {
+    return 'مرات اللعب: $count';
+  }
+
+  @override
+  String get domainSocialEmotional => 'المشاعر والأصدقاء';
+
+  @override
+  String get domainLanguage => 'اللغة';
+
+  @override
+  String get domainEarlyLiteracy => 'القراءة المبكرة';
+
+  @override
+  String get domainAuditory => 'الأصوات والاستماع';
+
+  @override
+  String get domainNumeracy => 'الأرقام';
+
+  @override
+  String get domainMemory => 'الذاكرة';
+
+  @override
+  String get domainAttention => 'الانتباه';
+
+  @override
+  String get domainProblemSolving => 'حلّ المشكلات';
+
+  @override
+  String get decreaseAge => 'أصغر';
+
+  @override
+  String get increaseAge => 'أكبر';
 }

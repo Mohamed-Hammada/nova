@@ -6,6 +6,8 @@ import 'package:nova_app/providers.dart';
 import 'package:nova_app/ui/design/nova_design.dart';
 import 'package:nova_app/ui/l10n.dart';
 import 'package:nova_app/ui/progress/progress_screen.dart';
+import 'package:nova_app/ui/scene/story_scene.dart';
+import 'package:nova_app/ui/world/activity_world.dart';
 
 import 'bear_apples_art.dart';
 import 'game_audio.dart';
@@ -105,6 +107,21 @@ class _GameScreenState extends ConsumerState<GameScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final content = ref.watch(contentRuntimeProvider);
+    final place = content.hasGame(widget.gameId) ? ActivityCategory.of(content.game(widget.gameId)) : ActivityCategory.numbers;
+    // Every activity plays inside its place in the Nova world.
+    return Stack(
+      fit: StackFit.expand,
+      children: [
+        StoryScene(theme: place.scene, horizon: 0.5),
+        // A soft paper veil keeps the instructions easy to read over the scene.
+        const ColoredBox(color: Color(0xB3FFF8EC)),
+        NovaPageBackdrop(child: _page(context)),
+      ],
+    );
+  }
+
+  Widget _page(BuildContext context) {
     return ListenableBuilder(
       listenable: _session,
       builder: (context, _) {
@@ -233,10 +250,13 @@ class _PlayView extends StatelessWidget {
     final playing = session.phase == GamePhase.playing;
 
     final isTestEnvironment = WidgetsBinding.instance.runtimeType.toString().contains('Test');
+    // The storybook 2D board is the default look; the 3D stage is used when a
+    // grown-up picks a 3D quality level explicitly (or a test forces it).
     final use3D = graphicsSetting != GraphicsQualitySetting.twoDimensional &&
         ((force3D ?? false) ||
             (stage3DTransport != null) ||
             (!isTestEnvironment &&
+                graphicsSetting != GraphicsQualitySetting.auto &&
                 StageCapability.shouldUse3D(
                   signals: DeviceSignals(
                     isWeb: kIsWeb,

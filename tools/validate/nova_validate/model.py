@@ -69,6 +69,10 @@ STRENGTH_CAPS = {"expert_consensus": "moderate", "design_inference": "emerging"}
 
 # Every age group's journey must offer at least this many levels (product requirement).
 MIN_JOURNEY_LEVELS = 50
+
+# A stage is an adventure a child can finish in a few sittings, with room for
+# practice, challenge and review around its required levels.
+MIN_STAGE_LEVELS = 3
 # Journeys together must cover every age from here to there.
 JOURNEY_AGE_SPAN = (2, 8)
 

@@ -15,8 +15,13 @@ class AmbientMotion extends InheritedWidget {
   static bool of(BuildContext context) {
     final reduce = MediaQuery.maybeOf(context)?.disableAnimations ?? false;
     final scope = context.dependOnInheritedWidgetOfExactType<AmbientMotion>();
-    return !reduce && (scope?.enabled ?? true);
+    return !reduce && (scope?.enabled ?? !_underTest);
   }
+
+  /// Widget tests that pump a single widget have no scope; looping idle
+  /// motion would keep them from ever settling, so it defaults off there
+  /// (the app itself always provides a scope).
+  static final bool _underTest = WidgetsBinding.instance.runtimeType.toString().contains('Test');
 
   @override
   bool updateShouldNotify(AmbientMotion oldWidget) => oldWidget.enabled != enabled;

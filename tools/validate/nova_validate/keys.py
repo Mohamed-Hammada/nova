@@ -17,4 +17,6 @@ def required_text_keys(spec: Spec) -> list[tuple[str, str]]:
         needed.append((f"transfer_task:{task['id']}", task["name_key"]))
     for journey in spec.journeys:
         needed.append((f"journey:{journey['id']}", journey["name_key"]))
+        for stage in journey.get("stages", []):
+            needed.append((f"stage:{stage['id']}", stage["name_key"]))
     return needed

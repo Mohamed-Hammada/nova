@@ -6,11 +6,23 @@ from tests.factory import get, make_spec, rules_of
 
 
 def _journey(journey_id="journey.test", ages=(2, 8), game="game.math.bear-snacks", count=MIN_JOURNEY_LEVELS):
+    short = journey_id.split(".")[-1]
+    levels = [{"id": f"{short}-{i:03d}", "game": game} for i in range(1, count + 1)]
     return {
         "id": journey_id,
         "name_key": f"{journey_id}.name",
         "age_range": list(ages),
-        "levels": [{"id": f"{journey_id.split('.')[-1]}-{i:03d}", "game": game} for i in range(1, count + 1)],
+        "stages": [
+            {
+                "id": f"stage.{short}.{n}",
+                "name_key": f"stage.{short}.{n}.name",
+                "place": "numbers",
+                "age_range": list(ages),
+                "levels": [level["id"] for level in levels[start:start + 10]],
+            }
+            for n, start in enumerate(range(0, count, 10))
+        ],
+        "levels": levels,
     }
 
 
@@ -75,3 +87,52 @@ def test_games_by_language_must_cover_every_active_language():
         assert "journey-language" in rules_of(issues)
     else:
         assert issues == []
+
+
+def test_stages_must_cover_every_level_in_order():
+    journey = _journey()
+    journey["stages"][0]["levels"].pop()
+    issues = check_journeys(_spec_with(journey))
+    assert rules_of(issues) == {"journey-stages"}
+
+
+def test_a_stage_needs_a_required_level():
+    journey = _journey()
+    for level in journey["levels"][:10]:
+        level["role"] = "optional"
+    issues = check_journeys(_spec_with(journey))
+    assert rules_of(issues) == {"journey-stages"}
+
+
+def test_a_stage_needs_a_few_levels():
+    journey = _journey()
+    journey["stages"][0]["levels"] = journey["stages"][0]["levels"][:2]
+    journey["stages"].insert(1, {**journey["stages"][0], "id": "stage.test.extra", "levels": [f"test-{i:03d}" for i in range(3, 11)]})
+    issues = check_journeys(_spec_with(journey))
+    assert rules_of(issues) == {"journey-stages"}
+
+
+def test_stage_ages_must_sit_inside_the_journey_and_in_order():
+    journey = _journey(ages=(2, 3))
+    journey["stages"][0]["age_range"] = [3, 3]
+    journey["stages"][1]["age_range"] = [2, 2]
+    journey["stages"][2]["age_range"] = [4, 5]
+    spec = _spec_with(journey, _journey("journey.rest", ages=(4, 8)))
+    issues = check_journeys(spec)
+    assert {"journey-age", "journey-stages"} <= rules_of(issues)
+
+
+def test_prerequisites_must_be_earlier_levels_of_the_journey():
+    journey = _journey()
+    journey["levels"][5]["prerequisites"] = ["test-009"]
+    journey["levels"][6]["prerequisites"] = ["nope-001"]
+    issues = check_journeys(_spec_with(journey))
+    assert rules_of(issues) == {"journey-prerequisite"}
+    assert len(issues) == 2
+
+
+def test_stage_ids_are_unique():
+    journey = _journey()
+    journey["stages"][1]["id"] = journey["stages"][0]["id"]
+    issues = check_journeys(_spec_with(journey))
+    assert "unique-id" in rules_of(issues)

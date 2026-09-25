@@ -11,7 +11,6 @@ import 'package:nova_app/core/content/models.dart';
 import 'package:nova_app/core/play/trial_factory.dart';
 import 'package:nova_app/core/play/trials.dart';
 import 'package:nova_app/providers.dart';
-import 'package:nova_app/ui/play/journey_screen.dart';
 import 'package:nova_app/ui/play/level_screen.dart';
 import 'package:nova_app/ui/play/trial_views.dart';
 import 'package:nova_app/ui/theme/age_band.dart';
@@ -39,7 +38,6 @@ Widget _app(Widget child, {required InMemoryPersistencePort persistence, require
 Journey _single(String gameId) =>
     Journey(id: 'journey.test', nameKey: '', ageRange: const [2, 8], levels: [JourneyLevel(id: 'test-001', gameId: gameId, skin: 'apples')]);
 
-Finder _node(String label) => find.byWidgetPredicate((w) => w is Semantics && w.properties.label == label);
 
 Future<void> _settleAway(WidgetTester tester) async {
   await tester.pumpWidget(const SizedBox());
@@ -93,24 +91,6 @@ void main() {
     // GameRuntime ran: the Adaptive Engine stored the next rung for this game.
     expect(await persistence.currentRung(childId: currentChildId, gameId: gameId), isNotNull);
     expect(speech.spoken.first, contains('Which one has'));
-    await _settleAway(tester);
-  });
-
-  testWidgets('the journey map opens only the next unfinished level', (tester) async {
-    tester.view.physicalSize = const Size(1280, 800);
-    tester.view.devicePixelRatio = 1;
-    addTearDown(tester.view.reset);
-    final state = InMemoryPlayerStatePort();
-    final journey = _content.journeyForAge(4)!;
-    await state.saveLevel(childId: currentChildId, levelId: journey.levels[0].id, stars: 2);
-    await tester.pumpWidget(_app(const JourneyScreen(), persistence: InMemoryPersistencePort(), state: state));
-    await tester.pump(const Duration(milliseconds: 300));
-    await tester.pump(const Duration(milliseconds: 300));
-
-    expect(_node('Level 1'), findsOneWidget);
-    expect(_node('Level 2'), findsOneWidget);
-    expect(_node('Level 3, locked'), findsOneWidget);
-    expect(find.text('2 of 150 stars'), findsOneWidget);
     await _settleAway(tester);
   });
 }

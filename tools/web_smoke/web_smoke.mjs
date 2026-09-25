@@ -49,7 +49,10 @@ let chrome;
 async function launch() {
   chrome = spawn(chromePath, [
     '--headless=new', `--remote-debugging-port=${debugPort}`, `--user-data-dir=${profile}`,
-    '--no-first-run', '--no-default-browser-check', '--window-size=1280,900', '--lang=en-US', 'about:blank',
+    '--no-first-run', '--no-default-browser-check', '--window-size=1280,900', '--lang=en-US',
+    // Chrome refuses to sandbox as root (CI containers); only then run it unsandboxed.
+    ...(process.getuid?.() === 0 ? ['--no-sandbox'] : []),
+    'about:blank',
   ], { stdio: 'ignore' });
   for (let i = 0; i < 100; i++) {
     try {
@@ -162,7 +165,17 @@ async function openApp(cdp) {
     await sleep(100);
   }
   await evaluate(cdp, `document.querySelector('flt-semantics-placeholder')?.click(), true`);
-  return waitFor(cdp, (t) => t.includes("Bear's Apples"), 'the home screen');
+  // A first launch asks the child's name and age; later launches open Home.
+  const first = await waitFor(cdp, (t) => t.includes("What's your name?") || t.includes('For grown-ups'), 'onboarding or home');
+  if (first.includes("What's your name?")) {
+    step('first launch: onboarding (age 4)');
+    await click(cdp, 'Next');
+    await click(cdp, '4 years old');
+    await click(cdp, 'Next');
+    await waitFor(cdp, (t) => t.includes('First stop:'), 'the first stop of the journey');
+    await click(cdp, "Let's go!");
+  }
+  return waitFor(cdp, (t) => t.includes('For grown-ups') && t.includes('My journey'), 'the home screen');
 }
 
 async function readProgress(cdp) {
@@ -180,13 +193,14 @@ try {
   if (!before.includes('Not yet')) fail(`a fresh profile should show "Not yet"; got: ${before.slice(0, 400)}`);
   step('fresh profile shows "Not yet"');
   await click(cdp, 'Back');
-  await waitFor(cdp, (t) => t.includes("Bear's Apples"), 'home');
+  await waitFor(cdp, (t) => t.includes("Bear's Apples"), 'home, recommending Bear\'s Apples first');
 
-  step('play a full session');
-  await click(cdp, "Bear's Apples. Play");
+  step('play a full session (the journey\'s first activity)');
+  await click(cdp, "Let's go!");
   let trials = 0;
   for (;;) {
-    const text = await waitFor(cdp, (t) => /Give the bear (\d+) apple/.test(t) || t.includes('All done!'), 'a trial or completion');
+    // While the session saves, the last round is still on screen; wait it out.
+    const text = await waitFor(cdp, (t) => (/Give the bear (\d+) apple/.test(t) && !t.includes('Saving')) || t.includes('All done!'), 'a trial or completion');
     if (text.includes('All done!')) break;
     const requested = Number(text.match(/Give the bear (\d+) apple/)[1]);
     for (let i = 0; i < requested; i++) await click(cdp, 'Apple');
@@ -199,14 +213,15 @@ try {
   step(`completed ${trials} trials, all correct`);
 
   await click(cdp, 'For grown-ups');
-  const after = await waitFor(cdp, (t) => /Step \d of 4/.test(t), 'progress after the session');
-  if (!after.includes('Secure')) fail(`expected Secure after a perfect, unhinted session; got: ${after.slice(0, 300)}`);
+  await waitFor(cdp, (t) => /Step \d of 4/.test(t), 'progress after the session');
+  await waitFor(cdp, (t) => t.includes('Secure'), 'Secure after a perfect, unhinted session');
   step('grown-ups view shows Secure');
 
   step('reload the page');
   await openApp(cdp);
-  const reloaded = await readProgress(cdp);
-  if (!reloaded.includes('Secure.')) fail(`progress was lost on reload; screen shows: ${reloaded.slice(0, 500)}`);
+  await readProgress(cdp);
+  // Each skill card loads its mastery on its own; wait for Bear's Apples' skill.
+  await waitFor(cdp, (t) => t.includes('Secure.'), 'Secure after the reload (progress was lost?)');
   step('Secure survives a reload');
 
   step('restart the browser (same profile)');
@@ -214,7 +229,8 @@ try {
   await stop();
   cdp = await launch();
   await openApp(cdp);
-  if (!(await readProgress(cdp)).includes('Secure')) fail('progress was lost across a browser restart');
+  await readProgress(cdp);
+  await waitFor(cdp, (t) => t.includes('Secure'), 'Secure after a browser restart (progress was lost?)');
   step('Secure survives a browser restart');
   cdp.close();
 

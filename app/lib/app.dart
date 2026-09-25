@@ -4,6 +4,7 @@ import 'package:nova_app/providers.dart';
 
 import 'ui/design/nova_design.dart';
 import 'ui/home/home_screen.dart';
+import 'ui/journey/onboarding_screen.dart';
 import 'ui/l10n.dart';
 import 'ui/settings/settings_sync.dart';
 import 'ui/theme/graphics.dart';
@@ -53,7 +54,8 @@ class NovaApp extends ConsumerWidget {
           child: SettingsSync(child: child!),
         ),
       ),
-      home: const HomeScreen(),
+      // A child who has not told Nova their age yet starts with onboarding.
+      home: ref.watch(childAgeProvider) == null ? const OnboardingScreen() : const HomeScreen(),
     );
   }
 }

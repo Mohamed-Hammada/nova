@@ -22,10 +22,33 @@ enum Reaction {
   eat(Duration(milliseconds: 1100)),
 
   /// A gentle, warm head tilt -- never a "wrong!" buzzer.
-  encourage(Duration(milliseconds: 1500));
+  encourage(Duration(milliseconds: 1500)),
+
+  /// A little jump back with wide eyes -- "Oh! What's that?"
+  surprise(Duration(milliseconds: 900));
 
   const Reaction(this.duration);
   final Duration duration;
+}
+
+/// How a character feels right now. Unlike a [Reaction] (a one-shot
+/// performance), a mood is held -- the character keeps breathing, blinking
+/// and glancing around in that mood until it changes, and changes blend
+/// over a moment rather than snapping.
+enum CharacterMood {
+  idle,
+  happy,
+  curious,
+  excited,
+  surprised,
+  thinking,
+  confused,
+  encouraging,
+  celebrating,
+
+  /// A soft "oh, not quite" -- never sad or scolding, and it recovers on
+  /// its own.
+  gentleDisappointment,
 }
 
 /// Drives a [CharacterView] from outside: trigger reactions and set where
@@ -34,10 +57,27 @@ class CharacterController extends ChangeNotifier {
   Reaction? _reaction;
   int _serial = 0;
   Offset? _look;
+  CharacterMood _mood = CharacterMood.idle;
+  int _moodSerial = 0;
+  Duration? _moodHold;
 
   Reaction? get reaction => _reaction;
   int get serial => _serial;
   Offset? get look => _look;
+  CharacterMood get mood => _mood;
+  int get moodSerial => _moodSerial;
+
+  /// How long the current mood lasts before easing back to idle (null:
+  /// until changed).
+  Duration? get moodHold => _moodHold;
+
+  /// Sets the character's mood; with [hold], it returns to idle afterwards.
+  void setMood(CharacterMood mood, {Duration? hold}) {
+    _mood = mood;
+    _moodHold = hold;
+    _moodSerial++;
+    notifyListeners();
+  }
 
   void react(Reaction reaction) {
     _reaction = reaction;
@@ -56,9 +96,12 @@ class CharacterController extends ChangeNotifier {
 /// A rendered, animated character. Idle life (breathing, blinking,
 /// glancing around) runs while [AmbientMotion] is on; reactions always play.
 class CharacterView extends StatefulWidget {
-  const CharacterView({super.key, required this.kind, this.controller, this.rimColor, this.entrance});
+  const CharacterView({super.key, required this.kind, this.controller, this.rimColor, this.entrance, this.mood});
 
   final CharacterKind kind;
+
+  /// A fixed mood when there is no controller (previews, pictures).
+  final CharacterMood? mood;
   final CharacterController? controller;
   final Color? rimColor;
 
@@ -82,10 +125,18 @@ class _CharacterViewState extends State<CharacterView> with SingleTickerProvider
   Offset _look = Offset.zero;
   bool _ambient = true;
 
+  CharacterMood _moodFrom = CharacterMood.idle;
+  CharacterMood _moodTo = CharacterMood.idle;
+  Duration _moodStart = Duration.zero;
+  Duration? _moodHold;
+  int _lastMoodSerial = -1;
+  static const _moodBlend = Duration(milliseconds: 380);
+
   @override
   void initState() {
     super.initState();
     widget.controller?.addListener(_onController);
+    _moodTo = _moodFrom = widget.controller?.mood ?? widget.mood ?? CharacterMood.idle;
     if (widget.entrance != null) {
       _reaction = widget.entrance;
       _reactionStart = Duration.zero;
@@ -115,11 +166,27 @@ class _CharacterViewState extends State<CharacterView> with SingleTickerProvider
       _reaction = c.reaction;
       _reactionStart = _now;
     }
+    if (c.moodSerial != _lastMoodSerial) {
+      _lastMoodSerial = c.moodSerial;
+      _changeMood(c.mood, c.moodHold);
+    }
     _syncTicker();
     if (!_ticker.isActive) setState(() {});
   }
 
   bool get _reacting => _reaction != null;
+
+  double get _moodT => ((_now - _moodStart).inMicroseconds / _moodBlend.inMicroseconds).clamp(0.0, 1.0);
+
+  bool get _blending => _moodT < 1 || _moodHold != null;
+
+  void _changeMood(CharacterMood mood, Duration? hold) {
+    if (mood == _moodTo && hold == null) return;
+    _moodFrom = _moodT >= 0.5 ? _moodTo : _moodFrom;
+    _moodTo = mood;
+    _moodStart = _now;
+    _moodHold = hold;
+  }
 
   bool get _chasingLook {
     final target = widget.controller?.look ?? Offset.zero;
@@ -127,11 +194,13 @@ class _CharacterViewState extends State<CharacterView> with SingleTickerProvider
   }
 
   void _syncTicker() {
-    final want = _ambient || _reacting || _chasingLook;
+    final want = _ambient || _reacting || _chasingLook || _blending;
     if (want && !_ticker.isActive) {
+      final shift = _now;
       _ambientBase = Duration.zero;
       _now = Duration.zero;
       if (_reactionStart != null) _reactionStart = Duration.zero;
+      _moodStart = _moodStart > shift ? Duration.zero : _moodStart - shift;
       _ticker.start();
     } else if (!want && _ticker.isActive) {
       _ticker.stop();
@@ -153,8 +222,15 @@ class _CharacterViewState extends State<CharacterView> with SingleTickerProvider
       _reaction = null;
       _reactionStart = null;
     }
+    final hold = _moodHold;
+    if (hold != null && _now - _moodStart >= hold + _moodBlend) {
+      _moodFrom = _moodTo;
+      _moodTo = CharacterMood.idle;
+      _moodStart = _now;
+      _moodHold = null;
+    }
     setState(() {});
-    if (!_ambient && !_reacting && !_chasingLook) _ticker.stop();
+    if (!_ambient && !_reacting && !_chasingLook && !_blending) _ticker.stop();
   }
 
   @override
@@ -167,7 +243,12 @@ class _CharacterViewState extends State<CharacterView> with SingleTickerProvider
   @override
   Widget build(BuildContext context) {
     final rt = _reaction == null ? null : (_now - _reactionStart!).inMicroseconds / 1e6;
-    final pose = poseFor(widget.kind, _ambientT, _look, _reaction, rt);
+    if (widget.controller == null && widget.mood != null && widget.mood != _moodTo) {
+      _moodFrom = _moodTo = widget.mood!;
+    }
+    final to = poseFor(widget.kind, _ambientT, _look, _reaction, rt, mood: _moodTo);
+    final t = Curves.easeInOut.transform(_moodT);
+    final pose = t >= 1 || _moodFrom == _moodTo ? to : Pose.lerp(poseFor(widget.kind, _ambientT, _look, _reaction, rt, mood: _moodFrom), to, t);
     return RepaintBoundary(
       child: CustomPaint(
         painter: CharacterPainter(
@@ -204,7 +285,7 @@ double _envelope(double t, double total, {double fade = 0.18}) => _ease(t / fade
   return (jump: 0, squash: 1 - 0.12 * math.sin(math.pi * l));
 }
 
-Pose poseFor(CharacterKind kind, double t, Offset look, Reaction? reaction, double? rt) {
+Pose poseFor(CharacterKind kind, double t, Offset look, Reaction? reaction, double? rt, {CharacterMood mood = CharacterMood.idle}) {
   final breath = math.sin(t * 2.2);
   final floppy = kind == CharacterKind.bunny ? 2.0 : 1.0;
 
@@ -232,6 +313,95 @@ Pose poseFor(CharacterKind kind, double t, Offset look, Reaction? reaction, doub
   var browTilt = 0.0;
   var lookX = look.dx + 0.25 * math.sin(t * 0.45);
   var lookY = look.dy;
+  var wide = 0.0;
+
+  // The held mood, on top of idle life.
+  switch (mood) {
+    case CharacterMood.idle:
+      break;
+    case CharacterMood.happy:
+      smile = 1;
+      mouthOpen = 0.22;
+      brow = 0.35;
+      headRoll += 0.05 * math.sin(t * 2.4);
+      tail += 0.2 * math.sin(t * 6);
+    case CharacterMood.curious:
+      headRoll += 0.2;
+      headYaw += 0.12;
+      lean = 0.05;
+      brow = 0.55;
+      smile = 0.35;
+      mouthOpen = 0.12;
+      wide = 0.35;
+      earL += 0.18;
+      earR -= 0.1;
+    case CharacterMood.excited:
+      final bounce = math.sin(t * 7).abs();
+      jump = 7 * bounce;
+      squash = 1 + 0.03 * math.sin(t * 14);
+      armL += 0.8 + 0.2 * math.sin(t * 7);
+      armR += 0.8 + 0.2 * math.sin(t * 7 + 1);
+      smile = 1;
+      mouthOpen = 0.5;
+      brow = 0.8;
+      wide = 0.4;
+      tail += 0.4 * math.sin(t * 12);
+    case CharacterMood.surprised:
+      brow = 1;
+      mouthOpen = 0.7;
+      smile = 0.1;
+      wide = 1;
+      lean = -0.05;
+      armL += 0.5;
+      armR += 0.5;
+      earL += 0.25;
+      earR += 0.25;
+    case CharacterMood.thinking:
+      headRoll += 0.16;
+      headPitch += 0.08;
+      armR += 1.35;
+      lookX = -0.55;
+      lookY = -0.75;
+      smile = 0.25;
+      browTilt = -0.25;
+      brow = 0.3;
+    case CharacterMood.confused:
+      headRoll += -0.22 + 0.04 * math.sin(t * 2);
+      browTilt = -0.45;
+      brow = 0.2;
+      smile = 0.05;
+      mouthOpen = 0.08;
+      lookX = 0.4 * math.sin(t * 0.9);
+      earL -= 0.2;
+    case CharacterMood.encouraging:
+      smile = 0.95;
+      brow = 0.45;
+      headPitch += 0.05 * math.sin(t * 3.2);
+      armL += 0.9 + 0.12 * math.sin(t * 3.2);
+      lean = 0.03;
+    case CharacterMood.celebrating:
+      final u = (t % 1.1) / 1.1;
+      final h = _hop(u * 1.1, 0.9, 30);
+      jump = h.jump;
+      squash = h.squash;
+      armL += 2.4 + 0.25 * math.sin(t * 12);
+      armR += 2.4 + 0.25 * math.sin(t * 12 + 2);
+      smile = 1;
+      mouthOpen = 0.65;
+      happyEyes = 1;
+      brow = 0.9;
+      tail += 0.5 * math.sin(t * 16);
+    case CharacterMood.gentleDisappointment:
+      smile = 0.05;
+      browTilt = -0.5;
+      headPitch += -0.1;
+      headRoll += 0.06;
+      lookY = 0.45;
+      armL -= 0.05;
+      armR -= 0.05;
+      earL -= 0.28;
+      earR -= 0.28;
+  }
 
   if (reaction != null && rt != null) {
     final total = reaction.duration.inMicroseconds / 1e6;
@@ -291,6 +461,17 @@ Pose poseFor(CharacterKind kind, double t, Offset look, Reaction? reaction, doub
         mouthOpen = 0.18 * e;
         armL += 0.4 * e * math.sin(rt * 5).abs();
         lean = 0.04 * e * math.sin(rt * 3.5);
+      case Reaction.surprise:
+        final h = _hop(rt, 0.5, 14);
+        jump = h.jump;
+        squash = h.squash;
+        lean = -0.08 * e;
+        brow = e;
+        wide = e;
+        mouthOpen = 0.7 * e;
+        smile = 0.2;
+        armL += 0.9 * e;
+        armR += 0.9 * e;
     }
   }
 
@@ -316,5 +497,6 @@ Pose poseFor(CharacterKind kind, double t, Offset look, Reaction? reaction, doub
     brow: brow,
     browTilt: browTilt,
     glow: 0.8 + 0.2 * math.sin(t * 3),
+    wide: wide,
   );
 }

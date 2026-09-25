@@ -1599,6 +1599,607 @@ class SettingRowsCompanion extends UpdateCompanion<SettingRow> {
   }
 }
 
+class $ActivityRecordRowsTable extends ActivityRecordRows
+    with TableInfo<$ActivityRecordRowsTable, ActivityRecordRow> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $ActivityRecordRowsTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _childIdMeta = const VerificationMeta(
+    'childId',
+  );
+  @override
+  late final GeneratedColumn<String> childId = GeneratedColumn<String>(
+    'child_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _activityIdMeta = const VerificationMeta(
+    'activityId',
+  );
+  @override
+  late final GeneratedColumn<String> activityId = GeneratedColumn<String>(
+    'activity_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _firstStartedAtMeta = const VerificationMeta(
+    'firstStartedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> firstStartedAt =
+      GeneratedColumn<DateTime>(
+        'first_started_at',
+        aliasedName,
+        false,
+        type: DriftSqlType.dateTime,
+        requiredDuringInsert: true,
+      );
+  static const VerificationMeta _lastPlayedAtMeta = const VerificationMeta(
+    'lastPlayedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> lastPlayedAt = GeneratedColumn<DateTime>(
+    'last_played_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _firstCompletedAtMeta = const VerificationMeta(
+    'firstCompletedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> firstCompletedAt =
+      GeneratedColumn<DateTime>(
+        'first_completed_at',
+        aliasedName,
+        true,
+        type: DriftSqlType.dateTime,
+        requiredDuringInsert: false,
+      );
+  static const VerificationMeta _attemptsMeta = const VerificationMeta(
+    'attempts',
+  );
+  @override
+  late final GeneratedColumn<int> attempts = GeneratedColumn<int>(
+    'attempts',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _completionsMeta = const VerificationMeta(
+    'completions',
+  );
+  @override
+  late final GeneratedColumn<int> completions = GeneratedColumn<int>(
+    'completions',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _bestStarsMeta = const VerificationMeta(
+    'bestStars',
+  );
+  @override
+  late final GeneratedColumn<int> bestStars = GeneratedColumn<int>(
+    'best_stars',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _lastAccuracyMeta = const VerificationMeta(
+    'lastAccuracy',
+  );
+  @override
+  late final GeneratedColumn<double> lastAccuracy = GeneratedColumn<double>(
+    'last_accuracy',
+    aliasedName,
+    true,
+    type: DriftSqlType.double,
+    requiredDuringInsert: false,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    childId,
+    activityId,
+    firstStartedAt,
+    lastPlayedAt,
+    firstCompletedAt,
+    attempts,
+    completions,
+    bestStars,
+    lastAccuracy,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'activity_record_rows';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<ActivityRecordRow> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('child_id')) {
+      context.handle(
+        _childIdMeta,
+        childId.isAcceptableOrUnknown(data['child_id']!, _childIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_childIdMeta);
+    }
+    if (data.containsKey('activity_id')) {
+      context.handle(
+        _activityIdMeta,
+        activityId.isAcceptableOrUnknown(data['activity_id']!, _activityIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_activityIdMeta);
+    }
+    if (data.containsKey('first_started_at')) {
+      context.handle(
+        _firstStartedAtMeta,
+        firstStartedAt.isAcceptableOrUnknown(
+          data['first_started_at']!,
+          _firstStartedAtMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_firstStartedAtMeta);
+    }
+    if (data.containsKey('last_played_at')) {
+      context.handle(
+        _lastPlayedAtMeta,
+        lastPlayedAt.isAcceptableOrUnknown(
+          data['last_played_at']!,
+          _lastPlayedAtMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_lastPlayedAtMeta);
+    }
+    if (data.containsKey('first_completed_at')) {
+      context.handle(
+        _firstCompletedAtMeta,
+        firstCompletedAt.isAcceptableOrUnknown(
+          data['first_completed_at']!,
+          _firstCompletedAtMeta,
+        ),
+      );
+    }
+    if (data.containsKey('attempts')) {
+      context.handle(
+        _attemptsMeta,
+        attempts.isAcceptableOrUnknown(data['attempts']!, _attemptsMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_attemptsMeta);
+    }
+    if (data.containsKey('completions')) {
+      context.handle(
+        _completionsMeta,
+        completions.isAcceptableOrUnknown(
+          data['completions']!,
+          _completionsMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_completionsMeta);
+    }
+    if (data.containsKey('best_stars')) {
+      context.handle(
+        _bestStarsMeta,
+        bestStars.isAcceptableOrUnknown(data['best_stars']!, _bestStarsMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_bestStarsMeta);
+    }
+    if (data.containsKey('last_accuracy')) {
+      context.handle(
+        _lastAccuracyMeta,
+        lastAccuracy.isAcceptableOrUnknown(
+          data['last_accuracy']!,
+          _lastAccuracyMeta,
+        ),
+      );
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {childId, activityId};
+  @override
+  ActivityRecordRow map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return ActivityRecordRow(
+      childId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}child_id'],
+      )!,
+      activityId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}activity_id'],
+      )!,
+      firstStartedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}first_started_at'],
+      )!,
+      lastPlayedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}last_played_at'],
+      )!,
+      firstCompletedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}first_completed_at'],
+      ),
+      attempts: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}attempts'],
+      )!,
+      completions: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}completions'],
+      )!,
+      bestStars: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}best_stars'],
+      )!,
+      lastAccuracy: attachedDatabase.typeMapping.read(
+        DriftSqlType.double,
+        data['${effectivePrefix}last_accuracy'],
+      ),
+    );
+  }
+
+  @override
+  $ActivityRecordRowsTable createAlias(String alias) {
+    return $ActivityRecordRowsTable(attachedDatabase, alias);
+  }
+}
+
+class ActivityRecordRow extends DataClass
+    implements Insertable<ActivityRecordRow> {
+  final String childId;
+  final String activityId;
+  final DateTime firstStartedAt;
+  final DateTime lastPlayedAt;
+  final DateTime? firstCompletedAt;
+  final int attempts;
+  final int completions;
+  final int bestStars;
+  final double? lastAccuracy;
+  const ActivityRecordRow({
+    required this.childId,
+    required this.activityId,
+    required this.firstStartedAt,
+    required this.lastPlayedAt,
+    this.firstCompletedAt,
+    required this.attempts,
+    required this.completions,
+    required this.bestStars,
+    this.lastAccuracy,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['child_id'] = Variable<String>(childId);
+    map['activity_id'] = Variable<String>(activityId);
+    map['first_started_at'] = Variable<DateTime>(firstStartedAt);
+    map['last_played_at'] = Variable<DateTime>(lastPlayedAt);
+    if (!nullToAbsent || firstCompletedAt != null) {
+      map['first_completed_at'] = Variable<DateTime>(firstCompletedAt);
+    }
+    map['attempts'] = Variable<int>(attempts);
+    map['completions'] = Variable<int>(completions);
+    map['best_stars'] = Variable<int>(bestStars);
+    if (!nullToAbsent || lastAccuracy != null) {
+      map['last_accuracy'] = Variable<double>(lastAccuracy);
+    }
+    return map;
+  }
+
+  ActivityRecordRowsCompanion toCompanion(bool nullToAbsent) {
+    return ActivityRecordRowsCompanion(
+      childId: Value(childId),
+      activityId: Value(activityId),
+      firstStartedAt: Value(firstStartedAt),
+      lastPlayedAt: Value(lastPlayedAt),
+      firstCompletedAt: firstCompletedAt == null && nullToAbsent
+          ? const Value.absent()
+          : Value(firstCompletedAt),
+      attempts: Value(attempts),
+      completions: Value(completions),
+      bestStars: Value(bestStars),
+      lastAccuracy: lastAccuracy == null && nullToAbsent
+          ? const Value.absent()
+          : Value(lastAccuracy),
+    );
+  }
+
+  factory ActivityRecordRow.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return ActivityRecordRow(
+      childId: serializer.fromJson<String>(json['childId']),
+      activityId: serializer.fromJson<String>(json['activityId']),
+      firstStartedAt: serializer.fromJson<DateTime>(json['firstStartedAt']),
+      lastPlayedAt: serializer.fromJson<DateTime>(json['lastPlayedAt']),
+      firstCompletedAt: serializer.fromJson<DateTime?>(
+        json['firstCompletedAt'],
+      ),
+      attempts: serializer.fromJson<int>(json['attempts']),
+      completions: serializer.fromJson<int>(json['completions']),
+      bestStars: serializer.fromJson<int>(json['bestStars']),
+      lastAccuracy: serializer.fromJson<double?>(json['lastAccuracy']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'childId': serializer.toJson<String>(childId),
+      'activityId': serializer.toJson<String>(activityId),
+      'firstStartedAt': serializer.toJson<DateTime>(firstStartedAt),
+      'lastPlayedAt': serializer.toJson<DateTime>(lastPlayedAt),
+      'firstCompletedAt': serializer.toJson<DateTime?>(firstCompletedAt),
+      'attempts': serializer.toJson<int>(attempts),
+      'completions': serializer.toJson<int>(completions),
+      'bestStars': serializer.toJson<int>(bestStars),
+      'lastAccuracy': serializer.toJson<double?>(lastAccuracy),
+    };
+  }
+
+  ActivityRecordRow copyWith({
+    String? childId,
+    String? activityId,
+    DateTime? firstStartedAt,
+    DateTime? lastPlayedAt,
+    Value<DateTime?> firstCompletedAt = const Value.absent(),
+    int? attempts,
+    int? completions,
+    int? bestStars,
+    Value<double?> lastAccuracy = const Value.absent(),
+  }) => ActivityRecordRow(
+    childId: childId ?? this.childId,
+    activityId: activityId ?? this.activityId,
+    firstStartedAt: firstStartedAt ?? this.firstStartedAt,
+    lastPlayedAt: lastPlayedAt ?? this.lastPlayedAt,
+    firstCompletedAt: firstCompletedAt.present
+        ? firstCompletedAt.value
+        : this.firstCompletedAt,
+    attempts: attempts ?? this.attempts,
+    completions: completions ?? this.completions,
+    bestStars: bestStars ?? this.bestStars,
+    lastAccuracy: lastAccuracy.present ? lastAccuracy.value : this.lastAccuracy,
+  );
+  ActivityRecordRow copyWithCompanion(ActivityRecordRowsCompanion data) {
+    return ActivityRecordRow(
+      childId: data.childId.present ? data.childId.value : this.childId,
+      activityId: data.activityId.present
+          ? data.activityId.value
+          : this.activityId,
+      firstStartedAt: data.firstStartedAt.present
+          ? data.firstStartedAt.value
+          : this.firstStartedAt,
+      lastPlayedAt: data.lastPlayedAt.present
+          ? data.lastPlayedAt.value
+          : this.lastPlayedAt,
+      firstCompletedAt: data.firstCompletedAt.present
+          ? data.firstCompletedAt.value
+          : this.firstCompletedAt,
+      attempts: data.attempts.present ? data.attempts.value : this.attempts,
+      completions: data.completions.present
+          ? data.completions.value
+          : this.completions,
+      bestStars: data.bestStars.present ? data.bestStars.value : this.bestStars,
+      lastAccuracy: data.lastAccuracy.present
+          ? data.lastAccuracy.value
+          : this.lastAccuracy,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('ActivityRecordRow(')
+          ..write('childId: $childId, ')
+          ..write('activityId: $activityId, ')
+          ..write('firstStartedAt: $firstStartedAt, ')
+          ..write('lastPlayedAt: $lastPlayedAt, ')
+          ..write('firstCompletedAt: $firstCompletedAt, ')
+          ..write('attempts: $attempts, ')
+          ..write('completions: $completions, ')
+          ..write('bestStars: $bestStars, ')
+          ..write('lastAccuracy: $lastAccuracy')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    childId,
+    activityId,
+    firstStartedAt,
+    lastPlayedAt,
+    firstCompletedAt,
+    attempts,
+    completions,
+    bestStars,
+    lastAccuracy,
+  );
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is ActivityRecordRow &&
+          other.childId == this.childId &&
+          other.activityId == this.activityId &&
+          other.firstStartedAt == this.firstStartedAt &&
+          other.lastPlayedAt == this.lastPlayedAt &&
+          other.firstCompletedAt == this.firstCompletedAt &&
+          other.attempts == this.attempts &&
+          other.completions == this.completions &&
+          other.bestStars == this.bestStars &&
+          other.lastAccuracy == this.lastAccuracy);
+}
+
+class ActivityRecordRowsCompanion extends UpdateCompanion<ActivityRecordRow> {
+  final Value<String> childId;
+  final Value<String> activityId;
+  final Value<DateTime> firstStartedAt;
+  final Value<DateTime> lastPlayedAt;
+  final Value<DateTime?> firstCompletedAt;
+  final Value<int> attempts;
+  final Value<int> completions;
+  final Value<int> bestStars;
+  final Value<double?> lastAccuracy;
+  final Value<int> rowid;
+  const ActivityRecordRowsCompanion({
+    this.childId = const Value.absent(),
+    this.activityId = const Value.absent(),
+    this.firstStartedAt = const Value.absent(),
+    this.lastPlayedAt = const Value.absent(),
+    this.firstCompletedAt = const Value.absent(),
+    this.attempts = const Value.absent(),
+    this.completions = const Value.absent(),
+    this.bestStars = const Value.absent(),
+    this.lastAccuracy = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  ActivityRecordRowsCompanion.insert({
+    required String childId,
+    required String activityId,
+    required DateTime firstStartedAt,
+    required DateTime lastPlayedAt,
+    this.firstCompletedAt = const Value.absent(),
+    required int attempts,
+    required int completions,
+    required int bestStars,
+    this.lastAccuracy = const Value.absent(),
+    this.rowid = const Value.absent(),
+  }) : childId = Value(childId),
+       activityId = Value(activityId),
+       firstStartedAt = Value(firstStartedAt),
+       lastPlayedAt = Value(lastPlayedAt),
+       attempts = Value(attempts),
+       completions = Value(completions),
+       bestStars = Value(bestStars);
+  static Insertable<ActivityRecordRow> custom({
+    Expression<String>? childId,
+    Expression<String>? activityId,
+    Expression<DateTime>? firstStartedAt,
+    Expression<DateTime>? lastPlayedAt,
+    Expression<DateTime>? firstCompletedAt,
+    Expression<int>? attempts,
+    Expression<int>? completions,
+    Expression<int>? bestStars,
+    Expression<double>? lastAccuracy,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (childId != null) 'child_id': childId,
+      if (activityId != null) 'activity_id': activityId,
+      if (firstStartedAt != null) 'first_started_at': firstStartedAt,
+      if (lastPlayedAt != null) 'last_played_at': lastPlayedAt,
+      if (firstCompletedAt != null) 'first_completed_at': firstCompletedAt,
+      if (attempts != null) 'attempts': attempts,
+      if (completions != null) 'completions': completions,
+      if (bestStars != null) 'best_stars': bestStars,
+      if (lastAccuracy != null) 'last_accuracy': lastAccuracy,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  ActivityRecordRowsCompanion copyWith({
+    Value<String>? childId,
+    Value<String>? activityId,
+    Value<DateTime>? firstStartedAt,
+    Value<DateTime>? lastPlayedAt,
+    Value<DateTime?>? firstCompletedAt,
+    Value<int>? attempts,
+    Value<int>? completions,
+    Value<int>? bestStars,
+    Value<double?>? lastAccuracy,
+    Value<int>? rowid,
+  }) {
+    return ActivityRecordRowsCompanion(
+      childId: childId ?? this.childId,
+      activityId: activityId ?? this.activityId,
+      firstStartedAt: firstStartedAt ?? this.firstStartedAt,
+      lastPlayedAt: lastPlayedAt ?? this.lastPlayedAt,
+      firstCompletedAt: firstCompletedAt ?? this.firstCompletedAt,
+      attempts: attempts ?? this.attempts,
+      completions: completions ?? this.completions,
+      bestStars: bestStars ?? this.bestStars,
+      lastAccuracy: lastAccuracy ?? this.lastAccuracy,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (childId.present) {
+      map['child_id'] = Variable<String>(childId.value);
+    }
+    if (activityId.present) {
+      map['activity_id'] = Variable<String>(activityId.value);
+    }
+    if (firstStartedAt.present) {
+      map['first_started_at'] = Variable<DateTime>(firstStartedAt.value);
+    }
+    if (lastPlayedAt.present) {
+      map['last_played_at'] = Variable<DateTime>(lastPlayedAt.value);
+    }
+    if (firstCompletedAt.present) {
+      map['first_completed_at'] = Variable<DateTime>(firstCompletedAt.value);
+    }
+    if (attempts.present) {
+      map['attempts'] = Variable<int>(attempts.value);
+    }
+    if (completions.present) {
+      map['completions'] = Variable<int>(completions.value);
+    }
+    if (bestStars.present) {
+      map['best_stars'] = Variable<int>(bestStars.value);
+    }
+    if (lastAccuracy.present) {
+      map['last_accuracy'] = Variable<double>(lastAccuracy.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('ActivityRecordRowsCompanion(')
+          ..write('childId: $childId, ')
+          ..write('activityId: $activityId, ')
+          ..write('firstStartedAt: $firstStartedAt, ')
+          ..write('lastPlayedAt: $lastPlayedAt, ')
+          ..write('firstCompletedAt: $firstCompletedAt, ')
+          ..write('attempts: $attempts, ')
+          ..write('completions: $completions, ')
+          ..write('bestStars: $bestStars, ')
+          ..write('lastAccuracy: $lastAccuracy, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
 abstract class _$NovaDatabase extends GeneratedDatabase {
   _$NovaDatabase(QueryExecutor e) : super(e);
   $NovaDatabaseManager get managers => $NovaDatabaseManager(this);
@@ -1610,6 +2211,8 @@ abstract class _$NovaDatabase extends GeneratedDatabase {
   late final $LevelProgressRowsTable levelProgressRows =
       $LevelProgressRowsTable(this);
   late final $SettingRowsTable settingRows = $SettingRowsTable(this);
+  late final $ActivityRecordRowsTable activityRecordRows =
+      $ActivityRecordRowsTable(this);
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
@@ -1620,6 +2223,7 @@ abstract class _$NovaDatabase extends GeneratedDatabase {
     gameRungState,
     levelProgressRows,
     settingRows,
+    activityRecordRows,
   ];
 }
 
@@ -2581,6 +3185,307 @@ typedef $$SettingRowsTableProcessedTableManager =
       SettingRow,
       PrefetchHooks Function()
     >;
+typedef $$ActivityRecordRowsTableCreateCompanionBuilder =
+    ActivityRecordRowsCompanion Function({
+      required String childId,
+      required String activityId,
+      required DateTime firstStartedAt,
+      required DateTime lastPlayedAt,
+      Value<DateTime?> firstCompletedAt,
+      required int attempts,
+      required int completions,
+      required int bestStars,
+      Value<double?> lastAccuracy,
+      Value<int> rowid,
+    });
+typedef $$ActivityRecordRowsTableUpdateCompanionBuilder =
+    ActivityRecordRowsCompanion Function({
+      Value<String> childId,
+      Value<String> activityId,
+      Value<DateTime> firstStartedAt,
+      Value<DateTime> lastPlayedAt,
+      Value<DateTime?> firstCompletedAt,
+      Value<int> attempts,
+      Value<int> completions,
+      Value<int> bestStars,
+      Value<double?> lastAccuracy,
+      Value<int> rowid,
+    });
+
+class $$ActivityRecordRowsTableFilterComposer
+    extends Composer<_$NovaDatabase, $ActivityRecordRowsTable> {
+  $$ActivityRecordRowsTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get childId => $composableBuilder(
+    column: $table.childId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get activityId => $composableBuilder(
+    column: $table.activityId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get firstStartedAt => $composableBuilder(
+    column: $table.firstStartedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get lastPlayedAt => $composableBuilder(
+    column: $table.lastPlayedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get firstCompletedAt => $composableBuilder(
+    column: $table.firstCompletedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get attempts => $composableBuilder(
+    column: $table.attempts,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get completions => $composableBuilder(
+    column: $table.completions,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get bestStars => $composableBuilder(
+    column: $table.bestStars,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<double> get lastAccuracy => $composableBuilder(
+    column: $table.lastAccuracy,
+    builder: (column) => ColumnFilters(column),
+  );
+}
+
+class $$ActivityRecordRowsTableOrderingComposer
+    extends Composer<_$NovaDatabase, $ActivityRecordRowsTable> {
+  $$ActivityRecordRowsTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get childId => $composableBuilder(
+    column: $table.childId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get activityId => $composableBuilder(
+    column: $table.activityId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get firstStartedAt => $composableBuilder(
+    column: $table.firstStartedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get lastPlayedAt => $composableBuilder(
+    column: $table.lastPlayedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get firstCompletedAt => $composableBuilder(
+    column: $table.firstCompletedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get attempts => $composableBuilder(
+    column: $table.attempts,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get completions => $composableBuilder(
+    column: $table.completions,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get bestStars => $composableBuilder(
+    column: $table.bestStars,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<double> get lastAccuracy => $composableBuilder(
+    column: $table.lastAccuracy,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$ActivityRecordRowsTableAnnotationComposer
+    extends Composer<_$NovaDatabase, $ActivityRecordRowsTable> {
+  $$ActivityRecordRowsTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get childId =>
+      $composableBuilder(column: $table.childId, builder: (column) => column);
+
+  GeneratedColumn<String> get activityId => $composableBuilder(
+    column: $table.activityId,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<DateTime> get firstStartedAt => $composableBuilder(
+    column: $table.firstStartedAt,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<DateTime> get lastPlayedAt => $composableBuilder(
+    column: $table.lastPlayedAt,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<DateTime> get firstCompletedAt => $composableBuilder(
+    column: $table.firstCompletedAt,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get attempts =>
+      $composableBuilder(column: $table.attempts, builder: (column) => column);
+
+  GeneratedColumn<int> get completions => $composableBuilder(
+    column: $table.completions,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get bestStars =>
+      $composableBuilder(column: $table.bestStars, builder: (column) => column);
+
+  GeneratedColumn<double> get lastAccuracy => $composableBuilder(
+    column: $table.lastAccuracy,
+    builder: (column) => column,
+  );
+}
+
+class $$ActivityRecordRowsTableTableManager
+    extends
+        RootTableManager<
+          _$NovaDatabase,
+          $ActivityRecordRowsTable,
+          ActivityRecordRow,
+          $$ActivityRecordRowsTableFilterComposer,
+          $$ActivityRecordRowsTableOrderingComposer,
+          $$ActivityRecordRowsTableAnnotationComposer,
+          $$ActivityRecordRowsTableCreateCompanionBuilder,
+          $$ActivityRecordRowsTableUpdateCompanionBuilder,
+          (
+            ActivityRecordRow,
+            BaseReferences<
+              _$NovaDatabase,
+              $ActivityRecordRowsTable,
+              ActivityRecordRow
+            >,
+          ),
+          ActivityRecordRow,
+          PrefetchHooks Function()
+        > {
+  $$ActivityRecordRowsTableTableManager(
+    _$NovaDatabase db,
+    $ActivityRecordRowsTable table,
+  ) : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$ActivityRecordRowsTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$ActivityRecordRowsTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$ActivityRecordRowsTableAnnotationComposer(
+                $db: db,
+                $table: table,
+              ),
+          updateCompanionCallback:
+              ({
+                Value<String> childId = const Value.absent(),
+                Value<String> activityId = const Value.absent(),
+                Value<DateTime> firstStartedAt = const Value.absent(),
+                Value<DateTime> lastPlayedAt = const Value.absent(),
+                Value<DateTime?> firstCompletedAt = const Value.absent(),
+                Value<int> attempts = const Value.absent(),
+                Value<int> completions = const Value.absent(),
+                Value<int> bestStars = const Value.absent(),
+                Value<double?> lastAccuracy = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => ActivityRecordRowsCompanion(
+                childId: childId,
+                activityId: activityId,
+                firstStartedAt: firstStartedAt,
+                lastPlayedAt: lastPlayedAt,
+                firstCompletedAt: firstCompletedAt,
+                attempts: attempts,
+                completions: completions,
+                bestStars: bestStars,
+                lastAccuracy: lastAccuracy,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                required String childId,
+                required String activityId,
+                required DateTime firstStartedAt,
+                required DateTime lastPlayedAt,
+                Value<DateTime?> firstCompletedAt = const Value.absent(),
+                required int attempts,
+                required int completions,
+                required int bestStars,
+                Value<double?> lastAccuracy = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => ActivityRecordRowsCompanion.insert(
+                childId: childId,
+                activityId: activityId,
+                firstStartedAt: firstStartedAt,
+                lastPlayedAt: lastPlayedAt,
+                firstCompletedAt: firstCompletedAt,
+                attempts: attempts,
+                completions: completions,
+                bestStars: bestStars,
+                lastAccuracy: lastAccuracy,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$ActivityRecordRowsTableProcessedTableManager =
+    ProcessedTableManager<
+      _$NovaDatabase,
+      $ActivityRecordRowsTable,
+      ActivityRecordRow,
+      $$ActivityRecordRowsTableFilterComposer,
+      $$ActivityRecordRowsTableOrderingComposer,
+      $$ActivityRecordRowsTableAnnotationComposer,
+      $$ActivityRecordRowsTableCreateCompanionBuilder,
+      $$ActivityRecordRowsTableUpdateCompanionBuilder,
+      (
+        ActivityRecordRow,
+        BaseReferences<
+          _$NovaDatabase,
+          $ActivityRecordRowsTable,
+          ActivityRecordRow
+        >,
+      ),
+      ActivityRecordRow,
+      PrefetchHooks Function()
+    >;
 
 class $NovaDatabaseManager {
   final _$NovaDatabase _db;
@@ -2595,4 +3500,6 @@ class $NovaDatabaseManager {
       $$LevelProgressRowsTableTableManager(_db, _db.levelProgressRows);
   $$SettingRowsTableTableManager get settingRows =>
       $$SettingRowsTableTableManager(_db, _db.settingRows);
+  $$ActivityRecordRowsTableTableManager get activityRecordRows =>
+      $$ActivityRecordRowsTableTableManager(_db, _db.activityRecordRows);
 }

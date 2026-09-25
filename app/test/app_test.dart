@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:nova_app/bootstrap.dart';
+import 'package:nova_app/ui/journey/onboarding_screen.dart';
 
 import 'support/fixture_content.dart';
 import 'support/pump_app.dart';
@@ -8,8 +9,11 @@ import 'support/pump_app.dart';
 void main() {
   testWidgets('NovaApp renders the home screen with the playable game from content', (tester) async {
     await pumpNovaApp(tester);
+    // The next activity is offered straight away, and its place can be explored.
     expect(find.text("Bear's Apples"), findsOneWidget);
-    expect(find.text('Count up to 5'), findsOneWidget);
+    expect(find.byKey(const ValueKey('place.numbers')), findsOneWidget);
+    await openPlace(tester, 'numbers');
+    expect(find.byKey(const ValueKey('station.game.math.bear-apples')), findsOneWidget);
     // In the bundle, but its mechanic has no implementation: not offered.
     expect(find.text('Number Match'), findsNothing);
   });
@@ -21,7 +25,8 @@ void main() {
     ));
     expect(find.text('Getting ready…'), findsOneWidget);
     await tester.pumpAndSettle();
-    expect(find.text("Bear's Apples"), findsOneWidget);
+    // A first launch (no saved age) opens onboarding.
+    expect(find.byType(OnboardingScreen), findsOneWidget);
   });
 
   testWidgets('a content bundle that fails to load shows a recoverable error, and retry recovers', (tester) async {
@@ -37,7 +42,7 @@ void main() {
 
     await tester.tap(find.widgetWithText(FilledButton, 'Try again'));
     await tester.pumpAndSettle();
-    expect(find.text("Bear's Apples"), findsOneWidget);
+    expect(find.byType(OnboardingScreen), findsOneWidget);
     expect(attempts, 2);
   });
 }

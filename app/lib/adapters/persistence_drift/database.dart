@@ -53,6 +53,24 @@ class LevelProgressRows extends Table {
   Set<Column> get primaryKey => {childId, levelId};
 }
 
+/// One row per child and journey activity: when it was first started and
+/// finished, how often it was played and finished, and the best stars.
+/// Rows are updated, never deleted, so history survives age changes.
+class ActivityRecordRows extends Table {
+  TextColumn get childId => text()();
+  TextColumn get activityId => text()();
+  DateTimeColumn get firstStartedAt => dateTime()();
+  DateTimeColumn get lastPlayedAt => dateTime()();
+  DateTimeColumn get firstCompletedAt => dateTime().nullable()();
+  IntColumn get attempts => integer()();
+  IntColumn get completions => integer()();
+  IntColumn get bestStars => integer()();
+  RealColumn get lastAccuracy => real().nullable()();
+
+  @override
+  Set<Column> get primaryKey => {childId, activityId};
+}
+
 /// Per-device settings: age group, language, and the grown-up's choices for
 /// voice, microphone and camera.
 class SettingRows extends Table {
@@ -63,12 +81,12 @@ class SettingRows extends Table {
   Set<Column> get primaryKey => {key};
 }
 
-@DriftDatabase(tables: [MasteryRecordRows, DimensionEstimateRows, GameRungState, LevelProgressRows, SettingRows])
+@DriftDatabase(tables: [MasteryRecordRows, DimensionEstimateRows, GameRungState, LevelProgressRows, SettingRows, ActivityRecordRows])
 class NovaDatabase extends _$NovaDatabase {
   NovaDatabase(super.executor);
 
   @override
-  int get schemaVersion => 2;
+  int get schemaVersion => 3;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -77,6 +95,16 @@ class NovaDatabase extends _$NovaDatabase {
           if (from < 2) {
             await m.createTable(levelProgressRows);
             await m.createTable(settingRows);
+          }
+          if (from < 3) {
+            await m.createTable(activityRecordRows);
+            // Levels finished before activity records existed become
+            // completed records, so no child loses their journey history.
+            await customStatement(
+              'INSERT OR IGNORE INTO activity_record_rows '
+              '(child_id, activity_id, first_started_at, last_played_at, first_completed_at, attempts, completions, best_stars) '
+              'SELECT child_id, level_id, updated_at, updated_at, updated_at, 1, 1, stars FROM level_progress_rows',
+            );
           }
         },
       );

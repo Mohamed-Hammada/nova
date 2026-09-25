@@ -40,8 +40,8 @@ class VisualView extends StatelessWidget {
       NumeralVisual() => NumeralBadge(numeral(v.value, language), size: size),
       TextVisual() => _TextCard(v.text, size: size, letter: v.isLetter),
       TokenVisual() => TokenArt(v.token, size: size),
-      PatternVisual() => _Pattern(v, size),
-      TowersVisual() => _Towers(v, size),
+      PatternVisual() => FittedBox(fit: BoxFit.scaleDown, child: _Pattern(v, size)),
+      TowersVisual() => FittedBox(fit: BoxFit.scaleDown, child: _Towers(v, size)),
       FaceVisual() => FaceArt(v.who, v.emotion, size: size),
       SceneVisual() => _Scene(v, size),
     };
