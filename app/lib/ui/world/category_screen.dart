@@ -65,14 +65,16 @@ class _CategoryScreenState extends ConsumerState<CategoryScreen> {
                             onPressed: () => Navigator.of(context).maybePop(),
                           ),
                           const SizedBox(width: NovaSpace.md),
-                          Expanded(
+                          // The place's name on a pill of its deep colour, so it
+                          // reads clearly against any sky.
+                          Flexible(
                             child: Semantics(
+                              container: true,
                               header: true,
-                              child: Text(
-                                c.title(l10n),
-                                style: NovaType.display(context, color: Colors.white).copyWith(
-                                  shadows: const [Shadow(color: Color(0x662E1A5C), blurRadius: 10, offset: Offset(0, 2))],
-                                ),
+                              child: Container(
+                                padding: const EdgeInsets.symmetric(horizontal: NovaSpace.md, vertical: NovaSpace.xxs),
+                                decoration: BoxDecoration(color: c.deep, borderRadius: BorderRadius.circular(NovaRadius.pill), boxShadow: NovaShadow.soft),
+                                child: Text(c.title(l10n), style: NovaType.display(context, color: Colors.white)),
                               ),
                             ),
                           ),

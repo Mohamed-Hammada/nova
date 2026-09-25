@@ -3,6 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:nova_app/ui/design/nova_design.dart';
 import 'package:nova_app/ui/l10n.dart';
 
+import '../support/fixture_content.dart';
 import '../support/play.dart';
 import '../support/pump_app.dart';
 
@@ -37,6 +38,26 @@ void main() {
         await tester.tap(buttonWithText(locale == NovaLocales.english ? 'Done' : 'انتهيت').first);
         await tester.pumpAndSettle();
         await expectAccessible(tester);
+        semantics.dispose();
+      });
+
+      testWidgets('a place, and a choice game played in it, meet the guidelines', (tester) async {
+        final semantics = tester.ensureSemantics();
+        await pumpNovaApp(tester, locale: locale, content: loadRealBundle());
+        await openPlace(tester, 'numbers');
+        await expectAccessible(tester);
+        // The way back is its own button, never merged into the heading.
+        final back = tester.getSemantics(find.bySemanticsLabel(lookupAppLocalizations(locale).backHome));
+        expect(back.flagsCollection.isButton, isTrue);
+        expect(back.flagsCollection.isHeader, isFalse);
+
+        await tester.tap(find.byKey(const ValueKey('station.game.math.number-match')));
+        for (var i = 0; i < 8; i++) {
+          await tester.pump(const Duration(milliseconds: 250));
+        }
+        await expectAccessible(tester);
+        await tester.pumpWidget(const SizedBox());
+        await tester.pump(const Duration(seconds: 3));
         semantics.dispose();
       });
 

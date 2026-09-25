@@ -84,7 +84,9 @@ class _JellyButtonState extends State<JellyButton> with TickerProviderStateMixin
           ],
         );
 
+    // Its own node: never merged into a neighbouring heading or label.
     return Semantics(
+      container: true,
       button: true,
       enabled: enabled,
       label: widget.semanticLabel,
