@@ -119,7 +119,7 @@ class _StageCelebrationState extends ConsumerState<StageCelebration> {
                         Text(widget.next == null ? l10n.journeyAllDone : l10n.newAdventure, textAlign: TextAlign.center, style: NovaType.title(context, color: NovaStory.plum)),
                         if (widget.next != null) Text(contentText(content, widget.next!.nameKey, lang), style: NovaType.body(context)),
                         const SizedBox(height: NovaSpace.md),
-                        NovaPlayButton(label: l10n.letsGo, icon: Icons.explore_rounded, color: (next ?? done).color, onPressed: () => Navigator.of(context).pop()),
+                        NovaPlayButton(label: l10n.letsGo, icon: Icons.explore_rounded, color: (next ?? done).deep, onPressed: () => Navigator.of(context).pop()),
                       ]),
                     ),
                   ]),

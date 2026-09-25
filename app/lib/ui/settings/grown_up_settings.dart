@@ -109,14 +109,18 @@ class _AgeSetting extends ConsumerWidget {
         Icon(Icons.cake_rounded, color: theme.colorScheme.primary),
         const SizedBox(width: NovaSpace.md),
         Expanded(child: Text(l10n.childAge, style: theme.textTheme.titleMedium)),
+      ]),
+      const SizedBox(height: NovaSpace.xs),
+      // On its own line, so large text never squeezes the controls.
+      Wrap(crossAxisAlignment: WrapCrossAlignment.center, spacing: NovaSpace.xs, children: [
         IconButton.outlined(
           key: const ValueKey('settings.age.down'),
           tooltip: l10n.decreaseAge,
           onPressed: age == null || age <= 2 ? null : () => set(age - 1),
           icon: const Icon(Icons.remove_rounded),
         ),
-        SizedBox(
-          width: 88,
+        ConstrainedBox(
+          constraints: const BoxConstraints(minWidth: 88),
           child: Text(
             age == null ? '–' : '${numeral(age, lang)} ${l10n.yearsOld}',
             key: const ValueKey('settings.age.value'),

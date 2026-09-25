@@ -521,7 +521,7 @@ class _LevelComplete extends StatelessWidget {
                         ],
                       ),
                       const SizedBox(height: NovaSpace.lg),
-                      NovaPlayButton(onPressed: onMap, color: place.color, icon: Icons.map_rounded, label: l10n.backToMap, size: 60),
+                      NovaPlayButton(onPressed: onMap, color: place.deep, icon: Icons.map_rounded, label: l10n.backToMap, size: 60),
                     ],
                   ),
                 ),

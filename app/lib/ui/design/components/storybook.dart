@@ -48,7 +48,8 @@ class NovaPlayButton extends StatelessWidget {
   final double size;
 
   @override
-  Widget build(BuildContext context) => JellyButton(onPressed: onPressed, color: color, icon: icon, label: label, size: size, semanticLabel: label);
+  // The visible label already names the button for screen readers.
+  Widget build(BuildContext context) => JellyButton(onPressed: onPressed, color: color, icon: icon, label: label, size: size);
 }
 
 /// A round control (close, repeat, hint, settings). Always labelled for

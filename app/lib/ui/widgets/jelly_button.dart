@@ -156,7 +156,7 @@ class _JellyButtonState extends State<JellyButton> with TickerProviderStateMixin
                                   gradient: LinearGradient(
                                     begin: Alignment.topCenter,
                                     end: Alignment.bottomCenter,
-                                    colors: [Colors.white.withValues(alpha: 0.55), Colors.white.withValues(alpha: 0)],
+                                    colors: [Colors.white.withValues(alpha: 0.4), Colors.white.withValues(alpha: 0)],
                                   ),
                                 ),
                               ),

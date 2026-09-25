@@ -65,7 +65,8 @@ abstract final class NovaStory {
   static const skyLow = Color(0xFFDDF2FF);
   static const sunshine = Color(0xFFFFC53D);
   static const honey = Color(0xFFFFA928);
-  static const coral = Color(0xFFFF7A59);
+  /// Deep enough for white button text (WCAG 3:1 for large text).
+  static const coral = Color(0xFFCC4523);
   static const berry = Color(0xFFF2508B);
   static const meadow = Color(0xFF7BCB5C);
   static const meadowDeep = Color(0xFF3F9A4B);
@@ -79,7 +80,7 @@ abstract final class NovaStory {
   static const ocean = Color(0xFF3C8DF2);
 
   /// Correct answers glow in this; it is never paired with a harsh red.
-  static const yes = Color(0xFF3FBF6A);
+  static const yes = Color(0xFF2E9A55);
 
   /// A miss is a warm, soft amber: "let's try again", not "wrong".
   static const again = Color(0xFFFFB547);
