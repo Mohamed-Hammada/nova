@@ -406,28 +406,81 @@ class ContentBundle {
 /// per language for literacy -- and, for counting games, a picture skin. It
 /// never sets difficulty: the Adaptive Engine still chooses the rung.
 class Journey {
-  const Journey({required this.id, required this.nameKey, required this.ageRange, required this.levels});
+  const Journey({required this.id, required this.nameKey, required this.ageRange, required this.levels, this.stages = const []});
 
   final String id;
   final String nameKey;
   final List<int> ageRange;
   final List<JourneyLevel> levels;
 
+  /// The journey's adventures, in order; together they cover every level.
+  final List<StageSpec> stages;
+
   factory Journey.fromJson(Map<String, dynamic> json) => Journey(
         id: json['id'] as String,
         nameKey: json['name_key'] as String,
         ageRange: List<int>.from((json['age_range'] as List).map((v) => (v as num).toInt())),
         levels: (json['levels'] as List).map((l) => JourneyLevel.fromJson(l as Map<String, dynamic>)).toList(),
+        stages: json['stages'] == null ? const [] : (json['stages'] as List).map((s) => StageSpec.fromJson(s as Map<String, dynamic>)).toList(),
       );
 }
 
+/// One stage of a journey as written in the spec: a named adventure of
+/// levels, and the ages for which it is the place to start.
+class StageSpec {
+  const StageSpec({required this.id, required this.nameKey, required this.place, required this.ageRange, required this.levelIds});
+
+  final String id;
+  final String nameKey;
+
+  /// The part of the Nova world the stage is set in (numbers, language...).
+  final String place;
+  final List<int> ageRange;
+  final List<String> levelIds;
+
+  factory StageSpec.fromJson(Map<String, dynamic> json) => StageSpec(
+        id: json['id'] as String,
+        nameKey: json['name_key'] as String,
+        place: json['place'] as String,
+        ageRange: List<int>.from((json['age_range'] as List).map((v) => (v as num).toInt())),
+        levelIds: List<String>.from(json['levels'] as List),
+      );
+}
+
+/// What a level is for within its stage.
+enum LevelRole {
+  /// Needed to finish the stage.
+  required,
+  practice,
+  challenge,
+  optional,
+  review;
+
+  static LevelRole parse(String? value) => LevelRole.values.firstWhere((r) => r.name == value, orElse: () => LevelRole.required);
+}
+
 class JourneyLevel {
-  const JourneyLevel({required this.id, this.gameId, this.gamesByLanguage = const {}, this.skin});
+  const JourneyLevel({
+    required this.id,
+    this.gameId,
+    this.gamesByLanguage = const {},
+    this.skin,
+    this.role = LevelRole.required,
+    this.prerequisites = const [],
+    this.minutes,
+  });
 
   final String id;
   final String? gameId;
   final Map<String, String> gamesByLanguage;
   final String? skin;
+  final LevelRole role;
+
+  /// Levels that must be finished before this one opens.
+  final List<String> prerequisites;
+
+  /// Estimated minutes, when the spec gives one.
+  final double? minutes;
 
   /// The game this level plays for a child using [language].
   String gameFor(String language) => gameId ?? gamesByLanguage[language] ?? gamesByLanguage.values.first;
@@ -437,5 +490,8 @@ class JourneyLevel {
         gameId: json['game'] as String?,
         gamesByLanguage: json['games_by_language'] == null ? const {} : Map<String, String>.from(json['games_by_language'] as Map),
         skin: json['skin'] as String?,
+        role: LevelRole.parse(json['role'] as String?),
+        prerequisites: json['prerequisites'] == null ? const [] : List<String>.from(json['prerequisites'] as List),
+        minutes: (json['minutes'] as num?)?.toDouble(),
       );
 }
