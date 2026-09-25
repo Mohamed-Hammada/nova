@@ -65,3 +65,41 @@ which has its own dedicated screen (`ui/game/game_screen.dart`). None is a conte
 - **Games in the world:** activities sit on a ground stage in the scene, not a white form panel.
 - **Sound effects:** small local, generated sound files (tap, success, gentle retry, celebration,
   pop, demonstration, unlock) through the existing AudioPort, always optional.
+
+## After this pass
+
+See [game-platform.md](game-platform.md) for how it works. What changed against the gaps above:
+
+1. **Quiz feel → objects in the world.**
+   - The ~65 choice levels play on the shared choice stage. Answers are baskets, balloons, bubbles,
+     lily pads, signposts, clouds, carriages or crystals, depending on the game and the place.
+   - They arrive, bob and celebrate, and the question sits in a pinned storybook frame.
+2. **Second tries.**
+   - A miss rests that answer and the child tries again. After two misses the hand shows the
+     answer and the child taps it.
+   - Only the first try counts for accuracy and stars; retries are logged as retries.
+3. **Visible adaptation.**
+   - Modelled rounds open with the companion's demonstration hand.
+   - Guided rounds float a wrong answer away (a first step), and hints do a first step, then show.
+   - The place grows richer as the child advances through a game's levels: flowers, then bunting
+     and butterflies, then a rainbow.
+4. **Same game, different stage.** Journey activities play in their stage's place.
+5. **White panel.**
+   - Choice, pairs and light rounds stand in the scene.
+   - Small-piece rounds sit on a mat tinted by the place.
+   - Pair cards take the place's colours.
+6. **Companion in the game.**
+   - It points, looks toward the answer and speaks each moment.
+   - It cheers a run of first-try answers and stays close after misses in a row.
+7. **Sound effects.**
+   - Eight generated local sounds on their own players, which a grown-up can switch off.
+   - Every sound has a visual.
+8. **Phones and accessibility.**
+   - Every game's first round is checked at 390px wide in both languages; sort, clap and counting
+     layouts were fixed.
+   - Buttons are always their own screen-reader node. The place's Home button used to be merged
+     into the heading.
+   - Place titles now pass contrast.
+
+Still to do: the drag, sort, stream and build rounds keep their own feedback (no try-again or hand
+yet), and the Bear's Apples 2.5D game is unchanged.
