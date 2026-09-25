@@ -73,10 +73,22 @@ Future<AppHarness> pumpNovaApp(
 
 /// Opens the first game from Home and waits for the first trial.
 Future<void> openBearApples(WidgetTester tester, {String name = "Bear's Apples"}) async {
-  // The game grid sits below the greeting and the journey card.
-  await tester.scrollUntilVisible(find.text(name), 200, scrollable: find.byType(Scrollable).first);
-  await tester.ensureVisible(find.text(name));
+  // Home -> Number Meadow (the place for counting games) -> the activity.
+  await openPlace(tester, 'numbers');
+  final station = find.byKey(const ValueKey('station.game.math.bear-apples'));
+  await tester.ensureVisible(station);
   await tester.pumpAndSettle();
-  await tester.tap(find.text(name));
+  expect(find.descendant(of: station, matching: find.text(name)), findsOneWidget);
+  await tester.tap(station);
+  await tester.pumpAndSettle();
+}
+
+/// Opens one place of the world from Home, e.g. 'numbers'.
+Future<void> openPlace(WidgetTester tester, String place) async {
+  final finder = find.byKey(ValueKey('place.$place'));
+  await tester.scrollUntilVisible(finder, 200, scrollable: find.byType(Scrollable).first);
+  await tester.ensureVisible(finder);
+  await tester.pumpAndSettle();
+  await tester.tap(finder);
   await tester.pumpAndSettle();
 }

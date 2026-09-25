@@ -29,7 +29,7 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(_directionOf(tester, find.byType(HomeScreen)), TextDirection.rtl);
-      expect(find.text('هيّا نلعب!'), findsOneWidget);
+      expect(find.text('أهلًا بعودتك!'), findsOneWidget);
       expect(find.text('تفاحات الدبّ'), findsOneWidget, reason: 'content strings follow the locale too');
     });
 
@@ -60,8 +60,11 @@ void main() {
     testWidgets('Arabic UI shows the Arabic game and skill names from content', (tester) async {
       await pumpNovaApp(tester, locale: NovaLocales.arabic);
       expect(find.text('تفاحات الدبّ'), findsOneWidget);
-      expect(find.text('العدّ حتى ٥'), findsOneWidget);
       expect(find.text("Bear's Apples"), findsNothing);
+      // Skill names are for grown-ups: they appear in the progress view.
+      await tester.tap(find.byTooltip('للكبار'));
+      await tester.pumpAndSettle();
+      expect(find.text('العدّ حتى ٥'), findsWidgets);
     });
 
     testWidgets('a content string missing in Arabic falls back to English, never to a raw key', (tester) async {

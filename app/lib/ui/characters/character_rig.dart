@@ -174,6 +174,7 @@ class Pose {
     this.brow = 0,
     this.browTilt = 0,
     this.glow = 1,
+    this.wide = 0,
   });
 
   final double jump, squash, lean, bodyYaw;
@@ -184,6 +185,44 @@ class Pose {
   /// Eyebrow angle: positive pulls the inner ends down (cross), negative
   /// lifts them (sad or worried). [brow] raises both ends together.
   final double browTilt;
+
+  /// Eyes opened wide (surprise, wonder): 0 normal, 1 widest.
+  final double wide;
+
+  static double _l(double a, double b, double t) => a + (b - a) * t;
+
+  /// Blends two poses, so a change of mood eases in instead of snapping.
+  static Pose lerp(Pose a, Pose b, double t) => t <= 0
+      ? a
+      : t >= 1
+          ? b
+          : Pose(
+              jump: _l(a.jump, b.jump, t),
+              squash: _l(a.squash, b.squash, t),
+              lean: _l(a.lean, b.lean, t),
+              bodyYaw: _l(a.bodyYaw, b.bodyYaw, t),
+              headYaw: _l(a.headYaw, b.headYaw, t),
+              headPitch: _l(a.headPitch, b.headPitch, t),
+              headRoll: _l(a.headRoll, b.headRoll, t),
+              armL: _l(a.armL, b.armL, t),
+              armR: _l(a.armR, b.armR, t),
+              legL: _l(a.legL, b.legL, t),
+              legR: _l(a.legR, b.legR, t),
+              earL: _l(a.earL, b.earL, t),
+              earR: _l(a.earR, b.earR, t),
+              tail: _l(a.tail, b.tail, t),
+              antenna: _l(a.antenna, b.antenna, t),
+              blink: _l(a.blink, b.blink, t),
+              lookX: _l(a.lookX, b.lookX, t),
+              lookY: _l(a.lookY, b.lookY, t),
+              mouthOpen: _l(a.mouthOpen, b.mouthOpen, t),
+              smile: _l(a.smile, b.smile, t),
+              happyEyes: _l(a.happyEyes, b.happyEyes, t),
+              brow: _l(a.brow, b.brow, t),
+              browTilt: _l(a.browTilt, b.browTilt, t),
+              glow: _l(a.glow, b.glow, t),
+              wide: _l(a.wide, b.wide, t),
+            );
 }
 
 // ---------------------------------------------------------------------------
@@ -191,7 +230,7 @@ class Pose {
 // ---------------------------------------------------------------------------
 
 class CharacterModel {
-  const CharacterModel({required this.parts, required this.pivots, required this.lidColor, this.height = 270});
+  const CharacterModel({required this.parts, required this.pivots, required this.lidColor, this.height = 300});
 
   final List<Part> parts;
 
@@ -214,179 +253,234 @@ class CharacterModel {
 
 const _shadowInk = Color(0xFF2A1640);
 
+// ---------------------------------------------------------------------------
+// The Nova character template
+//
+// Every companion is built from one template so they read as one cast: the
+// same big-head proportions (head about 45% of the height), the same eye
+// shape, size and placement, the same soft clay finish, and the same
+// storybook outfit -- a zip hoodie, trousers and rounded sneakers. A
+// character is only its colours plus a few species features (ears, snout,
+// tail, antenna), so a new friend is a palette and a handful of parts.
+// ---------------------------------------------------------------------------
+
+/// Colours and species features for one member of the cast.
+class CharacterLook {
+  const CharacterLook({
+    required this.skin,
+    required this.muzzle,
+    required this.nose,
+    required this.iris,
+    required this.hoodie,
+    required this.trousers,
+    required this.shoe,
+    this.hands,
+    this.brow = const Color(0xFF3B2430),
+    this.blush = const Color(0xFFFF8FAE),
+    this.head = const [],
+    this.body = const [],
+    this.glossySkin = false,
+    this.lid,
+    this.height = 300,
+  });
+
+  final Color skin;
+  final Color muzzle;
+  final Color nose;
+  final Color iris;
+  final Color hoodie;
+  final Color trousers;
+  final Color shoe;
+  final Color? hands;
+  final Color brow;
+  final Color blush;
+
+  /// Species parts on head bones (ears, antenna, snout details).
+  final List<Part> head;
+
+  /// Species parts on body bones (tails).
+  final List<Part> body;
+
+  /// Robot plating instead of fur.
+  final bool glossySkin;
+  final Color? lid;
+
+  /// Model height to fit in the box (taller for long ears).
+  final double height;
+}
+
+const _pivots = {
+  Bone.head: V3(0, -134, 0),
+  Bone.armL: V3(-46, -120, 6),
+  Bone.armR: V3(46, -120, 6),
+  Bone.legL: V3(-22, -52, 4),
+  Bone.legR: V3(22, -52, 4),
+  Bone.earL: V3(-36, -226, 0),
+  Bone.earR: V3(36, -226, 0),
+  Bone.tail: V3(0, -64, -38),
+  Bone.antenna: V3(0, -238, 0),
+};
+
+CharacterModel _build(CharacterLook k) {
+  final skin = k.glossySkin ? Finish.gloss : Finish.clay;
+  final hoodieDeep = shade(k.hoodie, -0.22);
+  final hoodieLight = shade(k.hoodie, 0.35);
+  final hands = k.hands ?? k.skin;
+  const sole = Color(0xFFFFFBF2);
+  return CharacterModel(
+    lidColor: k.lid ?? k.skin,
+    height: k.height,
+    pivots: _pivots,
+    parts: [
+      ...k.body,
+      // Sneakers: a warm white sole under a coloured upper.
+      Part(Bone.legL, const V3(-24, -9, 12), const V3(21, 9, 28), sole),
+      Part(Bone.legR, const V3(24, -9, 12), const V3(21, 9, 28), sole),
+      Part(Bone.legL, const V3(-24, -18, 10), const V3(18, 11, 23), k.shoe),
+      Part(Bone.legR, const V3(24, -18, 10), const V3(18, 11, 23), k.shoe),
+      Part(Bone.legL, const V3(-24, -22, 30), const V3(8, 5, 3), sole, depthBias: 2),
+      Part(Bone.legR, const V3(24, -22, 30), const V3(8, 5, 3), sole, depthBias: 2),
+      // Trousers.
+      Part(Bone.legL, const V3(-22, -38, -6), const V3(18, 19, 18), k.trousers),
+      Part(Bone.legR, const V3(22, -38, -6), const V3(18, 19, 18), k.trousers),
+      // Hoodie body, pocket, zip and the hood resting behind the neck.
+      Part(Bone.body, const V3(0, -86, 0), const V3(48, 46, 40), k.hoodie),
+      Part(Bone.body, const V3(0, -50, -4), const V3(44, 9, 36), shade(k.hoodie, -0.1)),
+      Part(Bone.body, const V3(0, -94, 39), const V3(2.2, 30, 2), hoodieLight, depthBias: 2),
+      Part(Bone.body, const V3(-9, -116, 36), const V3(1.6, 9, 1.6), hoodieLight, depthBias: 2),
+      Part(Bone.body, const V3(9, -116, 36), const V3(1.6, 9, 1.6), hoodieLight, depthBias: 2),
+      Part(Bone.body, const V3(0, -128, -14), const V3(40, 16, 30), hoodieDeep),
+      // Sleeves and hands.
+      Part(Bone.armL, const V3(-56, -98, 10), const V3(15, 28, 16), k.hoodie, roll: 0.22),
+      Part(Bone.armR, const V3(56, -98, 10), const V3(15, 28, 16), k.hoodie, roll: -0.22),
+      Part(Bone.armL, const V3(-62, -76, 12), const V3(14, 6, 14), hoodieDeep, roll: 0.22),
+      Part(Bone.armR, const V3(62, -76, 12), const V3(14, 6, 14), hoodieDeep, roll: -0.22),
+      Part(Bone.armL, const V3(-64, -64, 14), const V3(11, 11, 11), hands, material: skin),
+      Part(Bone.armR, const V3(64, -64, 14), const V3(11, 11, 11), hands, material: skin),
+      // Neck shadow under the chin.
+      Part(Bone.body, const V3(0, -130, 18), const V3(34, 9, 22), _shadowInk, material: Finish.shadow, depthBias: 2),
+      ...k.head,
+      // The head: the same size and shape for everyone.
+      Part(Bone.head, const V3(0, -186, 0), const V3(68, 61, 58), k.skin, material: skin),
+      Part(Bone.head, const V3(0, -164, 44), const V3(27, 18, 16), k.muzzle, material: skin, depthBias: 1),
+      Part(Bone.head, const V3(0, -172, 60), const V3(9, 6.5, 5), k.nose, material: Finish.gloss, depthBias: 4),
+      Part(Bone.head, const V3(0, -153, 55), const V3(10, 6, 3), const Color(0xFF3A1C24), material: Finish.mouth, depthBias: 5),
+      // Eyes: one design for the whole cast; only the iris colour changes.
+      Part(Bone.head, const V3(-25, -190, 49), const V3(14, 17, 5), Colors.white, material: Finish.eye, iris: k.iris, depthBias: 3),
+      Part(Bone.head, const V3(25, -190, 49), const V3(14, 17, 5), Colors.white, material: Finish.eye, iris: k.iris, depthBias: 3, mirror: true),
+      Part(Bone.head, const V3(-26, -214, 47), const V3(10, 3, 2), k.brow, material: Finish.brow, depthBias: 3),
+      Part(Bone.head, const V3(26, -214, 47), const V3(10, 3, 2), k.brow, material: Finish.brow, depthBias: 3, mirror: true),
+      Part(Bone.head, const V3(-43, -166, 38), const V3(10, 6.5, 3), k.blush, material: Finish.blush, depthBias: 2),
+      Part(Bone.head, const V3(43, -166, 38), const V3(10, 6.5, 3), k.blush, material: Finish.blush, depthBias: 2),
+    ],
+  );
+}
+
+/// Bruno: a warm brown bear in a tomato-red hoodie.
 final _bear = () {
-  const fur = Color(0xFFA0602F);
-  const tan = Color(0xFFF0C08E);
-  const dark = Color(0xFF3B2016);
-  return CharacterModel(
-    lidColor: fur,
-    pivots: const {
-      Bone.head: V3(0, -122, 0),
-      Bone.armL: V3(-48, -112, 6),
-      Bone.armR: V3(48, -112, 6),
-      Bone.legL: V3(-28, -34, 6),
-      Bone.legR: V3(28, -34, 6),
-      Bone.earL: V3(-40, -196, 0),
-      Bone.earR: V3(40, -196, 0),
-    },
-    parts: const [
-      Part(Bone.legL, V3(-30, -16, 16), V3(25, 17, 28), fur),
-      Part(Bone.legR, V3(30, -16, 16), V3(25, 17, 28), fur),
-      Part(Bone.legL, V3(-30, -14, 40), V3(14, 10, 5), tan, depthBias: 2),
-      Part(Bone.legR, V3(30, -14, 40), V3(14, 10, 5), tan, depthBias: 2),
-      Part(Bone.body, V3(0, -72, 0), V3(62, 66, 54), fur),
-      Part(Bone.body, V3(0, -64, 40), V3(40, 42, 20), tan, depthBias: 1),
-      Part(Bone.armL, V3(-62, -86, 12), V3(18, 34, 19), fur, roll: 0.35),
-      Part(Bone.armR, V3(62, -86, 12), V3(18, 34, 19), fur, roll: -0.35),
-      Part(Bone.body, V3(0, -120, 22), V3(44, 12, 28), _shadowInk, material: Finish.shadow, depthBias: 2),
-      Part(Bone.earL, V3(-46, -206, -4), V3(20, 20, 12), fur),
-      Part(Bone.earR, V3(46, -206, -4), V3(20, 20, 12), fur),
-      Part(Bone.earL, V3(-46, -206, 5), V3(11, 11, 6), Color(0xFFE59E86), depthBias: 1),
-      Part(Bone.earR, V3(46, -206, 5), V3(11, 11, 6), Color(0xFFE59E86), depthBias: 1),
-      Part(Bone.head, V3(0, -164, 0), V3(64, 56, 54), fur),
-      Part(Bone.head, V3(0, -148, 44), V3(29, 21, 16), tan, depthBias: 1),
-      Part(Bone.head, V3(0, -160, 60), V3(12, 8.5, 7), dark, material: Finish.gloss, depthBias: 4),
-      Part(Bone.head, V3(0, -137, 55), V3(11, 7, 3), dark, material: Finish.mouth, depthBias: 5),
-      Part(Bone.head, V3(-23, -177, 48), V3(10.5, 13, 5), Colors.white, material: Finish.eye, iris: Color(0xFF5A3314), depthBias: 3),
-      Part(Bone.head, V3(23, -177, 48), V3(10.5, 13, 5), Colors.white, material: Finish.eye, iris: Color(0xFF5A3314), depthBias: 3, mirror: true),
-      Part(Bone.head, V3(-24, -196, 46), V3(10, 3, 2), dark, material: Finish.brow, depthBias: 3),
-      Part(Bone.head, V3(24, -196, 46), V3(10, 3, 2), dark, material: Finish.brow, depthBias: 3, mirror: true),
-      Part(Bone.head, V3(-42, -150, 38), V3(10, 6, 3), Color(0xFFFF7E9A), material: Finish.blush, depthBias: 2),
-      Part(Bone.head, V3(42, -150, 38), V3(10, 6, 3), Color(0xFFFF7E9A), material: Finish.blush, depthBias: 2),
+  const fur = Color(0xFFB27544);
+  const inner = Color(0xFFF2C9A0);
+  return _build(const CharacterLook(
+    skin: fur,
+    muzzle: inner,
+    nose: Color(0xFF3B2016),
+    iris: Color(0xFF6B3A17),
+    hoodie: Color(0xFFF0643C),
+    trousers: Color(0xFF4F6FB8),
+    shoe: Color(0xFF2FB5A5),
+    head: [
+      Part(Bone.earL, V3(-44, -230, -6), V3(21, 20, 12), fur),
+      Part(Bone.earR, V3(44, -230, -6), V3(21, 20, 12), fur),
+      Part(Bone.earL, V3(-44, -229, 4), V3(11, 11, 5), Color(0xFFE8A08A), depthBias: 1),
+      Part(Bone.earR, V3(44, -229, 4), V3(11, 11, 5), Color(0xFFE8A08A), depthBias: 1),
     ],
-  );
+    body: [
+      Part(Bone.tail, V3(0, -64, -42), V3(13, 12, 11), fur),
+    ],
+  ));
 }();
 
+/// Luna: a lilac-white bunny in a bubblegum hoodie.
 final _bunny = () {
-  const fur = Color(0xFFF6EEFF);
-  const pink = Color(0xFFFFA9CB);
-  return CharacterModel(
-    lidColor: fur,
-    height: 300,
-    pivots: const {
-      Bone.head: V3(0, -112, 0),
-      Bone.armL: V3(-40, -100, 6),
-      Bone.armR: V3(40, -100, 6),
-      Bone.legL: V3(-26, -30, 6),
-      Bone.legR: V3(26, -30, 6),
-      Bone.earL: V3(-20, -200, 0),
-      Bone.earR: V3(20, -200, 0),
-      Bone.tail: V3(0, -50, -44),
-    },
-    parts: const [
-      Part(Bone.tail, V3(0, -52, -50), V3(20, 20, 18), Colors.white),
-      Part(Bone.legL, V3(-28, -14, 20), V3(22, 14, 32), fur),
-      Part(Bone.legR, V3(28, -14, 20), V3(22, 14, 32), fur),
-      Part(Bone.body, V3(0, -62, 0), V3(52, 58, 46), fur),
-      Part(Bone.body, V3(0, -56, 34), V3(32, 36, 16), Color(0xFFFFFFFF), depthBias: 1),
-      Part(Bone.armL, V3(-50, -76, 14), V3(14, 26, 15), fur, roll: 0.3),
-      Part(Bone.armR, V3(50, -76, 14), V3(14, 26, 15), fur, roll: -0.3),
-      Part(Bone.body, V3(0, -108, 20), V3(38, 10, 24), _shadowInk, material: Finish.shadow, depthBias: 2),
-      Part(Bone.earL, V3(-24, -248, -2), V3(14, 50, 10), fur, roll: -0.12),
-      Part(Bone.earR, V3(24, -248, -2), V3(14, 50, 10), fur, roll: 0.12),
-      Part(Bone.earL, V3(-24, -244, 6), V3(7.5, 38, 4), pink, roll: -0.12, depthBias: 1),
-      Part(Bone.earR, V3(24, -244, 6), V3(7.5, 38, 4), pink, roll: 0.12, depthBias: 1),
-      Part(Bone.head, V3(0, -156, 0), V3(60, 54, 52), fur),
-      Part(Bone.head, V3(0, -142, 44), V3(22, 15, 12), Colors.white, depthBias: 1),
-      Part(Bone.head, V3(0, -150, 55), V3(7, 5, 4), pink, material: Finish.gloss, depthBias: 4),
-      Part(Bone.head, V3(0, -134, 52), V3(9, 6, 3), Color(0xFF6B3355), material: Finish.mouth, depthBias: 5),
-      Part(Bone.head, V3(-24, -168, 44), V3(13, 16, 5), Colors.white, material: Finish.eye, iris: Color(0xFF6A4BCF), depthBias: 3),
-      Part(Bone.head, V3(24, -168, 44), V3(13, 16, 5), Colors.white, material: Finish.eye, iris: Color(0xFF6A4BCF), depthBias: 3, mirror: true),
-      Part(Bone.head, V3(-42, -142, 36), V3(11, 7, 3), Color(0xFFFF8FB8), material: Finish.blush, depthBias: 2),
-      Part(Bone.head, V3(42, -142, 36), V3(11, 7, 3), Color(0xFFFF8FB8), material: Finish.blush, depthBias: 2),
+  const fur = Color(0xFFF7F0FF);
+  const pink = Color(0xFFFFAACB);
+  return _build(const CharacterLook(
+    skin: fur,
+    muzzle: Colors.white,
+    nose: Color(0xFFFF7FAF),
+    iris: Color(0xFF6A4BCF),
+    hoodie: Color(0xFFF5A3D3),
+    trousers: Color(0xFF6D8FE0),
+    shoe: Color(0xFFB08CF0),
+    brow: Color(0xFF7A5A86),
+    head: [
+      Part(Bone.earL, V3(-24, -276, -4), V3(14, 50, 11), fur, roll: -0.14),
+      Part(Bone.earR, V3(24, -276, -4), V3(14, 50, 11), fur, roll: 0.14),
+      Part(Bone.earL, V3(-24, -272, 5), V3(7.5, 38, 4), pink, roll: -0.14, depthBias: 1),
+      Part(Bone.earR, V3(24, -272, 5), V3(7.5, 38, 4), pink, roll: 0.14, depthBias: 1),
     ],
-  );
+    body: [
+      Part(Bone.tail, V3(0, -62, -44), V3(17, 17, 15), Colors.white),
+    ],
+  ));
 }();
 
+/// Pip: a bright fox in a sunshine hoodie.
 final _fox = () {
-  const fur = Color(0xFFF2782B);
-  const cream = Color(0xFFFFF3E3);
-  const dark = Color(0xFF3A2320);
-  return CharacterModel(
-    lidColor: fur,
-    height: 285,
-    pivots: const {
-      Bone.head: V3(0, -120, 0),
-      Bone.armL: V3(-44, -108, 6),
-      Bone.armR: V3(44, -108, 6),
-      Bone.legL: V3(-26, -32, 6),
-      Bone.legR: V3(26, -32, 6),
-      Bone.earL: V3(-34, -200, 0),
-      Bone.earR: V3(34, -200, 0),
-      Bone.tail: V3(40, -40, -30),
-    },
-    parts: const [
-      Part(Bone.tail, V3(78, -86, -40), V3(30, 62, 28), fur, roll: 0.7),
-      Part(Bone.tail, V3(104, -134, -38), V3(19, 24, 20), cream, roll: 0.7),
-      Part(Bone.legL, V3(-26, -14, 16), V3(20, 15, 26), dark),
-      Part(Bone.legR, V3(26, -14, 16), V3(20, 15, 26), dark),
-      Part(Bone.body, V3(0, -70, 0), V3(52, 62, 46), fur),
-      Part(Bone.body, V3(0, -64, 34), V3(32, 44, 17), cream, depthBias: 1),
-      Part(Bone.armL, V3(-50, -80, 14), V3(14, 30, 15), fur, roll: 0.14),
-      Part(Bone.armR, V3(50, -80, 14), V3(14, 30, 15), fur, roll: -0.14),
-      Part(Bone.armL, V3(-54, -54, 18), V3(12, 10, 12), dark),
-      Part(Bone.armR, V3(54, -54, 18), V3(12, 10, 12), dark),
-      Part(Bone.body, V3(0, -118, 20), V3(40, 11, 26), _shadowInk, material: Finish.shadow, depthBias: 2),
-      Part(Bone.earL, V3(-40, -222, -4), V3(18, 34, 9), fur, roll: -0.38),
-      Part(Bone.earR, V3(40, -222, -4), V3(18, 34, 9), fur, roll: 0.38),
-      Part(Bone.earL, V3(-39, -218, 3), V3(10, 22, 4), cream, roll: -0.38, depthBias: 1),
-      Part(Bone.earR, V3(39, -218, 3), V3(10, 22, 4), cream, roll: 0.38, depthBias: 1),
-      Part(Bone.earL, V3(-50, -247, -2), V3(7, 10, 6), dark, roll: -0.38, depthBias: 1),
-      Part(Bone.earR, V3(50, -247, -2), V3(7, 10, 6), dark, roll: 0.38, depthBias: 1),
-      Part(Bone.head, V3(0, -160, 0), V3(62, 52, 50), fur),
-      Part(Bone.head, V3(-26, -146, 34), V3(28, 22, 18), cream, depthBias: 1),
-      Part(Bone.head, V3(26, -146, 34), V3(28, 22, 18), cream, depthBias: 1),
-      Part(Bone.head, V3(0, -146, 46), V3(22, 17, 18), cream, depthBias: 1.5),
-      Part(Bone.head, V3(0, -152, 64), V3(9, 7, 6), dark, material: Finish.gloss, depthBias: 4),
-      Part(Bone.head, V3(0, -134, 58), V3(10, 6, 3), dark, material: Finish.mouth, depthBias: 5),
-      Part(Bone.head, V3(-24, -172, 44), V3(11, 13.5, 5), Colors.white, material: Finish.eye, iris: Color(0xFFC77A12), depthBias: 3),
-      Part(Bone.head, V3(24, -172, 44), V3(11, 13.5, 5), Colors.white, material: Finish.eye, iris: Color(0xFFC77A12), depthBias: 3, mirror: true),
-      Part(Bone.head, V3(-25, -191, 44), V3(10, 3, 2), dark, material: Finish.brow, depthBias: 3),
-      Part(Bone.head, V3(25, -191, 44), V3(10, 3, 2), dark, material: Finish.brow, depthBias: 3, mirror: true),
+  const fur = Color(0xFFF07A2E);
+  const cream = Color(0xFFFFF1E0);
+  const dark = Color(0xFF4A2C22);
+  return _build(const CharacterLook(
+    skin: fur,
+    muzzle: cream,
+    nose: dark,
+    iris: Color(0xFF3E7A2E),
+    hoodie: Color(0xFFFFC43D),
+    trousers: Color(0xFF5E7A3A),
+    shoe: Color(0xFF3C8DF2),
+    hands: dark,
+    head: [
+      Part(Bone.earL, V3(-42, -244, -4), V3(18, 32, 9), fur, roll: -0.36),
+      Part(Bone.earR, V3(42, -244, -4), V3(18, 32, 9), fur, roll: 0.36),
+      Part(Bone.earL, V3(-41, -240, 3), V3(10, 21, 4), cream, roll: -0.36, depthBias: 1),
+      Part(Bone.earR, V3(41, -240, 3), V3(10, 21, 4), cream, roll: 0.36, depthBias: 1),
+      Part(Bone.earL, V3(-52, -268, -2), V3(7, 9, 6), dark, roll: -0.36, depthBias: 1),
+      Part(Bone.earR, V3(52, -268, -2), V3(7, 9, 6), dark, roll: 0.36, depthBias: 1),
+      Part(Bone.head, V3(-30, -168, 36), V3(22, 17, 14), cream, depthBias: 0.5),
+      Part(Bone.head, V3(30, -168, 36), V3(22, 17, 14), cream, depthBias: 0.5),
     ],
-  );
+    body: [
+      Part(Bone.tail, V3(58, -82, -40), V3(24, 50, 22), fur, roll: 0.75),
+      Part(Bone.tail, V3(82, -120, -38), V3(16, 20, 17), cream, roll: 0.75),
+    ],
+  ));
 }();
 
+/// Orbit: a friendly robot with a soft screen face -- the same eyes as
+/// everyone else, so Orbit still feels like one of the gang.
 final _robot = () {
-  const shell = Color(0xFFE4ECF7);
+  const shell = Color(0xFFE6EEF8);
+  const screen = Color(0xFFCFF3F7);
   const trim = Color(0xFF7A8BB5);
-  const visor = Color(0xFF151A3A);
-  const light = Color(0xFF3CF2FF);
-  return CharacterModel(
-    lidColor: visor,
-    height: 290,
-    pivots: const {
-      Bone.head: V3(0, -122, 0),
-      Bone.armL: V3(-50, -108, 6),
-      Bone.armR: V3(50, -108, 6),
-      Bone.legL: V3(-26, -34, 6),
-      Bone.legR: V3(26, -34, 6),
-      Bone.antenna: V3(0, -212, 0),
-    },
-    parts: const [
-      Part(Bone.legL, V3(-28, -16, 12), V3(22, 16, 24), trim, material: Finish.gloss),
-      Part(Bone.legR, V3(28, -16, 12), V3(22, 16, 24), trim, material: Finish.gloss),
-      Part(Bone.body, V3(0, -74, 0), V3(56, 60, 48), shell, material: Finish.gloss),
-      Part(Bone.body, V3(0, -76, 44), V3(24, 18, 6), visor, material: Finish.gloss, depthBias: 1),
-      Part(Bone.body, V3(0, -76, 49), V3(12, 8, 3), light, material: Finish.glow, depthBias: 2),
-      Part(Bone.armL, V3(-62, -104, 4), V3(13, 13, 13), trim, material: Finish.gloss),
-      Part(Bone.armR, V3(62, -104, 4), V3(13, 13, 13), trim, material: Finish.gloss),
-      Part(Bone.armL, V3(-66, -78, 10), V3(14, 28, 15), shell, material: Finish.gloss, roll: 0.25),
-      Part(Bone.armR, V3(66, -78, 10), V3(14, 28, 15), shell, material: Finish.gloss, roll: -0.25),
-      Part(Bone.armL, V3(-72, -50, 14), V3(12, 10, 12), light, material: Finish.glow),
-      Part(Bone.armR, V3(72, -50, 14), V3(12, 10, 12), light, material: Finish.glow),
-      Part(Bone.body, V3(0, -126, 16), V3(38, 10, 24), _shadowInk, material: Finish.shadow, depthBias: 2),
-      Part(Bone.antenna, V3(0, -226, 0), V3(3.5, 18, 3.5), trim, material: Finish.gloss),
-      Part(Bone.antenna, V3(0, -250, 0), V3(10, 10, 10), Color(0xFFFF5FA2), material: Finish.glow),
-      Part(Bone.head, V3(-66, -166, 0), V3(10, 18, 16), trim, material: Finish.gloss),
-      Part(Bone.head, V3(66, -166, 0), V3(10, 18, 16), trim, material: Finish.gloss),
-      Part(Bone.head, V3(0, -166, 0), V3(66, 52, 52), shell, material: Finish.gloss),
-      Part(Bone.head, V3(0, -164, 38), V3(52, 32, 18), visor, material: Finish.gloss, depthBias: 1),
-      Part(Bone.head, V3(-20, -168, 54), V3(10, 12, 3), light, material: Finish.glow, depthBias: 3),
-      Part(Bone.head, V3(20, -168, 54), V3(10, 12, 3), light, material: Finish.glow, depthBias: 3, mirror: true),
-      Part(Bone.head, V3(0, -148, 55), V3(11, 5, 2), light, material: Finish.mouth, depthBias: 4),
+  return _build(const CharacterLook(
+    skin: shell,
+    muzzle: screen,
+    nose: Color(0xFF4AC7D8),
+    iris: Color(0xFF2A7FD4),
+    hoodie: Color(0xFF34B7C9),
+    trousers: Color(0xFF3F4E86),
+    shoe: Color(0xFFFF7A59),
+    hands: trim,
+    glossySkin: true,
+    brow: Color(0xFF3F4E86),
+    blush: Color(0xFF7FE3FF),
+    head: [
+      Part(Bone.head, V3(-64, -186, 0), V3(10, 18, 17), trim, material: Finish.gloss),
+      Part(Bone.head, V3(64, -186, 0), V3(10, 18, 17), trim, material: Finish.gloss),
+      Part(Bone.antenna, V3(0, -250, 0), V3(3.5, 16, 3.5), trim, material: Finish.gloss),
+      Part(Bone.antenna, V3(0, -272, 0), V3(10, 10, 10), Color(0xFFFF5FA2), material: Finish.glow),
     ],
-  );
+  ));
 }();
 
 // ---------------------------------------------------------------------------
@@ -492,7 +586,9 @@ class CharacterPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    final scale = size.height / (model.height + 20);
+    // Every character is drawn at the same scale, so the cast keeps one set
+    // of proportions side by side; tall ears may reach above the box.
+    final scale = size.height / (model.height + 24);
     canvas.save();
     canvas.translate(size.width / 2, size.height - 12 * scale);
     canvas.scale(scale);
@@ -500,7 +596,7 @@ class CharacterPainter extends CustomPainter {
     // Contact shadow on the ground, shrinking as the character leaves it.
     final lift = (pose.jump / 60).clamp(0.0, 1.0);
     canvas.drawOval(
-      Rect.fromCenter(center: Offset.zero, width: 150 * (1 - lift * 0.35), height: 28 * (1 - lift * 0.35)),
+      Rect.fromCenter(center: Offset.zero, width: 140 * (1 - lift * 0.35), height: 26 * (1 - lift * 0.35)),
       Paint()
         ..color = _shadowInk.withValues(alpha: 0.28 * (1 - lift * 0.5))
         ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 9),
@@ -558,8 +654,8 @@ class CharacterPainter extends CustomPainter {
           ..shader = ui.Gradient.radial(
             Offset(l.dx * 0.42, l.dy * 0.42),
             1.45,
-            [shade(base, 0.32), base, shade(base, -0.28), shade(base, -0.5)],
-            [0.0, 0.42, 0.78, 1.0],
+            [shade(base, 0.3), base, shade(base, -0.2), shade(base, -0.38)],
+            [0.0, 0.46, 0.82, 1.0],
           ),
       );
       // Bounce light from the ground warms the underside.
@@ -646,8 +742,8 @@ class CharacterPainter extends CustomPainter {
     if (p.facing < 0.1) return;
     final iris = p.part.iris ?? Colors.black;
     final squint = pose.happyEyes;
+    final wide = pose.wide.clamp(0.0, 1.0);
     _inFrame(canvas, p, () {
-      final eye = Rect.fromCircle(center: Offset.zero, radius: 1);
       if (squint > 0.5) {
         // Closed, smiling eye: a thick upward arc.
         final arc = Path()
@@ -663,6 +759,8 @@ class CharacterPainter extends CustomPainter {
         );
         return;
       }
+      canvas.scale(1 + 0.06 * wide, 1 + 0.14 * wide);
+      final eye = Rect.fromCircle(center: Offset.zero, radius: 1);
       canvas.save();
       canvas.clipPath(Path()..addOval(eye));
       // Sclera with a soft shadow cast by the upper lid.
@@ -672,21 +770,30 @@ class CharacterPainter extends CustomPainter {
           ..shader = ui.Gradient.linear(
             const Offset(0, -1),
             const Offset(0, 1),
-            [const Color(0xFFD8D4EA), Colors.white, const Color(0xFFF4F1FF)],
-            [0.0, 0.4, 1.0],
+            [const Color(0xFFD9D3EC), Colors.white, const Color(0xFFF6F3FF)],
+            [0.0, 0.42, 1.0],
           ),
       );
-      // Iris and pupil follow the look target.
-      final look = Offset(pose.lookX.clamp(-1.0, 1.0) * 0.3, pose.lookY.clamp(-1.0, 1.0) * 0.25 + 0.08);
+      // A large iris (the storybook look) that follows the look target.
+      final look = Offset(pose.lookX.clamp(-1.0, 1.0) * 0.26, pose.lookY.clamp(-1.0, 1.0) * 0.22 + 0.1);
+      const r = 0.74;
       canvas.drawCircle(
         look,
-        0.68,
-        Paint()..shader = ui.Gradient.radial(look + const Offset(0, 0.25), 0.7, [shade(iris, 0.45), iris, shade(iris, -0.55)], [0.0, 0.55, 1.0]),
+        r,
+        Paint()..shader = ui.Gradient.radial(look + const Offset(0, 0.3), r, [shade(iris, 0.55), iris, shade(iris, -0.5)], [0.0, 0.55, 1.0]),
       );
-      canvas.drawCircle(look, 0.36, Paint()..color = const Color(0xFF0E0A14));
+      canvas.drawCircle(
+        look,
+        r,
+        Paint()
+          ..color = shade(iris, -0.6)
+          ..style = PaintingStyle.stroke
+          ..strokeWidth = 0.07,
+      );
+      canvas.drawCircle(look, 0.38 * (1 - 0.3 * wide), Paint()..color = const Color(0xFF120B18));
       // Two catchlights sell the "alive" look.
-      canvas.drawCircle(look + const Offset(-0.22, -0.28), 0.2, Paint()..color = Colors.white);
-      canvas.drawCircle(look + const Offset(0.2, 0.22), 0.09, Paint()..color = Colors.white.withValues(alpha: 0.85));
+      canvas.drawCircle(look + const Offset(-0.24, -0.3), 0.22, Paint()..color = Colors.white);
+      canvas.drawCircle(look + const Offset(0.22, 0.24), 0.1, Paint()..color = Colors.white.withValues(alpha: 0.85));
       // Eyelid.
       if (pose.blink > 0.01) {
         final lid = -1 + 2.1 * pose.blink;
@@ -700,12 +807,24 @@ class CharacterPainter extends CustomPainter {
         );
       }
       canvas.restore();
+      // Upper lash line: heavier on top, like a drawn storybook eye.
+      canvas.drawArc(
+        eye.inflate(0.02),
+        math.pi * 1.08,
+        math.pi * 0.84,
+        false,
+        Paint()
+          ..color = const Color(0xFF2B1A22)
+          ..style = PaintingStyle.stroke
+          ..strokeCap = StrokeCap.round
+          ..strokeWidth = 0.2,
+      );
       canvas.drawOval(
         eye,
         Paint()
-          ..color = const Color(0xFF2B1A22).withValues(alpha: 0.55)
+          ..color = const Color(0xFF2B1A22).withValues(alpha: 0.35)
           ..style = PaintingStyle.stroke
-          ..strokeWidth = 0.1,
+          ..strokeWidth = 0.08,
       );
     });
   }
@@ -736,7 +855,6 @@ class CharacterPainter extends CustomPainter {
 
   void _paintMouth(Canvas canvas, _Projected p) {
     if (p.facing < 0.1) return;
-    final robot = kind == CharacterKind.robot;
     final open = pose.mouthOpen.clamp(0.0, 1.0);
     final smile = pose.smile.clamp(-1.0, 1.0);
     canvas.save();
@@ -750,8 +868,8 @@ class CharacterPainter extends CustomPainter {
         ..quadraticBezierTo(w * 0.6, h * (1 + 2.6 * open), 0, h * (1.2 + 2.8 * open))
         ..quadraticBezierTo(-w * 0.6, h * (1 + 2.6 * open), -w, -h * 0.2)
         ..close();
-      canvas.drawPath(mouth, Paint()..color = robot ? p.part.color : const Color(0xFF4A1426));
-      if (!robot) {
+      canvas.drawPath(mouth, Paint()..color = const Color(0xFF4A1426));
+      {
         canvas.save();
         canvas.clipPath(mouth);
         canvas.drawOval(
@@ -767,7 +885,7 @@ class CharacterPainter extends CustomPainter {
       canvas.drawPath(
         path,
         Paint()
-          ..color = robot ? p.part.color : const Color(0xFF3A1C24)
+          ..color = const Color(0xFF3A1C24)
           ..style = PaintingStyle.stroke
           ..strokeWidth = h * 0.55
           ..strokeCap = StrokeCap.round,

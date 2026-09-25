@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:nova_app/ui/design/tokens.dart';
 import 'package:nova_app/ui/l10n.dart';
 
 import '../support/fixture_content.dart';
@@ -42,12 +43,13 @@ void main() {
     expect(tester.takeException(), isNull);
   });
 
-  testWidgets('home shows one, two, or three game columns as the window widens', (tester) async {
-    for (final (width, perRow) in [(390.0, 1), (820.0, 2), (1440.0, 3)]) {
+  testWidgets('a place shows two, three, or four activity stations per row as the window widens', (tester) async {
+    // Content width: the window less its gutters, capped on wide screens.
+    for (final (width, available, perRow) in [(390.0, 390.0 - 32, 2), (820.0, 820.0 - 64, 3), (1440.0, 1120.0, 4)]) {
       await pumpNovaApp(tester, size: Size(width, 900));
-      final card = tester.getSize(find.ancestor(of: find.text("Bear's Apples"), matching: find.byType(Card)));
-      final content = tester.getSize(find.byType(Wrap).first).width;
-      expect((content / card.width).round(), perRow, reason: 'width $width');
+      await openPlace(tester, 'numbers');
+      final station = tester.getSize(find.byKey(const ValueKey('station.game.math.bear-apples'))).width;
+      expect(((available + NovaSpace.md) / (station + NovaSpace.md)).round(), perRow, reason: 'width $width');
     }
   });
 }

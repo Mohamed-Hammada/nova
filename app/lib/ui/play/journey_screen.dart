@@ -24,6 +24,42 @@ import 'package:nova_app/core/play/lexicon.dart';
 /// Loads the stars earned so far on every level.
 final levelStarsProvider = FutureProvider<Map<String, int>>((ref) => ref.watch(playerStatePortProvider).levelStars(childId: currentChildId));
 
+/// The journey for the child's age (or age group).
+final currentJourneyProvider = Provider<Journey?>((ref) {
+  final content = ref.watch(contentRuntimeProvider);
+  final band = ref.watch(ageBandProvider);
+  return content.journeyForAge(ref.watch(childAgeProvider) ?? band.minAge) ?? content.journeyForAge(band.minAge);
+});
+
+/// The first level without stars (the last one once all are done), or null
+/// when there is no journey.
+int? nextLevelIndex(Journey? journey, Map<String, int> stars) {
+  if (journey == null || journey.levels.isEmpty) return null;
+  final i = journey.levels.indexWhere((l) => !stars.containsKey(l.id));
+  return i < 0 ? journey.levels.length - 1 : i;
+}
+
+/// Plays one journey level. Games with their own dedicated screen (Bear's
+/// Apples on the 3D stage) play there; every other game plays through
+/// LevelScreen. Stars are saved either way.
+Future<void> openJourneyLevel(BuildContext context, WidgetRef ref, Journey journey, int index) async {
+  final level = journey.levels[index];
+  final gameId = level.gameFor(ref.read(languageProvider));
+  final state = ref.read(playerStatePortProvider);
+  await Navigator.of(context).push(
+    MaterialPageRoute<void>(
+      builder: (_) => playableGames.containsKey(gameId)
+          ? GameScreen(
+              gameId: gameId,
+              skillId: ref.read(contentRuntimeProvider).game(gameId).primarySkillIds.first,
+              onComplete: (accuracy) => state.saveLevel(childId: currentChildId, levelId: level.id, stars: starsFor(accuracy)),
+            )
+          : LevelScreen(journey: journey, levelIndex: index),
+    ),
+  );
+  ref.invalidate(levelStarsProvider);
+}
+
 /// The level map for the child's age group: a winding path of levels in
 /// chapters of ten. A level opens when the one before it is finished.
 class JourneyScreen extends ConsumerStatefulWidget {
@@ -48,36 +84,17 @@ class _JourneyScreenState extends ConsumerState<JourneyScreen> {
     super.dispose();
   }
 
-  Future<void> _open(Journey journey, int index) async {
-    final level = journey.levels[index];
-    final gameId = level.gameFor(ref.read(languageProvider));
-    final state = ref.read(playerStatePortProvider);
-    await Navigator.of(context).push(
-      MaterialPageRoute(
-        // Games with their own dedicated screen (Bear's Apples on the 3D
-        // stage) play there; every other game plays through LevelScreen.
-        builder: (_) => playableGames.containsKey(gameId)
-            ? GameScreen(
-                gameId: gameId,
-                skillId: ref.read(contentRuntimeProvider).game(gameId).primarySkillIds.first,
-                onComplete: (accuracy) => state.saveLevel(childId: currentChildId, levelId: level.id, stars: starsFor(accuracy)),
-              )
-            : LevelScreen(journey: journey, levelIndex: index),
-      ),
-    );
-    ref.invalidate(levelStarsProvider);
-  }
+  Future<void> _open(Journey journey, int index) => openJourneyLevel(context, ref, journey, index);
 
   @override
   Widget build(BuildContext context) {
-    final band = ref.watch(ageBandProvider);
     final lang = ref.watch(languageProvider);
     final l10n = context.l10n;
     final rtl = Directionality.of(context) == TextDirection.rtl;
     final p = ref.watch(paletteProvider);
     final companion = ref.watch(companionProvider);
     final content = ref.watch(contentRuntimeProvider);
-    final journey = content.journeyForAge(ref.watch(childAgeProvider) ?? band.minAge) ?? content.journeyForAge(band.minAge);
+    final journey = ref.watch(currentJourneyProvider);
     final starsAsync = ref.watch(levelStarsProvider);
     final stars = starsAsync.value ?? const <String, int>{};
 

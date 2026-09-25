@@ -506,4 +506,126 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get promptBuild => 'ركّب كلمة الصورة.';
+
+  @override
+  String welcomeBack(String name) {
+    return 'أهلًا بعودتك يا $name!';
+  }
+
+  @override
+  String get welcomeBackNoName => 'أهلًا بعودتك!';
+
+  @override
+  String get letsExplore => 'هيّا نستكشف معًا.';
+
+  @override
+  String companionHello(String name) {
+    return 'أنا $name. إلى أين نذهب اليوم؟';
+  }
+
+  @override
+  String get continueJourney => 'تابع رحلتك';
+
+  @override
+  String get startJourney => 'ابدأ رحلتك';
+
+  @override
+  String get placesToExplore => 'أماكن نستكشفها';
+
+  @override
+  String activitiesCount(String count) {
+    return 'الأنشطة: $count';
+  }
+
+  @override
+  String get myTreasures => 'كنوزي';
+
+  @override
+  String starsCollected(String count) {
+    return 'النجوم: $count';
+  }
+
+  @override
+  String levelsExplored(String count) {
+    return 'المستويات المكتملة: $count';
+  }
+
+  @override
+  String get badgeFirstSteps => 'الخطوة الأولى';
+
+  @override
+  String get badgeStarCatcher => 'صائد النجوم';
+
+  @override
+  String get badgeExplorer => 'المستكشف الكبير';
+
+  @override
+  String get badgeLocked => 'واصل اللعب لتفتح هذه';
+
+  @override
+  String get catNumbers => 'مرج الأرقام';
+
+  @override
+  String get catLanguage => 'غابة الحكايات';
+
+  @override
+  String get catSounds => 'وادي الأصوات';
+
+  @override
+  String get catFeelings => 'حديقة المشاعر';
+
+  @override
+  String get catMemory => 'خليج الذاكرة';
+
+  @override
+  String get catDiscovery => 'تلّ الاكتشاف';
+
+  @override
+  String get catMovement => 'بركة الحركة';
+
+  @override
+  String get catNumbersTag => 'نعدّ ونقارن ونكتشف الأنماط';
+
+  @override
+  String get catLanguageTag => 'كلمات وحروف وحكايات';
+
+  @override
+  String get catSoundsTag => 'قوافٍ وإيقاعات وأصوات';
+
+  @override
+  String get catFeelingsTag => 'نفهم مشاعر أصدقائنا';
+
+  @override
+  String get catMemoryTag => 'نتذكّر ونطابق ونكرّر';
+
+  @override
+  String get catDiscoveryTag => 'نصنّف ونبدّل ونفكّر';
+
+  @override
+  String get catMovementTag => 'عيون سريعة وأيادٍ حذرة';
+
+  @override
+  String get newActivity => 'جديد';
+
+  @override
+  String get tryAgainGently => 'لنحاول مرة أخرى!';
+
+  @override
+  String get almostThere => 'اقتربت! أنت قادر على ذلك.';
+
+  @override
+  String get youDidIt => 'أحسنت!';
+
+  @override
+  String roundProgress(String current, String total) {
+    return 'الجولة $current من $total';
+  }
+
+  @override
+  String get journeyMap => 'خريطة الرحلة';
+
+  @override
+  String exploreCategory(String place) {
+    return 'استكشف $place';
+  }
 }

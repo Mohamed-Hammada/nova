@@ -973,6 +973,222 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Build the word for the picture.'**
   String get promptBuild;
+
+  /// No description provided for @welcomeBack.
+  ///
+  /// In en, this message translates to:
+  /// **'Welcome back, {name}!'**
+  String welcomeBack(String name);
+
+  /// No description provided for @welcomeBackNoName.
+  ///
+  /// In en, this message translates to:
+  /// **'Welcome back!'**
+  String get welcomeBackNoName;
+
+  /// No description provided for @letsExplore.
+  ///
+  /// In en, this message translates to:
+  /// **'Let\'s explore together.'**
+  String get letsExplore;
+
+  /// No description provided for @companionHello.
+  ///
+  /// In en, this message translates to:
+  /// **'I\'m {name}. Where shall we go today?'**
+  String companionHello(String name);
+
+  /// No description provided for @continueJourney.
+  ///
+  /// In en, this message translates to:
+  /// **'Continue your journey'**
+  String get continueJourney;
+
+  /// No description provided for @startJourney.
+  ///
+  /// In en, this message translates to:
+  /// **'Start your journey'**
+  String get startJourney;
+
+  /// No description provided for @placesToExplore.
+  ///
+  /// In en, this message translates to:
+  /// **'Places to explore'**
+  String get placesToExplore;
+
+  /// No description provided for @activitiesCount.
+  ///
+  /// In en, this message translates to:
+  /// **'Activities: {count}'**
+  String activitiesCount(String count);
+
+  /// No description provided for @myTreasures.
+  ///
+  /// In en, this message translates to:
+  /// **'My treasures'**
+  String get myTreasures;
+
+  /// No description provided for @starsCollected.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} stars'**
+  String starsCollected(String count);
+
+  /// No description provided for @levelsExplored.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} levels explored'**
+  String levelsExplored(String count);
+
+  /// No description provided for @badgeFirstSteps.
+  ///
+  /// In en, this message translates to:
+  /// **'First steps'**
+  String get badgeFirstSteps;
+
+  /// No description provided for @badgeStarCatcher.
+  ///
+  /// In en, this message translates to:
+  /// **'Star catcher'**
+  String get badgeStarCatcher;
+
+  /// No description provided for @badgeExplorer.
+  ///
+  /// In en, this message translates to:
+  /// **'Great explorer'**
+  String get badgeExplorer;
+
+  /// No description provided for @badgeLocked.
+  ///
+  /// In en, this message translates to:
+  /// **'Keep playing to unlock this'**
+  String get badgeLocked;
+
+  /// No description provided for @catNumbers.
+  ///
+  /// In en, this message translates to:
+  /// **'Number Meadow'**
+  String get catNumbers;
+
+  /// No description provided for @catLanguage.
+  ///
+  /// In en, this message translates to:
+  /// **'Story Woods'**
+  String get catLanguage;
+
+  /// No description provided for @catSounds.
+  ///
+  /// In en, this message translates to:
+  /// **'Sound Valley'**
+  String get catSounds;
+
+  /// No description provided for @catFeelings.
+  ///
+  /// In en, this message translates to:
+  /// **'Heart Garden'**
+  String get catFeelings;
+
+  /// No description provided for @catMemory.
+  ///
+  /// In en, this message translates to:
+  /// **'Memory Cove'**
+  String get catMemory;
+
+  /// No description provided for @catDiscovery.
+  ///
+  /// In en, this message translates to:
+  /// **'Discovery Hill'**
+  String get catDiscovery;
+
+  /// No description provided for @catMovement.
+  ///
+  /// In en, this message translates to:
+  /// **'Splash Pond'**
+  String get catMovement;
+
+  /// No description provided for @catNumbersTag.
+  ///
+  /// In en, this message translates to:
+  /// **'Count, compare and find patterns'**
+  String get catNumbersTag;
+
+  /// No description provided for @catLanguageTag.
+  ///
+  /// In en, this message translates to:
+  /// **'Words, letters and stories'**
+  String get catLanguageTag;
+
+  /// No description provided for @catSoundsTag.
+  ///
+  /// In en, this message translates to:
+  /// **'Rhymes, beats and first sounds'**
+  String get catSoundsTag;
+
+  /// No description provided for @catFeelingsTag.
+  ///
+  /// In en, this message translates to:
+  /// **'Understand how friends feel'**
+  String get catFeelingsTag;
+
+  /// No description provided for @catMemoryTag.
+  ///
+  /// In en, this message translates to:
+  /// **'Remember, match and repeat'**
+  String get catMemoryTag;
+
+  /// No description provided for @catDiscoveryTag.
+  ///
+  /// In en, this message translates to:
+  /// **'Sort, switch and think'**
+  String get catDiscoveryTag;
+
+  /// No description provided for @catMovementTag.
+  ///
+  /// In en, this message translates to:
+  /// **'Quick eyes, careful hands'**
+  String get catMovementTag;
+
+  /// No description provided for @newActivity.
+  ///
+  /// In en, this message translates to:
+  /// **'New'**
+  String get newActivity;
+
+  /// No description provided for @tryAgainGently.
+  ///
+  /// In en, this message translates to:
+  /// **'Let\'s try again!'**
+  String get tryAgainGently;
+
+  /// No description provided for @almostThere.
+  ///
+  /// In en, this message translates to:
+  /// **'Almost! You can do it.'**
+  String get almostThere;
+
+  /// No description provided for @youDidIt.
+  ///
+  /// In en, this message translates to:
+  /// **'You did it!'**
+  String get youDidIt;
+
+  /// No description provided for @roundProgress.
+  ///
+  /// In en, this message translates to:
+  /// **'Round {current} of {total}'**
+  String roundProgress(String current, String total);
+
+  /// No description provided for @journeyMap.
+  ///
+  /// In en, this message translates to:
+  /// **'Journey map'**
+  String get journeyMap;
+
+  /// No description provided for @exploreCategory.
+  ///
+  /// In en, this message translates to:
+  /// **'Explore {place}'**
+  String exploreCategory(String place);
 }
 
 class _AppLocalizationsDelegate

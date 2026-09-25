@@ -8,8 +8,11 @@ import 'support/pump_app.dart';
 void main() {
   testWidgets('NovaApp renders the home screen with the playable game from content', (tester) async {
     await pumpNovaApp(tester);
+    // The next activity is offered straight away, and its place can be explored.
     expect(find.text("Bear's Apples"), findsOneWidget);
-    expect(find.text('Count up to 5'), findsOneWidget);
+    expect(find.byKey(const ValueKey('place.numbers')), findsOneWidget);
+    await openPlace(tester, 'numbers');
+    expect(find.byKey(const ValueKey('station.game.math.bear-apples')), findsOneWidget);
     // In the bundle, but its mechanic has no implementation: not offered.
     expect(find.text('Number Match'), findsNothing);
   });

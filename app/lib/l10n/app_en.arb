@@ -356,5 +356,93 @@
   "promptClap": "Tap the drum once for each part of the word.",
   "promptPrintStart": "Tap where the reading starts.",
   "promptPrintFollow": "Tap the words in reading order.",
-  "promptBuild": "Build the word for the picture."
+  "promptBuild": "Build the word for the picture.",
+  "welcomeBack": "Welcome back, {name}!",
+  "@welcomeBack": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "welcomeBackNoName": "Welcome back!",
+  "letsExplore": "Let's explore together.",
+  "companionHello": "I'm {name}. Where shall we go today?",
+  "@companionHello": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "continueJourney": "Continue your journey",
+  "startJourney": "Start your journey",
+  "placesToExplore": "Places to explore",
+  "activitiesCount": "Activities: {count}",
+  "@activitiesCount": {
+    "placeholders": {
+      "count": {
+        "type": "String"
+      }
+    }
+  },
+  "myTreasures": "My treasures",
+  "starsCollected": "{count} stars",
+  "@starsCollected": {
+    "placeholders": {
+      "count": {
+        "type": "String"
+      }
+    }
+  },
+  "levelsExplored": "{count} levels explored",
+  "@levelsExplored": {
+    "placeholders": {
+      "count": {
+        "type": "String"
+      }
+    }
+  },
+  "badgeFirstSteps": "First steps",
+  "badgeStarCatcher": "Star catcher",
+  "badgeExplorer": "Great explorer",
+  "badgeLocked": "Keep playing to unlock this",
+  "catNumbers": "Number Meadow",
+  "catLanguage": "Story Woods",
+  "catSounds": "Sound Valley",
+  "catFeelings": "Heart Garden",
+  "catMemory": "Memory Cove",
+  "catDiscovery": "Discovery Hill",
+  "catMovement": "Splash Pond",
+  "catNumbersTag": "Count, compare and find patterns",
+  "catLanguageTag": "Words, letters and stories",
+  "catSoundsTag": "Rhymes, beats and first sounds",
+  "catFeelingsTag": "Understand how friends feel",
+  "catMemoryTag": "Remember, match and repeat",
+  "catDiscoveryTag": "Sort, switch and think",
+  "catMovementTag": "Quick eyes, careful hands",
+  "newActivity": "New",
+  "tryAgainGently": "Let's try again!",
+  "almostThere": "Almost! You can do it.",
+  "youDidIt": "You did it!",
+  "roundProgress": "Round {current} of {total}",
+  "@roundProgress": {
+    "placeholders": {
+      "current": {
+        "type": "String"
+      },
+      "total": {
+        "type": "String"
+      }
+    }
+  },
+  "journeyMap": "Journey map",
+  "exploreCategory": "Explore {place}",
+  "@exploreCategory": {
+    "placeholders": {
+      "place": {
+        "type": "String"
+      }
+    }
+  }
 }

@@ -17,11 +17,11 @@ abstract final class NovaPalette {
   static const outline = Color(0xFFCFC6B4);
   static const outlineStrong = Color(0xFF7D7462);
 
-  // Brand: a calm, confident blue for primary actions.
-  static const primary = Color(0xFF2350C8);
+  // Brand: Nova plum -- the storybook night sky the characters come from.
+  static const primary = Color(0xFF5B3CC4);
   static const onPrimary = Color(0xFFFFFFFF);
-  static const primaryContainer = Color(0xFFDDE6FF);
-  static const onPrimaryContainer = Color(0xFF10235E);
+  static const primaryContainer = Color(0xFFEAE3FF);
+  static const onPrimaryContainer = Color(0xFF24126A);
 
   // Feedback. "Try again" is warm amber, deliberately not alarm-red: a miss
   // is part of learning, not an error state.
@@ -52,6 +52,49 @@ abstract final class NovaPalette {
   static const table = Color(0xFFF1E3CC);
 }
 
+/// The storybook palette: the colours Nova's worlds, characters and
+/// child-facing controls are painted with. Rich but controlled -- each
+/// world uses a few of these, never all at once.
+abstract final class NovaStory {
+  static const ink = Color(0xFF2E2440);
+  static const inkSoft = Color(0xFF5A4E6E);
+  static const cream = Color(0xFFFFF8EC);
+  static const cloud = Color(0xFFFFFFFF);
+  static const sky = Color(0xFF8ED0FF);
+  static const skyHigh = Color(0xFF5FB4F5);
+  static const skyLow = Color(0xFFDDF2FF);
+  static const sunshine = Color(0xFFFFC53D);
+  static const honey = Color(0xFFFFA928);
+  static const coral = Color(0xFFFF7A59);
+  static const berry = Color(0xFFF2508B);
+  static const meadow = Color(0xFF7BCB5C);
+  static const meadowDeep = Color(0xFF3F9A4B);
+  static const leaf = Color(0xFF2F7F45);
+  static const earth = Color(0xFFB9825A);
+  static const earthDeep = Color(0xFF7E4E33);
+  static const lilac = Color(0xFFB69CFF);
+  static const plum = NovaPalette.primary;
+  static const plumDeep = Color(0xFF3A2390);
+  static const teal = Color(0xFF2FB5A5);
+  static const ocean = Color(0xFF3C8DF2);
+
+  /// Correct answers glow in this; it is never paired with a harsh red.
+  static const yes = Color(0xFF3FBF6A);
+
+  /// A miss is a warm, soft amber: "let's try again", not "wrong".
+  static const again = Color(0xFFFFB547);
+}
+
+/// Soft, warm shadows: tinted with plum rather than grey, so objects sit in
+/// the world instead of floating above a screen.
+abstract final class NovaShadow {
+  static const soft = [BoxShadow(color: Color(0x262E1A5C), blurRadius: 18, offset: Offset(0, 8))];
+  static const lifted = [BoxShadow(color: Color(0x332E1A5C), blurRadius: 30, offset: Offset(0, 14))];
+  static const contact = [BoxShadow(color: Color(0x1F2E1A5C), blurRadius: 8, offset: Offset(0, 3))];
+
+  static List<BoxShadow> glow(Color c, {double strength = 0.55}) => [BoxShadow(color: c.withValues(alpha: strength), blurRadius: 26, spreadRadius: 2)];
+}
+
 abstract final class NovaSpace {
   static const xxs = 4.0;
   static const xs = 8.0;
@@ -66,6 +109,7 @@ abstract final class NovaRadius {
   static const sm = 12.0;
   static const md = 20.0;
   static const lg = 28.0;
+  static const xl = 36.0;
   static const pill = 999.0;
 }
 

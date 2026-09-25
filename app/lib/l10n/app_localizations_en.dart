@@ -509,4 +509,126 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get promptBuild => 'Build the word for the picture.';
+
+  @override
+  String welcomeBack(String name) {
+    return 'Welcome back, $name!';
+  }
+
+  @override
+  String get welcomeBackNoName => 'Welcome back!';
+
+  @override
+  String get letsExplore => 'Let\'s explore together.';
+
+  @override
+  String companionHello(String name) {
+    return 'I\'m $name. Where shall we go today?';
+  }
+
+  @override
+  String get continueJourney => 'Continue your journey';
+
+  @override
+  String get startJourney => 'Start your journey';
+
+  @override
+  String get placesToExplore => 'Places to explore';
+
+  @override
+  String activitiesCount(String count) {
+    return 'Activities: $count';
+  }
+
+  @override
+  String get myTreasures => 'My treasures';
+
+  @override
+  String starsCollected(String count) {
+    return '$count stars';
+  }
+
+  @override
+  String levelsExplored(String count) {
+    return '$count levels explored';
+  }
+
+  @override
+  String get badgeFirstSteps => 'First steps';
+
+  @override
+  String get badgeStarCatcher => 'Star catcher';
+
+  @override
+  String get badgeExplorer => 'Great explorer';
+
+  @override
+  String get badgeLocked => 'Keep playing to unlock this';
+
+  @override
+  String get catNumbers => 'Number Meadow';
+
+  @override
+  String get catLanguage => 'Story Woods';
+
+  @override
+  String get catSounds => 'Sound Valley';
+
+  @override
+  String get catFeelings => 'Heart Garden';
+
+  @override
+  String get catMemory => 'Memory Cove';
+
+  @override
+  String get catDiscovery => 'Discovery Hill';
+
+  @override
+  String get catMovement => 'Splash Pond';
+
+  @override
+  String get catNumbersTag => 'Count, compare and find patterns';
+
+  @override
+  String get catLanguageTag => 'Words, letters and stories';
+
+  @override
+  String get catSoundsTag => 'Rhymes, beats and first sounds';
+
+  @override
+  String get catFeelingsTag => 'Understand how friends feel';
+
+  @override
+  String get catMemoryTag => 'Remember, match and repeat';
+
+  @override
+  String get catDiscoveryTag => 'Sort, switch and think';
+
+  @override
+  String get catMovementTag => 'Quick eyes, careful hands';
+
+  @override
+  String get newActivity => 'New';
+
+  @override
+  String get tryAgainGently => 'Let\'s try again!';
+
+  @override
+  String get almostThere => 'Almost! You can do it.';
+
+  @override
+  String get youDidIt => 'You did it!';
+
+  @override
+  String roundProgress(String current, String total) {
+    return 'Round $current of $total';
+  }
+
+  @override
+  String get journeyMap => 'Journey map';
+
+  @override
+  String exploreCategory(String place) {
+    return 'Explore $place';
+  }
 }

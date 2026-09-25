@@ -8,7 +8,11 @@ import 'package:nova_app/ui/l10n.dart';
 /// does: text direction, strings, number digits and content language all
 /// follow from the inherited locale.
 class LanguageMenuButton extends ConsumerWidget {
-  const LanguageMenuButton({super.key});
+  const LanguageMenuButton({super.key, this.iconOnly = false});
+
+  /// Just the icon, for round storybook controls (the tooltip and
+  /// screen-reader label still name it).
+  final bool iconOnly;
 
   static String endonym(AppLocalizations l10n, Locale locale) =>
       locale.languageCode == NovaLocales.arabic.languageCode ? l10n.languageNameArabic : l10n.languageNameEnglish;
@@ -40,7 +44,7 @@ class LanguageMenuButton extends ConsumerWidget {
             const Icon(Icons.translate_rounded),
             // On phones the icon alone (the tooltip and screen-reader label
             // still name it); the current language's name where there is room.
-            if (NovaWidthClass.of(context) != NovaWidthClass.compact) ...[
+            if (!iconOnly && NovaWidthClass.of(context) != NovaWidthClass.compact) ...[
               const SizedBox(width: NovaSpace.xs),
               Text(endonym(l10n, current), style: Theme.of(context).textTheme.labelLarge),
             ],

@@ -8,5 +8,6 @@ export 'components/feedback.dart';
 export 'components/page.dart';
 export 'components/progress.dart';
 export 'components/states.dart';
+export 'components/storybook.dart';
 export 'theme.dart';
 export 'tokens.dart';

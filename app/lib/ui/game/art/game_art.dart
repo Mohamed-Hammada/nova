@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:nova_app/ui/design/tokens.dart';
 
+import '../../characters/character_rig.dart';
+import '../../characters/character_view.dart';
+
 import 'vector_painters.dart';
 
 /// The visual state or emotional posture of an in-game character.
@@ -204,8 +207,32 @@ class _CharacterWidget extends StatelessWidget {
   final double size;
   final bool animate;
 
+  /// The Nova cast member behind an art id, if it is one.
+  static CharacterKind? _cast(String id) => switch (id) {
+        'bear' => CharacterKind.bear,
+        'bunny' => CharacterKind.bunny,
+        'fox' => CharacterKind.fox,
+        'robot' => CharacterKind.robot,
+        _ => null,
+      };
+
+  static CharacterMood _mood(CharacterVisualState s) => switch (s) {
+        CharacterVisualState.idle => CharacterMood.idle,
+        CharacterVisualState.thinking => CharacterMood.thinking,
+        CharacterVisualState.encourage => CharacterMood.encouraging,
+        CharacterVisualState.happy => CharacterMood.happy,
+        CharacterVisualState.celebrate => CharacterMood.celebrating,
+        CharacterVisualState.confused => CharacterMood.gentleDisappointment,
+      };
+
   @override
   Widget build(BuildContext context) {
+    // Cast members are drawn by the one Nova character system, so a game's
+    // host looks exactly like the same friend everywhere else in the app.
+    final kind = _cast(characterId);
+    if (kind != null) {
+      return SizedBox.square(dimension: size, child: CharacterView(kind: kind, mood: _mood(state)));
+    }
     final assetPath = GameArt.characterAsset(characterId, state);
     final fallbackPainter = VectorArtPainters.characterPainter(characterId, state);
 
