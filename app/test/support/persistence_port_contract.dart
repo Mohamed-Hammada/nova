@@ -38,6 +38,7 @@ void persistencePortContract(String adapterName, Future<PersistenceHarness> Func
       expect(await port.currentMastery(childId: 'c1', skillId: skill), isNull);
       expect(await port.currentDimension(childId: 'c1', skillId: skill, dimension: 'performance'), isNull);
       expect(await port.currentRung(childId: 'c1', gameId: game), isNull);
+      expect(await port.currentScaffold(childId: 'c1', gameId: game), isNull);
     });
 
     test('round-trips mastery, every dimension, and the rung exactly', () async {
@@ -71,6 +72,8 @@ void persistencePortContract(String adapterName, Future<PersistenceHarness> Func
       expect(transfer.evidenceCount, 1);
 
       expect(await port.currentRung(childId: 'c1', gameId: game), 'r2');
+      // The scaffold travels with the rung, so the next session applies it.
+      expect(await port.currentScaffold(childId: 'c1', gameId: game), decision('r2').scaffold);
     });
 
     test('"Not yet" (a null state) survives a round trip as null, not a string', () async {
