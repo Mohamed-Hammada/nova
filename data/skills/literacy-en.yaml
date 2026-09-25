@@ -1,0 +1,123 @@
+# Written with the Nova authoring helper, then maintained by hand. Every entry here is judgment-class
+# (design inference) until the research task links verified evidence.
+- id: lit.en.listening
+  domains: [language_literacy]
+  name_key: skill.lit.en.listening.name
+  description_key: skill.lit.en.listening.description
+  prerequisites: []
+  age_range: [2, 5]
+  indicators: [Points to the picture that matches a spoken sentence, Answers who and what questions about a short story]
+  evidence_basis: judgment
+  evidence_refs: [ev.design.literacy-games]
+  scope: language-specific
+  language: en
+  slot: listening
+  deep_scope: true
+- id: lit.en.vocabulary
+  domains: [language_literacy]
+  name_key: skill.lit.en.vocabulary.name
+  description_key: skill.lit.en.vocabulary.description
+  prerequisites: []
+  age_range: [2, 5]
+  indicators: [Points to the named picture among several, 'Knows words from home, food, animals and toys']
+  evidence_basis: judgment
+  evidence_refs: [ev.design.literacy-games]
+  scope: language-specific
+  language: en
+  slot: vocabulary
+  deep_scope: true
+- id: lit.en.syllables
+  domains: [language_literacy]
+  name_key: skill.lit.en.syllables.name
+  description_key: skill.lit.en.syllables.description
+  prerequisites: []
+  age_range: [3, 5]
+  indicators: [Claps once for each syllable of a two-syllable word, Counts syllables in three-syllable words]
+  evidence_basis: judgment
+  evidence_refs: [ev.design.literacy-games]
+  scope: language-specific
+  language: en
+  slot: phonological_awareness
+  deep_scope: true
+- id: lit.en.rhyme
+  domains: [language_literacy]
+  name_key: skill.lit.en.rhyme.name
+  description_key: skill.lit.en.rhyme.description
+  prerequisites:
+  - {skill: lit.en.syllables}
+  age_range: [4, 6]
+  indicators: [Chooses the word that rhymes with a spoken word, Says a rhyming word]
+  evidence_basis: judgment
+  evidence_refs: [ev.design.literacy-games]
+  scope: language-specific
+  language: en
+  slot: phonological_awareness
+  deep_scope: true
+- id: lit.en.print-direction
+  domains: [language_literacy]
+  name_key: skill.lit.en.print-direction.name
+  description_key: skill.lit.en.print-direction.description
+  prerequisites: []
+  age_range: [3, 5]
+  indicators: [Shows where to start reading on a page, Follows the words in reading order]
+  evidence_basis: judgment
+  evidence_refs: [ev.design.literacy-games]
+  scope: language-specific
+  language: en
+  slot: print_concepts
+  deep_scope: true
+- id: lit.en.letter-case
+  domains: [language_literacy]
+  name_key: skill.lit.en.letter-case.name
+  description_key: skill.lit.en.letter-case.description
+  prerequisites: []
+  age_range: [4, 6]
+  indicators: [Matches capitals to small letters for most of the alphabet, 'Does not mix up b, d and p']
+  evidence_basis: judgment
+  evidence_refs: [ev.design.literacy-games]
+  scope: language-specific
+  language: en
+  slot: letter_knowledge
+  deep_scope: true
+- id: lit.en.first-sounds
+  domains: [language_literacy]
+  name_key: skill.lit.en.first-sounds.name
+  description_key: skill.lit.en.first-sounds.description
+  prerequisites:
+  - {skill: lit.en.letter-case}
+  age_range: [4, 6]
+  indicators: [Chooses the letter for the first sound of a spoken word, Names words that start with a given letter]
+  evidence_basis: judgment
+  evidence_refs: [ev.design.literacy-games]
+  scope: language-specific
+  language: en
+  slot: sound_mapping
+  deep_scope: true
+- id: lit.en.build-words
+  domains: [language_literacy]
+  name_key: skill.lit.en.build-words.name
+  description_key: skill.lit.en.build-words.description
+  prerequisites:
+  - {skill: lit.en.first-sounds}
+  age_range: [5, 7]
+  indicators: [Picks the word made by blending spoken parts, Builds a three-letter word from letter tiles]
+  evidence_basis: judgment
+  evidence_refs: [ev.design.literacy-games]
+  scope: language-specific
+  language: en
+  slot: word_building
+  deep_scope: true
+- id: lit.en.read-words
+  domains: [language_literacy]
+  name_key: skill.lit.en.read-words.name
+  description_key: skill.lit.en.read-words.description
+  prerequisites:
+  - {skill: lit.en.build-words}
+  age_range: [6, 8]
+  indicators: [Reads a short word and chooses its picture, Reads words that share letters without guessing]
+  evidence_basis: judgment
+  evidence_refs: [ev.design.literacy-games]
+  scope: language-specific
+  language: en
+  slot: early_reading
+  deep_scope: false

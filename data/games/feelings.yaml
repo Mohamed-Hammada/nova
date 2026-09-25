@@ -1,0 +1,56 @@
+# Written with the Nova authoring helper, then maintained by hand. Every entry here is judgment-class
+# (design inference) until the research task links verified evidence.
+- id: game.sel.feelings-friends
+  name_key: game.sel.feelings-friends.name
+  age_range: [2, 5]
+  primary_skills: [sel.emotion.faces]
+  secondary_skills: []
+  objective: Find the friend who feels the same.
+  mechanic_id: emotion-match
+  mechanic: A friend shows a feeling on their face; the child taps the other friend who feels the same.
+  evidence_basis: judgment
+  evidence_refs: [ev.design.emotion-games]
+  difficulty:
+    varied: [item_complexity]
+    anchors:
+      item_complexity: [happy and sad, 'happy, sad and surprised', 'happy, sad, surprised and angry']
+    rungs:
+    - id: r1
+      values: {item_complexity: 0, distractors: 0, working_memory_load: 0, rule_complexity: 0, abstraction: 0, cognitive_load: 0, independence: 0}
+    - id: r2
+      values: {item_complexity: 1, distractors: 0, working_memory_load: 0, rule_complexity: 0, abstraction: 0, cognitive_load: 0, independence: 0}
+    - id: r3
+      values: {item_complexity: 2, distractors: 0, working_memory_load: 0, rule_complexity: 0, abstraction: 0, cognitive_load: 0, independence: 0}
+  scaffolding:
+    hints: [The feeling is named aloud., The friend acts the feeling out with their whole body.]
+    adult_prompt: Make faces in a mirror together and name each feeling.
+  signals: [accuracy, hints_used, retries, error_type, completion]
+  progression: {advance_parameter: param.default.advance-accuracy, retreat_parameter: param.default.retreat-accuracy}
+  transfer_probes: []
+  language_dependencies: []
+- id: game.sel.how-would-they-feel
+  name_key: game.sel.how-would-they-feel.name
+  age_range: [5, 8]
+  primary_skills: [sel.emotion.situations]
+  secondary_skills: []
+  objective: Choose how the friend feels.
+  mechanic_id: story-choice
+  mechanic: A short picture story is told (the balloon flew away); the child chooses the face that shows how the friend feels.
+  evidence_basis: judgment
+  evidence_refs: [ev.design.emotion-games]
+  difficulty:
+    varied: [distractors]
+    anchors:
+      distractors: [two faces to choose from, three faces to choose from]
+    rungs:
+    - id: r1
+      values: {item_complexity: 0, distractors: 0, working_memory_load: 0, rule_complexity: 0, abstraction: 0, cognitive_load: 0, independence: 0}
+    - id: r2
+      values: {item_complexity: 0, distractors: 1, working_memory_load: 0, rule_complexity: 0, abstraction: 0, cognitive_load: 0, independence: 0}
+  scaffolding:
+    hints: [The key moment of the story is replayed., The child is asked how they would feel.]
+    adult_prompt: Read a picture book together and pause to ask how a character feels and why.
+  signals: [accuracy, hints_used, retries, error_type, completion]
+  progression: {advance_parameter: param.default.advance-accuracy, retreat_parameter: param.default.retreat-accuracy}
+  transfer_probes: []
+  language_dependencies: []

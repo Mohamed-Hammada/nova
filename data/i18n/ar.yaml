@@ -5,3 +5,129 @@ skill.math.count.cardinality.description: يفهم أن آخر رقم يُعدّ
 game.math.bear-apples.name: تفاحات الدبّ
 game.math.number-match.name: طابِق الرقم
 task.math.count-objects-at-home.name: عُدّ أشياء في البيت
+skill.math.count.to-3.name: العدّ حتى ٣
+skill.math.count.to-3.description: يعدّ مجموعات حتى ٣ أشياء، بكلمة عدد لكل شيء.
+skill.math.compare.more-fewer.name: أكثر أم أقل
+skill.math.compare.more-fewer.description: يميّز أي المجموعتين فيها أشياء أكثر أو أقل.
+skill.math.numeral.recognize-10.name: معرفة الأرقام من ١ إلى ١٠
+skill.math.numeral.recognize-10.description: يتعرّف على الأرقام المكتوبة من ١ إلى ١٠.
+skill.math.pattern.repeat.name: إكمال النمط
+skill.math.pattern.repeat.description: يكمل نمطًا متكرّرًا من الألوان أو الأشكال.
+skill.math.count.to-20.name: العدّ حتى ٢٠
+skill.math.count.to-20.description: يعدّ مجموعات حتى ٢٠ شيئًا بدقّة.
+skill.math.add-sub.within-10.name: الجمع والطرح حتى ١٠
+skill.math.add-sub.within-10.description: يعرف كم أصبح العدد بعد إضافة أشياء أو أخذها، حتى ١٠.
+skill.math.add-sub.within-20.name: الجمع والطرح حتى ٢٠
+skill.math.add-sub.within-20.description: يجمع ويطرح حتى ٢٠، بما في ذلك تجاوز العشرة.
+skill.math.numberline.to-20.name: الأرقام على خط الأعداد
+skill.math.numberline.to-20.description: يضع الأرقام حتى ٢٠ على خط الأعداد.
+skill.math.pattern.grow.name: الأنماط المتزايدة
+skill.math.pattern.grow.description: يكمل أنماطًا تزداد بمقدار ثابت في كل خطوة.
+task.math.compare-at-home.name: أي كومة أكثر؟
+task.math.number-hunt.name: البحث عن الأرقام
+task.math.patterns-at-home.name: اصنع نمطًا
+task.math.count-big-at-home.name: عُدّ كومة كبيرة
+task.math.add-at-home.name: حساب الوجبة
+game.math.bunny-carrots.name: جزرات الأرنبة
+game.math.more-or-less.name: أكثر أم أقل
+game.math.number-catch.name: بالونات الأرقام
+game.math.pattern-train.name: قطار الأنماط
+game.math.pattern-builder.name: أنماط الأبراج
+game.math.star-count.name: عدّ النجوم
+game.math.add-take-away.name: العشّ المزدحم
+game.math.space-shop.name: جواهر الفضاء
+game.math.number-line-hop.name: قفزات الضفدع
+skill.cognitive.sort.one-rule.name: التصنيف حسب قاعدة واحدة
+skill.cognitive.sort.one-rule.description: يصنّف الأشياء في مجموعات حسب اللون أو الشكل.
+skill.memory.visual.pairs.name: تذكّر أماكن الأشياء
+skill.memory.visual.pairs.description: يتذكّر أماكن الصور المخفية ليجد الأزواج المتطابقة.
+skill.memory.sequence.recall.name: تذكّر الترتيب
+skill.memory.sequence.recall.description: يعيد سلسلة قصيرة بالترتيب نفسه.
+skill.ef.inhibition.go-no-go.name: توقّف وفكّر
+skill.ef.inhibition.go-no-go.description: يستجيب لإشارة ويمتنع عن الاستجابة لأخرى.
+skill.ef.flexibility.switch-rule.name: تبديل القاعدة
+skill.ef.flexibility.switch-rule.description: يصنّف بقاعدة ثم ينتقل إلى قاعدة جديدة عند الطلب.
+task.memory.hide-and-find.name: خبّئ وابحث
+task.memory.copy-tower.name: انسخ البرج
+task.ef.freeze-dance.name: رقصة التجمّد
+task.ef.sort-switch-at-home.name: صنّف وبدّل
+game.cog.color-sort.name: وقت الترتيب
+game.ef.sort-switch.name: صنّف وبدّل القاعدة
+game.memory.peekaboo-pairs.name: ابحث عن الزوج
+game.memory.simon-lights.name: موكب الأضواء
+game.ef.feed-the-fish.name: أطعم السمك
+skill.sel.emotion.faces.name: معرفة المشاعر من الوجوه
+skill.sel.emotion.faces.description: يتعرّف على الوجوه السعيدة والحزينة والمتفاجئة والغاضبة.
+skill.sel.emotion.situations.name: بماذا يشعرون؟
+skill.sel.emotion.situations.description: يتوقّع شعور شخص ما في موقف يومي.
+game.sel.feelings-friends.name: أصدقاء المشاعر
+game.sel.how-would-they-feel.name: بماذا يشعرون؟
+skill.lit.en.listening.name: الاستماع والفهم (بالإنجليزية)
+skill.lit.en.listening.description: يفهم جملًا وقصصًا قصيرة مسموعة.
+skill.lit.en.vocabulary.name: معرفة الكلمات اليومية (بالإنجليزية)
+skill.lit.en.vocabulary.description: يعرف كلمات الأشياء اليومية.
+skill.lit.en.syllables.name: تقطيع المقاطع (بالإنجليزية)
+skill.lit.en.syllables.description: يقسّم الكلمات المنطوقة إلى مقاطع.
+skill.lit.en.rhyme.name: سماع القافية (بالإنجليزية)
+skill.lit.en.rhyme.description: يسمع الكلمات المتشابهة في القافية.
+skill.lit.en.print-direction.name: كيف تعمل الكتابة (بالإنجليزية)
+skill.lit.en.print-direction.description: يعرف أن الإنجليزية تُقرأ من اليسار إلى اليمين ومن الأعلى إلى الأسفل.
+skill.lit.en.letter-case.name: الحروف الكبيرة والصغيرة (بالإنجليزية)
+skill.lit.en.letter-case.description: يطابق كل حرف إنجليزي كبير مع الحرف الصغير نفسه.
+skill.lit.en.first-sounds.name: الصوت الأول والحرف (بالإنجليزية)
+skill.lit.en.first-sounds.description: يعرف الحرف الذي تبدأ به الكلمة المنطوقة.
+skill.lit.en.build-words.name: تركيب الكلمات (بالإنجليزية)
+skill.lit.en.build-words.description: يدمج الأصوات ويركّب الحروف لتكوين كلمات قصيرة.
+skill.lit.en.read-words.name: قراءة الكلمات الأولى (بالإنجليزية)
+skill.lit.en.read-words.description: يقرأ كلمات قصيرة شائعة.
+task.lit.en.retell.name: أعد رواية القصة (بالإنجليزية)
+task.lit.en.find-what-i-name.name: ابحث عمّا أسمّيه (بالإنجليزية)
+task.lit.en.sound-games.name: ألعاب الأصوات (بالإنجليزية)
+task.lit.en.book-hunt.name: البحث في الكتاب (بالإنجليزية)
+game.lit.en.listen-and-find.name: استمع وابحث
+game.lit.en.word-hunt.name: صيد الكلمات
+game.lit.en.clap-syllables.name: صفّق للمقاطع
+game.lit.en.rhyme-time.name: وقت القافية
+game.lit.en.book-explorer.name: مستكشف الكتاب
+game.lit.en.letter-pairs.name: أزواج الحروف
+game.lit.en.letter-catch.name: فقاعات الحروف
+game.lit.en.first-sound.name: الصوت الأول
+game.lit.en.word-builder.name: باني الكلمات
+game.lit.en.sound-blender.name: خلّاط الأصوات
+game.lit.en.word-pictures.name: صور الكلمات
+skill.lit.ar.listening.name: الاستماع والفهم (بالعربية)
+skill.lit.ar.listening.description: يفهم جملًا وقصصًا قصيرة مسموعة.
+skill.lit.ar.vocabulary.name: معرفة الكلمات اليومية (بالعربية)
+skill.lit.ar.vocabulary.description: يعرف كلمات الأشياء اليومية.
+skill.lit.ar.syllables.name: تقطيع المقاطع (بالعربية)
+skill.lit.ar.syllables.description: يقسّم الكلمات المنطوقة إلى مقاطع.
+skill.lit.ar.rhyme.name: سماع القافية (بالعربية)
+skill.lit.ar.rhyme.description: يسمع الكلمات المتشابهة في القافية.
+skill.lit.ar.print-direction.name: كيف تعمل الكتابة (بالعربية)
+skill.lit.ar.print-direction.description: يعرف أن العربية تُقرأ من اليمين إلى اليسار ومن الأعلى إلى الأسفل.
+skill.lit.ar.letter-forms.name: أشكال الحروف
+skill.lit.ar.letter-forms.description: يتعرّف على الحرف العربي منفصلًا ومتصلًا.
+skill.lit.ar.first-sounds.name: الصوت الأول والحرف (بالعربية)
+skill.lit.ar.first-sounds.description: يعرف الحرف الذي تبدأ به الكلمة المنطوقة.
+skill.lit.ar.build-words.name: تركيب الكلمات (بالعربية)
+skill.lit.ar.build-words.description: يدمج الأصوات ويركّب الحروف لتكوين كلمات قصيرة.
+skill.lit.ar.read-words.name: قراءة الكلمات الأولى (بالعربية)
+skill.lit.ar.read-words.description: يقرأ كلمات قصيرة شائعة.
+task.lit.ar.retell.name: أعد رواية القصة (بالعربية)
+task.lit.ar.find-what-i-name.name: ابحث عمّا أسمّيه (بالعربية)
+task.lit.ar.sound-games.name: ألعاب الأصوات (بالعربية)
+task.lit.ar.book-hunt.name: البحث في الكتاب (بالعربية)
+game.lit.ar.listen-and-find.name: استمع وابحث
+game.lit.ar.word-hunt.name: صيد الكلمات
+game.lit.ar.clap-syllables.name: صفّق للمقاطع
+game.lit.ar.rhyme-time.name: وقت القافية
+game.lit.ar.book-explorer.name: مستكشف الكتاب
+game.lit.ar.letter-forms.name: أشكال الحروف
+game.lit.ar.letter-catch.name: فقاعات الحروف
+game.lit.ar.first-sound.name: الصوت الأول
+game.lit.ar.word-builder.name: باني الكلمات
+game.lit.ar.sound-blender.name: خلّاط الأصوات
+game.lit.ar.word-pictures.name: صور الكلمات
+journey.tiny.name: رحلة النجوم الصغيرة
+journey.explorer.name: رحلة المستكشفين
+journey.champion.name: رحلة الأبطال

@@ -1,0 +1,328 @@
+# Written with the Nova authoring helper, then maintained by hand. Every entry here is judgment-class
+# (design inference) until the research task links verified evidence.
+- id: game.lit.ar.listen-and-find
+  name_key: game.lit.ar.listen-and-find.name
+  age_range: [2, 5]
+  primary_skills: [lit.ar.listening]
+  secondary_skills: []
+  objective: Listen to the sentence and find the picture.
+  mechanic_id: story-choice
+  mechanic: A short sentence or two-line story is spoken; the child taps the picture that shows what happened.
+  evidence_basis: judgment
+  evidence_refs: [ev.design.literacy-games]
+  difficulty:
+    varied: [item_complexity, distractors]
+    anchors:
+      item_complexity: [one simple sentence, a two-sentence story]
+      distractors: [two pictures, three pictures that differ in one detail]
+    rungs:
+    - id: r1
+      values: {item_complexity: 0, distractors: 0, working_memory_load: 0, rule_complexity: 0, abstraction: 0, cognitive_load: 0, independence: 0}
+    - id: r2
+      values: {item_complexity: 1, distractors: 0, working_memory_load: 0, rule_complexity: 0, abstraction: 0, cognitive_load: 0, independence: 0}
+    - id: r3
+      values: {item_complexity: 1, distractors: 1, working_memory_load: 0, rule_complexity: 0, abstraction: 0, cognitive_load: 0, independence: 0}
+  scaffolding:
+    hints: [The sentence can be heard again., Key words are shown with pictures.]
+    adult_prompt: Read a picture book and ask the child to point to what you describe.
+  signals: [accuracy, hints_used, retries, error_type, completion]
+  progression: {advance_parameter: param.default.advance-accuracy, retreat_parameter: param.default.retreat-accuracy}
+  transfer_probes:
+  - {id: probe.ar.retell, type: cross_game, delayed: false, skill: lit.ar.listening, mechanic_id: retell, task_ref: task.lit.ar.retell, changes: From choosing pictures to retelling a real story., preserved: Understanding
+      a spoken story.}
+  language_dependencies: [ar]
+- id: game.lit.ar.word-hunt
+  name_key: game.lit.ar.word-hunt.name
+  age_range: [2, 5]
+  primary_skills: [lit.ar.vocabulary]
+  secondary_skills: []
+  objective: Find the picture of the word you hear.
+  mechanic_id: hear-and-point
+  mechanic: A word is spoken; the child taps its picture among several.
+  evidence_basis: judgment
+  evidence_refs: [ev.design.literacy-games]
+  difficulty:
+    varied: [item_complexity, distractors]
+    anchors:
+      item_complexity: ['very common words (ball, cup)', 'less common words (shell, kite)']
+      distractors: [two pictures, four pictures]
+    rungs:
+    - id: r1
+      values: {item_complexity: 0, distractors: 0, working_memory_load: 0, rule_complexity: 0, abstraction: 0, cognitive_load: 0, independence: 0}
+    - id: r2
+      values: {item_complexity: 0, distractors: 1, working_memory_load: 0, rule_complexity: 0, abstraction: 0, cognitive_load: 0, independence: 0}
+    - id: r3
+      values: {item_complexity: 1, distractors: 1, working_memory_load: 0, rule_complexity: 0, abstraction: 0, cognitive_load: 0, independence: 0}
+  scaffolding:
+    hints: [The word is repeated slowly., The picture wiggles after a pause.]
+    adult_prompt: Name things around the house and ask the child to point to them.
+  signals: [accuracy, hints_used, retries, error_type, completion]
+  progression: {advance_parameter: param.default.advance-accuracy, retreat_parameter: param.default.retreat-accuracy}
+  transfer_probes:
+  - {id: probe.ar.find-what-i-name, type: cross_game, delayed: false, skill: lit.ar.vocabulary, mechanic_id: physical-hunt, task_ref: task.lit.ar.find-what-i-name, changes: From pictures to real things
+      at home., preserved: Knowing the word for a thing.}
+  language_dependencies: [ar]
+- id: game.lit.ar.clap-syllables
+  name_key: game.lit.ar.clap-syllables.name
+  age_range: [3, 5]
+  primary_skills: [lit.ar.syllables]
+  secondary_skills: []
+  objective: Clap once for each part of the word.
+  mechanic_id: segment-sounds
+  mechanic: A word is spoken with its picture; the child taps the drum once for each syllable.
+  evidence_basis: judgment
+  evidence_refs: [ev.design.literacy-games]
+  difficulty:
+    varied: [item_complexity]
+    anchors:
+      item_complexity: [one- and two-syllable words, two- and three-syllable words, words of up to four syllables]
+    rungs:
+    - id: r1
+      values: {item_complexity: 0, distractors: 0, working_memory_load: 0, rule_complexity: 0, abstraction: 0, cognitive_load: 0, independence: 0}
+    - id: r2
+      values: {item_complexity: 1, distractors: 0, working_memory_load: 0, rule_complexity: 0, abstraction: 0, cognitive_load: 0, independence: 0}
+    - id: r3
+      values: {item_complexity: 2, distractors: 0, working_memory_load: 0, rule_complexity: 0, abstraction: 0, cognitive_load: 0, independence: 0}
+  scaffolding:
+    hints: [The word is said with pauses between its parts., Dots appear for each part.]
+    adult_prompt: Clap the syllables of family names together.
+  signals: [accuracy, hints_used, retries, error_type, completion]
+  progression: {advance_parameter: param.default.advance-accuracy, retreat_parameter: param.default.retreat-accuracy}
+  transfer_probes:
+  - {id: probe.ar.clap-names, type: cross_game, delayed: false, skill: lit.ar.syllables, mechanic_id: oral-sound-game, task_ref: task.lit.ar.sound-games, changes: From tapping a drum to clapping names with
+      an adult., preserved: Splitting words into syllables.}
+  language_dependencies: [ar]
+- id: game.lit.ar.rhyme-time
+  name_key: game.lit.ar.rhyme-time.name
+  age_range: [4, 6]
+  primary_skills: [lit.ar.rhyme]
+  secondary_skills: []
+  objective: Find the word that rhymes.
+  mechanic_id: rhyme-select
+  mechanic: A word is spoken; the child chooses the picture whose word rhymes with it.
+  evidence_basis: judgment
+  evidence_refs: [ev.design.literacy-games]
+  difficulty:
+    varied: [distractors]
+    anchors:
+      distractors: [two pictures, 'three pictures, one starting with the same sound']
+    rungs:
+    - id: r1
+      values: {item_complexity: 0, distractors: 0, working_memory_load: 0, rule_complexity: 0, abstraction: 0, cognitive_load: 0, independence: 0}
+    - id: r2
+      values: {item_complexity: 0, distractors: 1, working_memory_load: 0, rule_complexity: 0, abstraction: 0, cognitive_load: 0, independence: 0}
+  scaffolding:
+    hints: [The rhyming ends are stretched when spoken., The two words are said side by side.]
+    adult_prompt: "Play a rhyming game on a walk: what rhymes with cat?"
+  signals: [accuracy, hints_used, retries, error_type, completion]
+  progression: {advance_parameter: param.default.advance-accuracy, retreat_parameter: param.default.retreat-accuracy}
+  transfer_probes:
+  - {id: probe.ar.rhyme-talk, type: cross_game, delayed: false, skill: lit.ar.rhyme, mechanic_id: oral-sound-game, task_ref: task.lit.ar.sound-games, changes: From pictures to spoken rhyming with an adult.,
+    preserved: Hearing rhymes.}
+  language_dependencies: [ar]
+- id: game.lit.ar.book-explorer
+  name_key: game.lit.ar.book-explorer.name
+  age_range: [3, 5]
+  primary_skills: [lit.ar.print-direction]
+  secondary_skills: []
+  objective: Show where the reading starts and follow the words.
+  mechanic_id: print-follow
+  mechanic: A page with a short line of Arabic text appears; the child taps where reading starts, then taps the words in order from right to left.
+  evidence_basis: judgment
+  evidence_refs: [ev.design.literacy-games]
+  difficulty:
+    varied: [item_complexity]
+    anchors:
+      item_complexity: [find where the line starts, tap the words of one line in order, 'follow two lines, top then bottom']
+    rungs:
+    - id: r1
+      values: {item_complexity: 0, distractors: 0, working_memory_load: 0, rule_complexity: 0, abstraction: 0, cognitive_load: 0, independence: 0}
+    - id: r2
+      values: {item_complexity: 1, distractors: 0, working_memory_load: 0, rule_complexity: 0, abstraction: 0, cognitive_load: 0, independence: 0}
+    - id: r3
+      values: {item_complexity: 2, distractors: 0, working_memory_load: 0, rule_complexity: 0, abstraction: 0, cognitive_load: 0, independence: 0}
+  scaffolding:
+    hints: [An arrow shows the reading direction., The next word glows.]
+    adult_prompt: When reading together, run your finger under the words.
+  signals: [accuracy, hints_used, retries, error_type, completion]
+  progression: {advance_parameter: param.default.advance-accuracy, retreat_parameter: param.default.retreat-accuracy}
+  transfer_probes:
+  - {id: probe.ar.book-start, type: cross_game, delayed: false, skill: lit.ar.print-direction, mechanic_id: print-hunt, task_ref: task.lit.ar.book-hunt, changes: From a screen page to a real book., preserved: Knowing
+      where reading starts and which way it goes.}
+  language_dependencies: [ar]
+- id: game.lit.ar.letter-forms
+  name_key: game.lit.ar.letter-forms.name
+  age_range: [4, 6]
+  primary_skills: [lit.ar.letter-forms]
+  secondary_skills: []
+  objective: Match the letter to its joined form.
+  mechanic_id: letter-match
+  mechanic: A letter is shown on its own; the child taps the same letter as it looks at the start of a word.
+  evidence_basis: judgment
+  evidence_refs: [ev.design.literacy-games]
+  difficulty:
+    varied: [item_complexity, distractors]
+    anchors:
+      item_complexity: [letters whose joined form keeps its shape (ب ت ث ن), letters whose joined form changes more (ع غ ه ك)]
+      distractors: [two choices, 'three choices, including a letter with the same body and different dots']
+    rungs:
+    - id: r1
+      values: {item_complexity: 0, distractors: 0, working_memory_load: 0, rule_complexity: 0, abstraction: 0, cognitive_load: 0, independence: 0}
+    - id: r2
+      values: {item_complexity: 1, distractors: 0, working_memory_load: 0, rule_complexity: 0, abstraction: 0, cognitive_load: 0, independence: 0}
+    - id: r3
+      values: {item_complexity: 1, distractors: 1, working_memory_load: 0, rule_complexity: 0, abstraction: 0, cognitive_load: 0, independence: 0}
+  scaffolding:
+    hints: [The letter name is spoken., The dots of the letter are highlighted.]
+    adult_prompt: Find a letter at the start of words on a food packet together.
+  signals: [accuracy, hints_used, retries, error_type, completion]
+  progression: {advance_parameter: param.default.advance-accuracy, retreat_parameter: param.default.retreat-accuracy}
+  transfer_probes:
+  - {id: probe.ar.letter-catch, type: cross_game, delayed: false, skill: lit.ar.letter-forms, mechanic_id: catch-target, task_ref: game.lit.ar.letter-catch, changes: From matching one letter to catching
+      it among many moving letters., preserved: Knowing a letter in its forms.}
+  - {id: probe.ar.book-letters, type: cross_game, delayed: false, skill: lit.ar.letter-forms, mechanic_id: print-hunt, task_ref: task.lit.ar.book-hunt, changes: From the screen to a real book., preserved: Recognising
+      letters.}
+  language_dependencies: [ar]
+- id: game.lit.ar.letter-catch
+  name_key: game.lit.ar.letter-catch.name
+  age_range: [4, 6]
+  primary_skills: [lit.ar.letter-forms]
+  secondary_skills: []
+  objective: Catch the bubbles with the same letter.
+  mechanic_id: catch-target
+  mechanic: A letter is shown; bubbles with letters float up and the child pops only the ones with the same letter, in any form.
+  evidence_basis: judgment
+  evidence_refs: [ev.design.literacy-games]
+  difficulty:
+    varied: [item_complexity, cognitive_load]
+    anchors:
+      item_complexity: [the separate form only, separate and joined forms]
+      cognitive_load: [slow bubbles, faster bubbles]
+    rungs:
+    - id: r1
+      values: {item_complexity: 0, distractors: 0, working_memory_load: 0, rule_complexity: 0, abstraction: 0, cognitive_load: 0, independence: 0}
+    - id: r2
+      values: {item_complexity: 1, distractors: 0, working_memory_load: 0, rule_complexity: 0, abstraction: 0, cognitive_load: 0, independence: 0}
+    - id: r3
+      values: {item_complexity: 1, distractors: 0, working_memory_load: 0, rule_complexity: 0, abstraction: 0, cognitive_load: 1, independence: 0}
+  scaffolding:
+    hints: [The target letter stays on screen., Matching bubbles glow briefly.]
+    adult_prompt: Hunt for one letter on a sign or packet together.
+  signals: [accuracy, hints_used, retries, error_type, completion]
+  progression: {advance_parameter: param.default.advance-accuracy, retreat_parameter: param.default.retreat-accuracy}
+  transfer_probes: []
+  language_dependencies: [ar]
+- id: game.lit.ar.first-sound
+  name_key: game.lit.ar.first-sound.name
+  age_range: [4, 6]
+  primary_skills: [lit.ar.first-sounds]
+  secondary_skills: []
+  objective: Which letter does the word start with?
+  mechanic_id: sound-match
+  mechanic: A picture is shown and its word spoken; the child taps the letter the word starts with.
+  evidence_basis: judgment
+  evidence_refs: [ev.design.literacy-games]
+  difficulty:
+    varied: [distractors]
+    anchors:
+      distractors: [two letters, three letters]
+    rungs:
+    - id: r1
+      values: {item_complexity: 0, distractors: 0, working_memory_load: 0, rule_complexity: 0, abstraction: 0, cognitive_load: 0, independence: 0}
+    - id: r2
+      values: {item_complexity: 0, distractors: 1, working_memory_load: 0, rule_complexity: 0, abstraction: 0, cognitive_load: 0, independence: 0}
+  scaffolding:
+    hints: [The first sound is stretched., Another word with the same first sound is given.]
+    adult_prompt: Play I spy with the first sound.
+  signals: [accuracy, hints_used, retries, error_type, completion]
+  progression: {advance_parameter: param.default.advance-accuracy, retreat_parameter: param.default.retreat-accuracy}
+  transfer_probes:
+  - {id: probe.ar.i-spy, type: cross_game, delayed: false, skill: lit.ar.first-sounds, mechanic_id: oral-sound-game, task_ref: task.lit.ar.sound-games, changes: From tapping letters to a spoken I spy game.,
+    preserved: Hearing the first sound of a word.}
+  language_dependencies: [ar]
+- id: game.lit.ar.word-builder
+  name_key: game.lit.ar.word-builder.name
+  age_range: [5, 7]
+  primary_skills: [lit.ar.build-words]
+  secondary_skills: []
+  objective: Build the word for the picture.
+  mechanic_id: build-word
+  mechanic: A picture is shown and its word spoken; the child drags letter tiles into the slots in order.
+  evidence_basis: judgment
+  evidence_refs: [ev.design.literacy-games]
+  difficulty:
+    varied: [item_complexity, distractors]
+    anchors:
+      item_complexity: [three-letter words, four-letter words]
+      distractors: [only the needed tiles, one extra tile]
+    rungs:
+    - id: r1
+      values: {item_complexity: 0, distractors: 0, working_memory_load: 0, rule_complexity: 0, abstraction: 0, cognitive_load: 0, independence: 0}
+    - id: r2
+      values: {item_complexity: 0, distractors: 1, working_memory_load: 0, rule_complexity: 0, abstraction: 0, cognitive_load: 0, independence: 0}
+    - id: r3
+      values: {item_complexity: 1, distractors: 1, working_memory_load: 0, rule_complexity: 0, abstraction: 0, cognitive_load: 0, independence: 0}
+  scaffolding:
+    hints: [The next letter's sound is spoken., The first letter is placed for the child.]
+    adult_prompt: Build a short word with magnetic letters or letter cards.
+  signals: [accuracy, hints_used, retries, error_type, completion]
+  progression: {advance_parameter: param.default.advance-accuracy, retreat_parameter: param.default.retreat-accuracy}
+  transfer_probes:
+  - {id: probe.ar.sound-blender, type: cross_game, delayed: false, skill: lit.ar.build-words, mechanic_id: blend-sounds, task_ref: game.lit.ar.sound-blender, changes: From building with tiles to hearing
+      parts and choosing the word., preserved: Putting sounds together into words.}
+  language_dependencies: [ar]
+- id: game.lit.ar.sound-blender
+  name_key: game.lit.ar.sound-blender.name
+  age_range: [5, 7]
+  primary_skills: [lit.ar.build-words]
+  secondary_skills: []
+  objective: Put the sounds together and find the word.
+  mechanic_id: blend-sounds
+  mechanic: A word is spoken in parts (c-a-t, or syllables); the child taps the picture of the whole word.
+  evidence_basis: judgment
+  evidence_refs: [ev.design.literacy-games]
+  difficulty:
+    varied: [item_complexity]
+    anchors:
+      item_complexity: [words split into syllables, short words split into sounds]
+    rungs:
+    - id: r1
+      values: {item_complexity: 0, distractors: 0, working_memory_load: 0, rule_complexity: 0, abstraction: 0, cognitive_load: 0, independence: 0}
+    - id: r2
+      values: {item_complexity: 1, distractors: 0, working_memory_load: 0, rule_complexity: 0, abstraction: 0, cognitive_load: 0, independence: 0}
+  scaffolding:
+    hints: [The parts are said closer together., The first part is linked to its letter.]
+    adult_prompt: Say a word in parts (sh-ip) and ask the child to say it whole.
+  signals: [accuracy, hints_used, retries, error_type, completion]
+  progression: {advance_parameter: param.default.advance-accuracy, retreat_parameter: param.default.retreat-accuracy}
+  transfer_probes: []
+  language_dependencies: [ar]
+- id: game.lit.ar.word-pictures
+  name_key: game.lit.ar.word-pictures.name
+  age_range: [6, 8]
+  primary_skills: [lit.ar.read-words]
+  secondary_skills: []
+  objective: Read the word and find its picture.
+  mechanic_id: read-and-match
+  mechanic: A short word is shown in print (not spoken); the child reads it and taps its picture.
+  evidence_basis: judgment
+  evidence_refs: [ev.design.literacy-games]
+  difficulty:
+    varied: [item_complexity, distractors]
+    anchors:
+      item_complexity: [short words, longer words]
+      distractors: [pictures of words that look different, 'pictures of words that share letters (cat, car, cap)']
+    rungs:
+    - id: r1
+      values: {item_complexity: 0, distractors: 0, working_memory_load: 0, rule_complexity: 0, abstraction: 0, cognitive_load: 0, independence: 0}
+    - id: r2
+      values: {item_complexity: 0, distractors: 1, working_memory_load: 0, rule_complexity: 0, abstraction: 0, cognitive_load: 0, independence: 0}
+    - id: r3
+      values: {item_complexity: 1, distractors: 1, working_memory_load: 0, rule_complexity: 0, abstraction: 0, cognitive_load: 0, independence: 0}
+  scaffolding:
+    hints: [The first letter's sound is given., The word is split into parts.]
+    adult_prompt: Label things at home with cards and read them together.
+  signals: [accuracy, hints_used, retries, error_type, completion]
+  progression: {advance_parameter: param.default.advance-accuracy, retreat_parameter: param.default.retreat-accuracy}
+  transfer_probes: []
+  language_dependencies: [ar]

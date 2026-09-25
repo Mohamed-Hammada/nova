@@ -1,0 +1,34 @@
+# Written with the Nova authoring helper, then maintained by hand. Every entry here is judgment-class
+# (design inference) until the research task links verified evidence.
+- id: task.memory.hide-and-find
+  name_key: task.memory.hide-and-find.name
+  age_range: [2, 5]
+  skills: [memory.visual.pairs]
+  mechanic_id: physical-hunt
+  description: The adult hides two or three toys under cups while the child watches, waits a moment, then asks where each toy is.
+  signals: [accuracy, adult_assist, error_type]
+  scoring: The adult marks each find correct or not.
+- id: task.memory.copy-tower
+  name_key: task.memory.copy-tower.name
+  age_range: [3, 8]
+  skills: [memory.sequence.recall]
+  mechanic_id: physical-build
+  description: The adult builds a short tower of coloured blocks, shows it, covers it, and the child builds the same tower from memory.
+  signals: [accuracy, adult_assist, error_type]
+  scoring: The adult marks whether the colours are in the same order.
+- id: task.ef.freeze-dance
+  name_key: task.ef.freeze-dance.name
+  age_range: [3, 8]
+  skills: [ef.inhibition.go-no-go]
+  mechanic_id: physical-freeze
+  description: Music plays and the child dances; when the music stops or the adult says a stop word, the child freezes.
+  signals: [accuracy, adult_assist, error_type]
+  scoring: The adult marks each stop as held or not.
+- id: task.ef.sort-switch-at-home
+  name_key: task.ef.sort-switch-at-home.name
+  age_range: [4, 8]
+  skills: [ef.flexibility.switch-rule]
+  mechanic_id: physical-sort
+  description: The child sorts real socks or blocks by colour, then the adult says 'now by size' and the child sorts the same things again.
+  signals: [accuracy, adult_assist, error_type]
+  scoring: The adult marks whether the child used the new rule after the switch.

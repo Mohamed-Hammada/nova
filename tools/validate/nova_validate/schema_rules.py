@@ -20,6 +20,7 @@ SCHEMA_FILES = {
     "langpacks": "langpack.schema.json",
     "mechanics": "mechanic.schema.json",
     "signals": "signal.schema.json",
+    "journeys": "journey.schema.json",
 }
 
 

@@ -1,0 +1,42 @@
+# Written with the Nova authoring helper, then maintained by hand. Every entry here is judgment-class
+# (design inference) until the research task links verified evidence.
+- id: rule.sel.emotion.faces
+  skill: sel.emotion.faces
+  inputs: [accuracy, hints_used, error_type, adult_assist]
+  state_criteria:
+    emerging:
+      description: At least min-trials responses logged and accuracy above the emerging threshold, at any support level.
+      parameters: [param.default.min-trials, param.default.emerging-accuracy]
+      requires_dimensions: [performance]
+    developing:
+      description: Accuracy above the developing threshold but the secure conditions are not yet met.
+      parameters: [param.default.min-trials, param.default.developing-accuracy]
+      requires_dimensions: [performance]
+    secure:
+      description: Accuracy above the secure threshold with hints and adult help both rare, over at least min-trials responses.
+      parameters: [param.default.min-trials, param.default.secure-accuracy, param.default.secure-max-hints-per-trial, param.default.secure-max-adult-assist-per-trial]
+      requires_dimensions: [performance, independence]
+    transfer:
+      description: Secure, plus a passed cross_game or cross_context probe at or above the transfer pass mark.
+      parameters: [param.default.transfer-pass-accuracy, param.default.delayed-probe-interval-days]
+      requires_dimensions: [transfer]
+- id: rule.sel.emotion.situations
+  skill: sel.emotion.situations
+  inputs: [accuracy, hints_used, error_type, adult_assist]
+  state_criteria:
+    emerging:
+      description: At least min-trials responses logged and accuracy above the emerging threshold, at any support level.
+      parameters: [param.default.min-trials, param.default.emerging-accuracy]
+      requires_dimensions: [performance]
+    developing:
+      description: Accuracy above the developing threshold but the secure conditions are not yet met.
+      parameters: [param.default.min-trials, param.default.developing-accuracy]
+      requires_dimensions: [performance]
+    secure:
+      description: Accuracy above the secure threshold with hints and adult help both rare, over at least min-trials responses.
+      parameters: [param.default.min-trials, param.default.secure-accuracy, param.default.secure-max-hints-per-trial, param.default.secure-max-adult-assist-per-trial]
+      requires_dimensions: [performance, independence]
+    transfer:
+      description: Secure, plus a passed cross_game or cross_context probe at or above the transfer pass mark.
+      parameters: [param.default.transfer-pass-accuracy, param.default.delayed-probe-interval-days]
+      requires_dimensions: [transfer]

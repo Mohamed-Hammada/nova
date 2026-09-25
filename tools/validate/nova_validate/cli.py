@@ -13,6 +13,7 @@ from .game_rules import check_games
 from .graph_rules import check_skill_graph
 from .i18n_rules import check_i18n
 from .id_lifecycle_rules import check_id_lifecycle, write_baseline
+from .journey_rules import check_journeys
 from .langpack_rules import check_langpacks
 from .loader import load_spec
 from .model import Issue, Spec
@@ -31,6 +32,7 @@ SEMANTIC_CHECKS = (
     check_probes,
     check_deep_coverage,
     check_langpacks,
+    check_journeys,
     check_i18n,
     check_audio,
 )

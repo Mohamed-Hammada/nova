@@ -1,0 +1,25 @@
+# More Nova design inferences (judgment class, capped at emerging, verified: false).
+- {id: ev.design.math-strand-order, title: 'Working order for early number, pattern and operation skills', citation: 'Nova design decision, 2026-09', verified: false, evidence_type: design_inference, evidence_strength: emerging,
+  population: children 2-8 years, delivery: not_applicable, language: multi, finding: 'Nova orders its math strand as small counts, then comparing and numeral recognition, then counting to 20, adding and
+    taking away, patterns and the number line. This ordering is a working assumption drawn from common early-math curricula, not a Nova finding.', limits: Not tested by Nova; individual children may follow
+    a different order. The research task should replace this with verified framework evidence.}
+- {id: ev.design.choice-mechanics, title: Choosing between pictured options to show understanding, citation: 'Nova design decision, 2026-09', verified: false, evidence_type: design_inference, evidence_strength: emerging,
+  population: children 2-8 years, delivery: digital, language: multi, finding: 'Games in which the child chooses one of a few pictured options (compare, match, continue a pattern) let the app log a clear
+    correct or incorrect response per trial. This is an assumption about measurement, not evidence that the games teach the skill.', limits: 'Two-choice games have a 50 percent chance level, so their thresholds
+    need their own calibration.'}
+- {id: ev.design.join-separate-mechanic, title: Watching a group change to reason about adding and taking away, citation: 'Nova design decision, 2026-09', verified: false, evidence_type: design_inference,
+  evidence_strength: emerging, population: children 5-8 years, delivery: digital, language: multi, finding: Showing objects joining or leaving a group before asking how many there are now is assumed to
+    connect actions to addition and subtraction., limits: Not tested by Nova. The transfer probe to real objects checks whether it carries over.}
+- {id: ev.design.number-line-mechanic, title: Placing numbers on a number line, citation: 'Nova design decision, 2026-09', verified: false, evidence_type: design_inference, evidence_strength: emerging,
+  population: children 6-8 years, delivery: digital, language: multi, finding: Placing numerals on a line is assumed to support a sense of number magnitude and order., limits: Not tested by Nova.}
+- {id: ev.design.ef-games, title: Short game versions of classic executive-function tasks, citation: 'Nova design decision, 2026-09', verified: false, evidence_type: design_inference, evidence_strength: emerging,
+  population: children 2-8 years, delivery: digital, language: multi, finding: 'Nova adapts well-known task formats (go/no-go, card sorting with a rule switch, sequence recall, finding pairs) as short games
+    to practise and observe these skills. Their use as practice is a design choice; the transfer literature cited in chapter 07 warns that gains on such games often do not transfer.', limits: Near transfer
+    at most is expected; Nova does not claim these games raise general intelligence.}
+- {id: ev.design.emotion-games, title: Recognising feelings from faces and situations in short games, citation: 'Nova design decision, 2026-09', verified: false, evidence_type: design_inference, evidence_strength: emerging,
+  population: children 2-8 years, delivery: digital, language: multi, finding: 'Matching faces with the same feeling, and choosing how a character might feel in a situation, are used as practice for naming
+    emotions. This is a design choice.', limits: Screen faces are simplified; recognising real faces is checked by the adult.}
+- {id: ev.design.literacy-games, title: 'Short listening, sound and letter games for early literacy', citation: 'Nova design decision, 2026-09', verified: false, evidence_type: design_inference, evidence_strength: emerging,
+  population: children 2-8 years, delivery: digital, language: multi, finding: 'Nova fills each shared literacy slot with short games (listening, vocabulary, sound awareness, print concepts, letters, letter
+    sounds, word building, reading). The slot structure follows the shared language-pack contract; the games themselves are design choices.', limits: 'Spoken prompts use device text-to-speech until recorded
+    narration exists, which limits sound-level tasks. Arabic uses Modern Standard Arabic text; the instruction voice is still undecided (chapter 05).'}

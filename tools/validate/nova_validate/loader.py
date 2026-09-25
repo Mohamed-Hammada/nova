@@ -16,6 +16,7 @@ RECORD_DIRS = {
     "parameters": "parameters",
     "assessment_rules": "assessment",
     "langpacks": "langpacks",
+    "journeys": "journeys",
 }
 
 # Spec attribute -> single file at the data root (a list of records).

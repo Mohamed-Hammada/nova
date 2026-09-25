@@ -10,7 +10,7 @@
     diacritics: true
     tonal: false
     notes: Cursive script; each letter has isolated, initial, medial and final forms; short vowels are optional diacritics (harakat).
-  slots_filled: []
+  slots_filled: [early_reading, letter_knowledge, listening, phonological_awareness, print_concepts, sound_mapping, vocabulary, word_building]
   instruction_voice: undecided (Modern Standard Arabic or a dialect such as Egyptian; see chapter 05)
 - id: en
   name: English
@@ -21,7 +21,7 @@
     diacritics: false
     tonal: false
     notes: Alphabetic with an opaque spelling system; uppercase and lowercase letter forms.
-  slots_filled: []
+  slots_filled: [early_reading, letter_knowledge, listening, phonological_awareness, print_concepts, sound_mapping, vocabulary, word_building]
   instruction_voice: English
 - id: zh
   name: Chinese (Mandarin)

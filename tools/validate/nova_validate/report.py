@@ -41,4 +41,5 @@ def summary(spec: Spec) -> str:
         f"games: {len(spec.games)}  transfer tasks: {len(spec.transfer_tasks)}  "
         f"assessment rules: {len(spec.assessment_rules)}",
         f"parameters: {counts(status, ('provisional', 'pilot_calibrated', 'validated'))}",
+        "journeys: " + (", ".join(f"{j['id']} ages {j['age_range']} ({len(j['levels'])} levels)" for j in spec.journeys) or "none"),
     ])
