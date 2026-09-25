@@ -6,6 +6,7 @@ import 'package:nova_app/providers.dart';
 import 'characters/character_rig.dart';
 import 'characters/character_view.dart';
 import 'scene/world_backdrop.dart';
+import 'settings/grown_up_settings.dart';
 import 'theme/nova_theme.dart';
 import 'theme/strings.dart';
 import 'widgets/confetti.dart';
@@ -41,10 +42,9 @@ class _ParentViewState extends ConsumerState<ParentView> {
 
   @override
   Widget build(BuildContext context) {
-    final band = ref.watch(ageBandProvider);
     final lang = ref.watch(languageProvider);
     final s = UiStrings.of(lang);
-    final p = band.palette;
+    final p = ref.watch(paletteProvider);
     final content = ref.watch(contentRuntimeProvider);
 
     String skillName(String id) {
@@ -57,7 +57,7 @@ class _ParentViewState extends ConsumerState<ParentView> {
 
     return Scaffold(
       body: WorldBackdrop(
-        world: band.world,
+        world: ref.watch(worldProvider),
         groundLevel: widget.celebrate ? 0.5 : 0.3,
         child: Stack(
           children: [
@@ -112,6 +112,7 @@ class _ParentViewState extends ConsumerState<ParentView> {
                               shrinkWrap: true,
                               padding: const EdgeInsets.all(16),
                               children: [
+                                if (widget.skillId == null) const GrownUpSettings(),
                                 for (var i = 0; i < _skillIds.length; i++)
                                   _SkillCard(name: skillName(_skillIds[i]), record: records[i], strings: s, accent: p.accent),
                                 if (_skillIds.isEmpty)

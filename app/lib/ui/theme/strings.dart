@@ -22,6 +22,7 @@ class UiStrings {
   static String _digits(int n) => '$n'.split('').map((d) => '٠١٢٣٤٥٦٧٨٩'[int.parse(d)]).join();
 
   String get appName => _t('Nova', 'نوفا');
+  String greetingNamed(String child, String name) => _t('Hi $child! I\'m $name!', 'مرحبًا يا $child! أنا $name!');
   String greeting(String name) => _t("Hi! I'm $name!", 'مرحبًا! أنا $name!');
   String get letsPlay => _t("Let's play!", 'هيا نلعب!');
   String get pickYourAge => _t('How old are you?', 'كم عمرك؟');
@@ -69,15 +70,43 @@ class UiStrings {
   String get spokenPrompts => _t('Spoken instructions', 'التعليمات المسموعة');
   String get spokenPromptsSub => _t('The characters read every instruction aloud.', 'تقرأ الشخصيات كل تعليمة بصوت عالٍ.');
   String get voiceAnswers => _t('Answer by voice (microphone)', 'الإجابة بالصوت (الميكروفون)');
-  String get voiceAnswersSub => _t('Your child can say answers out loud. Speech is recognised on this device only; nothing is recorded or sent.',
-      'يمكن لطفلك قول الإجابات بصوت عالٍ. يُتعرّف على الكلام على هذا الجهاز فقط؛ لا يُسجَّل أو يُرسَل أي شيء.');
+  String get voiceAnswersSub => _t(
+    'Your child can say answers out loud. Speech is recognised on this device only; nothing is recorded or sent.',
+    'يمكن لطفلك قول الإجابات بصوت عالٍ. يُتعرّف على الكلام على هذا الجهاز فقط؛ لا يُسجَّل أو يُرسَل أي شيء.',
+  );
   String get cameraPlay => _t('Face play (camera)', 'اللعب بالوجه (الكاميرا)');
-  String get cameraPlaySub => _t('The characters can see your child smile, look around and play peekaboo. Faces are processed on this device only; no picture is saved or sent.',
-      'تستطيع الشخصيات رؤية ابتسامة طفلك واللعب معه. تُعالج الوجوه على هذا الجهاز فقط؛ لا تُحفظ أي صورة ولا تُرسَل.');
+  String get cameraPlaySub => _t(
+    'The characters can see your child smile, look around and play peekaboo. Faces are processed on this device only; no picture is saved or sent.',
+    'تستطيع الشخصيات رؤية ابتسامة طفلك واللعب معه. تُعالج الوجوه على هذا الجهاز فقط؛ لا تُحفظ أي صورة ولا تُرسَل.',
+  );
   String get notOnThisDevice => _t('Not available on this device.', 'غير متاح على هذا الجهاز.');
   String get permissionDenied => _t('Permission was not given. You can allow it in the device settings.', 'لم يُمنح الإذن. يمكنك السماح به من إعدادات الجهاز.');
   String get sayIt => _t('Say it!', 'قلها!');
   String get listening => _t('Listening...', 'أستمع...');
+  String get aboutMe => _t('About me', 'عنّي');
+  String get myName => _t('My name', 'اسمي');
+  String get typeName => _t('Type your name', 'اكتب اسمك');
+  String get howOld => _t('How old am I?', 'كم عمري؟');
+  String get myFriend => _t('My friend', 'صديقي');
+  String get myWorld => _t('My world', 'عالمي');
+  String get automatic => _t('Auto', 'تلقائي');
+  String get languageLabel => _t('Language', 'اللغة');
+  String worldName(WorldKind w) => switch (w) {
+        WorldKind.candyMeadow => _t('Candy Meadow', 'مرج الحلوى'),
+        WorldKind.sunnyForest => _t('Sunny Forest', 'الغابة المشمسة'),
+        WorldKind.cosmicLab => _t('Space Lab', 'مختبر الفضاء'),
+      };
+  String get graphics => _t('Graphics quality', 'جودة الرسوم');
+  String graphicsName(String q) => switch (q) {
+        'low' => _t('Low', 'منخفضة'),
+        'balanced' => _t('Balanced', 'متوازنة'),
+        _ => _t('High', 'عالية'),
+      };
+  String graphicsHelp(String q) => switch (q) {
+        'low' => _t('Still backgrounds and simpler lighting. Best for older phones and longer battery.', 'خلفيات ثابتة وإضاءة أبسط. الأفضل للهواتف القديمة ولتوفير البطارية.'),
+        'balanced' => _t('Moving worlds with fewer effects.', 'عوالم متحركة بمؤثرات أقل.'),
+        _ => _t('Full lighting, light rays and particles.', 'إضاءة كاملة وأشعة وجزيئات.'),
+      };
   String get home => _t('Home', 'الرئيسية');
   String get playAgain => _t('Play again', 'العب مرة أخرى');
 }

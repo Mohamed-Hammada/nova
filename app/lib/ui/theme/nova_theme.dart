@@ -17,8 +17,8 @@ TextStyle novaText(double size, {double weight = 600, Color? color, double heigh
   fontVariations: [FontVariation('wght', weight)],
 );
 
-ThemeData novaTheme(AgeBand band) {
-  final p = band.palette;
+ThemeData novaTheme(AgeBand band, [WorldPalette? palette]) {
+  final p = palette ?? band.palette;
   final scheme = ColorScheme.fromSeed(
     seedColor: p.accent,
     brightness: p.isNight ? Brightness.dark : Brightness.light,

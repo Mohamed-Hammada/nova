@@ -48,4 +48,26 @@ void main() {
 
     expect(find.text("Bear's Apples"), findsOneWidget);
   });
+
+  testWidgets('the home screen greets the child by name', (tester) async {
+    final runtime = ContentRuntime(ContentBundle.fromJson({
+      'schemaVersion': '1.0.0', 'contentVersion': 't', 'contentHash': 't',
+      'skills': [], 'transfer_tasks': [], 'langpacks': [], 'mechanics': [], 'games': [],
+      'assessment_rules': [], 'parameters': [], 'signals': [], 'i18n': {'en': {}, 'ar': {}}, 'audio': {'en': {}, 'ar': {}},
+    }));
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: [
+          contentRuntimeProvider.overrideWithValue(runtime),
+          ambientMotionProvider.overrideWithValue(false),
+          playerStatePortProvider.overrideWithValue(InMemoryPlayerStatePort()),
+          ttsProvider.overrideWithValue(FakeSpeechPort()),
+          childNameProvider.overrideWith((ref) => 'Sara'),
+        ],
+        child: const NovaApp(),
+      ),
+    );
+    await tester.pump(const Duration(seconds: 2));
+    expect(find.text("Hi Sara! I'm Pip!"), findsOneWidget);
+  });
 }

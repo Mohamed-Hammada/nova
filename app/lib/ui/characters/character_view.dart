@@ -3,6 +3,7 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 
+import '../theme/graphics.dart';
 import '../theme/motion.dart';
 import 'character_rig.dart';
 
@@ -169,7 +170,13 @@ class _CharacterViewState extends State<CharacterView> with SingleTickerProvider
     final pose = poseFor(widget.kind, _ambientT, _look, _reaction, rt);
     return RepaintBoundary(
       child: CustomPaint(
-        painter: CharacterPainter(kind: widget.kind, pose: pose, rimColor: widget.rimColor ?? const Color(0xFFFFF1C9)),
+        painter: CharacterPainter(
+          kind: widget.kind,
+          pose: pose,
+          rimColor: widget.rimColor ?? const Color(0xFFFFF1C9),
+          rim: Graphics.of(context).rimLight,
+          bounce: Graphics.of(context).fullLighting,
+        ),
         size: Size.infinite,
       ),
     );

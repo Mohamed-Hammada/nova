@@ -2,6 +2,8 @@ import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 
+import '../theme/graphics.dart';
+
 /// A one-shot burst of confetti and stars. Finite by design: it plays once
 /// per [play] and then stops, so it never keeps the app (or a test) busy.
 class ConfettiBurst extends StatefulWidget {
@@ -43,14 +45,15 @@ class _ConfettiBurstState extends State<ConfettiBurst> with SingleTickerProvider
         animation: _c,
         builder: (context, _) => _c.isDismissed || _c.isCompleted
             ? const SizedBox.expand()
-            : CustomPaint(painter: _ConfettiPainter(_c.value, widget.origin, widget.play), size: Size.infinite),
+            : CustomPaint(painter: _ConfettiPainter(_c.value, widget.origin, widget.play, Graphics.of(context).confetti), size: Size.infinite),
       ),
     );
   }
 }
 
 class _ConfettiPainter extends CustomPainter {
-  _ConfettiPainter(this.t, this.origin, this.seed);
+  _ConfettiPainter(this.t, this.origin, this.seed, this.count);
+  final int count;
   final double t;
   final Alignment origin;
   final int seed;
@@ -80,7 +83,7 @@ class _ConfettiPainter extends CustomPainter {
       );
     }
 
-    for (var i = 0; i < 90; i++) {
+    for (var i = 0; i < count; i++) {
       final angle = -math.pi / 2 + (rand.nextDouble() - 0.5) * math.pi * 1.5;
       final speed = size.shortestSide * (0.7 + rand.nextDouble() * 0.9);
       final vx = math.cos(angle) * speed;

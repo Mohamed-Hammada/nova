@@ -3,11 +3,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:nova_app/core/content/models.dart';
 import 'package:nova_app/providers.dart';
 
-import 'age_picker.dart';
 import 'characters/character_rig.dart';
 import 'characters/character_view.dart';
 import 'game_screen.dart';
 import 'parent_view.dart';
+import 'settings/profile_screen.dart';
 import 'play/game_art.dart';
 import 'play/journey_screen.dart';
 import 'play/level_screen.dart';
@@ -46,7 +46,15 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         transitionDuration: const Duration(milliseconds: 650),
         pageBuilder: (_, _, _) => game.id == _bearApples
             ? GameScreen(gameId: game.id, skillId: game.primarySkillIds.first)
-            : LevelScreen(journey: Journey(id: 'journey.free', nameKey: '', ageRange: game.ageRange, levels: [JourneyLevel(id: 'free-${game.id}', gameId: game.id)]), levelIndex: 0),
+            : LevelScreen(
+                journey: Journey(
+                  id: 'journey.free',
+                  nameKey: '',
+                  ageRange: game.ageRange,
+                  levels: [JourneyLevel(id: 'free-${game.id}', gameId: game.id)],
+                ),
+                levelIndex: 0,
+              ),
         transitionsBuilder: (_, animation, _, child) {
           // A "zoom into the world" cut.
           final curved = CurvedAnimation(parent: animation, curve: Curves.easeInOutCubic);
@@ -65,20 +73,20 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     final band = ref.watch(ageBandProvider);
     final lang = ref.watch(languageProvider);
     final s = UiStrings.of(lang);
-    final p = band.palette;
-    final name = lang == 'ar' ? band.character.displayNameAr : band.character.displayName;
+    final p = ref.watch(paletteProvider);
+    final companion = ref.watch(companionProvider);
+    final name = lang == 'ar' ? companion.displayNameAr : companion.displayName;
+    final childName = ref.watch(childNameProvider).trim();
 
     final factory = ref.watch(trialFactoryProvider);
     bool playable(Game g) => g.id == _bearApples || factory.canPlay(g.id);
-    final games = content.games
-        .where((g) => band.overlaps(g.ageRange) && (g.languageDependencies.isEmpty || g.languageDependencies.contains(lang)))
-        .toList()
+    final games = content.games.where((g) => band.overlaps(g.ageRange) && (g.languageDependencies.isEmpty || g.languageDependencies.contains(lang))).toList()
       ..sort((a, b) => (playable(a) ? 0 : 1).compareTo(playable(b) ? 0 : 1));
     final hasJourney = content.journeyForAge(band.minAge) != null;
 
     return Scaffold(
       body: WorldBackdrop(
-        world: band.world,
+        world: ref.watch(worldProvider),
         groundLevel: 0.62,
         child: SafeArea(
           child: LayoutBuilder(
@@ -97,7 +105,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                         alignment: Alignment.bottomCenter,
                         child: AspectRatio(
                           aspectRatio: 0.9,
-                          child: CharacterView(key: ValueKey(band), kind: band.character, controller: _guide, rimColor: p.glow, entrance: Reaction.wave),
+                          child: CharacterView(key: ValueKey(companion), kind: companion, controller: _guide, rimColor: p.glow, entrance: Reaction.wave),
                         ),
                       ),
                     ),
@@ -107,7 +115,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                       end: 0,
                       child: Align(
                         alignment: AlignmentDirectional.topCenter,
-                        child: SpeechBubble(text: s.greeting(name), fontSize: 18 * band.uiScale),
+                        child: SpeechBubble(text: childName.isEmpty ? s.greeting(name) : s.greetingNamed(childName, name), fontSize: 18 * band.uiScale),
                       ),
                     ),
                   ],
@@ -126,7 +134,12 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                       return Center(
                         child: _Entrance(
                           delay: 0,
-                          child: _JourneyCard(width: cardWidth, band: band, strings: s, onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const JourneyScreen()))),
+                          child: _JourneyCard(
+                            width: cardWidth,
+                            band: band,
+                            strings: s,
+                            onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const JourneyScreen())),
+                          ),
                         ),
                       );
                     }
@@ -194,7 +207,7 @@ class _TopBar extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final p = band.palette;
+    final p = ref.watch(paletteProvider);
     final chipColor = p.isNight ? Colors.white.withValues(alpha: 0.12) : Colors.white.withValues(alpha: 0.75);
     return Padding(
       padding: const EdgeInsets.fromLTRB(16, 12, 16, 0),
@@ -205,7 +218,7 @@ class _TopBar extends ConsumerWidget {
             button: true,
             label: strings.pickYourAge,
             child: GestureDetector(
-              onTap: () => showAgePicker(context),
+              onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const ProfileScreen())),
               child: Container(
                 padding: const EdgeInsetsDirectional.fromSTEB(4, 4, 16, 4),
                 decoration: BoxDecoration(
@@ -229,7 +242,7 @@ class _TopBar extends ConsumerWidget {
                           maxHeight: 100,
                           maxWidth: 80,
                           alignment: const Alignment(0, -0.3),
-                          child: SizedBox(width: 80, height: 100, child: CharacterPainterBox(kind: band.character)),
+                          child: SizedBox(width: 80, height: 100, child: CharacterPainterBox(kind: ref.watch(companionProvider))),
                         ),
                       ),
                     ),
@@ -378,7 +391,7 @@ class _JourneyCard extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final p = band.palette;
+    final p = ref.watch(paletteProvider);
     final stars = ref.watch(levelStarsProvider).value ?? const <String, int>{};
     final done = stars.length;
     return GestureDetector(
@@ -402,12 +415,22 @@ class _JourneyCard extends ConsumerWidget {
                   Icon(Icons.map_rounded, size: width * 0.5, color: Colors.white.withValues(alpha: 0.25)),
                   Positioned(top: 8, left: 10, child: StarShape(size: width * 0.14)),
                   Positioned(bottom: 16, right: 12, child: StarShape(size: width * 0.1)),
-                  Text('50', style: novaText(width * 0.3, weight: 800, color: Colors.white).copyWith(shadows: const [Shadow(blurRadius: 10, color: Color(0x55000000))])),
+                  Text(
+                    '50',
+                    style: novaText(width * 0.3, weight: 800, color: Colors.white).copyWith(shadows: const [Shadow(blurRadius: 10, color: Color(0x55000000))]),
+                  ),
                 ],
               ),
             ),
-            Text(strings.journey, textAlign: TextAlign.center, style: novaText(width * 0.11, weight: 800, color: Colors.white)),
-            Text(done == 0 ? strings.journeySub : strings.levelLabel(done + 1), style: novaText(width * 0.065, weight: 600, color: Colors.white.withValues(alpha: 0.9))),
+            Text(
+              strings.journey,
+              textAlign: TextAlign.center,
+              style: novaText(width * 0.11, weight: 800, color: Colors.white),
+            ),
+            Text(
+              done == 0 ? strings.journeySub : strings.levelLabel(done + 1),
+              style: novaText(width * 0.065, weight: 600, color: Colors.white.withValues(alpha: 0.9)),
+            ),
             const SizedBox(height: 10),
             JellyButton(onPressed: onTap, color: const Color(0xFFFFB12E), icon: Icons.play_arrow_rounded, label: strings.play, size: width * 0.2),
           ],

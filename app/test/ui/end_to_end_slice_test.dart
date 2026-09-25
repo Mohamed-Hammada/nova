@@ -147,7 +147,9 @@ void main() {
 
     await tester.tap(find.text('Explorers'));
     await tester.pumpAndSettle();
-    await tester.tap(find.text('Champions'));
+    await tester.tap(find.text('7')); // About me: age 7 -> Champions
+    await tester.pumpAndSettle();
+    await tester.tap(find.byIcon(Icons.arrow_back_rounded));
     await tester.pumpAndSettle();
 
     expect(find.text("Bear's Apples"), findsNothing); // not made for 6-8

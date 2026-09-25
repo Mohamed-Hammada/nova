@@ -123,13 +123,13 @@ class _GameScreenState extends ConsumerState<GameScreen> with SingleTickerProvid
     final band = ref.watch(ageBandProvider);
     final lang = ref.watch(languageProvider);
     final s = UiStrings.of(lang);
-    final p = band.palette;
+    final p = ref.watch(paletteProvider);
     final content = ref.watch(contentRuntimeProvider);
     final title = content.i18n(content.game(widget.gameId).nameKey, lang);
 
     return Scaffold(
       body: WorldBackdrop(
-        world: band.world,
+        world: ref.watch(worldProvider),
         groundLevel: 0.6,
         child: Stack(
           children: [

@@ -411,7 +411,12 @@ class _Projected {
 }
 
 class CharacterPainter extends CustomPainter {
-  CharacterPainter({required this.kind, required this.pose, this.rimColor = const Color(0xFFFFF1C9)}) : model = CharacterModel.of(kind);
+  CharacterPainter({required this.kind, required this.pose, this.rimColor = const Color(0xFFFFF1C9), this.rim = true, this.bounce = true})
+    : model = CharacterModel.of(kind);
+
+  /// Lighting passes; lower graphics quality turns them off.
+  final bool rim;
+  final bool bounce;
 
   final CharacterKind kind;
   final CharacterModel model;
@@ -558,21 +563,25 @@ class CharacterPainter extends CustomPainter {
           ),
       );
       // Bounce light from the ground warms the underside.
-      canvas.drawOval(
-        rect,
-        Paint()..shader = ui.Gradient.radial(Offset(-l.dx * 0.2, 0.95), 0.75, [const Color(0xFFFFD9A8).withValues(alpha: 0.28), const Color(0x00FFD9A8)]),
-      );
+      if (bounce) {
+        canvas.drawOval(
+          rect,
+          Paint()..shader = ui.Gradient.radial(Offset(-l.dx * 0.2, 0.95), 0.75, [const Color(0xFFFFD9A8).withValues(alpha: 0.28), const Color(0x00FFD9A8)]),
+        );
+      }
       // Rim light opposite the key.
-      canvas.drawOval(
-        rect,
-        Paint()
-          ..shader = ui.Gradient.radial(
-            Offset(l.dx * 0.28, l.dy * 0.28),
-            1.12,
-            [rimColor.withValues(alpha: 0), rimColor.withValues(alpha: 0), rimColor.withValues(alpha: gloss ? 0.45 : 0.28)],
-            [0.0, 0.9, 1.0],
-          ),
-      );
+      if (rim) {
+        canvas.drawOval(
+          rect,
+          Paint()
+            ..shader = ui.Gradient.radial(
+              Offset(l.dx * 0.28, l.dy * 0.28),
+              1.12,
+              [rimColor.withValues(alpha: 0), rimColor.withValues(alpha: 0), rimColor.withValues(alpha: gloss ? 0.45 : 0.28)],
+              [0.0, 0.9, 1.0],
+            ),
+        );
+      }
       // Specular: tight and bright on glossy parts, broad and faint on clay.
       final specAlpha = gloss ? 0.9 : 0.14;
       final specSize = gloss ? const Size(0.46, 0.28) : const Size(0.8, 0.55);
@@ -768,5 +777,5 @@ class CharacterPainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(CharacterPainter old) => old.pose != pose || old.kind != kind || old.rimColor != rimColor;
+  bool shouldRepaint(CharacterPainter old) => old.pose != pose || old.kind != kind || old.rimColor != rimColor || old.rim != rim || old.bounce != bounce;
 }

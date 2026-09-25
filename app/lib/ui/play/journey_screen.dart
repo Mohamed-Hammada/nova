@@ -46,7 +46,11 @@ class _JourneyScreenState extends ConsumerState<JourneyScreen> {
   }
 
   Future<void> _open(Journey journey, int index) async {
-    await Navigator.of(context).push(MaterialPageRoute(builder: (_) => LevelScreen(journey: journey, levelIndex: index)));
+    await Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (_) => LevelScreen(journey: journey, levelIndex: index),
+      ),
+    );
     ref.invalidate(levelStarsProvider);
   }
 
@@ -55,119 +59,142 @@ class _JourneyScreenState extends ConsumerState<JourneyScreen> {
     final band = ref.watch(ageBandProvider);
     final lang = ref.watch(languageProvider);
     final s = UiStrings.of(lang);
-    final p = band.palette;
+    final p = ref.watch(paletteProvider);
+    final companion = ref.watch(companionProvider);
     final content = ref.watch(contentRuntimeProvider);
-    final journey = content.journeyForAge(band.minAge);
+    final journey = content.journeyForAge(ref.watch(childAgeProvider) ?? band.minAge) ?? content.journeyForAge(band.minAge);
     final starsAsync = ref.watch(levelStarsProvider);
     final stars = starsAsync.value ?? const <String, int>{};
 
     return Scaffold(
       body: WorldBackdrop(
-        world: band.world,
+        world: ref.watch(worldProvider),
         groundLevel: 0.95,
         child: SafeArea(
           child: journey == null
               ? const SizedBox.shrink()
-              : LayoutBuilder(builder: (context, box) {
-                  final levels = journey.levels;
-                  var current = levels.indexWhere((l) => !stars.containsKey(l.id));
-                  if (current < 0) current = levels.length - 1;
-                  final total = stars.values.fold<int>(0, (a, b) => a + b);
-                  final height = _nodeY(levels.length) + 120;
-                  final width = box.maxWidth;
-                  Offset node(int i) => Offset(width / 2 + math.sin(i * 0.9) * math.min(width * 0.28, 220), height - _nodeY(i));
+              : LayoutBuilder(
+                  builder: (context, box) {
+                    final levels = journey.levels;
+                    var current = levels.indexWhere((l) => !stars.containsKey(l.id));
+                    if (current < 0) current = levels.length - 1;
+                    final total = stars.values.fold<int>(0, (a, b) => a + b);
+                    final height = _nodeY(levels.length) + 120;
+                    final width = box.maxWidth;
+                    Offset node(int i) => Offset(width / 2 + math.sin(i * 0.9) * math.min(width * 0.28, 220), height - _nodeY(i));
 
-                  // Scroll to the next level once, after the saved stars have loaded.
-                  if (!_scrolled && starsAsync.hasValue) {
-                    _scrolled = true;
-                    WidgetsBinding.instance.addPostFrameCallback((_) {
-                      if (_scroll.hasClients) {
-                        final target = (node(current).dy - box.maxHeight * 0.6).clamp(0.0, _scroll.position.maxScrollExtent);
-                        _scroll.jumpTo(target);
-                      }
-                    });
-                  }
+                    // Scroll to the next level once, after the saved stars have loaded.
+                    if (!_scrolled && starsAsync.hasValue) {
+                      _scrolled = true;
+                      WidgetsBinding.instance.addPostFrameCallback((_) {
+                        if (_scroll.hasClients) {
+                          final target = (node(current).dy - box.maxHeight * 0.6).clamp(0.0, _scroll.position.maxScrollExtent);
+                          _scroll.jumpTo(target);
+                        }
+                      });
+                    }
 
-                  return Stack(
-                    children: [
-                      SingleChildScrollView(
-                        controller: _scroll,
-                        child: SizedBox(
-                          width: width,
-                          height: height,
-                          child: Stack(
-                            clipBehavior: Clip.none,
-                            children: [
-                              Positioned.fill(child: CustomPaint(painter: _PathPainter([for (var i = 0; i < levels.length; i++) node(i)], current, p))),
-                              for (var c = 0; c * 10 < levels.length; c++)
+                    return Stack(
+                      children: [
+                        SingleChildScrollView(
+                          controller: _scroll,
+                          child: SizedBox(
+                            width: width,
+                            height: height,
+                            child: Stack(
+                              clipBehavior: Clip.none,
+                              children: [
+                                Positioned.fill(child: CustomPaint(painter: _PathPainter([for (var i = 0; i < levels.length; i++) node(i)], current, p))),
+                                for (var c = 0; c * 10 < levels.length; c++)
+                                  Positioned(
+                                    left: 0,
+                                    right: 0,
+                                    top: height - _nodeY(c * 10) + 44,
+                                    child: Center(
+                                      child: _ChapterBanner(text: s.chapter(c + 1), color: p.accentDeep),
+                                    ),
+                                  ),
+                                for (var i = 0; i < levels.length; i++)
+                                  Positioned(
+                                    left: node(i).dx - 40,
+                                    top: node(i).dy - 40,
+                                    child: _LevelNode(
+                                      number: i + 1,
+                                      language: lang,
+                                      stars: stars[levels[i].id],
+                                      locked: i > current,
+                                      current: i == current,
+                                      palette: p,
+                                      onTap: i > current ? null : () => _open(journey, i),
+                                    ),
+                                  ),
                                 Positioned(
-                                  left: 0,
-                                  right: 0,
-                                  top: height - _nodeY(c * 10) + 44,
-                                  child: Center(child: _ChapterBanner(text: s.chapter(c + 1), color: p.accentDeep)),
-                                ),
-                              for (var i = 0; i < levels.length; i++)
-                                Positioned(
-                                  left: node(i).dx - 40,
-                                  top: node(i).dy - 40,
-                                  child: _LevelNode(
-                                    number: i + 1,
-                                    language: lang,
-                                    stars: stars[levels[i].id],
-                                    locked: i > current,
-                                    current: i == current,
-                                    band: band,
-                                    onTap: i > current ? null : () => _open(journey, i),
+                                  left: node(current).dx + 34,
+                                  top: node(current).dy - 120,
+                                  width: 100,
+                                  height: 120,
+                                  child: IgnorePointer(
+                                    child: CharacterView(kind: companion, rimColor: p.glow),
                                   ),
                                 ),
-                              Positioned(
-                                left: node(current).dx + 34,
-                                top: node(current).dy - 120,
-                                width: 100,
-                                height: 120,
-                                child: IgnorePointer(child: CharacterView(kind: band.character, rimColor: p.glow)),
+                                for (final (i, pic) in [(4, Pic.tree), (13, Pic.flower), (22, Pic.shell), (31, Pic.star), (44, Pic.moon)])
+                                  if (i < levels.length)
+                                    Positioned(
+                                      left: node(i).dx < width / 2 ? node(i).dx + 90 : node(i).dx - 150,
+                                      top: node(i).dy - 30,
+                                      child: Opacity(opacity: 0.9, child: PicArt(pic, size: 60)),
+                                    ),
+                              ],
+                            ),
+                          ),
+                        ),
+                        Positioned(
+                          left: 12,
+                          right: 12,
+                          top: 10,
+                          child: Row(
+                            children: [
+                              JellyButton(
+                                onPressed: () => Navigator.of(context).maybePop(),
+                                color: p.accent,
+                                circle: true,
+                                size: 48,
+                                child: Icon(s.isRtl ? Icons.arrow_forward_rounded : Icons.arrow_back_rounded, color: Colors.white, size: 26),
                               ),
-                              for (final (i, pic) in [(4, Pic.tree), (13, Pic.flower), (22, Pic.shell), (31, Pic.star), (44, Pic.moon)])
-                                if (i < levels.length)
-                                  Positioned(left: node(i).dx < width / 2 ? node(i).dx + 90 : node(i).dx - 150, top: node(i).dy - 30, child: Opacity(opacity: 0.9, child: PicArt(pic, size: 60))),
+                              const SizedBox(width: 12),
+                              Expanded(
+                                child: Container(
+                                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+                                  decoration: BoxDecoration(
+                                    color: Colors.white.withValues(alpha: p.isNight ? 0.14 : 0.85),
+                                    borderRadius: BorderRadius.circular(30),
+                                  ),
+                                  child: Row(
+                                    children: [
+                                      Expanded(
+                                        child: Text(
+                                          content.i18n(journey.nameKey, lang),
+                                          overflow: TextOverflow.ellipsis,
+                                          style: novaText(20, weight: 800, color: p.isNight ? Colors.white : p.onSurface),
+                                        ),
+                                      ),
+                                      const StarShape(size: 24),
+                                      const SizedBox(width: 6),
+                                      Text(
+                                        s.starsCount(total, levels.length * 3),
+                                        style: novaText(15, weight: 700, color: p.isNight ? Colors.white70 : p.onSurface),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
                             ],
                           ),
                         ),
-                      ),
-                      Positioned(
-                        left: 12,
-                        right: 12,
-                        top: 10,
-                        child: Row(
-                          children: [
-                            JellyButton(
-                              onPressed: () => Navigator.of(context).maybePop(),
-                              color: p.accent,
-                              circle: true,
-                              size: 48,
-                              child: Icon(s.isRtl ? Icons.arrow_forward_rounded : Icons.arrow_back_rounded, color: Colors.white, size: 26),
-                            ),
-                            const SizedBox(width: 12),
-                            Expanded(
-                              child: Container(
-                                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
-                                decoration: BoxDecoration(color: Colors.white.withValues(alpha: p.isNight ? 0.14 : 0.85), borderRadius: BorderRadius.circular(30)),
-                                child: Row(
-                                  children: [
-                                    Expanded(child: Text(content.i18n(journey.nameKey, lang), overflow: TextOverflow.ellipsis, style: novaText(20, weight: 800, color: p.isNight ? Colors.white : p.onSurface))),
-                                    const StarShape(size: 24),
-                                    const SizedBox(width: 6),
-                                    Text(s.starsCount(total, levels.length * 3), style: novaText(15, weight: 700, color: p.isNight ? Colors.white70 : p.onSurface)),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  );
-                }),
+                      ],
+                    );
+                  },
+                ),
         ),
       ),
     );
@@ -195,23 +222,32 @@ class _PathPainter extends CustomPainter {
     }
 
     final all = through(points);
-    canvas.drawPath(all, Paint()
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = 30
-      ..strokeCap = StrokeCap.round
-      ..color = const Color(0xFF2A1640).withValues(alpha: 0.12)
-      ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 6));
-    canvas.drawPath(all, Paint()
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = 24
-      ..strokeCap = StrokeCap.round
-      ..color = palette.isNight ? const Color(0xFF3B2F7A) : const Color(0xFFF5E1B8));
-    if (current > 0) {
-      canvas.drawPath(through(points.sublist(0, current + 1)), Paint()
+    canvas.drawPath(
+      all,
+      Paint()
         ..style = PaintingStyle.stroke
-        ..strokeWidth = 10
+        ..strokeWidth = 30
         ..strokeCap = StrokeCap.round
-        ..color = palette.accent);
+        ..color = const Color(0xFF2A1640).withValues(alpha: 0.12)
+        ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 6),
+    );
+    canvas.drawPath(
+      all,
+      Paint()
+        ..style = PaintingStyle.stroke
+        ..strokeWidth = 24
+        ..strokeCap = StrokeCap.round
+        ..color = palette.isNight ? const Color(0xFF3B2F7A) : const Color(0xFFF5E1B8),
+    );
+    if (current > 0) {
+      canvas.drawPath(
+        through(points.sublist(0, current + 1)),
+        Paint()
+          ..style = PaintingStyle.stroke
+          ..strokeWidth = 10
+          ..strokeCap = StrokeCap.round
+          ..color = palette.accent,
+      );
     }
     // Dashes along the path, like footprints.
     for (final metric in all.computeMetrics()) {
@@ -233,30 +269,38 @@ class _ChapterBanner extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Container(
-        padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 6),
-        decoration: BoxDecoration(
-          color: color,
-          borderRadius: BorderRadius.circular(30),
-          boxShadow: [BoxShadow(color: shade(color, -0.6).withValues(alpha: 0.4), blurRadius: 12, offset: const Offset(0, 6))],
-          border: Border.all(color: Colors.white, width: 2),
-        ),
-        child: Text(text, style: novaText(18, weight: 800, color: Colors.white)),
-      );
+    padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 6),
+    decoration: BoxDecoration(
+      color: color,
+      borderRadius: BorderRadius.circular(30),
+      boxShadow: [BoxShadow(color: shade(color, -0.6).withValues(alpha: 0.4), blurRadius: 12, offset: const Offset(0, 6))],
+      border: Border.all(color: Colors.white, width: 2),
+    ),
+    child: Text(text, style: novaText(18, weight: 800, color: Colors.white)),
+  );
 }
 
 class _LevelNode extends StatelessWidget {
-  const _LevelNode({required this.number, required this.language, required this.stars, required this.locked, required this.current, required this.band, this.onTap});
+  const _LevelNode({
+    required this.number,
+    required this.language,
+    required this.stars,
+    required this.locked,
+    required this.current,
+    required this.palette,
+    this.onTap,
+  });
   final int number;
   final String language;
   final int? stars;
   final bool locked;
   final bool current;
-  final AgeBand band;
+  final WorldPalette palette;
   final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {
-    final p = band.palette;
+    final p = palette;
     final color = locked ? const Color(0xFFB9B2C8) : (stars != null ? p.accent : const Color(0xFFFFB12E));
     final node = Semantics(
       button: !locked,
@@ -275,7 +319,11 @@ class _LevelNode extends StatelessWidget {
                 alignment: Alignment.center,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  gradient: RadialGradient(center: const Alignment(-0.3, -0.4), colors: [shade(color, 0.45), color, shade(color, -0.3)], stops: const [0, 0.55, 1]),
+                  gradient: RadialGradient(
+                    center: const Alignment(-0.3, -0.4),
+                    colors: [shade(color, 0.45), color, shade(color, -0.3)],
+                    stops: const [0, 0.55, 1],
+                  ),
                   border: Border.all(color: Colors.white, width: 4),
                   boxShadow: [
                     BoxShadow(color: shade(color, -0.6).withValues(alpha: 0.45), blurRadius: 10, offset: const Offset(0, 6)),
@@ -284,12 +332,18 @@ class _LevelNode extends StatelessWidget {
                 ),
                 child: locked
                     ? const Icon(Icons.lock_rounded, color: Colors.white, size: 30)
-                    : Text(numeral(number, language), style: novaText(30, weight: 800, color: Colors.white).copyWith(shadows: const [Shadow(blurRadius: 3, color: Color(0x66000000))])),
+                    : Text(
+                        numeral(number, language),
+                        style: novaText(30, weight: 800, color: Colors.white).copyWith(shadows: const [Shadow(blurRadius: 3, color: Color(0x66000000))]),
+                      ),
               ),
               if (stars != null)
                 Positioned(
                   bottom: 0,
-                  child: Row(mainAxisSize: MainAxisSize.min, children: [for (var k = 0; k < 3; k++) StarShape(size: 22, filled: k < stars!)]),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [for (var k = 0; k < 3; k++) StarShape(size: 22, filled: k < stars!)],
+                  ),
                 ),
             ],
           ),
@@ -329,8 +383,8 @@ class _BobState extends State<_Bob> with SingleTickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) => AnimatedBuilder(
-        animation: _c,
-        builder: (context, child) => Transform.translate(offset: Offset(0, -6 * Curves.easeInOut.transform(_c.value)), child: child),
-        child: widget.child,
-      );
+    animation: _c,
+    builder: (context, child) => Transform.translate(offset: Offset(0, -6 * Curves.easeInOut.transform(_c.value)), child: child),
+    child: widget.child,
+  );
 }

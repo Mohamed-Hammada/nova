@@ -32,28 +32,25 @@ class TrialContext {
 }
 
 Widget trialView(Trial trial, TrialContext ctx) => switch (trial) {
-      ChoiceTrial() => ChoiceTrialView(trial: trial, ctx: ctx),
-      DragCountTrial() => DragCountTrialView(trial: trial, ctx: ctx),
-      TapCountTrial() => TapCountTrialView(trial: trial, ctx: ctx),
-      JoinSeparateTrial() => JoinSeparateTrialView(trial: trial, ctx: ctx),
-      NumberLineTrial() => NumberLineTrialView(trial: trial, ctx: ctx),
-      SortTrial() => SortTrialView(trial: trial, ctx: ctx),
-      PairsTrial() => PairsTrialView(trial: trial, ctx: ctx),
-      SequenceTrial() => SequenceTrialView(trial: trial, ctx: ctx),
-      StreamItemTrial() => StreamItemTrialView(trial: trial, ctx: ctx),
-      ClapTrial() => ClapTrialView(trial: trial, ctx: ctx),
-      PrintTrial() => PrintTrialView(trial: trial, ctx: ctx),
-      BuildWordTrial() => BuildWordTrialView(trial: trial, ctx: ctx),
-    };
+  ChoiceTrial() => ChoiceTrialView(trial: trial, ctx: ctx),
+  DragCountTrial() => DragCountTrialView(trial: trial, ctx: ctx),
+  TapCountTrial() => TapCountTrialView(trial: trial, ctx: ctx),
+  JoinSeparateTrial() => JoinSeparateTrialView(trial: trial, ctx: ctx),
+  NumberLineTrial() => NumberLineTrialView(trial: trial, ctx: ctx),
+  SortTrial() => SortTrialView(trial: trial, ctx: ctx),
+  PairsTrial() => PairsTrialView(trial: trial, ctx: ctx),
+  SequenceTrial() => SequenceTrialView(trial: trial, ctx: ctx),
+  StreamItemTrial() => StreamItemTrialView(trial: trial, ctx: ctx),
+  ClapTrial() => ClapTrialView(trial: trial, ctx: ctx),
+  PrintTrial() => PrintTrialView(trial: trial, ctx: ctx),
+  BuildWordTrial() => BuildWordTrialView(trial: trial, ctx: ctx),
+};
 
 /// The instruction for a round, before any answer.
 String trialPrompt(Trial t, String language, {String hostName = ''}) {
   String p(String key, [Map<String, String> args = const {}]) => prompt(key, language, args);
   return switch (t) {
-    ChoiceTrial() => p(t.promptKey, {
-        ...t.promptArgs,
-        if (t.promptArgs.containsKey('n')) 'n': numeral(int.parse(t.promptArgs['n']!), language),
-      }),
+    ChoiceTrial() => p(t.promptKey, {...t.promptArgs, if (t.promptArgs.containsKey('n')) 'n': numeral(int.parse(t.promptArgs['n']!), language)}),
     DragCountTrial() => p('drag_count', {'name': hostName, 'n': numeral(t.target, language), 'thing': _thing(t.item, t.target, language)}),
     TapCountTrial() => p('tap_count'),
     JoinSeparateTrial() => p('join'),
@@ -140,7 +137,11 @@ class _OptionCardState extends State<OptionCard> with SingleTickerProviderStateM
                 borderRadius: BorderRadius.circular(widget.size * 0.22),
                 border: Border.all(color: ring, width: widget.state == OptionState.idle && !widget.pulse ? 2 : 5),
                 boxShadow: [
-                  BoxShadow(color: ring == Colors.white ? const Color(0x332A1640) : ring.withValues(alpha: 0.6), blurRadius: ring == Colors.white ? 14 : 22, offset: const Offset(0, 8)),
+                  BoxShadow(
+                    color: ring == Colors.white ? const Color(0x332A1640) : ring.withValues(alpha: 0.6),
+                    blurRadius: ring == Colors.white ? 14 : 22,
+                    offset: const Offset(0, 8),
+                  ),
                 ],
               ),
               child: Center(child: widget.child),
@@ -155,9 +156,11 @@ class _OptionCardState extends State<OptionCard> with SingleTickerProviderStateM
 mixin _Pacing<T extends StatefulWidget> on State<T> {
   final _timers = <Timer>[];
 
-  void after(Duration d, VoidCallback f) => _timers.add(Timer(d, () {
-        if (mounted) f();
-      }));
+  void after(Duration d, VoidCallback f) => _timers.add(
+    Timer(d, () {
+      if (mounted) f();
+    }),
+  );
 
   @override
   void dispose() {
@@ -214,45 +217,49 @@ class _ChoiceTrialViewState extends State<ChoiceTrialView> with _Pacing {
   @override
   Widget build(BuildContext context) {
     final t = widget.trial;
-    return LayoutBuilder(builder: (context, box) {
-      final n = t.options.length;
-      final short = math.min(box.maxWidth, box.maxHeight);
-      final hasQuestion = t.question != null;
-      final optionSize = math.min((box.maxWidth - 24) / n - 16, (hasQuestion ? box.maxHeight * 0.44 : box.maxHeight * 0.62)).clamp(72.0, t.optionsAreBig ? 280.0 : 210.0);
-      return Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          if (hasQuestion) ...[
-            Container(
-              padding: const EdgeInsets.all(12),
-              decoration: BoxDecoration(color: Colors.white.withValues(alpha: 0.75), borderRadius: BorderRadius.circular(28)),
-              child: VisualView(t.question!, size: (short * 0.3).clamp(80.0, 200.0), language: widget.ctx.language),
-            ),
-            SizedBox(height: short * 0.05),
-          ],
-          Wrap(
-            alignment: WrapAlignment.center,
-            spacing: 16,
-            runSpacing: 16,
-            children: [
-              for (var i = 0; i < n; i++)
-                OptionCard(
-                  key: ValueKey(i),
-                  size: optionSize,
-                  pulse: _pulse && i == t.answer,
-                  state: _chosen == null
-                      ? OptionState.idle
-                      : i == _chosen
-                          ? (t.isCorrect(i) ? OptionState.right : OptionState.wrong)
-                          : (i == t.answer ? OptionState.reveal : OptionState.dim),
-                  onTap: () => _choose(i),
-                  child: VisualView(t.options[i], size: optionSize * 0.8, language: widget.ctx.language),
-                ),
+    return LayoutBuilder(
+      builder: (context, box) {
+        final n = t.options.length;
+        final short = math.min(box.maxWidth, box.maxHeight);
+        final hasQuestion = t.question != null;
+        final optionSize = math
+            .min((box.maxWidth - 24) / n - 16, (hasQuestion ? box.maxHeight * 0.44 : box.maxHeight * 0.62))
+            .clamp(72.0, t.optionsAreBig ? 280.0 : 210.0);
+        return Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            if (hasQuestion) ...[
+              Container(
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(color: Colors.white.withValues(alpha: 0.75), borderRadius: BorderRadius.circular(28)),
+                child: VisualView(t.question!, size: (short * 0.3).clamp(80.0, 200.0), language: widget.ctx.language),
+              ),
+              SizedBox(height: short * 0.05),
             ],
-          ),
-        ],
-      );
-    });
+            Wrap(
+              alignment: WrapAlignment.center,
+              spacing: 16,
+              runSpacing: 16,
+              children: [
+                for (var i = 0; i < n; i++)
+                  OptionCard(
+                    key: ValueKey(i),
+                    size: optionSize,
+                    pulse: _pulse && i == t.answer,
+                    state: _chosen == null
+                        ? OptionState.idle
+                        : i == _chosen
+                        ? (t.isCorrect(i) ? OptionState.right : OptionState.wrong)
+                        : (i == t.answer ? OptionState.reveal : OptionState.dim),
+                    onTap: () => _choose(i),
+                    child: VisualView(t.options[i], size: optionSize * 0.8, language: widget.ctx.language),
+                  ),
+              ],
+            ),
+          ],
+        );
+      },
+    );
   }
 }
 
@@ -268,19 +275,21 @@ class NumberChoices extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Wrap(
-        alignment: WrapAlignment.center,
-        spacing: 14,
-        children: [
-          for (final c in choices)
-            OptionCard(
-              size: 92,
-              pulse: pulse && c == answer,
-              state: chosen == null ? OptionState.idle : (c == chosen ? (c == answer ? OptionState.right : OptionState.wrong) : (c == answer ? OptionState.reveal : OptionState.dim)),
-              onTap: chosen == null ? () => onPick(c) : null,
-              child: NumeralBadge(numeral(c, language), size: 70),
-            ),
-        ],
-      );
+    alignment: WrapAlignment.center,
+    spacing: 14,
+    children: [
+      for (final c in choices)
+        OptionCard(
+          size: 92,
+          pulse: pulse && c == answer,
+          state: chosen == null
+              ? OptionState.idle
+              : (c == chosen ? (c == answer ? OptionState.right : OptionState.wrong) : (c == answer ? OptionState.reveal : OptionState.dim)),
+          onTap: chosen == null ? () => onPick(c) : null,
+          child: NumeralBadge(numeral(c, language), size: 70),
+        ),
+    ],
+  );
 }
 
 // ---------------------------------------------------------------------------
@@ -426,51 +435,66 @@ class _TapCountTrialViewState extends State<TapCountTrialView> with _Pacing {
   @override
   Widget build(BuildContext context) {
     final t = widget.trial;
-    return LayoutBuilder(builder: (context, box) {
-      final field = Size(math.min(box.maxWidth - 20, 620), math.max(160, box.maxHeight - 150));
-      final cols = t.scattered ? 5 : math.min(t.count, 10);
-      final rows = (t.count / cols).ceil();
-      final cell = math.min(field.width / cols, field.height / math.max(rows, t.scattered ? 4 : 1));
-      final rng = math.Random(t.seed);
-      final slots = [for (var r = 0; r < (t.scattered ? 4 : rows); r++) for (var c = 0; c < cols; c++) (r, c)];
-      if (t.scattered) slots.shuffle(rng);
-      return Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          SizedBox(
-            width: cols * cell,
-            height: (t.scattered ? 4 : rows) * cell,
-            child: Stack(
-              children: [
-                for (var i = 0; i < t.count; i++)
-                  Positioned(
-                    left: slots[i].$2 * cell + (t.scattered ? rng.nextDouble() * cell * 0.1 : 0),
-                    top: slots[i].$1 * cell,
-                    child: GestureDetector(
-                      onTap: () => _tap(i),
-                      child: SizedBox(
-                        width: cell,
-                        height: cell,
-                        child: Stack(
-                          alignment: Alignment.center,
-                          children: [
-                            AnimatedOpacity(duration: const Duration(milliseconds: 200), opacity: _tapped.contains(i) ? 1 : 0.55, child: PicArt(t.pic, size: cell * 0.86)),
-                            if (_tapped.contains(i))
-                              Text(numeral(_tapped.indexOf(i) + 1, widget.ctx.language),
-                                  style: novaText(cell * 0.34, weight: 800, color: Colors.white).copyWith(shadows: const [Shadow(blurRadius: 4, color: Colors.black54)])),
-                          ],
+    return LayoutBuilder(
+      builder: (context, box) {
+        final field = Size(math.min(box.maxWidth - 20, 620), math.max(160, box.maxHeight - 150));
+        final cols = t.scattered ? 5 : math.min(t.count, 10);
+        final rows = (t.count / cols).ceil();
+        final cell = math.min(field.width / cols, field.height / math.max(rows, t.scattered ? 4 : 1));
+        final rng = math.Random(t.seed);
+        final slots = [
+          for (var r = 0; r < (t.scattered ? 4 : rows); r++)
+            for (var c = 0; c < cols; c++) (r, c),
+        ];
+        if (t.scattered) slots.shuffle(rng);
+        return Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            SizedBox(
+              width: cols * cell,
+              height: (t.scattered ? 4 : rows) * cell,
+              child: Stack(
+                children: [
+                  for (var i = 0; i < t.count; i++)
+                    Positioned(
+                      left: slots[i].$2 * cell + (t.scattered ? rng.nextDouble() * cell * 0.1 : 0),
+                      top: slots[i].$1 * cell,
+                      child: GestureDetector(
+                        onTap: () => _tap(i),
+                        child: SizedBox(
+                          width: cell,
+                          height: cell,
+                          child: Stack(
+                            alignment: Alignment.center,
+                            children: [
+                              AnimatedOpacity(
+                                duration: const Duration(milliseconds: 200),
+                                opacity: _tapped.contains(i) ? 1 : 0.55,
+                                child: PicArt(t.pic, size: cell * 0.86),
+                              ),
+                              if (_tapped.contains(i))
+                                Text(
+                                  numeral(_tapped.indexOf(i) + 1, widget.ctx.language),
+                                  style: novaText(
+                                    cell * 0.34,
+                                    weight: 800,
+                                    color: Colors.white,
+                                  ).copyWith(shadows: const [Shadow(blurRadius: 4, color: Colors.black54)]),
+                                ),
+                            ],
+                          ),
                         ),
                       ),
                     ),
-                  ),
-              ],
+                ],
+              ),
             ),
-          ),
-          const SizedBox(height: 16),
-          NumberChoices(choices: t.choices, onPick: _pick, language: widget.ctx.language, chosen: _chosen, answer: t.count, pulse: _pulse),
-        ],
-      );
-    });
+            const SizedBox(height: 16),
+            NumberChoices(choices: t.choices, onPick: _pick, language: widget.ctx.language, chosen: _chosen, answer: t.count, pulse: _pulse),
+          ],
+        );
+      },
+    );
   }
 }
 
@@ -558,7 +582,14 @@ class _JoinSeparateTrialViewState extends State<JoinSeparateTrialView> with Sing
                             final home = Offset(18.0 + (i % 6) * 58, 22.0 + (i ~/ 6) * 56);
                             final away = Offset(home.dx + 260, -160);
                             final pos = !moving ? home : (joining ? Offset.lerp(away, home, v)! : Offset.lerp(home, away, v)!);
-                            return Positioned(left: pos.dx, top: pos.dy, child: Opacity(opacity: moving ? (joining ? v : 1 - v * 0.6) : 1, child: PicArt(t.pic, size: item)));
+                            return Positioned(
+                              left: pos.dx,
+                              top: pos.dy,
+                              child: Opacity(
+                                opacity: moving ? (joining ? v : 1 - v * 0.6) : 1,
+                                child: PicArt(t.pic, size: item),
+                              ),
+                            );
                           }(),
                       ],
                     );
@@ -621,62 +652,72 @@ class _NumberLineTrialViewState extends State<NumberLineTrialView> with _Pacing 
     // Arabic-medium maths textbooks' number lines; revisit with specialists.
     return Directionality(
       textDirection: TextDirection.ltr,
-      child: LayoutBuilder(builder: (context, box) {
-        final width = math.min(box.maxWidth - 40, 900.0);
-        final step = width / t.max;
-        bool labelled(int m) => m == 0 || m == t.max || (t.labelEvery > 0 && m % t.labelEvery == 0);
-        final frogAt = _mark ?? 0;
-        return Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            NumeralBadge(numeral(t.target, lang), size: 96),
-            const SizedBox(height: 28),
-            SizedBox(
-              width: width + 40,
-              height: 150,
-              child: Stack(
-                clipBehavior: Clip.none,
-                children: [
-                  Positioned(left: 20, right: 20, top: 80, child: Container(height: 8, decoration: BoxDecoration(color: const Color(0xFF5B4A70), borderRadius: BorderRadius.circular(4)))),
-                  for (var m = 0; m <= t.max; m++)
+      child: LayoutBuilder(
+        builder: (context, box) {
+          final width = math.min(box.maxWidth - 40, 900.0);
+          final step = width / t.max;
+          bool labelled(int m) => m == 0 || m == t.max || (t.labelEvery > 0 && m % t.labelEvery == 0);
+          final frogAt = _mark ?? 0;
+          return Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              NumeralBadge(numeral(t.target, lang), size: 96),
+              const SizedBox(height: 28),
+              SizedBox(
+                width: width + 40,
+                height: 150,
+                child: Stack(
+                  clipBehavior: Clip.none,
+                  children: [
                     Positioned(
-                      left: 20 + m * step - 22,
-                      top: 56,
-                      child: GestureDetector(
-                        onTap: () => _tap(m),
-                        child: SizedBox(
-                          width: 44,
-                          height: 90,
-                          child: Column(
-                            children: [
-                              Container(
-                                width: 6,
-                                height: labelled(m) ? 50 : 34,
-                                margin: EdgeInsets.only(top: labelled(m) ? 4 : 12),
-                                decoration: BoxDecoration(
-                                  color: _pulse && m == t.target ? const Color(0xFFFFC83D) : const Color(0xFF5B4A70),
-                                  borderRadius: BorderRadius.circular(3),
+                      left: 20,
+                      right: 20,
+                      top: 80,
+                      child: Container(
+                        height: 8,
+                        decoration: BoxDecoration(color: const Color(0xFF5B4A70), borderRadius: BorderRadius.circular(4)),
+                      ),
+                    ),
+                    for (var m = 0; m <= t.max; m++)
+                      Positioned(
+                        left: 20 + m * step - 22,
+                        top: 56,
+                        child: GestureDetector(
+                          onTap: () => _tap(m),
+                          child: SizedBox(
+                            width: 44,
+                            height: 90,
+                            child: Column(
+                              children: [
+                                Container(
+                                  width: 6,
+                                  height: labelled(m) ? 50 : 34,
+                                  margin: EdgeInsets.only(top: labelled(m) ? 4 : 12),
+                                  decoration: BoxDecoration(
+                                    color: _pulse && m == t.target ? const Color(0xFFFFC83D) : const Color(0xFF5B4A70),
+                                    borderRadius: BorderRadius.circular(3),
+                                  ),
                                 ),
-                              ),
-                              if (labelled(m)) Text(numeral(m, lang), style: novaText(18, weight: 800, color: const Color(0xFF3A2A4A))),
-                            ],
+                                if (labelled(m)) Text(numeral(m, lang), style: novaText(18, weight: 800, color: const Color(0xFF3A2A4A))),
+                              ],
+                            ),
                           ),
                         ),
                       ),
+                    AnimatedPositioned(
+                      duration: const Duration(milliseconds: 700),
+                      curve: Curves.easeOutBack,
+                      left: 20 + frogAt * step - 30,
+                      top: _mark == null ? 0 : -6,
+                      child: IgnorePointer(child: _Frog(ok: _mark == null ? null : t.isCorrect(_mark!))),
                     ),
-                  AnimatedPositioned(
-                    duration: const Duration(milliseconds: 700),
-                    curve: Curves.easeOutBack,
-                    left: 20 + frogAt * step - 30,
-                    top: _mark == null ? 0 : -6,
-                    child: IgnorePointer(child: _Frog(ok: _mark == null ? null : t.isCorrect(_mark!))),
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ),
-          ],
-        );
-      }),
+            ],
+          );
+        },
+      ),
     );
   }
 }
@@ -687,35 +728,43 @@ class _Frog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => SizedBox(
-        width: 60,
-        height: 56,
-        child: Stack(
-          alignment: Alignment.bottomCenter,
-          children: [
-            Container(
-              width: 56,
-              height: 42,
-              decoration: const BoxDecoration(
-                borderRadius: BorderRadius.all(Radius.elliptical(56, 42)),
-                gradient: RadialGradient(center: Alignment(-0.3, -0.4), colors: [Color(0xFFB5F28A), Color(0xFF4CC26B), Color(0xFF2E8A45)], stops: [0, 0.5, 1]),
+    width: 60,
+    height: 56,
+    child: Stack(
+      alignment: Alignment.bottomCenter,
+      children: [
+        Container(
+          width: 56,
+          height: 42,
+          decoration: const BoxDecoration(
+            borderRadius: BorderRadius.all(Radius.elliptical(56, 42)),
+            gradient: RadialGradient(center: Alignment(-0.3, -0.4), colors: [Color(0xFFB5F28A), Color(0xFF4CC26B), Color(0xFF2E8A45)], stops: [0, 0.5, 1]),
+          ),
+        ),
+        for (final dx in [-14.0, 14.0])
+          Positioned(
+            top: 0,
+            left: 30 + dx - 9,
+            child: Container(
+              width: 18,
+              height: 18,
+              decoration: const BoxDecoration(shape: BoxShape.circle, color: Colors.white),
+              alignment: Alignment.center,
+              child: Container(
+                width: 8,
+                height: 8,
+                decoration: const BoxDecoration(shape: BoxShape.circle, color: Color(0xFF1E1426)),
               ),
             ),
-            for (final dx in [-14.0, 14.0])
-              Positioned(
-                top: 0,
-                left: 30 + dx - 9,
-                child: Container(
-                  width: 18,
-                  height: 18,
-                  decoration: const BoxDecoration(shape: BoxShape.circle, color: Colors.white),
-                  alignment: Alignment.center,
-                  child: Container(width: 8, height: 8, decoration: const BoxDecoration(shape: BoxShape.circle, color: Color(0xFF1E1426))),
-                ),
-              ),
-            if (ok != null) Positioned(bottom: 10, child: Text(ok! ? '◡' : '~', style: novaText(20, weight: 800, color: const Color(0xFF1E5A2E)))),
-          ],
-        ),
-      );
+          ),
+        if (ok != null)
+          Positioned(
+            bottom: 10,
+            child: Text(ok! ? '◡' : '~', style: novaText(20, weight: 800, color: const Color(0xFF1E5A2E))),
+          ),
+      ],
+    ),
+  );
 }
 
 // ---------------------------------------------------------------------------
@@ -798,7 +847,12 @@ class _SortTrialViewState extends State<SortTrialView> with _Pacing {
         ),
         const SizedBox(height: 16),
         if (_bin == null)
-          Draggable<int>(data: 0, feedback: Material(type: MaterialType.transparency, child: card), childWhenDragging: const SizedBox(width: 130, height: 130), child: card)
+          Draggable<int>(
+            data: 0,
+            feedback: Material(type: MaterialType.transparency, child: card),
+            childWhenDragging: const SizedBox(width: 130, height: 130),
+            child: card,
+          )
         else
           const SizedBox(width: 130, height: 130),
         const SizedBox(height: 22),
@@ -851,7 +905,14 @@ class _Bin extends StatelessWidget {
       child: Stack(
         alignment: Alignment.center,
         children: [
-          Positioned(top: 8, child: Container(padding: const EdgeInsets.all(4), decoration: BoxDecoration(color: Colors.white.withValues(alpha: 0.9), shape: BoxShape.circle), child: TokenArt(label, size: 64))),
+          Positioned(
+            top: 8,
+            child: Container(
+              padding: const EdgeInsets.all(4),
+              decoration: BoxDecoration(color: Colors.white.withValues(alpha: 0.9), shape: BoxShape.circle),
+              child: TokenArt(label, size: 64),
+            ),
+          ),
           if (content != null) Positioned(bottom: 6, child: content!),
         ],
       ),
@@ -926,26 +987,33 @@ class _PairsTrialViewState extends State<PairsTrialView> with _Pacing {
   Widget build(BuildContext context) {
     final cards = widget.trial.cards;
     final cols = cards.length <= 4 ? cards.length : (cards.length <= 6 ? 3 : 4);
-    return LayoutBuilder(builder: (context, box) {
-      final rows = (cards.length / cols).ceil();
-      final size = math.min((box.maxWidth - 40) / cols - 14, (box.maxHeight - 20) / rows - 14).clamp(64.0, 170.0);
-      return Center(
-        child: SizedBox(
-          width: cols * (size + 14),
-          child: Wrap(
-            spacing: 14,
-            runSpacing: 14,
-            children: [
-              for (var i = 0; i < cards.length; i++)
-                GestureDetector(
-                  onTap: () => _flip(i),
-                  child: _FlipCard(size: size, faceUp: _peek || _found.contains(i) || _open.contains(i), found: _found.contains(i), child: PicArt(cards[i], size: size * 0.72)),
-                ),
-            ],
+    return LayoutBuilder(
+      builder: (context, box) {
+        final rows = (cards.length / cols).ceil();
+        final size = math.min((box.maxWidth - 40) / cols - 14, (box.maxHeight - 20) / rows - 14).clamp(64.0, 170.0);
+        return Center(
+          child: SizedBox(
+            width: cols * (size + 14),
+            child: Wrap(
+              spacing: 14,
+              runSpacing: 14,
+              children: [
+                for (var i = 0; i < cards.length; i++)
+                  GestureDetector(
+                    onTap: () => _flip(i),
+                    child: _FlipCard(
+                      size: size,
+                      faceUp: _peek || _found.contains(i) || _open.contains(i),
+                      found: _found.contains(i),
+                      child: PicArt(cards[i], size: size * 0.72),
+                    ),
+                  ),
+              ],
+            ),
           ),
-        ),
-      );
-    });
+        );
+      },
+    );
   }
 }
 
@@ -958,31 +1026,33 @@ class _FlipCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => TweenAnimationBuilder<double>(
-        tween: Tween(end: faceUp ? 1 : 0),
-        duration: const Duration(milliseconds: 320),
-        builder: (context, v, _) {
-          final showFace = v > 0.5;
-          return Transform(
-            alignment: Alignment.center,
-            transform: Matrix4.identity()
-              ..setEntry(3, 2, 0.002)
-              ..rotateY(math.pi * (showFace ? 1 - v : v)),
-            child: Container(
-              width: size,
-              height: size,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(size * 0.18),
-                color: showFace ? Colors.white : null,
-                gradient: showFace ? null : const LinearGradient(begin: Alignment.topLeft, end: Alignment.bottomRight, colors: [Color(0xFF9B6BFF), Color(0xFF5B4AE0)]),
-                border: Border.all(color: found ? const Color(0xFF34C77B) : Colors.white, width: found ? 5 : 3),
-                boxShadow: const [BoxShadow(color: Color(0x442A1640), blurRadius: 12, offset: Offset(0, 6))],
-              ),
-              alignment: Alignment.center,
-              child: showFace ? child : Icon(Icons.star_rounded, size: size * 0.4, color: Colors.white.withValues(alpha: 0.6)),
-            ),
-          );
-        },
+    tween: Tween(end: faceUp ? 1 : 0),
+    duration: const Duration(milliseconds: 320),
+    builder: (context, v, _) {
+      final showFace = v > 0.5;
+      return Transform(
+        alignment: Alignment.center,
+        transform: Matrix4.identity()
+          ..setEntry(3, 2, 0.002)
+          ..rotateY(math.pi * (showFace ? 1 - v : v)),
+        child: Container(
+          width: size,
+          height: size,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(size * 0.18),
+            color: showFace ? Colors.white : null,
+            gradient: showFace
+                ? null
+                : const LinearGradient(begin: Alignment.topLeft, end: Alignment.bottomRight, colors: [Color(0xFF9B6BFF), Color(0xFF5B4AE0)]),
+            border: Border.all(color: found ? const Color(0xFF34C77B) : Colors.white, width: found ? 5 : 3),
+            boxShadow: const [BoxShadow(color: Color(0x442A1640), blurRadius: 12, offset: Offset(0, 6))],
+          ),
+          alignment: Alignment.center,
+          child: showFace ? child : Icon(Icons.star_rounded, size: size * 0.4, color: Colors.white.withValues(alpha: 0.6)),
+        ),
       );
+    },
+  );
 }
 
 // ---------------------------------------------------------------------------
@@ -1085,8 +1155,17 @@ class _SequenceTrialViewState extends State<SequenceTrialView> with _Pacing {
                   height: 130,
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
-                    gradient: RadialGradient(center: const Alignment(-0.3, -0.4), colors: _lit == p ? [Colors.white, _colors[p]] : [shade(_colors[p], 0.1), shade(_colors[p], -0.35)]),
-                    boxShadow: [BoxShadow(color: _colors[p].withValues(alpha: _lit == p ? 0.9 : 0.25), blurRadius: _lit == p ? 40 : 10, spreadRadius: _lit == p ? 6 : 0)],
+                    gradient: RadialGradient(
+                      center: const Alignment(-0.3, -0.4),
+                      colors: _lit == p ? [Colors.white, _colors[p]] : [shade(_colors[p], 0.1), shade(_colors[p], -0.35)],
+                    ),
+                    boxShadow: [
+                      BoxShadow(
+                        color: _colors[p].withValues(alpha: _lit == p ? 0.9 : 0.25),
+                        blurRadius: _lit == p ? 40 : 10,
+                        spreadRadius: _lit == p ? 6 : 0,
+                      ),
+                    ],
                     border: Border.all(color: Colors.white.withValues(alpha: 0.8), width: 4),
                   ),
                 ),
@@ -1147,70 +1226,86 @@ class _StreamItemTrialViewState extends State<StreamItemTrialView> with SingleTi
   @override
   Widget build(BuildContext context) {
     final t = widget.trial;
-    return LayoutBuilder(builder: (context, box) {
-      final size = math.min(box.maxHeight * 0.4, 170.0);
-      return Stack(
-        children: [
-          if (t.targetLabel != null)
-            Positioned(
-              top: 0,
-              left: 0,
-              right: 0,
-              child: Center(
-                child: Container(
-                  padding: const EdgeInsets.all(8),
-                  decoration: BoxDecoration(color: Colors.white.withValues(alpha: 0.9), borderRadius: BorderRadius.circular(24), border: Border.all(color: const Color(0xFFFFC83D), width: 4)),
-                  child: VisualView(t.targetLabel!, size: 76, language: widget.ctx.language),
+    return LayoutBuilder(
+      builder: (context, box) {
+        final size = math.min(box.maxHeight * 0.4, 170.0);
+        return Stack(
+          children: [
+            if (t.targetLabel != null)
+              Positioned(
+                top: 0,
+                left: 0,
+                right: 0,
+                child: Center(
+                  child: Container(
+                    padding: const EdgeInsets.all(8),
+                    decoration: BoxDecoration(
+                      color: Colors.white.withValues(alpha: 0.9),
+                      borderRadius: BorderRadius.circular(24),
+                      border: Border.all(color: const Color(0xFFFFC83D), width: 4),
+                    ),
+                    child: VisualView(t.targetLabel!, size: 76, language: widget.ctx.language),
+                  ),
                 ),
               ),
-            ),
-          AnimatedBuilder(
-            animation: _travel,
-            builder: (context, child) {
-              final v = _travel.value;
-              final pos = switch (t.theme) {
-                StreamTheme.sea => Offset(box.maxWidth + size - v * (box.maxWidth + size * 2), box.maxHeight * 0.45 + math.sin(v * math.pi * 3) * 16),
-                _ => Offset(box.maxWidth / 2 - size / 2 + math.sin(v * math.pi * 2) * box.maxWidth * 0.2, box.maxHeight - v * (box.maxHeight + size)),
-              };
-              return Positioned(left: pos.dx - (t.theme == StreamTheme.sea ? size : 0), top: pos.dy, child: child!);
-            },
-            child: GestureDetector(
-              onTap: _tap,
-              child: AnimatedScale(
-                scale: _tapped ? (t.isTarget ? 1.25 : 0.85) : 1,
-                duration: const Duration(milliseconds: 200),
-                child: SizedBox(
-                  width: size,
-                  height: size,
-                  child: Stack(
-                    alignment: Alignment.center,
-                    children: [
-                      if (t.theme == StreamTheme.balloons) PicArt(Pic.balloon, size: size),
-                      if (t.theme == StreamTheme.bubbles)
-                        Container(
-                          width: size * 0.9,
-                          height: size * 0.9,
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            gradient: RadialGradient(colors: [Colors.white.withValues(alpha: 0.2), const Color(0xFFB9E4FF).withValues(alpha: 0.5), const Color(0xFF9B6BFF).withValues(alpha: 0.7)], stops: const [0, 0.8, 1]),
+            AnimatedBuilder(
+              animation: _travel,
+              builder: (context, child) {
+                final v = _travel.value;
+                final pos = switch (t.theme) {
+                  StreamTheme.sea => Offset(box.maxWidth + size - v * (box.maxWidth + size * 2), box.maxHeight * 0.45 + math.sin(v * math.pi * 3) * 16),
+                  _ => Offset(box.maxWidth / 2 - size / 2 + math.sin(v * math.pi * 2) * box.maxWidth * 0.2, box.maxHeight - v * (box.maxHeight + size)),
+                };
+                return Positioned(left: pos.dx - (t.theme == StreamTheme.sea ? size : 0), top: pos.dy, child: child!);
+              },
+              child: GestureDetector(
+                onTap: _tap,
+                child: AnimatedScale(
+                  scale: _tapped ? (t.isTarget ? 1.25 : 0.85) : 1,
+                  duration: const Duration(milliseconds: 200),
+                  child: SizedBox(
+                    width: size,
+                    height: size,
+                    child: Stack(
+                      alignment: Alignment.center,
+                      children: [
+                        if (t.theme == StreamTheme.balloons) PicArt(Pic.balloon, size: size),
+                        if (t.theme == StreamTheme.bubbles)
+                          Container(
+                            width: size * 0.9,
+                            height: size * 0.9,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              gradient: RadialGradient(
+                                colors: [
+                                  Colors.white.withValues(alpha: 0.2),
+                                  const Color(0xFFB9E4FF).withValues(alpha: 0.5),
+                                  const Color(0xFF9B6BFF).withValues(alpha: 0.7),
+                                ],
+                                stops: const [0, 0.8, 1],
+                              ),
+                            ),
                           ),
+                        Padding(
+                          padding: EdgeInsets.only(bottom: t.theme == StreamTheme.balloons ? size * 0.3 : 0),
+                          child: t.visual is PicVisual
+                              ? Transform.flip(
+                                  flipX: true,
+                                  child: VisualView(t.visual, size: size, language: widget.ctx.language),
+                                )
+                              : _StreamLabel(t.visual, size * 0.5, widget.ctx.language),
                         ),
-                      Padding(
-                        padding: EdgeInsets.only(bottom: t.theme == StreamTheme.balloons ? size * 0.3 : 0),
-                        child: t.visual is PicVisual
-                            ? Transform.flip(flipX: true, child: VisualView(t.visual, size: size, language: widget.ctx.language))
-                            : _StreamLabel(t.visual, size * 0.5, widget.ctx.language),
-                      ),
-                      if (_tapped && t.isTarget) Icon(Icons.auto_awesome, size: size * 0.5, color: const Color(0xFFFFE27A)),
-                    ],
+                        if (_tapped && t.isTarget) Icon(Icons.auto_awesome, size: size * 0.5, color: const Color(0xFFFFE27A)),
+                      ],
+                    ),
                   ),
                 ),
               ),
             ),
-          ),
-        ],
-      );
-    });
+          ],
+        );
+      },
+    );
   }
 }
 
@@ -1227,7 +1322,10 @@ class _StreamLabel extends StatelessWidget {
       TextVisual(:final text) => text,
       _ => '',
     };
-    return Text(text, style: novaText(size, weight: 800, color: Colors.white).copyWith(shadows: const [Shadow(blurRadius: 6, color: Color(0x88000000))]));
+    return Text(
+      text,
+      style: novaText(size, weight: 800, color: Colors.white).copyWith(shadows: const [Shadow(blurRadius: 6, color: Color(0x88000000))]),
+    );
   }
 }
 
@@ -1306,9 +1404,20 @@ class _ClapTrialViewState extends State<ClapTrialView> with _Pacing {
             const SizedBox(width: 24),
             Column(
               children: [
-                JellyButton(onPressed: _done || _taps == 0 ? null : () => setState(() => _taps--), color: const Color(0xFF9B8AA6), icon: Icons.undo_rounded, size: 52),
+                JellyButton(
+                  onPressed: _done || _taps == 0 ? null : () => setState(() => _taps--),
+                  color: const Color(0xFF9B8AA6),
+                  icon: Icons.undo_rounded,
+                  size: 52,
+                ),
                 const SizedBox(height: 12),
-                JellyButton(onPressed: _done || _taps == 0 ? null : _submit, color: const Color(0xFF34C77B), icon: Icons.check_rounded, label: widget.ctx.p('done'), size: 60),
+                JellyButton(
+                  onPressed: _done || _taps == 0 ? null : _submit,
+                  color: const Color(0xFF34C77B),
+                  icon: Icons.check_rounded,
+                  label: widget.ctx.p('done'),
+                  size: 60,
+                ),
               ],
             ),
           ],
@@ -1481,16 +1590,16 @@ class _BuildWordTrialViewState extends State<BuildWordTrialView> with _Pacing {
   Widget build(BuildContext context) {
     final t = widget.trial;
     Widget tile(String letter, {Color color = const Color(0xFF7C6CF2)}) => Container(
-          width: 72,
-          height: 80,
-          alignment: Alignment.center,
-          decoration: BoxDecoration(
-            gradient: LinearGradient(begin: Alignment.topCenter, end: Alignment.bottomCenter, colors: [shade(color, 0.3), color]),
-            borderRadius: BorderRadius.circular(16),
-            boxShadow: [BoxShadow(color: shade(color, -0.5), offset: const Offset(0, 5))],
-          ),
-          child: Text(letter, style: novaText(44, weight: 800, color: Colors.white)),
-        );
+      width: 72,
+      height: 80,
+      alignment: Alignment.center,
+      decoration: BoxDecoration(
+        gradient: LinearGradient(begin: Alignment.topCenter, end: Alignment.bottomCenter, colors: [shade(color, 0.3), color]),
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [BoxShadow(color: shade(color, -0.5), offset: const Offset(0, 5))],
+      ),
+      child: Text(letter, style: novaText(44, weight: 800, color: Colors.white)),
+    );
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
@@ -1540,7 +1649,10 @@ class _BuildWordTrialViewState extends State<BuildWordTrialView> with _Pacing {
                     data: i,
                     feedback: Material(type: MaterialType.transparency, child: tile(t.tiles[i])),
                     childWhenDragging: const SizedBox(width: 72, height: 80),
-                    child: GestureDetector(onTap: () => _offer(i), child: tile(t.tiles[i], color: _bounced == i ? const Color(0xFFFF7A6B) : const Color(0xFF7C6CF2))),
+                    child: GestureDetector(
+                      onTap: () => _offer(i),
+                      child: tile(t.tiles[i], color: _bounced == i ? const Color(0xFFFF7A6B) : const Color(0xFF7C6CF2)),
+                    ),
                   ),
                 ),
           ],

@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 
 import '../theme/age_band.dart';
+import '../theme/graphics.dart';
 import '../theme/motion.dart';
 import '../theme/nova_theme.dart';
 
@@ -31,7 +32,7 @@ class _WorldBackdropState extends State<WorldBackdrop> with SingleTickerProvider
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    final on = AmbientMotion.of(context);
+    final on = AmbientMotion.of(context) && Graphics.of(context).animatedBackdrop;
     if (on && !_ticker.isActive) _ticker.start();
     if (!on && _ticker.isActive) _ticker.stop();
   }
@@ -47,7 +48,7 @@ class _WorldBackdropState extends State<WorldBackdrop> with SingleTickerProvider
     return Stack(
       fit: StackFit.expand,
       children: [
-        RepaintBoundary(child: CustomPaint(painter: _WorldPainter(widget.world, _t, widget.groundLevel))),
+        RepaintBoundary(child: CustomPaint(painter: _WorldPainter(widget.world, _t, widget.groundLevel, Graphics.of(context)))),
         ?widget.child,
       ],
     );
@@ -55,7 +56,9 @@ class _WorldBackdropState extends State<WorldBackdrop> with SingleTickerProvider
 }
 
 class _WorldPainter extends CustomPainter {
-  _WorldPainter(this.world, this.t, this.ground) : p = WorldPalette.of(world);
+  _WorldPainter(this.world, this.t, this.ground, this.quality) : p = WorldPalette.of(world);
+
+  final GraphicsQuality quality;
 
   final WorldKind world;
   final double t;
@@ -79,14 +82,14 @@ class _WorldPainter extends CustomPainter {
     switch (world) {
       case WorldKind.cosmicLab:
         _stars(canvas, size);
-        _nebula(canvas, size);
+        if (quality.skyEffects) _nebula(canvas, size);
         _planet(canvas, Offset(w * 0.8, h * 0.2), math.min(w, h) * 0.12);
-        _shootingStar(canvas, size);
+        if (quality.skyEffects) _shootingStar(canvas, size);
       case WorldKind.sunnyForest:
-        _sun(canvas, Offset(w * 0.78, h * 0.17), math.min(w, h) * 0.09, rays: true);
+        _sun(canvas, Offset(w * 0.78, h * 0.17), math.min(w, h) * 0.09, rays: quality.skyEffects);
         _clouds(canvas, size, tint: Colors.white);
       case WorldKind.candyMeadow:
-        _rainbow(canvas, size);
+        if (quality.skyEffects) _rainbow(canvas, size);
         _sun(canvas, Offset(w * 0.18, h * 0.16), math.min(w, h) * 0.08, rays: false);
         _clouds(canvas, size, tint: const Color(0xFFFFF6FB));
     }
@@ -144,7 +147,7 @@ class _WorldPainter extends CustomPainter {
 
   void _clouds(Canvas canvas, Size size, {required Color tint}) {
     final w = size.width, h = size.height;
-    for (var i = 0; i < 5; i++) {
+    for (var i = 0; i < quality.clouds; i++) {
       final s = _seeds[i];
       final speed = 6 + s.$3 * 10;
       final x = ((s.$1 * (w + 300) + t * speed) % (w + 300)) - 150;
@@ -373,7 +376,7 @@ class _WorldPainter extends CustomPainter {
   void _particles(Canvas canvas, Size size) {
     final w = size.width, h = size.height;
     final night = p.isNight;
-    for (var i = 0; i < 22; i++) {
+    for (var i = 0; i < quality.particles; i++) {
       final s = _seeds[i + 5];
       final speed = 8 + s.$3 * 14;
       final y = h - ((s.$2 * h + t * speed) % (h + 40));
@@ -402,5 +405,5 @@ class _WorldPainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(_WorldPainter old) => old.t != t || old.world != world || old.ground != ground;
+  bool shouldRepaint(_WorldPainter old) => old.t != t || old.world != world || old.ground != ground || old.quality != quality;
 }

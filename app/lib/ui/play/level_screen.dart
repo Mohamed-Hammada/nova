@@ -126,9 +126,14 @@ class _LevelScreenState extends ConsumerState<LevelScreen> {
     _guide.react(Reaction.cheer);
     _speak(UiStrings.of(_lang).greatJob);
     await ref.read(playerStatePortProvider).saveLevel(childId: currentChildId, levelId: _level.id, stars: s.stars);
-    await ref.read(gameRuntimeProvider).completeSession(
-          childId: currentChildId, gameId: _game.id, skillId: _game.primarySkillIds.first,
-          rawEvents: List.of(_events), mapper: trialSignalMapper,
+    await ref
+        .read(gameRuntimeProvider)
+        .completeSession(
+          childId: currentChildId,
+          gameId: _game.id,
+          skillId: _game.primarySkillIds.first,
+          rawEvents: List.of(_events),
+          mapper: trialSignalMapper,
         );
   }
 
@@ -144,18 +149,18 @@ class _LevelScreenState extends ConsumerState<LevelScreen> {
   @override
   Widget build(BuildContext context) {
     final band = ref.watch(ageBandProvider);
-    final p = band.palette;
+    final p = ref.watch(paletteProvider);
     final s = UiStrings.of(_lang);
     final content = ref.watch(contentRuntimeProvider);
     final session = _session;
     final trial = session == null || session.isFinished ? null : session.current;
     final isDrag = trial is DragCountTrial;
-    final guideKind = isDrag ? _host : band.character;
+    final guideKind = isDrag ? _host : ref.watch(companionProvider);
     final bubble = _feedback ?? (trial == null ? null : trialPrompt(trial, _lang, hostName: _hostName));
 
     return Scaffold(
       body: WorldBackdrop(
-        world: band.world,
+        world: ref.watch(worldProvider),
         groundLevel: 0.7,
         child: Stack(
           children: [
@@ -178,36 +183,60 @@ class _LevelScreenState extends ConsumerState<LevelScreen> {
                     onRepeat: trial == null ? null : _announce,
                   ),
                   Expanded(
-                    child: LayoutBuilder(builder: (context, box) {
-                      final wide = box.maxWidth > 700;
-                      final guide = SizedBox(
-                        width: wide ? box.maxWidth * 0.22 : box.maxWidth * 0.3,
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            if (bubble != null && !_finished)
-                              Padding(
-                                padding: const EdgeInsets.only(bottom: 4),
-                                child: SpeechBubble(text: bubble, fontSize: (wide ? 18 : 14) * band.uiScale),
+                    child: LayoutBuilder(
+                      builder: (context, box) {
+                        final wide = box.maxWidth > 700;
+                        final guide = SizedBox(
+                          width: wide ? box.maxWidth * 0.22 : box.maxWidth * 0.3,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              if (bubble != null && !_finished)
+                                Padding(
+                                  padding: const EdgeInsets.only(bottom: 4),
+                                  child: SpeechBubble(text: bubble, fontSize: (wide ? 18 : 14) * band.uiScale),
+                                ),
+                              Flexible(
+                                child: AspectRatio(
+                                  aspectRatio: 0.85,
+                                  child: CharacterView(kind: guideKind, controller: _guide, rimColor: p.glow),
+                                ),
                               ),
-                            Flexible(child: AspectRatio(aspectRatio: 0.85, child: CharacterView(kind: guideKind, controller: _guide, rimColor: p.glow))),
-                          ],
-                        ),
-                      );
-                      final stage = trial == null
-                          ? const SizedBox.shrink()
-                          : KeyedSubtree(
-                              key: ValueKey('${session!.index}'),
-                              child: trialView(
-                                trial,
-                                TrialContext(language: _lang, onResponse: _onResponse, onDone: _onDone, hint: _hint, speak: _speak, accent: p.accent),
-                              ),
-                            );
-                      if (_finished) return _LevelComplete(stars: _stars, strings: s, accent: p.accent, onMap: () => Navigator.of(context).pop(true), guide: guide);
-                      return wide
-                          ? Row(crossAxisAlignment: CrossAxisAlignment.end, children: [Padding(padding: const EdgeInsets.only(left: 12, bottom: 12), child: guide), Expanded(child: Padding(padding: const EdgeInsets.all(12), child: stage))])
-                          : Column(children: [Expanded(child: Padding(padding: const EdgeInsets.all(8), child: stage)), SizedBox(height: box.maxHeight * 0.26, child: guide)]);
-                    }),
+                            ],
+                          ),
+                        );
+                        final stage = trial == null
+                            ? const SizedBox.shrink()
+                            : KeyedSubtree(
+                                key: ValueKey('${session!.index}'),
+                                child: trialView(
+                                  trial,
+                                  TrialContext(language: _lang, onResponse: _onResponse, onDone: _onDone, hint: _hint, speak: _speak, accent: p.accent),
+                                ),
+                              );
+                        if (_finished) {
+                          return _LevelComplete(stars: _stars, strings: s, accent: p.accent, onMap: () => Navigator.of(context).pop(true), guide: guide);
+                        }
+                        return wide
+                            ? Row(
+                                crossAxisAlignment: CrossAxisAlignment.end,
+                                children: [
+                                  Padding(padding: const EdgeInsets.only(left: 12, bottom: 12), child: guide),
+                                  Expanded(
+                                    child: Padding(padding: const EdgeInsets.all(12), child: stage),
+                                  ),
+                                ],
+                              )
+                            : Column(
+                                children: [
+                                  Expanded(
+                                    child: Padding(padding: const EdgeInsets.all(8), child: stage),
+                                  ),
+                                  SizedBox(height: box.maxHeight * 0.26, child: guide),
+                                ],
+                              );
+                      },
+                    ),
                   ),
                 ],
               ),
@@ -232,35 +261,61 @@ class _TopBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Padding(
-        padding: const EdgeInsets.fromLTRB(12, 10, 12, 0),
-        child: Row(
-          children: [
-            JellyButton(onPressed: onClose, color: accent, circle: true, size: 46, child: const Icon(Icons.close_rounded, color: Colors.white, size: 26)),
-            const SizedBox(width: 10),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(title, maxLines: 1, overflow: TextOverflow.ellipsis, style: novaText(18, weight: 800, color: night ? Colors.white : const Color(0xFF2E2440))),
-                  const SizedBox(height: 4),
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(8),
-                    child: TweenAnimationBuilder<double>(
-                      tween: Tween(end: progress),
-                      duration: const Duration(milliseconds: 400),
-                      builder: (context, v, _) => LinearProgressIndicator(value: v, minHeight: 10, color: accent, backgroundColor: Colors.white.withValues(alpha: 0.6)),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(width: 10),
-            JellyButton(onPressed: onRepeat, color: const Color(0xFF3C8DF2), circle: true, size: 46, semanticLabel: 'repeat', child: const Icon(Icons.volume_up_rounded, color: Colors.white, size: 24)),
-            const SizedBox(width: 8),
-            JellyButton(onPressed: onHint, color: const Color(0xFFFFB12E), circle: true, size: 46, semanticLabel: 'hint', child: const Icon(Icons.lightbulb_rounded, color: Colors.white, size: 24)),
-          ],
+    padding: const EdgeInsets.fromLTRB(12, 10, 12, 0),
+    child: Row(
+      children: [
+        JellyButton(
+          onPressed: onClose,
+          color: accent,
+          circle: true,
+          size: 46,
+          child: const Icon(Icons.close_rounded, color: Colors.white, size: 26),
         ),
-      );
+        const SizedBox(width: 10),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                title,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: novaText(18, weight: 800, color: night ? Colors.white : const Color(0xFF2E2440)),
+              ),
+              const SizedBox(height: 4),
+              ClipRRect(
+                borderRadius: BorderRadius.circular(8),
+                child: TweenAnimationBuilder<double>(
+                  tween: Tween(end: progress),
+                  duration: const Duration(milliseconds: 400),
+                  builder: (context, v, _) =>
+                      LinearProgressIndicator(value: v, minHeight: 10, color: accent, backgroundColor: Colors.white.withValues(alpha: 0.6)),
+                ),
+              ),
+            ],
+          ),
+        ),
+        const SizedBox(width: 10),
+        JellyButton(
+          onPressed: onRepeat,
+          color: const Color(0xFF3C8DF2),
+          circle: true,
+          size: 46,
+          semanticLabel: 'repeat',
+          child: const Icon(Icons.volume_up_rounded, color: Colors.white, size: 24),
+        ),
+        const SizedBox(width: 8),
+        JellyButton(
+          onPressed: onHint,
+          color: const Color(0xFFFFB12E),
+          circle: true,
+          size: 46,
+          semanticLabel: 'hint',
+          child: const Icon(Icons.lightbulb_rounded, color: Colors.white, size: 24),
+        ),
+      ],
+    ),
+  );
 }
 
 class _LevelComplete extends StatelessWidget {
@@ -273,42 +328,45 @@ class _LevelComplete extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Center(
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            guide,
-            const SizedBox(width: 12),
-            Container(
-              padding: const EdgeInsets.all(28),
-              decoration: BoxDecoration(
-                color: Colors.white.withValues(alpha: 0.95),
-                borderRadius: BorderRadius.circular(34),
-                boxShadow: const [BoxShadow(color: Color(0x442A1640), blurRadius: 30, offset: Offset(0, 14))],
-              ),
-              child: Column(
+    child: Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        guide,
+        const SizedBox(width: 12),
+        Container(
+          padding: const EdgeInsets.all(28),
+          decoration: BoxDecoration(
+            color: Colors.white.withValues(alpha: 0.95),
+            borderRadius: BorderRadius.circular(34),
+            boxShadow: const [BoxShadow(color: Color(0x442A1640), blurRadius: 30, offset: Offset(0, 14))],
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(strings.levelDone, style: novaText(34, weight: 800, color: const Color(0xFF2E2440))),
+              const SizedBox(height: 14),
+              Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Text(strings.levelDone, style: novaText(34, weight: 800, color: const Color(0xFF2E2440))),
-                  const SizedBox(height: 14),
-                  Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      for (var i = 0; i < 3; i++)
-                        TweenAnimationBuilder<double>(
-                          tween: Tween(begin: 0, end: 1),
-                          duration: Duration(milliseconds: 500 + i * 250),
-                          curve: Curves.elasticOut,
-                          builder: (context, v, child) => Transform.scale(scale: v, child: child),
-                          child: Padding(padding: const EdgeInsets.all(6), child: StarShape(size: i == 1 ? 72 : 56, filled: i < stars)),
-                        ),
-                    ],
-                  ),
-                  const SizedBox(height: 20),
-                  JellyButton(onPressed: onMap, color: accent, icon: Icons.map_rounded, label: strings.backToMap, size: 62),
+                  for (var i = 0; i < 3; i++)
+                    TweenAnimationBuilder<double>(
+                      tween: Tween(begin: 0, end: 1),
+                      duration: Duration(milliseconds: 500 + i * 250),
+                      curve: Curves.elasticOut,
+                      builder: (context, v, child) => Transform.scale(scale: v, child: child),
+                      child: Padding(
+                        padding: const EdgeInsets.all(6),
+                        child: StarShape(size: i == 1 ? 72 : 56, filled: i < stars),
+                      ),
+                    ),
                 ],
               ),
-            ),
-          ],
+              const SizedBox(height: 20),
+              JellyButton(onPressed: onMap, color: accent, icon: Icons.map_rounded, label: strings.backToMap, size: 62),
+            ],
+          ),
         ),
-      );
+      ],
+    ),
+  );
 }

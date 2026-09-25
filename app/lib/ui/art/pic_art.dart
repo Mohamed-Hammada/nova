@@ -26,7 +26,9 @@ class PicArt extends StatelessWidget {
     return SizedBox(
       width: size,
       height: size,
-      child: CustomPaint(painter: character != null ? CharacterPainter(kind: character, pose: const Pose(smile: 0.9)) : _PicPainter(pic)),
+      child: CustomPaint(
+        painter: character != null ? CharacterPainter(kind: character, pose: const Pose(smile: 0.9)) : _PicPainter(pic),
+      ),
     );
   }
 }
@@ -140,21 +142,17 @@ class _PicPainter extends CustomPainter {
   // ------------------------------------------------------------ helpers --
 
   void _groundShadow() => _c.drawOval(
-        const Rect.fromLTWH(22, 86, 56, 10),
-        Paint()
-          ..color = const Color(0xFF2A1640).withValues(alpha: 0.18)
-          ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 3),
-      );
+    const Rect.fromLTWH(22, 86, 56, 10),
+    Paint()
+      ..color = const Color(0xFF2A1640).withValues(alpha: 0.18)
+      ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 3),
+  );
 
   /// Fills [path] with a lit, glossy gradient in [color].
   void _fill(Path path, Color color, {bool gloss = true}) {
     final b = path.getBounds();
     final light = Offset(b.left + b.width * 0.32, b.top + b.height * 0.28);
-    _c.drawPath(
-      path,
-      Paint()
-        ..shader = ui.Gradient.radial(light, b.longestSide * 0.95, [shade(color, 0.4), color, shade(color, -0.35)], [0, 0.45, 1]),
-    );
+    _c.drawPath(path, Paint()..shader = ui.Gradient.radial(light, b.longestSide * 0.95, [shade(color, 0.4), color, shade(color, -0.35)], [0, 0.45, 1]));
     if (gloss) {
       _c.drawOval(
         Rect.fromCenter(center: light, width: b.width * 0.3, height: b.height * 0.16),
@@ -166,14 +164,14 @@ class _PicPainter extends CustomPainter {
   void _orb(Offset c, double r, Color color) => _fill(Path()..addOval(Rect.fromCircle(center: c, radius: r)), color);
 
   void _stroke(Path path, Color color, double width) => _c.drawPath(
-        path,
-        Paint()
-          ..color = color
-          ..style = PaintingStyle.stroke
-          ..strokeWidth = width
-          ..strokeCap = StrokeCap.round
-          ..strokeJoin = StrokeJoin.round,
-      );
+    path,
+    Paint()
+      ..color = color
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = width
+      ..strokeCap = StrokeCap.round
+      ..strokeJoin = StrokeJoin.round,
+  );
 
   void _rrect(Rect r, double radius, Color color) => _fill(Path()..addRRect(RRect.fromRectAndRadius(r, Radius.circular(radius))), color);
 
@@ -213,9 +211,13 @@ class _PicPainter extends CustomPainter {
         _leaf(const Offset(50, 30), -math.pi / 2 + (k - 2) * 0.7, 16);
       }
     } else {
-      _stroke(Path()
-        ..moveTo(50, 32)
-        ..quadraticBezierTo(51, 20, 56, 12), const Color(0xFF5B3A1E), 4);
+      _stroke(
+        Path()
+          ..moveTo(50, 32)
+          ..quadraticBezierTo(51, 20, 56, 12),
+        const Color(0xFF5B3A1E),
+        4,
+      );
       _leaf(const Offset(54, 20), -0.5, 22);
     }
   }
@@ -229,9 +231,13 @@ class _PicPainter extends CustomPainter {
       ..cubicTo(38, 40, 38, 18, 50, 18)
       ..close();
     _fill(body, const Color(0xFF9CCB3B));
-    _stroke(Path()
-      ..moveTo(50, 20)
-      ..lineTo(53, 8), const Color(0xFF5B3A1E), 4);
+    _stroke(
+      Path()
+        ..moveTo(50, 20)
+        ..lineTo(53, 8),
+      const Color(0xFF5B3A1E),
+      4,
+    );
   }
 
   void _carrot() {
@@ -243,9 +249,13 @@ class _PicPainter extends CustomPainter {
       ..close();
     _fill(body, const Color(0xFFFF8A1F));
     for (var k = 0; k < 3; k++) {
-      _stroke(Path()
-        ..moveTo(40 + k * 2.0, 44 + k * 12.0)
-        ..lineTo(48 + k * 1.0, 44 + k * 12.0), shade(const Color(0xFFFF8A1F), -0.4), 2);
+      _stroke(
+        Path()
+          ..moveTo(40 + k * 2.0, 44 + k * 12.0)
+          ..lineTo(48 + k * 1.0, 44 + k * 12.0),
+        shade(const Color(0xFFFF8A1F), -0.4),
+        2,
+      );
     }
     for (final a in [-2.0, -1.57, -1.1]) {
       _leaf(const Offset(50, 28), a, 24);
@@ -254,9 +264,13 @@ class _PicPainter extends CustomPainter {
 
   void _radish() {
     _orb(const Offset(50, 58), 26, const Color(0xFFE0306B));
-    _stroke(Path()
-      ..moveTo(50, 84)
-      ..lineTo(50, 94), const Color(0xFFF3E6EC), 3);
+    _stroke(
+      Path()
+        ..moveTo(50, 84)
+        ..lineTo(50, 94),
+      const Color(0xFFF3E6EC),
+      3,
+    );
     for (final a in [-2.0, -1.57, -1.1]) {
       _leaf(const Offset(50, 34), a, 24);
     }
@@ -276,36 +290,58 @@ class _PicPainter extends CustomPainter {
       ..close();
     _fill(tail, shade(color, -0.1), gloss: false);
     if (shark) {
-      _fill(Path()
-        ..moveTo(40, 32)
-        ..lineTo(54, 12)
-        ..lineTo(60, 34)
-        ..close(), shade(color, -0.1), gloss: false);
+      _fill(
+        Path()
+          ..moveTo(40, 32)
+          ..lineTo(54, 12)
+          ..lineTo(60, 34)
+          ..close(),
+        shade(color, -0.1),
+        gloss: false,
+      );
     }
     _fill(body, color);
     if (shark) {
-      _c.drawPath(Path()
-        ..moveTo(16, 56)
-        ..cubicTo(30, 72, 60, 72, 74, 56)
-        ..close(), Paint()..color = Colors.white.withValues(alpha: 0.8));
+      _c.drawPath(
+        Path()
+          ..moveTo(16, 56)
+          ..cubicTo(30, 72, 60, 72, 74, 56)
+          ..close(),
+        Paint()..color = Colors.white.withValues(alpha: 0.8),
+      );
       for (var k = 0; k < 4; k++) {
-        _c.drawPath(Path()
-          ..moveTo(22 + k * 6.0, 58)
-          ..lineTo(25 + k * 6.0, 64)
-          ..lineTo(28 + k * 6.0, 58), Paint()..color = Colors.white);
+        _c.drawPath(
+          Path()
+            ..moveTo(22 + k * 6.0, 58)
+            ..lineTo(25 + k * 6.0, 64)
+            ..lineTo(28 + k * 6.0, 58),
+          Paint()..color = Colors.white,
+        );
       }
       _eye(const Offset(30, 46), 3.5);
-      _stroke(Path()
-        ..moveTo(24, 40)
-        ..lineTo(34, 43), const Color(0xFF1E1426), 2.5);
+      _stroke(
+        Path()
+          ..moveTo(24, 40)
+          ..lineTo(34, 43),
+        const Color(0xFF1E1426),
+        2.5,
+      );
     } else {
       _eye(const Offset(30, 48), 4.5);
-      _stroke(Path()
-        ..moveTo(52, 36)
-        ..quadraticBezierTo(48, 52, 52, 68), shade(color, -0.3), 2);
-      _stroke(Path()
-        ..moveTo(18, 58)
-        ..quadraticBezierTo(22, 62, 26, 58), const Color(0xFF7A2A10), 2);
+      _stroke(
+        Path()
+          ..moveTo(52, 36)
+          ..quadraticBezierTo(48, 52, 52, 68),
+        shade(color, -0.3),
+        2,
+      );
+      _stroke(
+        Path()
+          ..moveTo(18, 58)
+          ..quadraticBezierTo(22, 62, 26, 58),
+        const Color(0xFF7A2A10),
+        2,
+      );
     }
   }
 
@@ -325,19 +361,31 @@ class _PicPainter extends CustomPainter {
     _orb(const Offset(50, 54), 34, const Color(0xFF3C8DF2));
     _c.save();
     _c.clipPath(Path()..addOval(Rect.fromCircle(center: const Offset(50, 54), radius: 34)));
-    _stroke(Path()
-      ..moveTo(16, 40)
-      ..quadraticBezierTo(50, 60, 84, 40), Colors.white.withValues(alpha: 0.9), 7);
-    _stroke(Path()
-      ..moveTo(40, 20)
-      ..quadraticBezierTo(62, 54, 40, 90), const Color(0xFFFFD23D), 7);
+    _stroke(
+      Path()
+        ..moveTo(16, 40)
+        ..quadraticBezierTo(50, 60, 84, 40),
+      Colors.white.withValues(alpha: 0.9),
+      7,
+    );
+    _stroke(
+      Path()
+        ..moveTo(40, 20)
+        ..quadraticBezierTo(62, 54, 40, 90),
+      const Color(0xFFFFD23D),
+      7,
+    );
     _c.restore();
   }
 
   void _flower() {
-    _stroke(Path()
-      ..moveTo(50, 56)
-      ..lineTo(50, 92), const Color(0xFF3DB35A), 5);
+    _stroke(
+      Path()
+        ..moveTo(50, 56)
+        ..lineTo(50, 92),
+      const Color(0xFF3DB35A),
+      5,
+    );
     _leaf(const Offset(50, 78), -0.6, 18);
     for (var k = 0; k < 6; k++) {
       final a = k * math.pi / 3;
@@ -355,9 +403,13 @@ class _PicPainter extends CustomPainter {
       ..close();
     _fill(path, const Color(0xFFFFB38A));
     for (var k = -2; k <= 2; k++) {
-      _stroke(Path()
-        ..moveTo(50, 24)
-        ..lineTo(50 + k * 12.0, 80), shade(const Color(0xFFFFB38A), -0.3), 2);
+      _stroke(
+        Path()
+          ..moveTo(50, 24)
+          ..lineTo(50 + k * 12.0, 80),
+        shade(const Color(0xFFFFB38A), -0.3),
+        2,
+      );
     }
     _rrect(const Rect.fromLTWH(38, 76, 24, 12), 4, const Color(0xFFFFB38A));
   }
@@ -376,59 +428,95 @@ class _PicPainter extends CustomPainter {
   void _bird() {
     _orb(const Offset(48, 58), 28, const Color(0xFF4FB3FF));
     _orb(const Offset(66, 38), 16, const Color(0xFF4FB3FF));
-    _fill(Path()
-      ..moveTo(80, 36)
-      ..lineTo(94, 40)
-      ..lineTo(80, 44)
-      ..close(), const Color(0xFFFFB12E), gloss: false);
+    _fill(
+      Path()
+        ..moveTo(80, 36)
+        ..lineTo(94, 40)
+        ..lineTo(80, 44)
+        ..close(),
+      const Color(0xFFFFB12E),
+      gloss: false,
+    );
     _eye(const Offset(70, 34), 3.5);
-    _fill(Path()
-      ..moveTo(30, 52)
-      ..quadraticBezierTo(44, 40, 56, 58)
-      ..quadraticBezierTo(42, 70, 30, 52)
-      ..close(), shade(const Color(0xFF4FB3FF), -0.2), gloss: false);
+    _fill(
+      Path()
+        ..moveTo(30, 52)
+        ..quadraticBezierTo(44, 40, 56, 58)
+        ..quadraticBezierTo(42, 70, 30, 52)
+        ..close(),
+      shade(const Color(0xFF4FB3FF), -0.2),
+      gloss: false,
+    );
     _dot(const Offset(48, 64), 10, const Color(0xFFFFE9C7));
   }
 
   void _balloon() {
-    _stroke(Path()
-      ..moveTo(50, 74)
-      ..quadraticBezierTo(44, 84, 52, 96), const Color(0xFF8A7A9A), 2);
+    _stroke(
+      Path()
+        ..moveTo(50, 74)
+        ..quadraticBezierTo(44, 84, 52, 96),
+      const Color(0xFF8A7A9A),
+      2,
+    );
     _fill(Path()..addOval(const Rect.fromLTWH(24, 10, 52, 64)), const Color(0xFFFF5FA2));
-    _fill(Path()
-      ..moveTo(46, 72)
-      ..lineTo(54, 72)
-      ..lineTo(50, 78)
-      ..close(), const Color(0xFFD9437D), gloss: false);
+    _fill(
+      Path()
+        ..moveTo(46, 72)
+        ..lineTo(54, 72)
+        ..lineTo(50, 78)
+        ..close(),
+      const Color(0xFFD9437D),
+      gloss: false,
+    );
   }
 
   void _cat() {
     const fur = Color(0xFFFFA24A);
-    _fill(Path()
-      ..moveTo(24, 40)
-      ..lineTo(28, 14)
-      ..lineTo(44, 30)
-      ..close(), fur, gloss: false);
-    _fill(Path()
-      ..moveTo(76, 40)
-      ..lineTo(72, 14)
-      ..lineTo(56, 30)
-      ..close(), fur, gloss: false);
+    _fill(
+      Path()
+        ..moveTo(24, 40)
+        ..lineTo(28, 14)
+        ..lineTo(44, 30)
+        ..close(),
+      fur,
+      gloss: false,
+    );
+    _fill(
+      Path()
+        ..moveTo(76, 40)
+        ..lineTo(72, 14)
+        ..lineTo(56, 30)
+        ..close(),
+      fur,
+      gloss: false,
+    );
     _fill(Path()..addOval(const Rect.fromLTWH(18, 24, 64, 58)), fur);
     _eye(const Offset(38, 50), 5);
     _eye(const Offset(62, 50), 5);
     _dot(const Offset(50, 60), 3.5, const Color(0xFFFF6F8E));
     for (final s in [-1.0, 1.0]) {
-      _stroke(Path()
-        ..moveTo(50 + s * 10, 62)
-        ..lineTo(50 + s * 30, 58), const Color(0xFF5B3A1E), 1.5);
-      _stroke(Path()
-        ..moveTo(50 + s * 10, 65)
-        ..lineTo(50 + s * 30, 67), const Color(0xFF5B3A1E), 1.5);
+      _stroke(
+        Path()
+          ..moveTo(50 + s * 10, 62)
+          ..lineTo(50 + s * 30, 58),
+        const Color(0xFF5B3A1E),
+        1.5,
+      );
+      _stroke(
+        Path()
+          ..moveTo(50 + s * 10, 65)
+          ..lineTo(50 + s * 30, 67),
+        const Color(0xFF5B3A1E),
+        1.5,
+      );
     }
-    _stroke(Path()
-      ..moveTo(44, 67)
-      ..quadraticBezierTo(50, 72, 56, 67), const Color(0xFF5B3A1E), 2);
+    _stroke(
+      Path()
+        ..moveTo(44, 67)
+        ..quadraticBezierTo(50, 72, 56, 67),
+      const Color(0xFF5B3A1E),
+      2,
+    );
   }
 
   void _hat() {
@@ -440,16 +528,24 @@ class _PicPainter extends CustomPainter {
   void _sun() {
     for (var k = 0; k < 12; k++) {
       final a = k * math.pi / 6;
-      _stroke(Path()
-        ..moveTo(50 + math.cos(a) * 32, 50 + math.sin(a) * 32)
-        ..lineTo(50 + math.cos(a) * 44, 50 + math.sin(a) * 44), const Color(0xFFFFB12E), 5);
+      _stroke(
+        Path()
+          ..moveTo(50 + math.cos(a) * 32, 50 + math.sin(a) * 32)
+          ..lineTo(50 + math.cos(a) * 44, 50 + math.sin(a) * 44),
+        const Color(0xFFFFB12E),
+        5,
+      );
     }
     _orb(const Offset(50, 50), 26, const Color(0xFFFFD23D));
     _eye(const Offset(41, 46), 3);
     _eye(const Offset(59, 46), 3);
-    _stroke(Path()
-      ..moveTo(42, 58)
-      ..quadraticBezierTo(50, 64, 58, 58), const Color(0xFF7A3E00), 2.5);
+    _stroke(
+      Path()
+        ..moveTo(42, 58)
+        ..quadraticBezierTo(50, 64, 58, 58),
+      const Color(0xFF7A3E00),
+      2.5,
+    );
   }
 
   void _moon() {
@@ -497,36 +593,58 @@ class _PicPainter extends CustomPainter {
   }
 
   void _boat() {
-    _stroke(Path()
-      ..moveTo(50, 64)
-      ..lineTo(50, 12), const Color(0xFF8A5A30), 3);
-    _fill(Path()
-      ..moveTo(52, 14)
-      ..lineTo(82, 56)
-      ..lineTo(52, 56)
-      ..close(), Colors.white);
-    _fill(Path()
-      ..moveTo(10, 62)
-      ..lineTo(90, 62)
-      ..lineTo(76, 84)
-      ..lineTo(24, 84)
-      ..close(), const Color(0xFFE8452E));
+    _stroke(
+      Path()
+        ..moveTo(50, 64)
+        ..lineTo(50, 12),
+      const Color(0xFF8A5A30),
+      3,
+    );
+    _fill(
+      Path()
+        ..moveTo(52, 14)
+        ..lineTo(82, 56)
+        ..lineTo(52, 56)
+        ..close(),
+      Colors.white,
+    );
+    _fill(
+      Path()
+        ..moveTo(10, 62)
+        ..lineTo(90, 62)
+        ..lineTo(76, 84)
+        ..lineTo(24, 84)
+        ..close(),
+      const Color(0xFFE8452E),
+    );
   }
 
   void _goat() {
     const fur = Color(0xFFF1ECE4);
-    _stroke(Path()
-      ..moveTo(36, 26)
-      ..quadraticBezierTo(26, 8, 16, 18), const Color(0xFF8A7A6A), 5);
-    _stroke(Path()
-      ..moveTo(64, 26)
-      ..quadraticBezierTo(74, 8, 84, 18), const Color(0xFF8A7A6A), 5);
+    _stroke(
+      Path()
+        ..moveTo(36, 26)
+        ..quadraticBezierTo(26, 8, 16, 18),
+      const Color(0xFF8A7A6A),
+      5,
+    );
+    _stroke(
+      Path()
+        ..moveTo(64, 26)
+        ..quadraticBezierTo(74, 8, 84, 18),
+      const Color(0xFF8A7A6A),
+      5,
+    );
     _fill(Path()..addOval(const Rect.fromLTWH(26, 22, 48, 58)), fur);
-    _fill(Path()
-      ..moveTo(44, 78)
-      ..lineTo(56, 78)
-      ..lineTo(50, 94)
-      ..close(), fur, gloss: false);
+    _fill(
+      Path()
+        ..moveTo(44, 78)
+        ..lineTo(56, 78)
+        ..lineTo(50, 94)
+        ..close(),
+      fur,
+      gloss: false,
+    );
     _eye(const Offset(40, 46), 4);
     _eye(const Offset(60, 46), 4);
     _fill(Path()..addOval(const Rect.fromLTWH(38, 58, 24, 16)), const Color(0xFFFFC6C6), gloss: false);
@@ -535,10 +653,14 @@ class _PicPainter extends CustomPainter {
   void _duck() {
     _orb(const Offset(46, 64), 28, const Color(0xFFFFD23D));
     _orb(const Offset(64, 36), 18, const Color(0xFFFFD23D));
-    _fill(Path()
-      ..moveTo(78, 36)
-      ..quadraticBezierTo(96, 38, 80, 46)
-      ..close(), const Color(0xFFFF8A1F), gloss: false);
+    _fill(
+      Path()
+        ..moveTo(78, 36)
+        ..quadraticBezierTo(96, 38, 80, 46)
+        ..close(),
+      const Color(0xFFFF8A1F),
+      gloss: false,
+    );
     _eye(const Offset(68, 32), 3.5);
   }
 
@@ -556,44 +678,56 @@ class _PicPainter extends CustomPainter {
   }
 
   void _car() {
-    _fill(Path()
-      ..moveTo(10, 66)
-      ..lineTo(14, 50)
-      ..lineTo(30, 48)
-      ..lineTo(40, 32)
-      ..lineTo(66, 32)
-      ..lineTo(78, 48)
-      ..lineTo(90, 52)
-      ..lineTo(90, 66)
-      ..close(), const Color(0xFF34C77B));
-    _c.drawPath(Path()
-      ..moveTo(42, 36)
-      ..lineTo(64, 36)
-      ..lineTo(72, 48)
-      ..lineTo(36, 48)
-      ..close(), Paint()..color = const Color(0xFFBFE6FF));
+    _fill(
+      Path()
+        ..moveTo(10, 66)
+        ..lineTo(14, 50)
+        ..lineTo(30, 48)
+        ..lineTo(40, 32)
+        ..lineTo(66, 32)
+        ..lineTo(78, 48)
+        ..lineTo(90, 52)
+        ..lineTo(90, 66)
+        ..close(),
+      const Color(0xFF34C77B),
+    );
+    _c.drawPath(
+      Path()
+        ..moveTo(42, 36)
+        ..lineTo(64, 36)
+        ..lineTo(72, 48)
+        ..lineTo(36, 48)
+        ..close(),
+      Paint()..color = const Color(0xFFBFE6FF),
+    );
     _wheel(const Offset(30, 68));
     _wheel(const Offset(72, 68));
   }
 
   void _cup() {
     _stroke(Path()..addOval(const Rect.fromLTWH(62, 38, 22, 26)), const Color(0xFFFF6FA5), 6);
-    _fill(Path()
-      ..moveTo(20, 28)
-      ..lineTo(70, 28)
-      ..lineTo(64, 84)
-      ..lineTo(26, 84)
-      ..close(), const Color(0xFFFF6FA5));
+    _fill(
+      Path()
+        ..moveTo(20, 28)
+        ..lineTo(70, 28)
+        ..lineTo(64, 84)
+        ..lineTo(26, 84)
+        ..close(),
+      const Color(0xFFFF6FA5),
+    );
     _c.drawOval(const Rect.fromLTWH(20, 22, 50, 12), Paint()..color = const Color(0xFF7A3E1E));
   }
 
   void _house() {
     _rrect(const Rect.fromLTWH(20, 44, 60, 44), 4, const Color(0xFFFFE0A8));
-    _fill(Path()
-      ..moveTo(12, 48)
-      ..lineTo(50, 14)
-      ..lineTo(88, 48)
-      ..close(), const Color(0xFFE8452E));
+    _fill(
+      Path()
+        ..moveTo(12, 48)
+        ..lineTo(50, 14)
+        ..lineTo(88, 48)
+        ..close(),
+      const Color(0xFFE8452E),
+    );
     _rrect(const Rect.fromLTWH(43, 62, 16, 26), 3, const Color(0xFF8A5A30));
     _c.drawRect(const Rect.fromLTWH(26, 54, 12, 12), Paint()..color = const Color(0xFF7FC8FF));
     _c.drawRect(const Rect.fromLTWH(64, 54, 12, 12), Paint()..color = const Color(0xFF7FC8FF));
@@ -612,31 +746,46 @@ class _PicPainter extends CustomPainter {
   }
 
   void _kite() {
-    _stroke(Path()
-      ..moveTo(50, 78)
-      ..quadraticBezierTo(40, 88, 54, 96), const Color(0xFF8A7A9A), 2);
-    _fill(Path()
-      ..moveTo(50, 8)
-      ..lineTo(80, 40)
-      ..lineTo(50, 78)
-      ..lineTo(20, 40)
-      ..close(), const Color(0xFF28D7E8));
-    _stroke(Path()
-      ..moveTo(50, 8)
-      ..lineTo(50, 78)
-      ..moveTo(20, 40)
-      ..lineTo(80, 40), Colors.white.withValues(alpha: 0.7), 2);
+    _stroke(
+      Path()
+        ..moveTo(50, 78)
+        ..quadraticBezierTo(40, 88, 54, 96),
+      const Color(0xFF8A7A9A),
+      2,
+    );
+    _fill(
+      Path()
+        ..moveTo(50, 8)
+        ..lineTo(80, 40)
+        ..lineTo(50, 78)
+        ..lineTo(20, 40)
+        ..close(),
+      const Color(0xFF28D7E8),
+    );
+    _stroke(
+      Path()
+        ..moveTo(50, 8)
+        ..lineTo(50, 78)
+        ..moveTo(20, 40)
+        ..lineTo(80, 40),
+      Colors.white.withValues(alpha: 0.7),
+      2,
+    );
   }
 
   void _cake() {
     _rrect(const Rect.fromLTWH(16, 46, 68, 40), 8, const Color(0xFFFFB5D2));
     _c.drawRRect(RRect.fromRectAndRadius(const Rect.fromLTWH(16, 42, 68, 12), const Radius.circular(6)), Paint()..color = Colors.white);
     _rrect(const Rect.fromLTWH(46, 22, 8, 22), 3, const Color(0xFF7FB6FF));
-    _fill(Path()
-      ..moveTo(50, 8)
-      ..quadraticBezierTo(58, 16, 50, 22)
-      ..quadraticBezierTo(42, 16, 50, 8)
-      ..close(), const Color(0xFFFFB12E), gloss: false);
+    _fill(
+      Path()
+        ..moveTo(50, 8)
+        ..quadraticBezierTo(58, 16, 50, 22)
+        ..quadraticBezierTo(42, 16, 50, 8)
+        ..close(),
+      const Color(0xFFFFB12E),
+      gloss: false,
+    );
   }
 
   void _banana() {
@@ -647,9 +796,13 @@ class _PicPainter extends CustomPainter {
       ..quadraticBezierTo(36, 70, 28, 26)
       ..close();
     _fill(path, const Color(0xFFFFD23D));
-    _stroke(Path()
-      ..moveTo(18, 30)
-      ..lineTo(24, 22), const Color(0xFF5B3A1E), 4);
+    _stroke(
+      Path()
+        ..moveTo(18, 30)
+        ..lineTo(24, 22),
+      const Color(0xFF5B3A1E),
+      4,
+    );
   }
 
   void _watermelon() {
@@ -673,14 +826,22 @@ class _PicPainter extends CustomPainter {
   void _drum() {
     _rrect(const Rect.fromLTWH(18, 36, 64, 44), 8, const Color(0xFFE8452E));
     for (var k = 0; k < 5; k++) {
-      _stroke(Path()
-        ..moveTo(18 + k * 16.0, 40)
-        ..lineTo(26 + k * 16.0, 76), const Color(0xFFFFD23D), 2);
+      _stroke(
+        Path()
+          ..moveTo(18 + k * 16.0, 40)
+          ..lineTo(26 + k * 16.0, 76),
+        const Color(0xFFFFD23D),
+        2,
+      );
     }
     _fill(Path()..addOval(const Rect.fromLTWH(18, 28, 64, 16)), const Color(0xFFFFF4E0));
-    _stroke(Path()
-      ..moveTo(70, 10)
-      ..lineTo(56, 32), const Color(0xFF8A5A30), 4);
+    _stroke(
+      Path()
+        ..moveTo(70, 10)
+        ..lineTo(56, 32),
+      const Color(0xFF8A5A30),
+      4,
+    );
   }
 
   void _gift() {
@@ -692,19 +853,31 @@ class _PicPainter extends CustomPainter {
   }
 
   void _net() {
-    _stroke(Path()
-      ..moveTo(50, 50)
-      ..lineTo(84, 92), const Color(0xFF8A5A30), 5);
+    _stroke(
+      Path()
+        ..moveTo(50, 50)
+        ..lineTo(84, 92),
+      const Color(0xFF8A5A30),
+      5,
+    );
     _stroke(Path()..addOval(const Rect.fromLTWH(14, 10, 48, 48)), const Color(0xFF3C8DF2), 5);
     _c.save();
     _c.clipPath(Path()..addOval(const Rect.fromLTWH(14, 10, 48, 48)));
     for (var k = 0; k < 7; k++) {
-      _stroke(Path()
-        ..moveTo(14 + k * 8.0, 10)
-        ..lineTo(14 + k * 8.0, 58), Colors.white.withValues(alpha: 0.8), 1.5);
-      _stroke(Path()
-        ..moveTo(14, 10 + k * 8.0)
-        ..lineTo(62, 10 + k * 8.0), Colors.white.withValues(alpha: 0.8), 1.5);
+      _stroke(
+        Path()
+          ..moveTo(14 + k * 8.0, 10)
+          ..lineTo(14 + k * 8.0, 58),
+        Colors.white.withValues(alpha: 0.8),
+        1.5,
+      );
+      _stroke(
+        Path()
+          ..moveTo(14, 10 + k * 8.0)
+          ..lineTo(62, 10 + k * 8.0),
+        Colors.white.withValues(alpha: 0.8),
+        1.5,
+      );
     }
     _c.restore();
   }
@@ -724,11 +897,15 @@ class _PicPainter extends CustomPainter {
       _fill(Path()..addOval(Rect.fromCenter(center: Offset(50 + s * 16, 66), width: 26, height: 28)), const Color(0xFFFF6FA5));
     }
     _rrect(const Rect.fromLTWH(46, 26, 8, 52), 4, const Color(0xFF3A2A4A));
-    _stroke(Path()
-      ..moveTo(48, 28)
-      ..lineTo(40, 14)
-      ..moveTo(52, 28)
-      ..lineTo(60, 14), const Color(0xFF3A2A4A), 2);
+    _stroke(
+      Path()
+        ..moveTo(48, 28)
+        ..lineTo(40, 14)
+        ..moveTo(52, 28)
+        ..lineTo(60, 14),
+      const Color(0xFF3A2A4A),
+      2,
+    );
   }
 
   @override

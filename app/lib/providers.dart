@@ -20,7 +20,9 @@ import 'package:nova_app/core/ports/clock_port.dart';
 import 'package:nova_app/core/ports/persistence_port.dart';
 import 'package:nova_app/core/signals/signal_bus.dart';
 import 'package:nova_app/core/signals/signal_collector.dart';
+import 'package:nova_app/ui/characters/character_rig.dart';
 import 'package:nova_app/ui/theme/age_band.dart';
+import 'package:nova_app/ui/theme/graphics.dart';
 
 // Real content: loaded once at app start via loadContentRuntimeFromAssets()
 // and overridden into this provider before runApp (see main.dart).
@@ -68,6 +70,21 @@ const currentChildId = 'local-child';
 // arrives with multiple child profiles (Plan 2).
 final ageBandProvider = StateProvider<AgeBand>((ref) => AgeBand.explorer);
 final languageProvider = StateProvider<String>((ref) => 'en');
+
+// The child's profile. Name and exact age are optional; companion and
+// world follow the age group unless the child picks their own.
+final childNameProvider = StateProvider<String>((ref) => '');
+final childAgeProvider = StateProvider<int?>((ref) => null);
+final companionChoiceProvider = StateProvider<CharacterKind?>((ref) => null);
+final worldChoiceProvider = StateProvider<WorldKind?>((ref) => null);
+final companionProvider = Provider<CharacterKind>((ref) => ref.watch(companionChoiceProvider) ?? ref.watch(ageBandProvider).character);
+final worldProvider = Provider<WorldKind>((ref) => ref.watch(worldChoiceProvider) ?? ref.watch(ageBandProvider).world);
+final paletteProvider = Provider<WorldPalette>((ref) => WorldPalette.of(ref.watch(worldProvider)));
+
+// Grown-up settings.
+final graphicsProvider = StateProvider<GraphicsQuality>((ref) => GraphicsQuality.high);
+final voiceAnswersProvider = StateProvider<bool>((ref) => false);
+final cameraPlayProvider = StateProvider<bool>((ref) => false);
 
 // Looping decorative animation (idle characters, drifting clouds). Tests
 // switch it off so the widget tree can settle; see ui/theme/motion.dart.
