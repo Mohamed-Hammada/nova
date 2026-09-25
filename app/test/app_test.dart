@@ -3,7 +3,10 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:nova_app/app.dart';
 import 'package:nova_app/core/content/content_runtime.dart';
 import 'package:nova_app/core/content/models.dart';
+import 'package:nova_app/adapters/in_memory_player_state_port.dart';
 import 'package:nova_app/providers.dart';
+
+import 'support/fake_speech_port.dart';
 
 void main() {
   testWidgets('NovaApp renders the home screen with the game title', (tester) async {
@@ -36,6 +39,8 @@ void main() {
           contentRuntimeProvider.overrideWithValue(runtime),
           // Idle animation loops forever; switch it off so the tree settles.
           ambientMotionProvider.overrideWithValue(false),
+          playerStatePortProvider.overrideWithValue(InMemoryPlayerStatePort()),
+          ttsProvider.overrideWithValue(FakeSpeechPort()),
         ],
         child: const NovaApp(),
       ),

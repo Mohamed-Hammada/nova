@@ -1077,6 +1077,528 @@ class GameRungStateCompanion extends UpdateCompanion<GameRungStateData> {
   }
 }
 
+class $LevelProgressRowsTable extends LevelProgressRows
+    with TableInfo<$LevelProgressRowsTable, LevelProgressRow> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $LevelProgressRowsTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _childIdMeta = const VerificationMeta(
+    'childId',
+  );
+  @override
+  late final GeneratedColumn<String> childId = GeneratedColumn<String>(
+    'child_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _levelIdMeta = const VerificationMeta(
+    'levelId',
+  );
+  @override
+  late final GeneratedColumn<String> levelId = GeneratedColumn<String>(
+    'level_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _starsMeta = const VerificationMeta('stars');
+  @override
+  late final GeneratedColumn<int> stars = GeneratedColumn<int>(
+    'stars',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _updatedAtMeta = const VerificationMeta(
+    'updatedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> updatedAt = GeneratedColumn<DateTime>(
+    'updated_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [childId, levelId, stars, updatedAt];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'level_progress_rows';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<LevelProgressRow> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('child_id')) {
+      context.handle(
+        _childIdMeta,
+        childId.isAcceptableOrUnknown(data['child_id']!, _childIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_childIdMeta);
+    }
+    if (data.containsKey('level_id')) {
+      context.handle(
+        _levelIdMeta,
+        levelId.isAcceptableOrUnknown(data['level_id']!, _levelIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_levelIdMeta);
+    }
+    if (data.containsKey('stars')) {
+      context.handle(
+        _starsMeta,
+        stars.isAcceptableOrUnknown(data['stars']!, _starsMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_starsMeta);
+    }
+    if (data.containsKey('updated_at')) {
+      context.handle(
+        _updatedAtMeta,
+        updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_updatedAtMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {childId, levelId};
+  @override
+  LevelProgressRow map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return LevelProgressRow(
+      childId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}child_id'],
+      )!,
+      levelId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}level_id'],
+      )!,
+      stars: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}stars'],
+      )!,
+      updatedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}updated_at'],
+      )!,
+    );
+  }
+
+  @override
+  $LevelProgressRowsTable createAlias(String alias) {
+    return $LevelProgressRowsTable(attachedDatabase, alias);
+  }
+}
+
+class LevelProgressRow extends DataClass
+    implements Insertable<LevelProgressRow> {
+  final String childId;
+  final String levelId;
+  final int stars;
+  final DateTime updatedAt;
+  const LevelProgressRow({
+    required this.childId,
+    required this.levelId,
+    required this.stars,
+    required this.updatedAt,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['child_id'] = Variable<String>(childId);
+    map['level_id'] = Variable<String>(levelId);
+    map['stars'] = Variable<int>(stars);
+    map['updated_at'] = Variable<DateTime>(updatedAt);
+    return map;
+  }
+
+  LevelProgressRowsCompanion toCompanion(bool nullToAbsent) {
+    return LevelProgressRowsCompanion(
+      childId: Value(childId),
+      levelId: Value(levelId),
+      stars: Value(stars),
+      updatedAt: Value(updatedAt),
+    );
+  }
+
+  factory LevelProgressRow.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return LevelProgressRow(
+      childId: serializer.fromJson<String>(json['childId']),
+      levelId: serializer.fromJson<String>(json['levelId']),
+      stars: serializer.fromJson<int>(json['stars']),
+      updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'childId': serializer.toJson<String>(childId),
+      'levelId': serializer.toJson<String>(levelId),
+      'stars': serializer.toJson<int>(stars),
+      'updatedAt': serializer.toJson<DateTime>(updatedAt),
+    };
+  }
+
+  LevelProgressRow copyWith({
+    String? childId,
+    String? levelId,
+    int? stars,
+    DateTime? updatedAt,
+  }) => LevelProgressRow(
+    childId: childId ?? this.childId,
+    levelId: levelId ?? this.levelId,
+    stars: stars ?? this.stars,
+    updatedAt: updatedAt ?? this.updatedAt,
+  );
+  LevelProgressRow copyWithCompanion(LevelProgressRowsCompanion data) {
+    return LevelProgressRow(
+      childId: data.childId.present ? data.childId.value : this.childId,
+      levelId: data.levelId.present ? data.levelId.value : this.levelId,
+      stars: data.stars.present ? data.stars.value : this.stars,
+      updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('LevelProgressRow(')
+          ..write('childId: $childId, ')
+          ..write('levelId: $levelId, ')
+          ..write('stars: $stars, ')
+          ..write('updatedAt: $updatedAt')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(childId, levelId, stars, updatedAt);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is LevelProgressRow &&
+          other.childId == this.childId &&
+          other.levelId == this.levelId &&
+          other.stars == this.stars &&
+          other.updatedAt == this.updatedAt);
+}
+
+class LevelProgressRowsCompanion extends UpdateCompanion<LevelProgressRow> {
+  final Value<String> childId;
+  final Value<String> levelId;
+  final Value<int> stars;
+  final Value<DateTime> updatedAt;
+  final Value<int> rowid;
+  const LevelProgressRowsCompanion({
+    this.childId = const Value.absent(),
+    this.levelId = const Value.absent(),
+    this.stars = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  LevelProgressRowsCompanion.insert({
+    required String childId,
+    required String levelId,
+    required int stars,
+    required DateTime updatedAt,
+    this.rowid = const Value.absent(),
+  }) : childId = Value(childId),
+       levelId = Value(levelId),
+       stars = Value(stars),
+       updatedAt = Value(updatedAt);
+  static Insertable<LevelProgressRow> custom({
+    Expression<String>? childId,
+    Expression<String>? levelId,
+    Expression<int>? stars,
+    Expression<DateTime>? updatedAt,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (childId != null) 'child_id': childId,
+      if (levelId != null) 'level_id': levelId,
+      if (stars != null) 'stars': stars,
+      if (updatedAt != null) 'updated_at': updatedAt,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  LevelProgressRowsCompanion copyWith({
+    Value<String>? childId,
+    Value<String>? levelId,
+    Value<int>? stars,
+    Value<DateTime>? updatedAt,
+    Value<int>? rowid,
+  }) {
+    return LevelProgressRowsCompanion(
+      childId: childId ?? this.childId,
+      levelId: levelId ?? this.levelId,
+      stars: stars ?? this.stars,
+      updatedAt: updatedAt ?? this.updatedAt,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (childId.present) {
+      map['child_id'] = Variable<String>(childId.value);
+    }
+    if (levelId.present) {
+      map['level_id'] = Variable<String>(levelId.value);
+    }
+    if (stars.present) {
+      map['stars'] = Variable<int>(stars.value);
+    }
+    if (updatedAt.present) {
+      map['updated_at'] = Variable<DateTime>(updatedAt.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('LevelProgressRowsCompanion(')
+          ..write('childId: $childId, ')
+          ..write('levelId: $levelId, ')
+          ..write('stars: $stars, ')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $SettingRowsTable extends SettingRows
+    with TableInfo<$SettingRowsTable, SettingRow> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $SettingRowsTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _keyMeta = const VerificationMeta('key');
+  @override
+  late final GeneratedColumn<String> key = GeneratedColumn<String>(
+    'key',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _valueMeta = const VerificationMeta('value');
+  @override
+  late final GeneratedColumn<String> value = GeneratedColumn<String>(
+    'value',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [key, value];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'setting_rows';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<SettingRow> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('key')) {
+      context.handle(
+        _keyMeta,
+        key.isAcceptableOrUnknown(data['key']!, _keyMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_keyMeta);
+    }
+    if (data.containsKey('value')) {
+      context.handle(
+        _valueMeta,
+        value.isAcceptableOrUnknown(data['value']!, _valueMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_valueMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {key};
+  @override
+  SettingRow map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return SettingRow(
+      key: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}key'],
+      )!,
+      value: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}value'],
+      )!,
+    );
+  }
+
+  @override
+  $SettingRowsTable createAlias(String alias) {
+    return $SettingRowsTable(attachedDatabase, alias);
+  }
+}
+
+class SettingRow extends DataClass implements Insertable<SettingRow> {
+  final String key;
+  final String value;
+  const SettingRow({required this.key, required this.value});
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['key'] = Variable<String>(key);
+    map['value'] = Variable<String>(value);
+    return map;
+  }
+
+  SettingRowsCompanion toCompanion(bool nullToAbsent) {
+    return SettingRowsCompanion(key: Value(key), value: Value(value));
+  }
+
+  factory SettingRow.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return SettingRow(
+      key: serializer.fromJson<String>(json['key']),
+      value: serializer.fromJson<String>(json['value']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'key': serializer.toJson<String>(key),
+      'value': serializer.toJson<String>(value),
+    };
+  }
+
+  SettingRow copyWith({String? key, String? value}) =>
+      SettingRow(key: key ?? this.key, value: value ?? this.value);
+  SettingRow copyWithCompanion(SettingRowsCompanion data) {
+    return SettingRow(
+      key: data.key.present ? data.key.value : this.key,
+      value: data.value.present ? data.value.value : this.value,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('SettingRow(')
+          ..write('key: $key, ')
+          ..write('value: $value')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(key, value);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is SettingRow &&
+          other.key == this.key &&
+          other.value == this.value);
+}
+
+class SettingRowsCompanion extends UpdateCompanion<SettingRow> {
+  final Value<String> key;
+  final Value<String> value;
+  final Value<int> rowid;
+  const SettingRowsCompanion({
+    this.key = const Value.absent(),
+    this.value = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  SettingRowsCompanion.insert({
+    required String key,
+    required String value,
+    this.rowid = const Value.absent(),
+  }) : key = Value(key),
+       value = Value(value);
+  static Insertable<SettingRow> custom({
+    Expression<String>? key,
+    Expression<String>? value,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (key != null) 'key': key,
+      if (value != null) 'value': value,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  SettingRowsCompanion copyWith({
+    Value<String>? key,
+    Value<String>? value,
+    Value<int>? rowid,
+  }) {
+    return SettingRowsCompanion(
+      key: key ?? this.key,
+      value: value ?? this.value,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (key.present) {
+      map['key'] = Variable<String>(key.value);
+    }
+    if (value.present) {
+      map['value'] = Variable<String>(value.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('SettingRowsCompanion(')
+          ..write('key: $key, ')
+          ..write('value: $value, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
 abstract class _$NovaDatabase extends GeneratedDatabase {
   _$NovaDatabase(QueryExecutor e) : super(e);
   $NovaDatabaseManager get managers => $NovaDatabaseManager(this);
@@ -1085,6 +1607,9 @@ abstract class _$NovaDatabase extends GeneratedDatabase {
   late final $DimensionEstimateRowsTable dimensionEstimateRows =
       $DimensionEstimateRowsTable(this);
   late final $GameRungStateTable gameRungState = $GameRungStateTable(this);
+  late final $LevelProgressRowsTable levelProgressRows =
+      $LevelProgressRowsTable(this);
+  late final $SettingRowsTable settingRows = $SettingRowsTable(this);
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
@@ -1093,6 +1618,8 @@ abstract class _$NovaDatabase extends GeneratedDatabase {
     masteryRecordRows,
     dimensionEstimateRows,
     gameRungState,
+    levelProgressRows,
+    settingRows,
   ];
 }
 
@@ -1721,6 +2248,339 @@ typedef $$GameRungStateTableProcessedTableManager =
       GameRungStateData,
       PrefetchHooks Function()
     >;
+typedef $$LevelProgressRowsTableCreateCompanionBuilder =
+    LevelProgressRowsCompanion Function({
+      required String childId,
+      required String levelId,
+      required int stars,
+      required DateTime updatedAt,
+      Value<int> rowid,
+    });
+typedef $$LevelProgressRowsTableUpdateCompanionBuilder =
+    LevelProgressRowsCompanion Function({
+      Value<String> childId,
+      Value<String> levelId,
+      Value<int> stars,
+      Value<DateTime> updatedAt,
+      Value<int> rowid,
+    });
+
+class $$LevelProgressRowsTableFilterComposer
+    extends Composer<_$NovaDatabase, $LevelProgressRowsTable> {
+  $$LevelProgressRowsTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get childId => $composableBuilder(
+    column: $table.childId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get levelId => $composableBuilder(
+    column: $table.levelId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get stars => $composableBuilder(
+    column: $table.stars,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+}
+
+class $$LevelProgressRowsTableOrderingComposer
+    extends Composer<_$NovaDatabase, $LevelProgressRowsTable> {
+  $$LevelProgressRowsTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get childId => $composableBuilder(
+    column: $table.childId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get levelId => $composableBuilder(
+    column: $table.levelId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get stars => $composableBuilder(
+    column: $table.stars,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$LevelProgressRowsTableAnnotationComposer
+    extends Composer<_$NovaDatabase, $LevelProgressRowsTable> {
+  $$LevelProgressRowsTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get childId =>
+      $composableBuilder(column: $table.childId, builder: (column) => column);
+
+  GeneratedColumn<String> get levelId =>
+      $composableBuilder(column: $table.levelId, builder: (column) => column);
+
+  GeneratedColumn<int> get stars =>
+      $composableBuilder(column: $table.stars, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get updatedAt =>
+      $composableBuilder(column: $table.updatedAt, builder: (column) => column);
+}
+
+class $$LevelProgressRowsTableTableManager
+    extends
+        RootTableManager<
+          _$NovaDatabase,
+          $LevelProgressRowsTable,
+          LevelProgressRow,
+          $$LevelProgressRowsTableFilterComposer,
+          $$LevelProgressRowsTableOrderingComposer,
+          $$LevelProgressRowsTableAnnotationComposer,
+          $$LevelProgressRowsTableCreateCompanionBuilder,
+          $$LevelProgressRowsTableUpdateCompanionBuilder,
+          (
+            LevelProgressRow,
+            BaseReferences<
+              _$NovaDatabase,
+              $LevelProgressRowsTable,
+              LevelProgressRow
+            >,
+          ),
+          LevelProgressRow,
+          PrefetchHooks Function()
+        > {
+  $$LevelProgressRowsTableTableManager(
+    _$NovaDatabase db,
+    $LevelProgressRowsTable table,
+  ) : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$LevelProgressRowsTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$LevelProgressRowsTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$LevelProgressRowsTableAnnotationComposer(
+                $db: db,
+                $table: table,
+              ),
+          updateCompanionCallback:
+              ({
+                Value<String> childId = const Value.absent(),
+                Value<String> levelId = const Value.absent(),
+                Value<int> stars = const Value.absent(),
+                Value<DateTime> updatedAt = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => LevelProgressRowsCompanion(
+                childId: childId,
+                levelId: levelId,
+                stars: stars,
+                updatedAt: updatedAt,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                required String childId,
+                required String levelId,
+                required int stars,
+                required DateTime updatedAt,
+                Value<int> rowid = const Value.absent(),
+              }) => LevelProgressRowsCompanion.insert(
+                childId: childId,
+                levelId: levelId,
+                stars: stars,
+                updatedAt: updatedAt,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$LevelProgressRowsTableProcessedTableManager =
+    ProcessedTableManager<
+      _$NovaDatabase,
+      $LevelProgressRowsTable,
+      LevelProgressRow,
+      $$LevelProgressRowsTableFilterComposer,
+      $$LevelProgressRowsTableOrderingComposer,
+      $$LevelProgressRowsTableAnnotationComposer,
+      $$LevelProgressRowsTableCreateCompanionBuilder,
+      $$LevelProgressRowsTableUpdateCompanionBuilder,
+      (
+        LevelProgressRow,
+        BaseReferences<
+          _$NovaDatabase,
+          $LevelProgressRowsTable,
+          LevelProgressRow
+        >,
+      ),
+      LevelProgressRow,
+      PrefetchHooks Function()
+    >;
+typedef $$SettingRowsTableCreateCompanionBuilder =
+    SettingRowsCompanion Function({
+      required String key,
+      required String value,
+      Value<int> rowid,
+    });
+typedef $$SettingRowsTableUpdateCompanionBuilder =
+    SettingRowsCompanion Function({
+      Value<String> key,
+      Value<String> value,
+      Value<int> rowid,
+    });
+
+class $$SettingRowsTableFilterComposer
+    extends Composer<_$NovaDatabase, $SettingRowsTable> {
+  $$SettingRowsTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get key => $composableBuilder(
+    column: $table.key,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get value => $composableBuilder(
+    column: $table.value,
+    builder: (column) => ColumnFilters(column),
+  );
+}
+
+class $$SettingRowsTableOrderingComposer
+    extends Composer<_$NovaDatabase, $SettingRowsTable> {
+  $$SettingRowsTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get key => $composableBuilder(
+    column: $table.key,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get value => $composableBuilder(
+    column: $table.value,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$SettingRowsTableAnnotationComposer
+    extends Composer<_$NovaDatabase, $SettingRowsTable> {
+  $$SettingRowsTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get key =>
+      $composableBuilder(column: $table.key, builder: (column) => column);
+
+  GeneratedColumn<String> get value =>
+      $composableBuilder(column: $table.value, builder: (column) => column);
+}
+
+class $$SettingRowsTableTableManager
+    extends
+        RootTableManager<
+          _$NovaDatabase,
+          $SettingRowsTable,
+          SettingRow,
+          $$SettingRowsTableFilterComposer,
+          $$SettingRowsTableOrderingComposer,
+          $$SettingRowsTableAnnotationComposer,
+          $$SettingRowsTableCreateCompanionBuilder,
+          $$SettingRowsTableUpdateCompanionBuilder,
+          (
+            SettingRow,
+            BaseReferences<_$NovaDatabase, $SettingRowsTable, SettingRow>,
+          ),
+          SettingRow,
+          PrefetchHooks Function()
+        > {
+  $$SettingRowsTableTableManager(_$NovaDatabase db, $SettingRowsTable table)
+    : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$SettingRowsTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$SettingRowsTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$SettingRowsTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<String> key = const Value.absent(),
+                Value<String> value = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => SettingRowsCompanion(key: key, value: value, rowid: rowid),
+          createCompanionCallback:
+              ({
+                required String key,
+                required String value,
+                Value<int> rowid = const Value.absent(),
+              }) => SettingRowsCompanion.insert(
+                key: key,
+                value: value,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$SettingRowsTableProcessedTableManager =
+    ProcessedTableManager<
+      _$NovaDatabase,
+      $SettingRowsTable,
+      SettingRow,
+      $$SettingRowsTableFilterComposer,
+      $$SettingRowsTableOrderingComposer,
+      $$SettingRowsTableAnnotationComposer,
+      $$SettingRowsTableCreateCompanionBuilder,
+      $$SettingRowsTableUpdateCompanionBuilder,
+      (
+        SettingRow,
+        BaseReferences<_$NovaDatabase, $SettingRowsTable, SettingRow>,
+      ),
+      SettingRow,
+      PrefetchHooks Function()
+    >;
 
 class $NovaDatabaseManager {
   final _$NovaDatabase _db;
@@ -1731,4 +2591,8 @@ class $NovaDatabaseManager {
       $$DimensionEstimateRowsTableTableManager(_db, _db.dimensionEstimateRows);
   $$GameRungStateTableTableManager get gameRungState =>
       $$GameRungStateTableTableManager(_db, _db.gameRungState);
+  $$LevelProgressRowsTableTableManager get levelProgressRows =>
+      $$LevelProgressRowsTableTableManager(_db, _db.levelProgressRows);
+  $$SettingRowsTableTableManager get settingRows =>
+      $$SettingRowsTableTableManager(_db, _db.settingRows);
 }

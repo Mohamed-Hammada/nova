@@ -13,6 +13,10 @@ class SignalDraft {
 /// mechanic itself.
 typedef SignalMapper = List<SignalDraft> Function(RawMechanicEvent event);
 
+/// The mapping for every trial-based game: each response is one accuracy
+/// signal plus the hints used on it.
+List<SignalDraft> trialSignalMapper(RawMechanicEvent event) => bearApplesSignalMapper(event);
+
 /// The mapping for game.math.bear-apples specifically.
 List<SignalDraft> bearApplesSignalMapper(RawMechanicEvent event) {
   return switch (event) {

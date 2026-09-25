@@ -172,6 +172,7 @@ class Pose {
     this.smile = 0.6,
     this.happyEyes = 0,
     this.brow = 0,
+    this.browTilt = 0,
     this.glow = 1,
   });
 
@@ -179,6 +180,10 @@ class Pose {
   final double headYaw, headPitch, headRoll;
   final double armL, armR, legL, legR, earL, earR, tail, antenna;
   final double blink, lookX, lookY, mouthOpen, smile, happyEyes, brow, glow;
+
+  /// Eyebrow angle: positive pulls the inner ends down (cross), negative
+  /// lifts them (sad or worried). [brow] raises both ends together.
+  final double browTilt;
 }
 
 // ---------------------------------------------------------------------------
@@ -700,10 +705,15 @@ class CharacterPainter extends CustomPainter {
     if (p.facing < 0.1) return;
     final side = p.part.mirror ? -1.0 : 1.0;
     _inFrame(canvas, p, () {
-      final raise = pose.brow; // -1 worried .. 1 excited
+      final raise = pose.brow;
+      final tilt = pose.browTilt;
+      // The inner end is the one nearest the nose: +x for the left brow,
+      // -x for the mirrored right brow.
+      final outer = 0.3 - raise * 0.7;
+      final inner = outer + tilt * 1.1;
       final path = Path()
-        ..moveTo(-1, 0.4 - raise * 0.5 * side)
-        ..quadraticBezierTo(0, -0.9 - raise * 0.8, 1, 0.4 + raise * 0.5 * side);
+        ..moveTo(-1, side > 0 ? outer : inner)
+        ..quadraticBezierTo(0, -0.6 - raise * 0.7 + (tilt < 0 ? tilt * 0.3 : 0), 1, side > 0 ? inner : outer);
       canvas.drawPath(
         path,
         Paint()

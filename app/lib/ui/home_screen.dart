@@ -8,6 +8,10 @@ import 'characters/character_rig.dart';
 import 'characters/character_view.dart';
 import 'game_screen.dart';
 import 'parent_view.dart';
+import 'play/game_art.dart';
+import 'play/journey_screen.dart';
+import 'play/level_screen.dart';
+import 'widgets/props.dart';
 import 'scene/world_backdrop.dart';
 import 'theme/age_band.dart';
 import 'theme/nova_theme.dart';
@@ -16,9 +20,9 @@ import 'widgets/game_card.dart';
 import 'widgets/jelly_button.dart';
 import 'widgets/speech_bubble.dart';
 
-/// Mechanics that have a real, playable implementation in this build. Games
-/// using any other mechanic are shown locked as "coming soon".
-const playableMechanics = {'drag-to-count'};
+/// Bear's Apples keeps its dedicated screen (the original vertical slice);
+/// every other game plays through the shared level screen.
+const _bearApples = 'game.math.bear-apples';
 
 class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});
@@ -40,7 +44,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     Navigator.of(context).push(
       PageRouteBuilder(
         transitionDuration: const Duration(milliseconds: 650),
-        pageBuilder: (_, _, _) => GameScreen(gameId: game.id, skillId: game.primarySkillIds.first),
+        pageBuilder: (_, _, _) => game.id == _bearApples
+            ? GameScreen(gameId: game.id, skillId: game.primarySkillIds.first)
+            : LevelScreen(journey: Journey(id: 'journey.free', nameKey: '', ageRange: game.ageRange, levels: [JourneyLevel(id: 'free-${game.id}', gameId: game.id)]), levelIndex: 0),
         transitionsBuilder: (_, animation, _, child) {
           // A "zoom into the world" cut.
           final curved = CurvedAnimation(parent: animation, curve: Curves.easeInOutCubic);
@@ -62,8 +68,13 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     final p = band.palette;
     final name = lang == 'ar' ? band.character.displayNameAr : band.character.displayName;
 
-    final games = content.games.where((g) => band.overlaps(g.ageRange)).toList()
-      ..sort((a, b) => (playableMechanics.contains(a.mechanicId) ? 0 : 1).compareTo(playableMechanics.contains(b.mechanicId) ? 0 : 1));
+    final factory = ref.watch(trialFactoryProvider);
+    bool playable(Game g) => g.id == _bearApples || factory.canPlay(g.id);
+    final games = content.games
+        .where((g) => band.overlaps(g.ageRange) && (g.languageDependencies.isEmpty || g.languageDependencies.contains(lang)))
+        .toList()
+      ..sort((a, b) => (playable(a) ? 0 : 1).compareTo(playable(b) ? 0 : 1));
+    final hasJourney = content.journeyForAge(band.minAge) != null;
 
     return Scaffold(
       body: WorldBackdrop(
@@ -108,9 +119,18 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                 child: ListView.separated(
                   scrollDirection: Axis.horizontal,
                   padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-                  itemCount: games.length,
+                  itemCount: games.length + (hasJourney ? 1 : 0),
                   separatorBuilder: (_, _) => const SizedBox(width: 20),
-                  itemBuilder: (context, i) {
+                  itemBuilder: (context, index) {
+                    if (hasJourney && index == 0) {
+                      return Center(
+                        child: _Entrance(
+                          delay: 0,
+                          child: _JourneyCard(width: cardWidth, band: band, strings: s, onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const JourneyScreen()))),
+                        ),
+                      );
+                    }
+                    final i = index - (hasJourney ? 1 : 0);
                     final g = games[i];
                     return Center(
                       child: _Entrance(
@@ -120,7 +140,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                           title: content.i18n(g.nameKey, lang),
                           mechanicId: g.mechanicId,
                           palette: p,
-                          playable: playableMechanics.contains(g.mechanicId),
+                          playable: playable(g),
+                          art: gameArt(g, cardWidth, lang),
                           playLabel: s.play,
                           comingSoonLabel: s.comingSoon,
                           ageLabel: '${g.ageRange.first}–${g.ageRange.last}',
@@ -343,6 +364,55 @@ class _Entrance extends StatelessWidget {
         child: Transform.translate(offset: Offset(0, 60 * (1 - v)), child: child),
       ),
       child: child,
+    );
+  }
+}
+
+/// The way into the level map: the biggest, brightest card on the shelf.
+class _JourneyCard extends ConsumerWidget {
+  const _JourneyCard({required this.width, required this.band, required this.strings, required this.onTap});
+  final double width;
+  final AgeBand band;
+  final UiStrings strings;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final p = band.palette;
+    final stars = ref.watch(levelStarsProvider).value ?? const <String, int>{};
+    final done = stars.length;
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        width: width,
+        height: width * 1.3,
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(32),
+          gradient: LinearGradient(begin: Alignment.topLeft, end: Alignment.bottomRight, colors: [shade(p.accent, 0.25), p.accentDeep]),
+          border: Border.all(color: Colors.white, width: 3),
+          boxShadow: [BoxShadow(color: p.accentDeep.withValues(alpha: 0.5), blurRadius: 30, offset: const Offset(0, 14))],
+        ),
+        child: Column(
+          children: [
+            Expanded(
+              child: Stack(
+                alignment: Alignment.center,
+                children: [
+                  Icon(Icons.map_rounded, size: width * 0.5, color: Colors.white.withValues(alpha: 0.25)),
+                  Positioned(top: 8, left: 10, child: StarShape(size: width * 0.14)),
+                  Positioned(bottom: 16, right: 12, child: StarShape(size: width * 0.1)),
+                  Text('50', style: novaText(width * 0.3, weight: 800, color: Colors.white).copyWith(shadows: const [Shadow(blurRadius: 10, color: Color(0x55000000))])),
+                ],
+              ),
+            ),
+            Text(strings.journey, textAlign: TextAlign.center, style: novaText(width * 0.11, weight: 800, color: Colors.white)),
+            Text(done == 0 ? strings.journeySub : strings.levelLabel(done + 1), style: novaText(width * 0.065, weight: 600, color: Colors.white.withValues(alpha: 0.9))),
+            const SizedBox(height: 10),
+            JellyButton(onPressed: onTap, color: const Color(0xFFFFB12E), icon: Icons.play_arrow_rounded, label: strings.play, size: width * 0.2),
+          ],
+        ),
+      ),
     );
   }
 }

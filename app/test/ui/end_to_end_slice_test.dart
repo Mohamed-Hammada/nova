@@ -7,10 +7,12 @@ import 'package:nova_app/core/content/models.dart';
 import 'package:nova_app/core/ports/audio_port.dart';
 import 'package:nova_app/core/ports/clock_port.dart';
 import 'package:nova_app/core/ports/persistence_port.dart';
+import 'package:nova_app/adapters/in_memory_player_state_port.dart';
 import 'package:nova_app/providers.dart';
 
 import '../support/fake_audio_port.dart';
 import '../support/fake_clock.dart';
+import '../support/fake_speech_port.dart';
 import '../support/in_memory_persistence_port.dart';
 
 ContentRuntime _fixtureRuntime() {
@@ -94,6 +96,8 @@ void main() {
           audioPortProvider.overrideWithValue(audio as AudioPort),
           // Idle animation loops forever; switch it off so pumpAndSettle settles.
           ambientMotionProvider.overrideWithValue(false),
+          playerStatePortProvider.overrideWithValue(InMemoryPlayerStatePort()),
+          ttsProvider.overrideWithValue(FakeSpeechPort()),
         ],
         child: const NovaApp(),
       ),
@@ -132,6 +136,8 @@ void main() {
           persistencePortProvider.overrideWithValue(InMemoryPersistencePort() as PersistencePort),
           audioPortProvider.overrideWithValue(FakeAudioPort() as AudioPort),
           ambientMotionProvider.overrideWithValue(false),
+          playerStatePortProvider.overrideWithValue(InMemoryPlayerStatePort()),
+          ttsProvider.overrideWithValue(FakeSpeechPort()),
         ],
         child: const NovaApp(),
       ),
@@ -154,6 +160,8 @@ void main() {
         overrides: [
           contentRuntimeProvider.overrideWithValue(_fixtureRuntime()),
           ambientMotionProvider.overrideWithValue(false),
+          playerStatePortProvider.overrideWithValue(InMemoryPlayerStatePort()),
+          ttsProvider.overrideWithValue(FakeSpeechPort()),
         ],
         child: const NovaApp(),
       ),

@@ -222,6 +222,7 @@ Pose poseFor(CharacterKind kind, double t, Offset look, Reaction? reaction, doub
   var smile = 0.6;
   var happyEyes = 0.0;
   var brow = 0.0;
+  var browTilt = 0.0;
   var lookX = look.dx + 0.25 * math.sin(t * 0.45);
   var lookY = look.dy;
 
@@ -277,7 +278,8 @@ Pose poseFor(CharacterKind kind, double t, Offset look, Reaction? reaction, doub
       case Reaction.encourage:
         headRoll += 0.2 * e * math.sin(rt * 3.5);
         headPitch += -0.06 * e;
-        brow = -0.5 * e * (rt < total / 2 ? 1 : 0) + 0.5 * e * (rt >= total / 2 ? 1 : 0);
+        browTilt = rt < total / 2 ? -0.6 * e : 0;
+        brow = rt >= total / 2 ? 0.5 * e : 0;
         smile = rt < total / 2 ? 0.2 : 0.9;
         mouthOpen = 0.18 * e;
         armL += 0.4 * e * math.sin(rt * 5).abs();
@@ -305,6 +307,7 @@ Pose poseFor(CharacterKind kind, double t, Offset look, Reaction? reaction, doub
     smile: smile,
     happyEyes: happyEyes,
     brow: brow,
+    browTilt: browTilt,
     glow: 0.8 + 0.2 * math.sin(t * 3),
   );
 }

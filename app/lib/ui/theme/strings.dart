@@ -19,6 +19,8 @@ class UiStrings {
 
   String _t(String en, String ar) => language == 'ar' ? ar : en;
 
+  static String _digits(int n) => '$n'.split('').map((d) => '٠١٢٣٤٥٦٧٨٩'[int.parse(d)]).join();
+
   String get appName => _t('Nova', 'نوفا');
   String greeting(String name) => _t("Hi! I'm $name!", 'مرحبًا! أنا $name!');
   String get letsPlay => _t("Let's play!", 'هيا نلعب!');
@@ -55,6 +57,27 @@ class UiStrings {
     'تنمو المهارات عبر خمس مراحل: ليس بعد، ناشئة، في تطوّر، متمكّنة، ثم الانتقال إلى مواقف جديدة.',
   );
   String get noSkillsYet => _t('Play a game to see progress here.', 'العب لعبة لترى التقدّم هنا.');
+  String levelLabel(int n) => _t('Level $n', 'المستوى ${_digits(n)}');
+  String get levelDone => _t('Level complete!', 'أنهيت المستوى!');
+  String get backToMap => _t('Map', 'الخريطة');
+  String get journey => _t('My Journey', 'رحلتي');
+  String get journeySub => _t('50 levels to explore', '٥٠ مستوى للاستكشاف');
+  String get freePlay => _t('Free play', 'لعب حر');
+  String chapter(int n) => _t('Chapter $n', 'الفصل ${_digits(n)}');
+  String starsCount(int n, int of) => _t('$n of $of stars', '${_digits(n)} من ${_digits(of)} نجمة');
+  String get settings => _t('Settings', 'الإعدادات');
+  String get spokenPrompts => _t('Spoken instructions', 'التعليمات المسموعة');
+  String get spokenPromptsSub => _t('The characters read every instruction aloud.', 'تقرأ الشخصيات كل تعليمة بصوت عالٍ.');
+  String get voiceAnswers => _t('Answer by voice (microphone)', 'الإجابة بالصوت (الميكروفون)');
+  String get voiceAnswersSub => _t('Your child can say answers out loud. Speech is recognised on this device only; nothing is recorded or sent.',
+      'يمكن لطفلك قول الإجابات بصوت عالٍ. يُتعرّف على الكلام على هذا الجهاز فقط؛ لا يُسجَّل أو يُرسَل أي شيء.');
+  String get cameraPlay => _t('Face play (camera)', 'اللعب بالوجه (الكاميرا)');
+  String get cameraPlaySub => _t('The characters can see your child smile, look around and play peekaboo. Faces are processed on this device only; no picture is saved or sent.',
+      'تستطيع الشخصيات رؤية ابتسامة طفلك واللعب معه. تُعالج الوجوه على هذا الجهاز فقط؛ لا تُحفظ أي صورة ولا تُرسَل.');
+  String get notOnThisDevice => _t('Not available on this device.', 'غير متاح على هذا الجهاز.');
+  String get permissionDenied => _t('Permission was not given. You can allow it in the device settings.', 'لم يُمنح الإذن. يمكنك السماح به من إعدادات الجهاز.');
+  String get sayIt => _t('Say it!', 'قلها!');
+  String get listening => _t('Listening...', 'أستمع...');
   String get home => _t('Home', 'الرئيسية');
   String get playAgain => _t('Play again', 'العب مرة أخرى');
 }

@@ -32,6 +32,18 @@ class ContentRuntime {
   /// Every game in the bundle, in spec order.
   List<Game> get games => List.unmodifiable(_bundle.games);
 
+  List<Journey> get journeys => _bundle.journeys;
+
+  /// The journey whose age range contains [age], if any.
+  Journey? journeyForAge(int age) {
+    for (final j in _bundle.journeys) {
+      if (j.ageRange.first <= age && age <= j.ageRange.last) return j;
+    }
+    return null;
+  }
+
+  bool hasGame(String id) => _gamesById.containsKey(id);
+
   Game game(String id) => _gamesById[id] ?? (throw ArgumentError('no such game: $id'));
   TransferTask transferTask(String id) => _tasksById[id] ?? (throw ArgumentError('no such transfer task: $id'));
 

@@ -4,6 +4,11 @@ import 'package:nova_app/adapters/clock_device/system_clock.dart';
 import 'package:nova_app/adapters/persistence_drift/connection.dart';
 import 'package:nova_app/adapters/persistence_drift/database.dart';
 import 'package:nova_app/adapters/persistence_drift/drift_persistence_port.dart';
+import 'package:nova_app/adapters/persistence_drift/drift_player_state_port.dart';
+import 'package:nova_app/adapters/speech/tts_speech_port.dart';
+import 'package:nova_app/core/play/trial_factory.dart';
+import 'package:nova_app/core/ports/player_state_port.dart';
+import 'package:nova_app/core/ports/speech_port.dart';
 import 'package:nova_app/core/adaptive/adaptive_model.dart';
 import 'package:nova_app/core/adaptive/adaptive_progression_engine.dart';
 import 'package:nova_app/core/assessment/assessment_engine.dart';
@@ -24,10 +29,20 @@ final contentRuntimeProvider = Provider<ContentRuntime>((ref) => throw Unimpleme
 final clockPortProvider = Provider<ClockPort>((ref) => const SystemClock());
 final audioPortProvider = Provider<AudioPort>((ref) => JustAudioPort());
 
-final persistencePortProvider = Provider<PersistencePort>((ref) {
-  final db = NovaDatabase(openConnection());
-  return DriftPersistencePort(db);
-});
+// One database for the whole app, shared by both storage ports.
+final databaseProvider = Provider<NovaDatabase>((ref) => NovaDatabase(openConnection()));
+
+final persistencePortProvider = Provider<PersistencePort>((ref) => DriftPersistencePort(ref.watch(databaseProvider)));
+
+/// Level stars and settings (not learning evidence).
+final playerStatePortProvider = Provider<PlayerStatePort>((ref) => DriftPlayerStatePort(ref.watch(databaseProvider)));
+
+/// Spoken prompts, unless a grown-up turned them off.
+final speechEnabledProvider = StateProvider<bool>((ref) => true);
+final ttsProvider = Provider<SpeechPort>((ref) => TtsSpeechPort());
+final speechPortProvider = Provider<SpeechPort>((ref) => ref.watch(speechEnabledProvider) ? ref.watch(ttsProvider) : const SilentSpeechPort());
+
+final trialFactoryProvider = Provider<TrialFactory>((ref) => const TrialFactory());
 
 final signalBusProvider = Provider<SignalBus>((ref) => InMemorySignalBus());
 

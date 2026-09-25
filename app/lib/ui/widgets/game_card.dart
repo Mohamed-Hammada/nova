@@ -20,6 +20,7 @@ class GameCard extends StatefulWidget {
     required this.ageLabel,
     required this.onPlay,
     this.width = 230,
+    this.art,
   });
 
   final String title;
@@ -31,6 +32,9 @@ class GameCard extends StatefulWidget {
   final String ageLabel;
   final VoidCallback onPlay;
   final double width;
+
+  /// Card illustration; defaults to a picture for the mechanic.
+  final Widget? art;
 
   @override
   State<GameCard> createState() => _GameCardState();
@@ -115,7 +119,7 @@ class _GameCardState extends State<GameCard> {
                               decoration: BoxDecoration(color: shade(p.hillNear, 0.15), borderRadius: BorderRadius.all(Radius.elliptical(w, w * 0.2))),
                             ),
                           ),
-                          _GameArt(mechanicId: widget.mechanicId, width: w),
+                          widget.art ?? _GameArt(mechanicId: widget.mechanicId, width: w),
                           if (!widget.playable)
                             Container(
                               color: Colors.black.withValues(alpha: 0.25),

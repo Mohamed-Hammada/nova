@@ -95,6 +95,7 @@ class Game {
     required this.progressionRetreatParameter,
     required this.transferProbes,
     this.ageRange = const [2, 8],
+    this.languageDependencies = const [],
   });
 
   final String id;
@@ -102,6 +103,9 @@ class Game {
 
   /// [min, max] age in years the game is designed for.
   final List<int> ageRange;
+
+  /// Language packs the game needs (literacy games); empty for universal games.
+  final List<String> languageDependencies;
   final List<String> primarySkillIds;
   final String mechanicId;
   final List<String> rungIds;
@@ -131,6 +135,7 @@ class Game {
           .map((p) => TransferProbe.fromJson(p as Map<String, dynamic>))
           .toList(),
       ageRange: json['age_range'] == null ? const [2, 8] : List<int>.from(json['age_range'] as List),
+      languageDependencies: List<String>.from((json['language_dependencies'] as List?) ?? const []),
     );
   }
 }
@@ -233,6 +238,7 @@ class ContentBundle {
     required this.signalDefs,
     required this.i18n,
     required this.audio,
+    this.journeys = const [],
   });
 
   final String schemaVersion;
@@ -248,6 +254,7 @@ class ContentBundle {
   final List<SignalDef> signalDefs;
   final Map<String, Map<String, String>> i18n;
   final Map<String, Map<String, String>> audio;
+  final List<Journey> journeys;
 
   factory ContentBundle.fromJson(Map<String, dynamic> json) {
     List<T> list<T>(String key, T Function(Map<String, dynamic>) fromJson) =>
@@ -271,6 +278,45 @@ class ContentBundle {
       signalDefs: list('signals', SignalDef.fromJson),
       i18n: stringTable('i18n'),
       audio: stringTable('audio'),
+      journeys: json['journeys'] == null ? const [] : list('journeys', Journey.fromJson),
     );
   }
+}
+
+/// The level map for one age group (data/journeys). A level picks a game --
+/// per language for literacy -- and, for counting games, a picture skin. It
+/// never sets difficulty: the Adaptive Engine still chooses the rung.
+class Journey {
+  const Journey({required this.id, required this.nameKey, required this.ageRange, required this.levels});
+
+  final String id;
+  final String nameKey;
+  final List<int> ageRange;
+  final List<JourneyLevel> levels;
+
+  factory Journey.fromJson(Map<String, dynamic> json) => Journey(
+        id: json['id'] as String,
+        nameKey: json['name_key'] as String,
+        ageRange: List<int>.from((json['age_range'] as List).map((v) => (v as num).toInt())),
+        levels: (json['levels'] as List).map((l) => JourneyLevel.fromJson(l as Map<String, dynamic>)).toList(),
+      );
+}
+
+class JourneyLevel {
+  const JourneyLevel({required this.id, this.gameId, this.gamesByLanguage = const {}, this.skin});
+
+  final String id;
+  final String? gameId;
+  final Map<String, String> gamesByLanguage;
+  final String? skin;
+
+  /// The game this level plays for a child using [language].
+  String gameFor(String language) => gameId ?? gamesByLanguage[language] ?? gamesByLanguage.values.first;
+
+  factory JourneyLevel.fromJson(Map<String, dynamic> json) => JourneyLevel(
+        id: json['id'] as String,
+        gameId: json['game'] as String?,
+        gamesByLanguage: json['games_by_language'] == null ? const {} : Map<String, String>.from(json['games_by_language'] as Map),
+        skin: json['skin'] as String?,
+      );
 }
