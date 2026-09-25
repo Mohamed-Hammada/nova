@@ -25,14 +25,17 @@ class JourneyRecorder {
     await _port.saveActivityRecord(record.started(at));
   }
 
-  /// Returns whether the activity now counts as completed.
-  Future<bool> finish({required String childId, required String activityId, required int stars, required double accuracy, bool finishedAllRounds = true}) async {
+  /// Records a finished session: whether it completes the activity (the
+  /// activity's criteria), and the session evidence -- accuracy, hints, and
+  /// the Adaptive Engine's decision -- that the curriculum engine uses for
+  /// what comes next. Returns whether the activity now counts as completed.
+  Future<bool> finish({required String childId, required String activityId, required SessionOutcome outcome}) async {
     final at = _now();
     final criteria = _curriculum.activity(activityId)?.completion ?? const CompletionCriteria();
-    final completed = criteria.isMet(finishedAllRounds: finishedAllRounds, stars: stars);
+    final completed = criteria.isMet(finishedAllRounds: outcome.finishedAllRounds, stars: outcome.stars);
     final record = await _existing(childId, activityId) ?? ActivityRecord.fresh(childId, activityId, at).started(at);
-    await _port.saveActivityRecord(record.finished(at, completed: completed, stars: stars, accuracy: accuracy));
-    if (completed) await _port.saveLevel(childId: childId, levelId: activityId, stars: stars);
+    await _port.saveActivityRecord(record.finished(at, completed: completed, stars: outcome.stars, accuracy: outcome.accuracy, outcome: outcome));
+    if (completed) await _port.saveLevel(childId: childId, levelId: activityId, stars: outcome.stars);
     return completed;
   }
 }

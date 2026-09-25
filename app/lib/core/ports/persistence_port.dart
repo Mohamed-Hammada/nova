@@ -16,4 +16,7 @@ abstract class PersistencePort {
   Future<MasteryRecord?> currentMastery({required String childId, required String skillId});
   Future<DimensionEstimate?> currentDimension({required String childId, required String skillId, required String dimension});
   Future<String?> currentRung({required String childId, required String gameId});
+
+  /// The scaffold the Adaptive Engine last chose for this game, if any.
+  Future<String?> currentScaffold({required String childId, required String gameId});
 }

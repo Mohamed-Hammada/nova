@@ -24,6 +24,20 @@ final activityRecordsProvider = FutureProvider<Map<String, ActivityRecord>>((ref
   return {for (final r in records) r.activityId: r};
 });
 
+/// The Mastery Engine's state for every skill in the curriculum, read
+/// through GameRuntime (never PersistencePort directly). Invalidate after
+/// a play.
+final childEvidenceProvider = FutureProvider<ChildEvidence>((ref) async {
+  final runtime = ref.watch(gameRuntimeProvider);
+  final skills = {for (final a in ref.watch(curriculumProvider).activities) ...a.skills};
+  final mastery = <String, String?>{};
+  for (final skill in skills) {
+    final record = await runtime.currentMastery(childId: currentChildId, skillId: skill);
+    if (record != null) mastery[skill] = record.state;
+  }
+  return ChildEvidence(masteryBySkill: mastery);
+});
+
 /// The child's profile, once they have told Nova their age (null before
 /// onboarding).
 final childProfileProvider = Provider<ChildProfile?>((ref) {
@@ -39,7 +53,10 @@ final journeyProgressProvider = Provider<JourneyProgress?>((ref) {
   final curriculum = ref.watch(curriculumProvider);
   final records = ref.watch(activityRecordsProvider).value;
   if (profile == null || records == null || curriculum.isEmpty) return null;
-  return ref.watch(curriculumEngineProvider).evaluate(profile, records);
+  // The one source of truth for "what next": Home, the map and the stage
+  // screens all read this.
+  final evidence = ref.watch(childEvidenceProvider).value ?? const ChildEvidence();
+  return ref.watch(curriculumEngineProvider).evaluate(profile, records, evidence: evidence);
 });
 
 /// Sets the child's chronological age (onboarding, "About me", or a

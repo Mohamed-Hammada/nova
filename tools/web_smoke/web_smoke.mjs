@@ -216,6 +216,10 @@ try {
   await waitFor(cdp, (t) => /Step \d of 4/.test(t), 'progress after the session');
   await waitFor(cdp, (t) => t.includes('Secure'), 'Secure after a perfect, unhinted session');
   step('grown-ups view shows Secure');
+  // The adaptive loop reached the journey: the session's decision is recorded
+  // with the activity and reported to grown-ups.
+  await waitFor(cdp, (t) => t.includes('Moved up a level'), 'the adaptive decision in the activity history');
+  step('the Adaptive Engine moved Bear\'s Apples up a level, recorded on the journey');
 
   step('reload the page');
   await openApp(cdp);

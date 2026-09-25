@@ -136,3 +136,12 @@ def test_stage_ids_are_unique():
     journey["stages"][1]["id"] = journey["stages"][0]["id"]
     issues = check_journeys(_spec_with(journey))
     assert "unique-id" in rules_of(issues)
+
+
+def test_the_report_counts_stage_names_awaiting_review():
+    from nova_validate.report import _stage_copy_line
+
+    journey = _journey()
+    journey["stages"][0]["copy_status"] = "reviewed"
+    line = _stage_copy_line(_spec_with(journey))
+    assert line.startswith("stage copy: 1 reviewed, 4 draft")

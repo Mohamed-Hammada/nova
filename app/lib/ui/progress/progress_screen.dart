@@ -2,6 +2,8 @@ import 'package:nova_app/ui/settings/grown_up_settings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:nova_app/core/mastery/mastery_record.dart';
+import 'package:nova_app/core/game/session_plan.dart';
+import 'package:nova_app/core/journey/journey_models.dart';
 import 'package:nova_app/providers.dart';
 import 'package:nova_app/ui/journey/journey_labels.dart';
 import 'package:nova_app/ui/journey/journey_providers.dart';
@@ -57,6 +59,9 @@ class ProgressScreen extends ConsumerWidget {
             // spec 3.5/3.6), and Nova's claims are non-clinical.
             NovaFeedbackBanner(kind: NovaFeedbackKind.info, message: l10n.progressDisclaimer),
             const SizedBox(height: NovaSpace.lg),
+            // Mastery evidence: the assessment pipeline's view, skill by skill.
+            Semantics(header: true, child: Text(l10n.masteryEvidenceTitle, style: theme.textTheme.titleLarge)),
+            const SizedBox(height: NovaSpace.sm),
             for (final skillId in skillIds) ...[_SkillProgressCard(skillId: skillId), const SizedBox(height: NovaSpace.md)],
             const _JourneyReport(),
             const SizedBox(height: NovaSpace.md),
@@ -177,7 +182,11 @@ class _Ladder extends StatelessWidget {
 
 /// For grown-ups: where the child is in the journey, how the developmental
 /// areas are covered so far (a share of activities, not a score), and
-/// every activity played -- history is never removed.
+
+/// For grown-ups: the child's age and place in the journey, what has been
+/// completed (kept apart from mastery evidence, above), how recent sessions
+/// went and how the Adaptive Engine responded, and areas that could use
+/// more practice. Descriptive only: not a score and not a diagnosis.
 class _JourneyReport extends ConsumerWidget {
   const _JourneyReport();
 
@@ -192,6 +201,32 @@ class _JourneyReport extends ConsumerWidget {
     final curriculum = ref.watch(curriculumProvider);
     final records = [...?ref.watch(activityRecordsProvider).value?.values]..sort((a, b) => b.lastPlayedAt.compareTo(a.lastPlayedAt));
     final stage = progress.current;
+    final completedStages = [
+      for (final s in progress.stages)
+        if (s.status == StageStatus.completed) contentText(content, s.stage.nameKey, lang),
+    ];
+    String gameName(String activityId) {
+      final a = curriculum.activity(activityId);
+      if (a == null) return activityId;
+      final id = a.gameFor(lang);
+      return content.hasGame(id) ? contentText(content, content.game(id).nameKey, lang) : id;
+    }
+
+    final practiceAreas = {
+      for (final r in records)
+        if (r.struggled && curriculum.activity(r.activityId) != null) domainLabel(l10n, curriculum.activity(r.activityId)!.domain),
+    };
+    String moveLabel(AdaptiveMove m) => switch (m) {
+      AdaptiveMove.advance => l10n.moveAdvance,
+      AdaptiveMove.stay => l10n.moveStay,
+      AdaptiveMove.retreat => l10n.moveRetreat,
+    };
+
+    Widget heading(String text) => Padding(
+      padding: const EdgeInsets.only(top: NovaSpace.md, bottom: NovaSpace.xs),
+      child: Semantics(header: true, child: Text(text, style: theme.textTheme.titleMedium)),
+    );
+
     return Padding(
       padding: const EdgeInsets.only(bottom: NovaSpace.md),
       child: NovaCard(
@@ -200,12 +235,15 @@ class _JourneyReport extends ConsumerWidget {
           children: [
             Semantics(header: true, child: Text(l10n.journeyStage, style: theme.textTheme.titleLarge)),
             const SizedBox(height: NovaSpace.xxs),
+            Text(l10n.reportAge('${numeral(progress.profile.age, lang)} ${l10n.yearsOld}'), style: theme.textTheme.bodyLarge),
             Text(
               '${contentText(content, stage.stage.nameKey, lang)} · ${l10n.stageDoneCount(numeral(stage.requiredDone, lang), numeral(stage.requiredTotal, lang))}',
               style: theme.textTheme.bodyLarge,
             ),
-            const SizedBox(height: NovaSpace.md),
-            Text(l10n.developmentalAreas, style: theme.textTheme.titleMedium),
+            heading(l10n.completedStages),
+            Text(completedStages.isEmpty ? l10n.noneYet : completedStages.join(' · '), style: theme.textTheme.bodyMedium),
+            heading(l10n.activityCompletionTitle),
+            Text(l10n.completionNote, style: theme.textTheme.bodySmall),
             const SizedBox(height: NovaSpace.xs),
             for (final d in progress.domains)
               Padding(
@@ -229,19 +267,26 @@ class _JourneyReport extends ConsumerWidget {
                 ),
               ),
             Text(l10n.areasNote, style: theme.textTheme.bodySmall),
-            const SizedBox(height: NovaSpace.md),
-            Text(l10n.activityHistory, style: theme.textTheme.titleMedium),
-            const SizedBox(height: NovaSpace.xs),
+            heading(l10n.recentPerformance),
             if (records.isEmpty) Text(l10n.noHistoryYet, style: theme.textTheme.bodyMedium),
             for (final r in records.take(12))
               if (curriculum.activity(r.activityId) case final a?)
                 ListTile(
                   contentPadding: EdgeInsets.zero,
                   leading: Icon(r.completed ? Icons.check_circle_rounded : Icons.timelapse_rounded, color: r.completed ? NovaPalette.success : theme.colorScheme.outline),
-                  title: Text(content.hasGame(a.gameFor(lang)) ? contentText(content, content.game(a.gameFor(lang)).nameKey, lang) : a.id),
-                  subtitle: Text('${domainLabel(l10n, a.domain)} · ${roleLabel(l10n, a.role)} · ${l10n.playedTimes(numeral(r.attempts, lang))}'),
-                  trailing: r.bestStars > 0 ? Text('★ ${numeral(r.bestStars, lang)}', style: theme.textTheme.labelLarge) : null,
+                  title: Text(gameName(a.id)),
+                  subtitle: Text(
+                    [
+                      '${domainLabel(l10n, a.domain)} · ${r.completed ? l10n.practiced : roleLabel(l10n, a.role)} · ${l10n.playedTimes(numeral(r.attempts, lang))}',
+                      if (r.lastAccuracy != null) l10n.accuracyPercent(numeral((r.lastAccuracy! * 100).round(), lang)),
+                      if (r.lastHintsPerTrial != null) l10n.hintsPerRound(r.lastHintsPerTrial!.toStringAsFixed(1)),
+                      if (r.lastMove != null) moveLabel(r.lastMove!),
+                    ].join('\n'),
+                  ),
+                  isThreeLine: r.lastMove != null,
                 ),
+            heading(l10n.needsPractice),
+            Text(practiceAreas.isEmpty ? l10n.needsPracticeNone : practiceAreas.join(' · '), style: theme.textTheme.bodyMedium),
           ],
         ),
       ),

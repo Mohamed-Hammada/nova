@@ -799,4 +799,74 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get increaseAge => 'Older';
+
+  @override
+  String get greatEffort => 'What great effort!';
+
+  @override
+  String get scaffoldModelled => 'Let me show you first!';
+
+  @override
+  String get scaffoldGuided => 'I\'ll help you along the way!';
+
+  @override
+  String get scaffoldIndependent => 'You\'re ready for a challenge!';
+
+  @override
+  String get recPractice => 'Let\'s practise that a little more!';
+
+  @override
+  String get recTryAgain => 'Let\'s try that one again together!';
+
+  @override
+  String reportAge(String age) {
+    return 'Age: $age';
+  }
+
+  @override
+  String get completedStages => 'Completed stages';
+
+  @override
+  String get noneYet => 'None yet';
+
+  @override
+  String get completionNote =>
+      'Completing an activity means it was played to the end. Mastery states come from the assessment of many sessions and are shown separately.';
+
+  @override
+  String get masteryEvidenceTitle => 'Mastery evidence';
+
+  @override
+  String get activityCompletionTitle => 'Activity completion';
+
+  @override
+  String get recentPerformance => 'Recent performance';
+
+  @override
+  String accuracyPercent(String percent) {
+    return '$percent% right on the first try';
+  }
+
+  @override
+  String hintsPerRound(String hints) {
+    return '$hints hints per round';
+  }
+
+  @override
+  String get moveAdvance => 'Moved up a level';
+
+  @override
+  String get moveStay => 'Stayed at this level';
+
+  @override
+  String get moveRetreat => 'Easier level, more help';
+
+  @override
+  String get needsPractice => 'Areas to practise more';
+
+  @override
+  String get needsPracticeNone => 'Nothing stands out yet.';
+
+  @override
+  String get practiced => 'Practiced';
 }

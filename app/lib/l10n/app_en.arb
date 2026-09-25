@@ -540,5 +540,47 @@
   "domainAttention": "Attention",
   "domainProblemSolving": "Problem solving",
   "decreaseAge": "Younger",
-  "increaseAge": "Older"
+  "increaseAge": "Older",
+  "greatEffort": "What great effort!",
+  "scaffoldModelled": "Let me show you first!",
+  "scaffoldGuided": "I'll help you along the way!",
+  "scaffoldIndependent": "You're ready for a challenge!",
+  "recPractice": "Let's practise that a little more!",
+  "recTryAgain": "Let's try that one again together!",
+  "reportAge": "Age: {age}",
+  "@reportAge": {
+    "placeholders": {
+      "age": {
+        "type": "String"
+      }
+    }
+  },
+  "completedStages": "Completed stages",
+  "noneYet": "None yet",
+  "completionNote": "Completing an activity means it was played to the end. Mastery states come from the assessment of many sessions and are shown separately.",
+  "masteryEvidenceTitle": "Mastery evidence",
+  "activityCompletionTitle": "Activity completion",
+  "recentPerformance": "Recent performance",
+  "accuracyPercent": "{percent}% right on the first try",
+  "@accuracyPercent": {
+    "placeholders": {
+      "percent": {
+        "type": "String"
+      }
+    }
+  },
+  "hintsPerRound": "{hints} hints per round",
+  "@hintsPerRound": {
+    "placeholders": {
+      "hints": {
+        "type": "String"
+      }
+    }
+  },
+  "moveAdvance": "Moved up a level",
+  "moveStay": "Stayed at this level",
+  "moveRetreat": "Easier level, more help",
+  "needsPractice": "Areas to practise more",
+  "needsPracticeNone": "Nothing stands out yet.",
+  "practiced": "Practiced"
 }

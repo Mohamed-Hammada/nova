@@ -88,6 +88,35 @@ Bear's Apples' `bear`) draw it through the same system.
 - A "mastered" activity (finished twice with every star) describes the activity, not the child's
   skill mastery, which only the assessment pipeline decides.
 
+## Completion, mastery and adaptation (three separate things)
+
+- **Completion** -- did the child finish the activity? The curriculum engine decides it from the
+  activity's completion criteria (all rounds played, at least one star). It drives stage progress.
+- **Mastery** -- is there enough evidence that the skill is developing or secure? Only the
+  assessment pipeline decides it (`GameRuntime.completeSession`: signals -> AssessmentEngine
+  (performance, independence) -> MasteryEngine, thresholds from the spec). Stars and completion
+  never count as mastery.
+- **Adaptation** -- what should happen next, given how the child played? The Adaptive Engine
+  (`AdaptiveProgressionEngine` with the swappable `AdaptiveModel`; today `RuleBasedAdaptiveModel`)
+  reads the session's performance AND independence (hints, adult help; limits from the skill's
+  assessment rule) and decides the next rung and scaffold: accurate and independent moves up;
+  accurate only with help stays so help can fade; the productive band stays; struggling moves down
+  with guided help, or at the first rung is shown how first. The rung and scaffold are saved
+  (`game_rung_state`) and the next session applies them (modelled: help every round, guided: help
+  on the first round; this help is logged as a hint so it never reads as independent work).
+
+The loop end to end: activity -> game session -> learning signals -> assessment -> mastery +
+adaptive decision (rung, scaffold) -> `SessionOutcome` (accuracy, hints, move, scaffold) recorded on
+the activity -> `CurriculumEngine` recommendation (with `ChildEvidence`: mastery per skill) -> the
+journey. The recommendation stays inside curriculum eligibility (current stage, unlocked,
+prerequisites met): after a hard session it suggests practice in the same area or the same game
+again (now easier; at most a few times), after accurate independent play an open challenge,
+otherwise required work first (avoiding the area just played, favouring skills without secure
+evidence). Home, the map and stage screens all read the one `journeyProgressProvider`.
+
+Stage names are placeholder copy (`copy_status: draft` in `data/journeys/journeys.yaml`, counted by
+the validator report); their ids are technical slugs, so wording can change without touching ids.
+
 ## Settings and personalisation
 
 - First launch: onboarding asks the child's name and age.

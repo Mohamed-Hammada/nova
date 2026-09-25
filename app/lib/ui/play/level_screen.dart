@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:nova_app/core/game/session_plan.dart';
 import 'package:nova_app/core/content/models.dart';
+import 'package:nova_app/core/journey/journey_models.dart';
 import 'package:nova_app/core/game/signal_mapping.dart';
 import 'package:nova_app/core/mechanics/raw_events.dart';
 import 'package:nova_app/core/play/lexicon.dart';
@@ -32,10 +34,11 @@ class LevelScreen extends ConsumerStatefulWidget {
   final Journey journey;
   final int levelIndex;
 
-  /// Called once all rounds are played, with the stars and first-try
-  /// accuracy. Journey activities record their completion through it;
-  /// without it the level's stars are saved directly.
-  final Future<void> Function(int stars, double accuracy)? onFinished;
+  /// Called once all rounds are played and the session has gone through
+  /// GameRuntime, with its outcome (stars, accuracy, hints and the Adaptive
+  /// Engine's decision). Journey activities record it; without it the
+  /// level's stars are saved directly.
+  final Future<void> Function(SessionOutcome outcome)? onFinished;
 
   /// Fixed seed for tests; otherwise every play of a level is a new mix.
   final int? seed;
@@ -62,6 +65,9 @@ class _LevelScreenState extends ConsumerState<LevelScreen> {
   /// Whether the last answer was right (null: no answer yet this round).
   bool? _lastCorrect;
 
+  /// The help the Adaptive Engine chose for this session (ScaffoldLevel).
+  String _scaffold = ScaffoldLevel.hintOnRequest;
+
   late final _speech = ref.read(speechPortProvider);
   late final _voice = ref.read(voiceInputProvider);
   PlaySession? _session;
@@ -87,8 +93,23 @@ class _LevelScreenState extends ConsumerState<LevelScreen> {
     final session = PlaySession(mechanicId: _game.mechanicId, trials: trials)..start(rngSeed: seed);
     session.rawEvents.listen(_events.add);
     if (!mounted) return;
-    setState(() => _session = session);
+    setState(() {
+      _session = session;
+      _scaffold = plan.scaffold;
+    });
+    // Starting: the companion encourages, and says how it will help when the
+    // Adaptive Engine chose extra support (or more independence) last time.
+    _guide.react(Reaction.encourage);
     _guide.setMood(CharacterMood.curious, hold: const Duration(milliseconds: 1400));
+    final l10n = context.l10n;
+    final intro = switch (_scaffold) {
+      ScaffoldLevel.modelled => l10n.scaffoldModelled,
+      ScaffoldLevel.guided => l10n.scaffoldGuided,
+      ScaffoldLevel.independent => l10n.scaffoldIndependent,
+      _ => null,
+    };
+    if (intro != null) _speak(intro);
+    _scaffoldRound();
     _announce();
   }
 
@@ -111,6 +132,19 @@ class _LevelScreenState extends ConsumerState<LevelScreen> {
   }
 
   void _speak(String text) => _speech.speak(text, language: _lang);
+
+  /// Gives the help the scaffold calls for at the start of a round: every
+  /// round when modelled, the first round when guided. It counts as a hint
+  /// in the session's signals, so unrequested help never reads as
+  /// independent work.
+  void _scaffoldRound() {
+    final s = _session;
+    if (s == null || s.isFinished) return;
+    if (_scaffold == ScaffoldLevel.modelled || (_scaffold == ScaffoldLevel.guided && s.index == 0)) {
+      s.useHint();
+      _hint.value++;
+    }
+  }
 
   void _onResponse(bool correct) {
     _session!.record(correct);
@@ -182,6 +216,7 @@ class _LevelScreenState extends ConsumerState<LevelScreen> {
     });
     if (s.next()) {
       setState(() {});
+      _scaffoldRound();
       _announce();
     } else {
       _finish();
@@ -190,21 +225,29 @@ class _LevelScreenState extends ConsumerState<LevelScreen> {
 
   Future<void> _finish() async {
     final s = _session!;
+    final l10n = context.l10n;
     setState(() {
       _finished = true;
       _stars = s.stars;
       _confetti++;
     });
-    _guide.react(Reaction.cheer);
-    _guide.setMood(CharacterMood.celebrating, hold: const Duration(milliseconds: 2600));
-    _speak(context.l10n.youDidIt);
-    final onFinished = widget.onFinished;
-    if (onFinished != null) {
-      await onFinished(s.stars, s.accuracy);
+    // Strong play gets a big celebration; a hard session gets warm praise
+    // for the effort -- never a sense of having failed.
+    if (s.stars >= 3) {
+      _guide.react(Reaction.cheer);
+      _guide.setMood(CharacterMood.celebrating, hold: const Duration(milliseconds: 2600));
+    } else if (s.stars <= 1) {
+      _guide.react(Reaction.encourage);
+      _guide.setMood(CharacterMood.encouraging, hold: const Duration(milliseconds: 2600));
     } else {
-      await ref.read(playerStatePortProvider).saveLevel(childId: currentChildId, levelId: _level.id, stars: s.stars);
+      _guide.react(Reaction.happy);
+      _guide.setMood(CharacterMood.happy, hold: const Duration(milliseconds: 2000));
     }
-    await ref
+    _speak(s.stars <= 1 ? l10n.greatEffort : l10n.youDidIt);
+    // The session's learning signals go through assessment, mastery and the
+    // Adaptive Engine first; the journey then records the outcome with the
+    // decision, so what comes next follows how the child actually played.
+    final decision = await ref
         .read(gameRuntimeProvider)
         .completeSession(
           childId: currentChildId,
@@ -213,6 +256,12 @@ class _LevelScreenState extends ConsumerState<LevelScreen> {
           rawEvents: List.of(_events),
           mapper: trialSignalMapper,
         );
+    final onFinished = widget.onFinished;
+    if (onFinished != null) {
+      await onFinished(SessionOutcome(stars: s.stars, accuracy: s.accuracy, hintsPerTrial: s.hintsPerTrial, move: decision.move, scaffold: decision.scaffold));
+    } else {
+      await ref.read(playerStatePortProvider).saveLevel(childId: currentChildId, levelId: _level.id, stars: s.stars);
+    }
   }
 
   @override
@@ -502,7 +551,7 @@ class _LevelComplete extends StatelessWidget {
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Text(l10n.youDidIt, style: NovaType.display(context, color: place.deep)),
+                      Text(stars <= 1 ? l10n.greatEffort : l10n.youDidIt, textAlign: TextAlign.center, style: NovaType.display(context, color: place.deep)),
                       const SizedBox(height: NovaSpace.xxs),
                       Text(l10n.levelDone, style: NovaType.body(context)),
                       const SizedBox(height: NovaSpace.md),

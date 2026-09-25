@@ -15,9 +15,12 @@ class AdaptiveProgressionEngine {
     required String currentRungId,
     required DimensionEstimate? recentPerformance,
     required Map<String, Parameter> parameters,
+    DimensionEstimate? recentIndependence,
+    IndependenceLimits? independenceLimits,
   }) =>
       _model.decide(
         childId: childId, game: game, rungIds: rungIds, currentRungId: currentRungId,
         recentPerformance: recentPerformance, parameters: parameters,
+        recentIndependence: recentIndependence, independenceLimits: independenceLimits,
       );
 }

@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:nova_app/mechanics_flutter/drag_to_count_mechanic.dart';
 import 'package:nova_app/providers.dart';
+import 'package:nova_app/core/journey/journey_models.dart';
+import 'package:nova_app/core/play/session.dart';
 import 'package:nova_app/ui/design/nova_design.dart';
 import 'package:nova_app/ui/l10n.dart';
 import 'package:nova_app/ui/progress/progress_screen.dart';
@@ -37,9 +39,10 @@ class GameScreen extends ConsumerStatefulWidget {
   final Stage3DTransport? stage3DTransport;
   final bool? force3D;
 
-  /// Called once when a session has been saved, with first-try accuracy
-  /// (used by journey levels to award stars).
-  final void Function(double accuracy)? onComplete;
+  /// Called once when a session has been saved, with its outcome: stars
+  /// and first-try accuracy for the journey, plus hints per trial and the
+  /// Adaptive Engine's decision from the session's learning signals.
+  final void Function(SessionOutcome outcome)? onComplete;
 
   @override
   ConsumerState<GameScreen> createState() => _GameScreenState();
@@ -93,7 +96,8 @@ class _GameScreenState extends ConsumerState<GameScreen> {
     if (_session.phase == GamePhase.complete && !_reported) {
       _reported = true;
       ref.invalidate(masteryProvider);
-      widget.onComplete?.call(_session.firstTryAccuracy);
+      final accuracy = _session.firstTryAccuracy;
+      widget.onComplete?.call(SessionOutcome(stars: starsFor(accuracy), accuracy: accuracy, hintsPerTrial: _session.hintsPerTrial, move: _session.lastMove, scaffold: _session.lastScaffold));
     }
   }
 

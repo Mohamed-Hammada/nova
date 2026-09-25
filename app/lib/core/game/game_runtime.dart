@@ -1,8 +1,10 @@
 import 'package:nova_app/core/adaptive/adaptive_decision.dart';
+import 'package:nova_app/core/adaptive/adaptive_model.dart';
 import 'package:nova_app/core/adaptive/adaptive_progression_engine.dart';
 import 'package:nova_app/core/assessment/assessment_engine.dart';
 import 'package:nova_app/core/content/content_runtime.dart';
 import 'package:nova_app/core/content/criterion_parameters.dart';
+import 'package:nova_app/core/content/models.dart';
 import 'package:nova_app/core/mastery/mastery_engine.dart';
 import 'package:nova_app/core/mastery/mastery_record.dart';
 import 'package:nova_app/core/mechanics/raw_events.dart';
@@ -59,7 +61,8 @@ class GameRuntime {
     final game = _content.game(gameId);
     final rungId = await _currentRungId(childId: childId, gameId: gameId);
     final trialCount = minTrialsFor(_content.assessmentRuleFor(skillId), _content.allParameters()) ?? 1;
-    return SessionPlan(childId: childId, game: game, skillId: skillId, rung: game.rungsById[rungId]!, trialCount: trialCount);
+    final scaffold = await _persistence.currentScaffold(childId: childId, gameId: gameId) ?? ScaffoldLevel.hintOnRequest;
+    return SessionPlan(childId: childId, game: game, skillId: skillId, rung: game.rungsById[rungId]!, trialCount: trialCount, scaffold: scaffold);
   }
 
   /// Read-only view of a skill's mastery for presentation (e.g. the grown-ups'
@@ -74,6 +77,19 @@ class GameRuntime {
     final game = _content.game(gameId);
     final saved = await _persistence.currentRung(childId: childId, gameId: gameId);
     return saved != null && game.rungsById.containsKey(saved) ? saved : game.rungIds.first;
+  }
+
+  /// The strictest help limits any of the rule's state criteria set (the
+  /// ones Secure uses), read from content like every other threshold.
+  static IndependenceLimits _independenceLimits(AssessmentRule rule, Map<String, Parameter> parameters) {
+    num? hints, assist;
+    for (final criterion in rule.stateCriteria.values) {
+      final h = criterionParameter(criterion, parameters, 'hints-per-trial');
+      final a = criterionParameter(criterion, parameters, 'adult-assist-per-trial');
+      if (h != null && (hints == null || h < hints)) hints = h;
+      if (a != null && (assist == null || a < assist)) assist = a;
+    }
+    return IndependenceLimits(maxHintsPerTrial: hints, maxAdultAssistPerTrial: assist);
   }
 
   Future<AdaptiveDecision> completeSession({
@@ -120,6 +136,7 @@ class GameRuntime {
     final decision = _adaptive.recommend(
       childId: childId, game: game, rungIds: game.rungIds, currentRungId: currentRung,
       recentPerformance: performance, parameters: parameters,
+      recentIndependence: independence, independenceLimits: _independenceLimits(rule, parameters),
     );
 
     await _persistence.saveSession(

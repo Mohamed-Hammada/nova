@@ -1495,6 +1495,132 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Older'**
   String get increaseAge;
+
+  /// No description provided for @greatEffort.
+  ///
+  /// In en, this message translates to:
+  /// **'What great effort!'**
+  String get greatEffort;
+
+  /// No description provided for @scaffoldModelled.
+  ///
+  /// In en, this message translates to:
+  /// **'Let me show you first!'**
+  String get scaffoldModelled;
+
+  /// No description provided for @scaffoldGuided.
+  ///
+  /// In en, this message translates to:
+  /// **'I\'ll help you along the way!'**
+  String get scaffoldGuided;
+
+  /// No description provided for @scaffoldIndependent.
+  ///
+  /// In en, this message translates to:
+  /// **'You\'re ready for a challenge!'**
+  String get scaffoldIndependent;
+
+  /// No description provided for @recPractice.
+  ///
+  /// In en, this message translates to:
+  /// **'Let\'s practise that a little more!'**
+  String get recPractice;
+
+  /// No description provided for @recTryAgain.
+  ///
+  /// In en, this message translates to:
+  /// **'Let\'s try that one again together!'**
+  String get recTryAgain;
+
+  /// No description provided for @reportAge.
+  ///
+  /// In en, this message translates to:
+  /// **'Age: {age}'**
+  String reportAge(String age);
+
+  /// No description provided for @completedStages.
+  ///
+  /// In en, this message translates to:
+  /// **'Completed stages'**
+  String get completedStages;
+
+  /// No description provided for @noneYet.
+  ///
+  /// In en, this message translates to:
+  /// **'None yet'**
+  String get noneYet;
+
+  /// No description provided for @completionNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Completing an activity means it was played to the end. Mastery states come from the assessment of many sessions and are shown separately.'**
+  String get completionNote;
+
+  /// No description provided for @masteryEvidenceTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Mastery evidence'**
+  String get masteryEvidenceTitle;
+
+  /// No description provided for @activityCompletionTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Activity completion'**
+  String get activityCompletionTitle;
+
+  /// No description provided for @recentPerformance.
+  ///
+  /// In en, this message translates to:
+  /// **'Recent performance'**
+  String get recentPerformance;
+
+  /// No description provided for @accuracyPercent.
+  ///
+  /// In en, this message translates to:
+  /// **'{percent}% right on the first try'**
+  String accuracyPercent(String percent);
+
+  /// No description provided for @hintsPerRound.
+  ///
+  /// In en, this message translates to:
+  /// **'{hints} hints per round'**
+  String hintsPerRound(String hints);
+
+  /// No description provided for @moveAdvance.
+  ///
+  /// In en, this message translates to:
+  /// **'Moved up a level'**
+  String get moveAdvance;
+
+  /// No description provided for @moveStay.
+  ///
+  /// In en, this message translates to:
+  /// **'Stayed at this level'**
+  String get moveStay;
+
+  /// No description provided for @moveRetreat.
+  ///
+  /// In en, this message translates to:
+  /// **'Easier level, more help'**
+  String get moveRetreat;
+
+  /// No description provided for @needsPractice.
+  ///
+  /// In en, this message translates to:
+  /// **'Areas to practise more'**
+  String get needsPractice;
+
+  /// No description provided for @needsPracticeNone.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing stands out yet.'**
+  String get needsPracticeNone;
+
+  /// No description provided for @practiced.
+  ///
+  /// In en, this message translates to:
+  /// **'Practiced'**
+  String get practiced;
 }
 
 class _AppLocalizationsDelegate

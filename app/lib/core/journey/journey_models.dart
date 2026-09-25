@@ -1,3 +1,4 @@
+import 'package:nova_app/core/game/session_plan.dart';
 import 'package:nova_app/core/content/models.dart';
 
 /// The child using Nova. [age] is the child's real, chronological age: it
@@ -113,6 +114,9 @@ class ActivityRecord {
     this.completions = 0,
     this.bestStars = 0,
     this.lastAccuracy,
+    this.lastHintsPerTrial,
+    this.lastMove,
+    this.lastScaffold,
   });
 
   final String childId;
@@ -129,7 +133,21 @@ class ActivityRecord {
   final int bestStars;
   final double? lastAccuracy;
 
+  /// From the last session's assessment and adaptive decision: hints per
+  /// round, and whether the Adaptive Engine moved the game up, kept it, or
+  /// moved it down (with the scaffold it chose). This is session evidence,
+  /// not mastery.
+  final double? lastHintsPerTrial;
+  final AdaptiveMove? lastMove;
+  final String? lastScaffold;
+
   bool get completed => completions > 0;
+
+  /// The last session showed struggle (the Adaptive Engine eased off).
+  bool get struggled => lastMove == AdaptiveMove.retreat;
+
+  /// The last session was accurate and independent enough to move up.
+  bool get thrived => lastMove == AdaptiveMove.advance || lastScaffold == ScaffoldLevel.independent;
 
   ActivityRecord started(DateTime at) => ActivityRecord(
         childId: childId,
@@ -141,9 +159,12 @@ class ActivityRecord {
         completions: completions,
         bestStars: bestStars,
         lastAccuracy: lastAccuracy,
+        lastHintsPerTrial: lastHintsPerTrial,
+        lastMove: lastMove,
+        lastScaffold: lastScaffold,
       );
 
-  ActivityRecord finished(DateTime at, {required bool completed, required int stars, required double accuracy}) => ActivityRecord(
+  ActivityRecord finished(DateTime at, {required bool completed, required int stars, required double accuracy, SessionOutcome? outcome}) => ActivityRecord(
         childId: childId,
         activityId: activityId,
         firstStartedAt: firstStartedAt,
@@ -153,10 +174,71 @@ class ActivityRecord {
         completions: completions + (completed ? 1 : 0),
         bestStars: stars > bestStars ? stars : bestStars,
         lastAccuracy: accuracy,
+        lastHintsPerTrial: outcome?.hintsPerTrial ?? lastHintsPerTrial,
+        lastMove: outcome?.move ?? lastMove,
+        lastScaffold: outcome?.scaffold ?? lastScaffold,
       );
 
   static ActivityRecord fresh(String childId, String activityId, DateTime at) =>
       ActivityRecord(childId: childId, activityId: activityId, firstStartedAt: at, lastPlayedAt: at);
+}
+
+/// What a finished game session reports to the journey: the child's
+/// result, and the Adaptive Engine's decision computed from the session's
+/// learning signals (GameRuntime.completeSession).
+class SessionOutcome {
+  const SessionOutcome({required this.stars, required this.accuracy, this.hintsPerTrial, this.move, this.scaffold, this.finishedAllRounds = true});
+  final int stars;
+
+  /// First-try accuracy, 0..1.
+  final double accuracy;
+  final double? hintsPerTrial;
+
+  /// The Adaptive Engine's decision for the next session of this game.
+  final AdaptiveMove? move;
+  final String? scaffold;
+  final bool finishedAllRounds;
+}
+
+/// What the child has shown so far, beyond their activity records: the
+/// Mastery Engine's state per skill (absent: no evidence yet; null value:
+/// "Not yet"). Read from GameRuntime by the app and handed in here, so the
+/// curriculum engine stays pure.
+class ChildEvidence {
+  const ChildEvidence({this.masteryBySkill = const {}});
+  final Map<String, String?> masteryBySkill;
+
+  static const _secure = {'secure', 'transfer'};
+
+  /// Whether every one of [skills] already has secure (or transfer) evidence.
+  bool isSecure(List<String> skills) => skills.isNotEmpty && skills.every((s) => _secure.contains(masteryBySkill[s]));
+}
+
+/// Why an activity is recommended.
+enum RecommendationReason {
+  /// The next required activity of the stage.
+  next,
+
+  /// More practice in an area the last session found hard.
+  practice,
+
+  /// The same activity again, which the Adaptive Engine has made easier.
+  tryAgainEasier,
+
+  /// A challenge, after accurate and independent play.
+  stretch,
+
+  /// Optional, practice or review work once required work is done.
+  explore,
+
+  /// Everything is done: revisit an earlier activity.
+  review,
+}
+
+class Recommendation {
+  const Recommendation(this.activity, this.reason);
+  final Activity activity;
+  final RecommendationReason reason;
 }
 
 /// Where an activity stands for this child.
@@ -215,7 +297,7 @@ class JourneyProgress {
     required this.entryIndex,
     required this.currentIndex,
     required this.firstVisibleIndex,
-    required this.recommended,
+    required this.recommendation,
     required this.domains,
     required this.finished,
   });
@@ -234,7 +316,10 @@ class JourneyProgress {
   /// The first stage worth showing: the starting point, or earlier if the
   /// child has history there (history never disappears).
   final int firstVisibleIndex;
-  final Activity? recommended;
+  /// The next activity and why the engine chose it.
+  final Recommendation? recommendation;
+
+  Activity? get recommended => recommendation?.activity;
   final List<DomainProgress> domains;
 
   /// Every stage from the starting point on is complete.

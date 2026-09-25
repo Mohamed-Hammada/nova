@@ -105,6 +105,7 @@ class _CategoryScreenState extends ConsumerState<CategoryScreen> {
                           await openActivity(context, game);
                           ref.invalidate(levelStarsProvider);
                           ref.invalidate(activityRecordsProvider);
+                          ref.invalidate(childEvidenceProvider);
                         },
                       ),
                     ],

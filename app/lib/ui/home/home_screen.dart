@@ -60,12 +60,7 @@ class HomeScreen extends ConsumerWidget {
                             const _TopBar(),
                             const SizedBox(height: NovaSpace.md),
                             _Hero(wide: wide),
-                            if (journey != null) ...[
-                              const SizedBox(height: NovaSpace.xl),
-                              _SectionTitle(l10n.myJourney),
-                              const SizedBox(height: NovaSpace.sm),
-                              _JourneyStrip(progress: journey),
-                            ],
+                            if (journey != null) ...[const SizedBox(height: NovaSpace.xl), _SectionTitle(l10n.myJourney), const SizedBox(height: NovaSpace.sm), _JourneyStrip(progress: journey)],
                             const SizedBox(height: NovaSpace.xl),
                             _SectionTitle(journey != null ? l10n.exploreMore : l10n.placesToExplore),
                             const SizedBox(height: NovaSpace.sm),
@@ -121,38 +116,41 @@ class _TopBar extends ConsumerWidget {
     final showName = MediaQuery.sizeOf(context).width >= 600 || MediaQuery.textScalerOf(context).scale(10) <= 13;
     return Row(
       children: [
-        // The child's own badge: their friend's face and their name.
-        Flexible(
-          child: Semantics(
-            button: true,
-            label: l10n.aboutMe,
-            excludeSemantics: true,
-            child: GestureDetector(
-              onTap: () => Navigator.of(context).push(MaterialPageRoute<void>(builder: (_) => const ProfileScreen())),
-              child: Container(
-                padding: EdgeInsetsDirectional.fromSTEB(4, 4, showName ? 16 : 4, 4),
-                constraints: const BoxConstraints(minHeight: NovaSize.childTouch - 8),
-                decoration: BoxDecoration(color: NovaStory.cloud, borderRadius: BorderRadius.circular(NovaRadius.pill), boxShadow: NovaShadow.soft),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    _Avatar(kind: ref.watch(companionProvider), size: 48),
-                    if (showName) const SizedBox(width: NovaSpace.xs),
-                    if (showName)
-                      Flexible(
-                        child: ConstrainedBox(
-                          constraints: const BoxConstraints(maxWidth: 140),
-                          child: Text(name.isEmpty ? l10n.aboutMe : name, style: NovaType.label(context), overflow: TextOverflow.ellipsis, maxLines: 1),
+        // The child's own badge: their friend's face and their name. It takes
+        // all the free space (aligned to the start), so the name has room.
+        Expanded(
+          child: Align(
+            alignment: AlignmentDirectional.centerStart,
+            child: Semantics(
+              button: true,
+              label: l10n.aboutMe,
+              excludeSemantics: true,
+              child: GestureDetector(
+                onTap: () => Navigator.of(context).push(MaterialPageRoute<void>(builder: (_) => const ProfileScreen())),
+                child: Container(
+                  padding: EdgeInsetsDirectional.fromSTEB(4, 4, showName ? 16 : 4, 4),
+                  constraints: const BoxConstraints(minHeight: NovaSize.childTouch - 8),
+                  decoration: BoxDecoration(color: NovaStory.cloud, borderRadius: BorderRadius.circular(NovaRadius.pill), boxShadow: NovaShadow.soft),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      _Avatar(kind: ref.watch(companionProvider), size: 48),
+                      if (showName) const SizedBox(width: NovaSpace.xs),
+                      if (showName)
+                        Flexible(
+                          child: ConstrainedBox(
+                            constraints: const BoxConstraints(maxWidth: 140),
+                            child: Text(name.isEmpty ? l10n.aboutMe : name, style: NovaType.label(context), overflow: TextOverflow.ellipsis, maxLines: 1),
+                          ),
                         ),
-                      ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
             ),
           ),
         ),
         const SizedBox(width: NovaSpace.xs),
-        const Spacer(),
         NovaStarBadge(label: numeral(stars, lang), semanticLabel: l10n.starsCollected(numeral(stars, lang))),
         const SizedBox(width: NovaSpace.xs),
         DecoratedBox(
@@ -227,16 +225,21 @@ class _HeroState extends ConsumerState<_Hero> {
     final child = ref.watch(childNameProvider).trim();
     // "Welcome back" once the child has played; before that, a beginning.
     final returning = (ref.watch(activityRecordsProvider).value ?? const {}).isNotEmpty;
-    final greeting = returning
-        ? (child.isEmpty ? l10n.welcomeBackNoName : l10n.welcomeBack(child))
-        : (child.isEmpty ? l10n.onboardingReadyNoName : l10n.onboardingReady(child));
+    final greeting = returning ? (child.isEmpty ? l10n.welcomeBackNoName : l10n.welcomeBack(child)) : (child.isEmpty ? l10n.onboardingReadyNoName : l10n.onboardingReady(child));
     // The companion names the adventure the child is on.
     final journey = ref.watch(journeyProgressProvider);
+    // The companion says why the next activity was chosen -- from the same
+    // curriculum/adaptive recommendation the button plays.
     final adventure = journey == null
         ? l10n.letsExplore
         : journey.finished
         ? l10n.journeyAllDone
-        : l10n.weAreIn(contentText(ref.watch(contentRuntimeProvider), journey.current.stage.nameKey, ref.watch(languageProvider)));
+        : switch (journey.recommendation?.reason) {
+            RecommendationReason.practice => l10n.recPractice,
+            RecommendationReason.tryAgainEasier => l10n.recTryAgain,
+            RecommendationReason.stretch => l10n.scaffoldIndependent,
+            _ => l10n.weAreIn(contentText(ref.watch(contentRuntimeProvider), journey.current.stage.nameKey, ref.watch(languageProvider))),
+          };
 
     final stage = FloatingIsland(
       width: widget.wide ? 300 : 170,

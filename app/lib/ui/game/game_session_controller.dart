@@ -108,6 +108,19 @@ class GameSessionController extends ChangeNotifier {
     final first = _events.whereType<TrialSubmitted>().where((e) => e.attempt == 1).toList();
     return first.isEmpty ? 0 : first.where((e) => e.correct).length / first.length;
   }
+  /// Hints used per trial across the session (every attempt).
+  double get hintsPerTrial {
+    final submitted = _events.whereType<TrialSubmitted>().toList();
+    if (_trials.isEmpty) return 0;
+    return submitted.fold<int>(0, (a, e) => a + e.hintsUsedThisTrial) / _trials.length;
+  }
+
+  /// The Adaptive Engine's decision for the next session, once saved.
+  AdaptiveMove? get lastMove => _lastMove;
+  String? get lastScaffold => _lastScaffold;
+  AdaptiveMove? _lastMove;
+  String? _lastScaffold;
+
   SessionPlan? get plan => _plan;
   int get trialCount => _trials.length;
   int get trialIndex => _trialIndex;
@@ -224,6 +237,11 @@ class GameSessionController extends ChangeNotifier {
     }
     _mechanic.beginTrial(requestedTotal: trial.requested);
     _feedback = null;
+    // The scaffold the Adaptive Engine chose: 'modelled' shows the counting
+    // help on every trial, 'guided' on the first. It is recorded as a hint,
+    // so help the child did not ask for never counts as independence.
+    final scaffold = _plan?.scaffold;
+    if (scaffold == ScaffoldLevel.modelled || (scaffold == ScaffoldLevel.guided && index == 0)) _mechanic.useHint();
     _onCue(GameCue.trialStart);
     _setPhase(GamePhase.playing);
   }
@@ -234,10 +252,12 @@ class GameSessionController extends ChangeNotifier {
     // Let the mechanic's broadcast stream deliver its last events.
     await Future<void>.delayed(Duration.zero);
     try {
-      await _runtime.completeSession(
+      final decision = await _runtime.completeSession(
         childId: childId, gameId: gameId, skillId: skillId,
         rawEvents: List.of(_events), mapper: _signalMapper,
       );
+      _lastMove = decision.move;
+      _lastScaffold = decision.scaffold;
       _onCue(GameCue.sessionComplete);
       _setPhase(GamePhase.complete);
     } catch (error, stack) {

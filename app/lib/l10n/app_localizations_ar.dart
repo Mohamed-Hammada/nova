@@ -36,7 +36,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get loadingMessage => 'نستعدّ…';
 
   @override
-  String get errorTitle => 'حدث خطأ ما';
+  String get errorTitle => 'حدث شيء غير متوقّع';
 
   @override
   String get errorContentUnavailable => 'تعذّر تحميل الألعاب على هذا الجهاز.';
@@ -86,26 +86,26 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String trialProgress(String current, String total) {
-    return 'السؤال $current من $total';
+    return 'الجولة $current من $total';
   }
 
   @override
   String get feedbackCorrect => 'صحيح تمامًا! الدبّ سعيد.';
 
   @override
-  String get feedbackTryAgain => 'ليس تمامًا. هيّا نعدّ مرة أخرى.';
+  String get feedbackTryAgain => 'كدت تصل! هيّا نعدّ مرة أخرى.';
 
   @override
   String get feedbackOnlyApples => 'الدبّ يريد التفاح فقط.';
 
   @override
-  String get feedbackMoveOn => 'محاولة جيدة! هيّا إلى السؤال التالي.';
+  String get feedbackMoveOn => 'محاولة جميلة! هيّا إلى الجولة التالية.';
 
   @override
   String get next => 'التالي';
 
   @override
-  String get tryAgain => 'حاول مرة أخرى';
+  String get tryAgain => 'هيّا نجرّب مرة أخرى';
 
   @override
   String get saving => 'جارٍ الحفظ…';
@@ -379,7 +379,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get repeatInstruction => 'أعد التعليمة';
 
   @override
-  String get closeLevel => 'اخرج من المستوى';
+  String get closeLevel => 'اخرج من اللعبة';
 
   @override
   String levelLocked(String number) {
@@ -426,7 +426,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String promptRhyme(String word) {
-    return 'ما الذي يتّفق في القافية مع $word؟';
+    return 'أيّ كلمة تشبه $word في آخرها؟';
   }
 
   @override
@@ -547,7 +547,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String levelsExplored(String count) {
-    return 'المستويات المكتملة: $count';
+    return 'المستويات التي أنهيتها: $count';
   }
 
   @override
@@ -560,7 +560,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get badgeExplorer => 'المستكشف الكبير';
 
   @override
-  String get badgeLocked => 'واصل اللعب لتفتح هذه';
+  String get badgeLocked => 'واصل اللعب لتحصل عليها';
 
   @override
   String get catNumbers => 'مرج الأرقام';
@@ -578,7 +578,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get catMemory => 'خليج الذاكرة';
 
   @override
-  String get catDiscovery => 'تلّ الاكتشاف';
+  String get catDiscovery => 'تلّة الاكتشاف';
 
   @override
   String get catMovement => 'بركة الحركة';
@@ -608,7 +608,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get newActivity => 'جديد';
 
   @override
-  String get tryAgainGently => 'لنحاول مرة أخرى!';
+  String get tryAgainGently => 'هيّا نجرّب مرة أخرى!';
 
   @override
   String get almostThere => 'اقتربت! أنت قادر على ذلك.';
@@ -654,11 +654,11 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String onboardingReady(String name) {
-    return 'تبدأ مغامرتك يا $name!';
+    return 'هيّا نبدأ المغامرة يا $name!';
   }
 
   @override
-  String get onboardingReadyNoName => 'تبدأ مغامرتك!';
+  String get onboardingReadyNoName => 'هيّا نبدأ المغامرة!';
 
   @override
   String onboardingFirstStop(String stage) {
@@ -689,7 +689,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get exploreMore => 'استكشف المزيد';
 
   @override
-  String get stageComplete => 'أنهيت هذه المغامرة!';
+  String get stageComplete => 'أحسنت! أنهيت هذه المغامرة!';
 
   @override
   String get newAdventure => 'مغامرة جديدة بانتظارك!';
@@ -698,10 +698,10 @@ class AppLocalizationsAr extends AppLocalizations {
   String get journeyAllDone => 'أنهيت الرحلة كلها! العب أي مغامرة من جديد.';
 
   @override
-  String get statusCompleted => 'مكتمل';
+  String get statusCompleted => 'تمّ';
 
   @override
-  String get statusLocked => 'مغلق';
+  String get statusLocked => 'مقفل';
 
   @override
   String get statusNext => 'التالي';
@@ -731,11 +731,11 @@ class AppLocalizationsAr extends AppLocalizations {
   String get roleReview => 'مراجعة';
 
   @override
-  String get unlockHint => 'أنهِ الألعاب التي قبلها لتفتح هذه.';
+  String get unlockHint => 'العب الألعاب التي قبلها أولًا، وستُفتح هذه!';
 
   @override
   String weAreIn(String stage) {
-    return 'نحن نستكشف $stage!';
+    return 'هيّا نستكشف $stage!';
   }
 
   @override
@@ -795,4 +795,74 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get increaseAge => 'أكبر';
+
+  @override
+  String get greatEffort => 'يا له من مجهود رائع!';
+
+  @override
+  String get scaffoldModelled => 'سأريك أولًا كيف نلعب!';
+
+  @override
+  String get scaffoldGuided => 'سأساعدك خطوة بخطوة!';
+
+  @override
+  String get scaffoldIndependent => 'أنت جاهز للتحدّي!';
+
+  @override
+  String get recPractice => 'هيّا نتدرّب عليها قليلًا بعد!';
+
+  @override
+  String get recTryAgain => 'هيّا نجرّبها مرة أخرى معًا!';
+
+  @override
+  String reportAge(String age) {
+    return 'العمر: $age';
+  }
+
+  @override
+  String get completedStages => 'المراحل المكتملة';
+
+  @override
+  String get noneYet => 'لا شيء بعد';
+
+  @override
+  String get completionNote =>
+      'إنهاء نشاط يعني أنه لُعب حتى النهاية. أمّا مراحل الإتقان فتأتي من تقييم عدّة جلسات لعب، وتظهر منفصلة.';
+
+  @override
+  String get masteryEvidenceTitle => 'أدلّة الإتقان';
+
+  @override
+  String get activityCompletionTitle => 'إنجاز الأنشطة';
+
+  @override
+  String get recentPerformance => 'الأداء الأخير';
+
+  @override
+  String accuracyPercent(String percent) {
+    return 'صحيح من أول محاولة: $percent٪';
+  }
+
+  @override
+  String hintsPerRound(String hints) {
+    return 'تلميحات في كل جولة: $hints';
+  }
+
+  @override
+  String get moveAdvance => 'انتقل إلى مستوى أصعب';
+
+  @override
+  String get moveStay => 'بقي في المستوى نفسه';
+
+  @override
+  String get moveRetreat => 'مستوى أسهل مع مساعدة أكثر';
+
+  @override
+  String get needsPractice => 'مجالات تحتاج إلى مزيد من التدريب';
+
+  @override
+  String get needsPracticeNone => 'لا يبرز شيء حتى الآن.';
+
+  @override
+  String get practiced => 'تمّ التدرّب';
 }

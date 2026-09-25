@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:nova_app/core/content/models.dart';
 import 'package:nova_app/core/journey/journey_models.dart';
-import 'package:nova_app/core/play/session.dart';
 import 'package:nova_app/providers.dart';
 
 import '../game/game_catalog.dart';
@@ -25,16 +24,12 @@ Future<void> playJourneyActivity(BuildContext context, WidgetRef ref, Activity a
 
   final language = ref.read(languageProvider);
   final gameId = activity.gameFor(language);
-  Future<void> finished(int stars, double accuracy) => recorder.finish(childId: currentChildId, activityId: activity.id, stars: stars, accuracy: accuracy);
+  Future<void> finished(SessionOutcome outcome) => recorder.finish(childId: currentChildId, activityId: activity.id, outcome: outcome);
 
   await Navigator.of(context).push(
     MaterialPageRoute<void>(
       builder: (_) => playableGames.containsKey(gameId)
-          ? GameScreen(
-              gameId: gameId,
-              skillId: ref.read(contentRuntimeProvider).game(gameId).primarySkillIds.first,
-              onComplete: (accuracy) => finished(starsFor(accuracy), accuracy),
-            )
+          ? GameScreen(gameId: gameId, skillId: ref.read(contentRuntimeProvider).game(gameId).primarySkillIds.first, onComplete: finished)
           : LevelScreen(
               journey: Journey(id: 'journey.activity', nameKey: '', ageRange: [activity.minAge, activity.maxAge], levels: [activity.level]),
               levelIndex: 0,
@@ -44,6 +39,7 @@ Future<void> playJourneyActivity(BuildContext context, WidgetRef ref, Activity a
   );
 
   ref.invalidate(activityRecordsProvider);
+  ref.invalidate(childEvidenceProvider);
   ref.invalidate(levelStarsProvider);
   await ref.read(activityRecordsProvider.future);
   final after = ref.read(journeyProgressProvider);

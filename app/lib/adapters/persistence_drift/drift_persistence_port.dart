@@ -40,7 +40,7 @@ class DriftPersistencePort implements PersistencePort {
             );
       }
       await _db.into(_db.gameRungState).insertOnConflictUpdate(
-            GameRungStateCompanion.insert(childId: childId, gameId: decision.gameId, rungId: decision.nextRungId),
+            GameRungStateCompanion.insert(childId: childId, gameId: decision.gameId, rungId: decision.nextRungId, scaffold: Value(decision.scaffold)),
           );
     });
     await _durabilityBarrier();
@@ -86,5 +86,13 @@ class DriftPersistencePort implements PersistencePort {
           ..where((t) => t.childId.equals(childId) & t.gameId.equals(gameId)))
         .getSingleOrNull();
     return row?.rungId;
+  }
+
+  @override
+  Future<String?> currentScaffold({required String childId, required String gameId}) async {
+    final row = await (_db.select(_db.gameRungState)
+          ..where((t) => t.childId.equals(childId) & t.gameId.equals(gameId)))
+        .getSingleOrNull();
+    return row?.scaffold;
   }
 }

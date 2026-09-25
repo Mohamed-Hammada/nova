@@ -8,6 +8,8 @@ import 'package:nova_app/adapters/in_memory_player_state_port.dart';
 import 'package:nova_app/app.dart';
 import 'package:nova_app/core/content/content_runtime.dart';
 import 'package:nova_app/core/content/models.dart';
+import 'package:nova_app/core/game/session_plan.dart';
+import 'package:nova_app/core/journey/journey_models.dart';
 import 'package:nova_app/core/play/trial_factory.dart';
 import 'package:nova_app/core/play/trials.dart';
 import 'package:nova_app/providers.dart';
@@ -92,5 +94,68 @@ void main() {
     expect(await persistence.currentRung(childId: currentChildId, gameId: gameId), isNotNull);
     expect(speech.spoken.first, contains('Which one has'));
     await _settleAway(tester);
+  });
+
+  group('the adaptive loop through a real level', () {
+    const gameId = 'game.math.more-or-less';
+
+    Future<SessionOutcome> playLevel(WidgetTester tester, InMemoryPersistencePort persistence, FakeSpeechPort speech, {required bool right, required int seed}) async {
+      SessionOutcome? outcome;
+      await tester.pumpWidget(_app(
+        LevelScreen(key: ValueKey('level-$seed'), journey: _single(gameId), levelIndex: 0, seed: seed, onFinished: (o) async => outcome = o),
+        persistence: persistence,
+        state: InMemoryPlayerStatePort(),
+        speech: speech,
+      ));
+      await tester.pump(const Duration(milliseconds: 200));
+      final game = _content.game(gameId);
+      final rung = (await persistence.currentRung(childId: currentChildId, gameId: gameId)) ?? game.rungIds.first;
+      final trials = const TrialFactory().build(game: game, rung: game.rungsById[rung]!, language: 'en', seed: seed, skin: 'apples').cast<ChoiceTrial>();
+      for (final t in trials) {
+        final pick = right ? t.answer : (t.answer + 1) % t.options.length;
+        await tester.tap(find.byType(OptionCard).at(pick));
+        await tester.pump(const Duration(milliseconds: 1700));
+      }
+      await tester.pump(const Duration(seconds: 2));
+      await tester.runAsync(() => Future<void>.delayed(const Duration(milliseconds: 50)));
+      await tester.pump(const Duration(seconds: 1));
+      return outcome!;
+    }
+
+    testWidgets('a struggling session: the Adaptive Engine eases off, and the next session shows how first', (tester) async {
+      tester.view.physicalSize = const Size(1280, 800);
+      tester.view.devicePixelRatio = 1;
+      addTearDown(tester.view.reset);
+      final persistence = InMemoryPersistencePort();
+      final speech = FakeSpeechPort();
+
+      final outcome = await playLevel(tester, persistence, speech, right: false, seed: 11);
+      expect(outcome.accuracy, lessThan(0.5));
+      expect(outcome.move, AdaptiveMove.retreat);
+      expect(outcome.scaffold, ScaffoldLevel.modelled);
+      expect(await persistence.currentScaffold(childId: currentChildId, gameId: gameId), ScaffoldLevel.modelled);
+      expect(find.text('What great effort!'), findsOneWidget, reason: 'a hard session is praised for effort, never judged');
+      await _settleAway(tester);
+
+      // The next session applies the scaffold: the companion shows how first.
+      speech.spoken.clear();
+      await tester.pumpWidget(_app(LevelScreen(key: const ValueKey('again'), journey: _single(gameId), levelIndex: 0, seed: 12), persistence: persistence, state: InMemoryPlayerStatePort(), speech: speech));
+      await tester.pump(const Duration(milliseconds: 300));
+      expect(speech.spoken, contains('Let me show you first!'));
+      await _settleAway(tester);
+    });
+
+    testWidgets('a strong, independent session: the next session is one rung harder', (tester) async {
+      tester.view.physicalSize = const Size(1280, 800);
+      tester.view.devicePixelRatio = 1;
+      addTearDown(tester.view.reset);
+      final persistence = InMemoryPersistencePort();
+      final outcome = await playLevel(tester, persistence, FakeSpeechPort(), right: true, seed: 11);
+      expect(outcome.accuracy, 1);
+      expect(outcome.move, AdaptiveMove.advance);
+      final game = _content.game(gameId);
+      expect(await persistence.currentRung(childId: currentChildId, gameId: gameId), game.rungIds[1]);
+      await _settleAway(tester);
+    });
   });
 }
