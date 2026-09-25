@@ -8,6 +8,7 @@ import '../design/nova_design.dart';
 import '../l10n.dart';
 import '../scene/story_scene.dart';
 import '../widgets/confetti.dart';
+import '../audio/sound_effects.dart';
 import '../world/activity_world.dart';
 
 /// Shown when a child finishes a stage: the companion celebrates the
@@ -34,12 +35,14 @@ class _StageCelebrationState extends ConsumerState<StageCelebration> {
     Future<void>.delayed(const Duration(milliseconds: 1400), () {
       if (!mounted) return;
       setState(() => _revealed = true);
+      ref.read(soundEffectsProvider).play(Sfx.unlock);
       _guide.react(Reaction.surprise);
       _guide.setMood(CharacterMood.excited, hold: const Duration(milliseconds: 1800));
       final l10n = context.l10n;
       ref.read(speechPortProvider).speak(widget.next == null ? l10n.journeyAllDone : l10n.newAdventure, language: ref.read(languageProvider));
     });
     WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) ref.read(soundEffectsProvider).play(Sfx.celebrate);
       if (mounted) ref.read(speechPortProvider).speak(context.l10n.stageComplete, language: ref.read(languageProvider));
     });
   }

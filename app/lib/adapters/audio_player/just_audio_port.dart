@@ -10,17 +10,23 @@ import 'package:nova_app/core/ports/audio_port.dart';
 /// With [bundledAssets] (the build's asset manifest), a path that was never
 /// bundled is skipped outright instead of attempted -- on the web an attempt
 /// would be a failing request to the app's own origin.
+///
+/// [voices] players take turns, so short sounds (effects) can overlap
+/// instead of cutting each other off; narration uses one.
 class JustAudioPort implements AudioPort {
-  JustAudioPort({Set<String>? bundledAssets}) : _bundledAssets = bundledAssets;
+  JustAudioPort({Set<String>? bundledAssets, this.voices = 1}) : _bundledAssets = bundledAssets;
 
   final Set<String>? _bundledAssets;
-  AudioPlayer? _player;
+  final int voices;
+  final _players = <AudioPlayer>[];
+  int _next = 0;
 
   @override
   Future<void> play(String assetPath) async {
     if (_bundledAssets != null && !_bundledAssets.contains(assetPath)) return;
     try {
-      final player = _player ??= AudioPlayer();
+      if (_players.length < voices) _players.add(AudioPlayer());
+      final player = _players[_next++ % _players.length];
       await player.setAsset(assetPath);
       await player.play();
     } catch (_) {

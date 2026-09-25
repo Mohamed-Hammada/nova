@@ -46,6 +46,17 @@ final clockPortProvider = Provider<ClockPort>((ref) => const SystemClock());
 final bundledAssetsProvider = Provider<Set<String>?>((ref) => null);
 final audioPortProvider = Provider<AudioPort>((ref) => JustAudioPort(bundledAssets: ref.watch(bundledAssetsProvider)));
 
+/// Sound effects (taps, chimes, celebrations), unless a grown-up turned them
+/// off. Separate players from narration, so an effect never cuts off a
+/// spoken prompt. Only sounds the build really bundles are played; without
+/// an asset manifest (tests, previews) effects stay silent.
+final soundEffectsEnabledProvider = StateProvider<bool>((ref) => true);
+final soundEffectsPortProvider = Provider<AudioPort>((ref) {
+  final bundled = ref.watch(bundledAssetsProvider);
+  if (!ref.watch(soundEffectsEnabledProvider) || bundled == null) return const SilentAudioPort();
+  return JustAudioPort(bundledAssets: bundled, voices: 3);
+});
+
 // One database for the app's lifetime, shared by both storage ports.
 // openConnection() is chosen at compile time per platform
 // (adapters/persistence_drift/connection.dart): native SQLite on devices,

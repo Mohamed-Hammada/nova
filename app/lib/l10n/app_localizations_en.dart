@@ -895,4 +895,11 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get demoThisOne => 'Watch me: I\'d pick this one!';
+
+  @override
+  String get soundEffects => 'Sound effects';
+
+  @override
+  String get soundEffectsDesc =>
+      'Gentle chimes and pops while playing. Everything is also shown on screen.';
 }

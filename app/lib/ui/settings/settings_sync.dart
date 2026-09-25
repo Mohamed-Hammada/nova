@@ -37,6 +37,7 @@ Future<void> loadSettings(ProviderContainer c, PlayerStatePort store) async {
   final graphics = await get('graphics');
   if (graphics != null) c.read(graphicsSettingProvider.notifier).state = GraphicsQualitySetting.fromString(graphics);
   c.read(speechEnabledProvider.notifier).state = (await get('speech')) != 'off';
+  c.read(soundEffectsEnabledProvider.notifier).state = (await get('soundEffects')) != 'off';
   c.read(voiceAnswersProvider.notifier).state = (await get('voiceAnswers')) == 'on';
   c.read(cameraPlayProvider.notifier).state = (await get('camera')) == 'on';
 }
@@ -64,6 +65,7 @@ class SettingsSync extends ConsumerWidget {
     ref.listen(worldChoiceProvider, (_, w) => save('world', w?.name ?? ''));
     ref.listen(graphicsSettingProvider, (_, g) => save('graphics', g.toJson()));
     ref.listen(speechEnabledProvider, (_, on) => save('speech', on ? 'on' : 'off'));
+    ref.listen(soundEffectsEnabledProvider, (_, on) => save('soundEffects', on ? 'on' : 'off'));
     ref.listen(voiceAnswersProvider, (_, on) => save('voiceAnswers', on ? 'on' : 'off'));
     ref.listen(cameraPlayProvider, (_, on) => save('camera', on ? 'on' : 'off'));
     return child;

@@ -64,6 +64,8 @@ class GrownUpSettings extends ConsumerWidget {
           const Divider(height: NovaSpace.lg),
           toggleRow(Icons.record_voice_over_rounded, l10n.spokenPrompts, l10n.spokenPromptsDesc, ref.watch(speechEnabledProvider),
               (on) => ref.read(speechEnabledProvider.notifier).state = on),
+          toggleRow(Icons.music_note_rounded, l10n.soundEffects, l10n.soundEffectsDesc, ref.watch(soundEffectsEnabledProvider),
+              (on) => ref.read(soundEffectsEnabledProvider.notifier).state = on),
           toggleRow(Icons.mic_rounded, l10n.voiceAnswers, l10n.voiceAnswersDesc, ref.watch(voiceAnswersProvider) && voiceAnswersSupported,
               voiceAnswersSupported ? (on) => toggle(voiceAnswersProvider, on, 'microphone') : null),
           toggleRow(Icons.face_retouching_natural_rounded, l10n.cameraPlay, l10n.cameraPlayDesc, ref.watch(cameraPlayProvider) && facePlaySupported,

@@ -1669,6 +1669,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Watch me: I\'d pick this one!'**
   String get demoThisOne;
+
+  /// Grown-up setting: turn sound effects on or off.
+  ///
+  /// In en, this message translates to:
+  /// **'Sound effects'**
+  String get soundEffects;
+
+  /// Explains the sound effects setting.
+  ///
+  /// In en, this message translates to:
+  /// **'Gentle chimes and pops while playing. Everything is also shown on screen.'**
+  String get soundEffectsDesc;
 }
 
 class _AppLocalizationsDelegate

@@ -11,6 +11,7 @@ import 'package:nova_app/core/play/voice_match.dart';
 import 'package:nova_app/core/play/trials.dart';
 import 'package:nova_app/providers.dart';
 
+import '../audio/sound_effects.dart';
 import '../characters/character_rig.dart';
 import '../characters/character_view.dart';
 import '../design/nova_design.dart';
@@ -84,6 +85,7 @@ class _LevelScreenState extends ConsumerState<LevelScreen> {
   String _scaffold = ScaffoldLevel.hintOnRequest;
 
   late final _speech = ref.read(speechPortProvider);
+  late final _sfx = ref.read(soundEffectsProvider);
   late final _voice = ref.read(voiceInputProvider);
   PlaySession? _session;
   String? _feedback;
@@ -162,6 +164,8 @@ class _LevelScreenState extends ConsumerState<LevelScreen> {
   void _scaffoldRound() {
     final s = _session;
     if (s == null || s.isFinished) return;
+    // Choice answers sweep into the scene.
+    if (s.current is ChoiceTrial) _sfx.play(Sfx.whoosh);
     final help = _scaffold == ScaffoldLevel.modelled
         ? RoundHelp.show
         : (_scaffold == ScaffoldLevel.guided && s.index == 0 ? RoundHelp.firstStep : RoundHelp.none);
@@ -199,6 +203,7 @@ class _LevelScreenState extends ConsumerState<LevelScreen> {
       PlayMoment.show => _scaffold == ScaffoldLevel.modelled && _hintsThisRound == 0 ? l10n.demoThisOne : l10n.showHint,
       PlayMoment.reveal => l10n.revealHere,
     };
+    _sfx.play(moment == PlayMoment.firstStep ? Sfx.pop : Sfx.show);
     _guide.react(moment == PlayMoment.reveal ? Reaction.encourage : Reaction.happy);
     _guide.setMood(CharacterMood.encouraging, hold: const Duration(milliseconds: 1600));
     _speak(text);
@@ -217,9 +222,13 @@ class _LevelScreenState extends ConsumerState<LevelScreen> {
     final retries = _session!.current is ChoiceTrial;
     // Streams log many quick responses; keep reactions for the other rounds.
     if (_session!.current is StreamItemTrial) {
-      if (correct) _guide.react(Reaction.happy);
+      if (correct) {
+        _guide.react(Reaction.happy);
+        _sfx.play(Sfx.pop);
+      }
       return;
     }
+    _sfx.play(correct ? Sfx.success : Sfx.retry);
     // Success is celebrated; a miss gets a soft "oh!" that turns straight
     // into encouragement -- never a buzzer or a red cross.
     if (correct) {
@@ -300,6 +309,7 @@ class _LevelScreenState extends ConsumerState<LevelScreen> {
       _stars = s.stars;
       _confetti++;
     });
+    _sfx.play(Sfx.celebrate);
     // Strong play gets a big celebration; a hard session gets warm praise
     // for the effort -- never a sense of having failed.
     if (s.stars >= 3) {

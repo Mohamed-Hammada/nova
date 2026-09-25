@@ -891,4 +891,11 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get demoThisOne => 'سأريك: أختار هذا!';
+
+  @override
+  String get soundEffects => 'المؤثرات الصوتية';
+
+  @override
+  String get soundEffectsDesc =>
+      'رنّات وأصوات لطيفة أثناء اللعب. كل شيء يظهر على الشاشة أيضًا.';
 }

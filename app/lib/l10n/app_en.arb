@@ -619,5 +619,13 @@
   "demoThisOne": "Watch me: I'd pick this one!",
   "@demoThisOne": {
     "description": "Choice round: demoThisOne"
+  },
+  "soundEffects": "Sound effects",
+  "soundEffectsDesc": "Gentle chimes and pops while playing. Everything is also shown on screen.",
+  "@soundEffects": {
+    "description": "Grown-up setting: turn sound effects on or off."
+  },
+  "@soundEffectsDesc": {
+    "description": "Explains the sound effects setting."
   }
 }

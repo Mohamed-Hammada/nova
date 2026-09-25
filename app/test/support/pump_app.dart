@@ -45,6 +45,8 @@ Future<AppHarness> pumpNovaApp(
   bool disableAnimations = false,
   // The child's age; null starts at first-launch onboarding.
   int? age = 4,
+  // Records sound effects; they are silent otherwise.
+  AudioPort? soundEffects,
 }) async {
   tester.view.physicalSize = size * tester.view.devicePixelRatio;
   addTearDown(tester.view.resetPhysicalSize);
@@ -61,6 +63,7 @@ Future<AppHarness> pumpNovaApp(
     clockPortProvider.overrideWithValue(clock as ClockPort),
     audioPortProvider.overrideWithValue(audio as AudioPort),
     ...deviceFreeOverrides(persistence: store),
+    if (soundEffects != null) soundEffectsPortProvider.overrideWithValue(soundEffects),
   ]);
   addTearDown(container.dispose);
   if (locale != null) container.read(localeProvider.notifier).state = locale;
