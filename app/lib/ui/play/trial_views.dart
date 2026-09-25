@@ -157,6 +157,10 @@ class _OptionCardState extends State<OptionCard> with SingleTickerProviderStateM
   }
 }
 
+/// Shrinks a fixed-size round as a whole when the screen is too small for
+/// it (a narrow phone), so nothing is cut off; it never grows.
+Widget fitDown(Widget child) => Center(child: FittedBox(fit: BoxFit.scaleDown, child: child));
+
 mixin _Pacing<T extends StatefulWidget> on State<T> {
   final _timers = <Timer>[];
 
@@ -361,7 +365,10 @@ class _TapCountTrialViewState extends State<TapCountTrialView> with _Pacing {
     return LayoutBuilder(
       builder: (context, box) {
         final field = Size(math.min(box.maxWidth - 20, 620), math.max(160, box.maxHeight - 150));
-        final cols = t.scattered ? 5 : math.min(t.count, 10);
+        // In lines: one row when it leaves big enough things to tap, two
+        // rows on a narrow phone (never more, so counting stays in order).
+        var cols = t.scattered ? 5 : math.min(t.count, 10);
+        if (!t.scattered && t.count > 5 && field.width / cols < 64) cols = (t.count / 2).ceil();
         final rows = (t.count / cols).ceil();
         final cell = math.min(field.width / cols, field.height / math.max(rows, t.scattered ? 4 : 1));
         final rng = math.Random(t.seed);
@@ -751,8 +758,12 @@ class _SortTrialViewState extends State<SortTrialView> with _Pacing {
       ),
       child: TokenArt(t.card, size: 110),
     );
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
+    // Scales down as a whole on a narrow phone, so every bin stays on screen.
+    return Center(
+      child: FittedBox(
+        fit: BoxFit.scaleDown,
+        child: Column(
+      mainAxisSize: MainAxisSize.min,
       children: [
         if (t.switched)
           TweenAnimationBuilder<double>(
@@ -808,6 +819,8 @@ class _SortTrialViewState extends State<SortTrialView> with _Pacing {
           ],
         ),
       ],
+        ),
+      ),
     );
   }
 }
@@ -916,11 +929,16 @@ class _PairsTrialViewState extends State<PairsTrialView> with _Pacing {
   @override
   Widget build(BuildContext context) {
     final cards = widget.trial.cards;
-    final cols = cards.length <= 4 ? cards.length : (cards.length <= 6 ? 3 : 4);
     return LayoutBuilder(
       builder: (context, box) {
-        final rows = (cards.length / cols).ceil();
-        final size = math.min((box.maxWidth - 40) / cols - 14, (box.maxHeight - 20) / rows - 14).clamp(64.0, 170.0);
+        // The grid shape that gives the biggest cards in this space: 2 x 2
+        // on a phone, one row of four on a wide screen.
+        double sizeFor(int cols) => math.min((box.maxWidth - 40) / cols - 14, (box.maxHeight - 20) / (cards.length / cols).ceil() - 14);
+        var cols = 1;
+        for (var c = 2; c <= cards.length; c++) {
+          if (sizeFor(c) > sizeFor(cols)) cols = c;
+        }
+        final size = sizeFor(cols).clamp(64.0, 170.0);
         return Center(
           child: SizedBox(
             width: cols * (size + 14),
@@ -933,6 +951,8 @@ class _PairsTrialViewState extends State<PairsTrialView> with _Pacing {
                     onTap: () => _flip(i),
                     child: _FlipCard(
                       size: size,
+                      back: widget.ctx.look.tint,
+                      backDeep: widget.ctx.look.deep,
                       faceUp: _peek || _found.contains(i) || _open.contains(i),
                       found: _found.contains(i),
                       child: PicArt(cards[i], size: size * 0.72),
@@ -948,8 +968,12 @@ class _PairsTrialViewState extends State<PairsTrialView> with _Pacing {
 }
 
 class _FlipCard extends StatelessWidget {
-  const _FlipCard({required this.size, required this.faceUp, required this.found, required this.child});
+  const _FlipCard({required this.size, required this.faceUp, required this.found, required this.child, this.back = const Color(0xFF9B6BFF), this.backDeep = const Color(0xFF5B4AE0)});
   final double size;
+
+  /// The card back takes the place's colours.
+  final Color back;
+  final Color backDeep;
   final bool faceUp;
   final bool found;
   final Widget child;
@@ -973,7 +997,7 @@ class _FlipCard extends StatelessWidget {
             color: showFace ? Colors.white : null,
             gradient: showFace
                 ? null
-                : const LinearGradient(begin: Alignment.topLeft, end: Alignment.bottomRight, colors: [Color(0xFF9B6BFF), Color(0xFF5B4AE0)]),
+                : LinearGradient(begin: Alignment.topLeft, end: Alignment.bottomRight, colors: [back, backDeep]),
             border: Border.all(color: found ? const Color(0xFF34C77B) : Colors.white, width: found ? 5 : 3),
             boxShadow: const [BoxShadow(color: Color(0x442A1640), blurRadius: 12, offset: Offset(0, 6))],
           ),
@@ -1305,8 +1329,8 @@ class _ClapTrialViewState extends State<ClapTrialView> with _Pacing {
   @override
   Widget build(BuildContext context) {
     final w = widget.trial.word;
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
+    return fitDown(Column(
+      mainAxisSize: MainAxisSize.min,
       children: [
         GestureDetector(onTap: () => widget.ctx.speak(w.text), child: PicArt(w.pic, size: 140)),
         const SizedBox(height: 6),
@@ -1353,7 +1377,7 @@ class _ClapTrialViewState extends State<ClapTrialView> with _Pacing {
           ],
         ),
       ],
-    );
+    ));
   }
 }
 

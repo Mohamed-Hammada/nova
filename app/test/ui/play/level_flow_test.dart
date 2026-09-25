@@ -50,9 +50,9 @@ Future<void> _settleAway(WidgetTester tester) async {
 }
 
 void main() {
-  for (final lang in ['en', 'ar']) {
-    testWidgets('every playable game opens and shows its first round ($lang)', (tester) async {
-      tester.view.physicalSize = const Size(1280, 800);
+  for (final (lang, size) in [('en', const Size(1280, 800)), ('ar', const Size(1280, 800)), ('en', const Size(390, 780)), ('ar', const Size(390, 780))]) {
+    testWidgets('every playable game opens and shows its first round ($lang, ${size.width.toInt()} wide)', (tester) async {
+      tester.view.physicalSize = size;
       tester.view.devicePixelRatio = 1;
       addTearDown(tester.view.reset);
       for (final id in const TrialFactory().playableGameIds) {
@@ -63,7 +63,7 @@ void main() {
         for (var i = 0; i < 12; i++) {
           await tester.pump(const Duration(milliseconds: 100));
         }
-        expect(tester.takeException(), isNull, reason: id);
+        expect(tester.takeException(), isNull, reason: '$id should lay out without overflow');
         await _settleAway(tester);
       }
     });

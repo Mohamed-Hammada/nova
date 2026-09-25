@@ -464,14 +464,15 @@ class _LevelScreenState extends ConsumerState<LevelScreen> {
                             if (_lastCorrect == true) const Positioned.fill(child: IgnorePointer(child: _Sparkles())),
                           ],
                         );
-                        // Choice answers are objects in the place, so they
-                        // stand in the scene itself; rounds with small
-                        // pieces to drag, sort or read play on a storybook
-                        // mat that keeps them easy to see.
-                        final panel = trial is ChoiceTrial
+                        // Choice answers, memory cards and lights are big
+                        // objects of the place, so they stand in the scene
+                        // itself; rounds with small pieces to drag, sort or
+                        // read play on a storybook mat that keeps them easy
+                        // to see.
+                        final panel = trial is ChoiceTrial || trial is PairsTrial || trial is SequenceTrial
                             ? Padding(padding: EdgeInsets.all(wide ? NovaSpace.md : NovaSpace.xs), child: play)
                             : NovaPanel(
-                                color: const Color(0xF2FFFBF2),
+                                color: Color.lerp(place.color, Colors.white, 0.9)!.withValues(alpha: 0.94),
                                 padding: EdgeInsets.all(wide ? NovaSpace.md : NovaSpace.xs),
                                 child: play,
                               );
