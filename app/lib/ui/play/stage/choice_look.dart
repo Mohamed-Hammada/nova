@@ -7,7 +7,7 @@ import '../../world/activity_world.dart';
 /// balloon over the hills, a bubble by the cove) rather than cards on a form.
 enum Holder {
   card(aspect: 1, face: Rect.fromLTRB(0.1, 0.1, 0.9, 0.9), arrival: Arrival.pop, lifts: false),
-  basket(aspect: 1.08, face: Rect.fromLTRB(0.12, 0.04, 0.88, 0.62), arrival: Arrival.drop, lifts: false),
+  basket(aspect: 1.08, face: Rect.fromLTRB(0.14, 0.14, 0.86, 0.6), arrival: Arrival.drop, lifts: false),
   balloon(aspect: 1.3, face: Rect.fromLTRB(0.15, 0.08, 0.85, 0.66), arrival: Arrival.rise, lifts: true),
   bubble(aspect: 1, face: Rect.fromLTRB(0.17, 0.17, 0.83, 0.83), arrival: Arrival.rise, lifts: true),
   lilyPad(aspect: 1.08, face: Rect.fromLTRB(0.16, 0.06, 0.84, 0.68), arrival: Arrival.pop, lifts: false),
@@ -39,7 +39,7 @@ enum Arrival { pop, drop, rise, slide }
 /// content and mechanic are unchanged.
 @immutable
 class ChoiceLook {
-  const ChoiceLook({required this.holder, required this.tint, required this.deep});
+  const ChoiceLook({required this.holder, required this.tint, required this.deep, this.ground = const Color(0xFFB8E27A)});
 
   final Holder holder;
 
@@ -48,6 +48,9 @@ class ChoiceLook {
 
   /// A deep version for rims and the question frame (contrast on cream).
   final Color deep;
+
+  /// The place's light ground, for the patch the answers stand on.
+  final Color ground;
 
   static const plain = ChoiceLook(holder: Holder.card, tint: Color(0xFFFF9A2E), deep: Color(0xFFD9670B));
 
@@ -71,11 +74,11 @@ class ChoiceLook {
   /// The look for [gameId] played in [place]. The same game played in a
   /// different stage looks different.
   static ChoiceLook of(String gameId, ActivityCategory place) =>
-      ChoiceLook(holder: byGame[gameId] ?? byPlace[place] ?? Holder.card, tint: place.color, deep: place.deep);
+      ChoiceLook(holder: byGame[gameId] ?? byPlace[place] ?? Holder.card, tint: place.color, deep: place.deep, ground: place.scene.groundLight);
 
   @override
-  bool operator ==(Object other) => other is ChoiceLook && other.holder == holder && other.tint == tint && other.deep == deep;
+  bool operator ==(Object other) => other is ChoiceLook && other.holder == holder && other.tint == tint && other.deep == deep && other.ground == ground;
 
   @override
-  int get hashCode => Object.hash(holder, tint, deep);
+  int get hashCode => Object.hash(holder, tint, deep, ground);
 }

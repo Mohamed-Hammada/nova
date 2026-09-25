@@ -15,6 +15,9 @@ import 'package:nova_app/core/play/trials.dart';
 import 'package:nova_app/providers.dart';
 import 'package:nova_app/ui/play/level_screen.dart';
 import 'package:nova_app/ui/play/trial_views.dart';
+import 'package:nova_app/ui/play/stage/choice_look.dart';
+import 'package:nova_app/ui/scene/story_scene.dart';
+import 'package:nova_app/ui/world/activity_world.dart';
 import 'package:nova_app/ui/theme/age_band.dart';
 import 'package:nova_app/ui/theme/motion.dart';
 
@@ -162,5 +165,27 @@ void main() {
       expect(await persistence.currentRung(childId: currentChildId, gameId: gameId), game.rungIds[1]);
       await _settleAway(tester);
     });
+  });
+
+  testWidgets('the world grows richer as the child moves up a game\'s levels, and plays in the stage\'s place', (tester) async {
+    tester.view.physicalSize = const Size(1280, 800);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.reset);
+    const gameId = 'game.lit.en.word-hunt';
+    final game = _content.game(gameId);
+    Future<StoryScene> sceneAt(String rung, {ActivityCategory? place}) async {
+      await tester.pumpWidget(_app(LevelScreen(key: ValueKey('$rung$place'), journey: _single(gameId), levelIndex: 0, seed: 3, rungOverride: rung, place: place),
+          persistence: InMemoryPersistencePort(), state: InMemoryPlayerStatePort(), speech: FakeSpeechPort()));
+      await tester.pump(const Duration(milliseconds: 300));
+      return tester.widget<StoryScene>(find.byType(StoryScene));
+    }
+
+    expect((await sceneAt(game.rungIds.first)).richness, 0);
+    expect((await sceneAt(game.rungIds.last)).richness, 1);
+    // The same game in another stage's place: that place's scene and holders.
+    final cove = await sceneAt(game.rungIds.first, place: ActivityCategory.memory);
+    expect(cove.theme, ActivityCategory.memory.scene);
+    expect(tester.widget<ChoiceHolder>(find.byType(ChoiceHolder).first).look.holder, Holder.bubble);
+    await _settleAway(tester);
   });
 }

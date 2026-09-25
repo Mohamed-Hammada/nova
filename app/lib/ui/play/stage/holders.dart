@@ -32,7 +32,11 @@ class HolderArt extends StatelessWidget {
         foregroundPainter: _HolderPainter(look, back: false),
         child: Stack(
           children: [
-            Positioned.fromRect(rect: face, child: Center(child: child)),
+            // Round holders keep what they carry inside their curve.
+            Positioned.fromRect(
+              rect: face,
+              child: h == Holder.balloon || h == Holder.bubble ? ClipOval(child: Center(child: child)) : Center(child: child),
+            ),
           ],
         ),
       ),
@@ -103,10 +107,11 @@ class _HolderPainter extends CustomPainter {
           ..lineTo(w * 0.84, h * 0.96)
           ..quadraticBezierTo(w * 0.5, h * 1.0, w * 0.16, h * 0.96)
           ..close();
-        final dish = Rect.fromLTRB(w * 0.06, h * 0.0, w * 0.94, h * 0.7);
+        final dish = Rect.fromLTRB(w * 0.08, h * 0.1, w * 0.92, h * 0.7);
         if (back) {
           _shadow(canvas, s);
-          canvas.drawArc(Rect.fromLTRB(w * 0.1, -h * 0.02, w * 0.9, h * 1.1), math.pi, math.pi, false, _stroke(_woodDark, w * 0.05));
+          canvas.drawArc(Rect.fromLTRB(w * 0.16, -h * 0.03, w * 0.84, h * 1.0), math.pi, math.pi, false, _stroke(_woodDark, w * 0.06));
+          canvas.drawArc(Rect.fromLTRB(w * 0.16, -h * 0.03, w * 0.84, h * 1.0), math.pi, math.pi, false, _stroke(_wood, w * 0.025));
           canvas.drawOval(dish, _fill(_cream));
           canvas.drawOval(dish.deflate(2), _stroke(_pale, 3));
           _glow(canvas, Path()..addOval(dish)..addPath(body, Offset.zero));

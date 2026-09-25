@@ -63,9 +63,14 @@ class SceneTheme {
 /// only clouds and motes move, and nothing moves when motion is reduced or
 /// graphics are set low.
 class StoryScene extends StatefulWidget {
-  const StoryScene({super.key, required this.theme, this.horizon = 0.62, this.child});
+  const StoryScene({super.key, required this.theme, this.horizon = 0.62, this.child, this.richness = 0});
 
   final SceneTheme theme;
+
+  /// How festive the place is, 0 to 1. A game grows richer as the child
+  /// moves up its levels: more flowers, bunting across the sky, then
+  /// butterflies and a rainbow. The place stays recognisably the same.
+  final double richness;
 
   /// Where the foreground meadow begins, as a fraction of the height.
   final double horizon;
@@ -101,9 +106,9 @@ class _StorySceneState extends State<StoryScene> with SingleTickerProviderStateM
     return Stack(
       fit: StackFit.expand,
       children: [
-        RepaintBoundary(child: CustomPaint(painter: _LandscapePainter(widget.theme, widget.horizon, rtl))),
+        RepaintBoundary(child: CustomPaint(painter: _LandscapePainter(widget.theme, widget.horizon, rtl, richness: widget.richness))),
         if (quality != GraphicsQuality.low)
-          RepaintBoundary(child: CustomPaint(painter: _SkyLifePainter(widget.theme, widget.horizon, _time, quality))),
+          RepaintBoundary(child: CustomPaint(painter: _SkyLifePainter(widget.theme, widget.horizon, _time, quality, richness: widget.richness))),
         ?widget.child,
       ],
     );
@@ -115,9 +120,10 @@ class _StorySceneState extends State<StoryScene> with SingleTickerProviderStateM
 // ---------------------------------------------------------------------------
 
 class _LandscapePainter extends CustomPainter {
-  _LandscapePainter(this.t, this.horizon, this.rtl);
+  _LandscapePainter(this.t, this.horizon, this.rtl, {this.richness = 0});
   final SceneTheme t;
   final double horizon;
+  final double richness;
 
   /// Mirrors the composition, so the sun and the big tree sit on the side a
   /// reader of the current language looks at last.
@@ -139,6 +145,19 @@ class _LandscapePainter extends CustomPainter {
     final sun = Offset(w * 0.84, h * 0.14);
     canvas.drawCircle(sun, h * 0.34, Paint()..shader = ui.Gradient.radial(sun, h * 0.34, [t.sun.withValues(alpha: 0.55), t.sun.withValues(alpha: 0)]));
     canvas.drawCircle(sun, h * 0.055, Paint()..color = t.sun);
+
+    // A rainbow over the hills, for the richest version of a place.
+    if (richness >= 0.66) {
+      const bands = [Color(0xFFFF8A8A), Color(0xFFFFC56B), Color(0xFFFFF08A), Color(0xFF9BE39B), Color(0xFF8FCBFF), Color(0xFFC3A6FF)];
+      final c = Offset(w * 0.3, horizonY - h * 0.05);
+      for (var i = 0; i < bands.length; i++) {
+        final r = h * (0.42 - i * 0.022);
+        canvas.drawArc(Rect.fromCircle(center: c, radius: r), math.pi, math.pi, false, Paint()
+          ..color = bands[i].withValues(alpha: 0.5)
+          ..style = PaintingStyle.stroke
+          ..strokeWidth = h * 0.022);
+      }
+    }
 
     // Far hills: two soft layers with aerial haze.
     _hills(canvas, size, horizonY - h * 0.16, h * 0.07, 1.3, 0.4, Color.lerp(t.hillFar, t.skyBottom, 0.45)!);
@@ -186,15 +205,46 @@ class _LandscapePainter extends CustomPainter {
       ..close();
     canvas.drawPath(path, Paint()..color = const Color(0xFFF3D9A4).withValues(alpha: 0.85));
 
+    if (richness >= 0.33) _bunting(canvas, size);
+
     // Big foreground tree at the far side, framing the scene.
     _tree(canvas, Offset(w * 0.93, horizonY + h * 0.08), h * 0.12, SceneProp.roundTrees, t.props.contains(SceneProp.fruitTrees));
 
     // Props scattered across the meadow.
     final r2 = math.Random(11);
-    for (var i = 0; i < (w / 70).clamp(6, 22).round(); i++) {
+    for (var i = 0; i < ((w / 70).clamp(6, 22) * (1 + richness)).round(); i++) {
       final p = Offset(r2.nextDouble() * w, horizonY + h * 0.05 + r2.nextDouble() * (h - horizonY) * 0.85);
       final prop = t.props[i % t.props.length];
       _prop(canvas, p, h * 0.014 * (0.8 + r2.nextDouble() * 0.6) * (0.6 + (p.dy - horizonY) / (h - horizonY)), prop, i);
+    }
+  }
+
+  /// Bunting strung across the sky: a celebration of getting better.
+  void _bunting(Canvas canvas, Size size) {
+    final w = size.width, h = size.height;
+    const colours = [Color(0xFFFF7A6B), Color(0xFFFFC83D), Color(0xFF34C77B), Color(0xFF3C8DF2), Color(0xFFB07CFF)];
+    final a = Offset(-w * 0.02, h * 0.03), b = Offset(w * 1.02, h * 0.05);
+    final sag = h * 0.07;
+    Offset at(double u) => Offset.lerp(a, b, u)! + Offset(0, sag * 4 * u * (1 - u));
+    final line = Path()..moveTo(a.dx, a.dy);
+    for (var u = 0.0; u <= 1.0; u += 0.02) {
+      final p = at(u);
+      line.lineTo(p.dx, p.dy);
+    }
+    canvas.drawPath(line, Paint()
+      ..color = const Color(0xFF8A6A50)
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 1.6);
+    final n = (w / 46).clamp(10, 40).round();
+    for (var i = 0; i < n; i++) {
+      final u = (i + 0.5) / n;
+      final p = at(u), q = at(u + 0.5 / n);
+      final flag = Path()
+        ..moveTo(p.dx, p.dy)
+        ..lineTo(q.dx, q.dy)
+        ..lineTo((p.dx + q.dx) / 2, (p.dy + q.dy) / 2 + h * 0.035)
+        ..close();
+      canvas.drawPath(flag, Paint()..color = colours[i % colours.length]);
     }
   }
 
@@ -292,7 +342,7 @@ class _LandscapePainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(_LandscapePainter old) => old.t != t || old.horizon != horizon || old.rtl != rtl;
+  bool shouldRepaint(_LandscapePainter old) => old.t != t || old.horizon != horizon || old.rtl != rtl || old.richness != richness;
 }
 
 // ---------------------------------------------------------------------------
@@ -300,7 +350,8 @@ class _LandscapePainter extends CustomPainter {
 // ---------------------------------------------------------------------------
 
 class _SkyLifePainter extends CustomPainter {
-  _SkyLifePainter(this.t, this.horizon, this.time, this.quality) : super(repaint: time);
+  _SkyLifePainter(this.t, this.horizon, this.time, this.quality, {this.richness = 0}) : super(repaint: time);
+  final double richness;
   final SceneTheme t;
   final double horizon;
   final ValueNotifier<double> time;
@@ -327,6 +378,25 @@ class _SkyLifePainter extends CustomPainter {
       final a = 0.25 + 0.2 * math.sin(s * 1.3 * sp + i);
       canvas.drawCircle(Offset(x, y), 2.2 * sp, Paint()..color = Colors.white.withValues(alpha: a));
     }
+    _butterflies(canvas, size, s);
+  }
+
+  /// Butterflies fluttering over the meadow in a richer place.
+  void _butterflies(Canvas canvas, Size size, double s) {
+    final n = richness >= 0.66 ? 5 : (richness >= 0.33 ? 2 : 0);
+    const wings = [Color(0xFFFF8FB8), Color(0xFFFFC83D), Color(0xFF8FCBFF), Color(0xFFB69CFF), Color(0xFFFF9A5A)];
+    for (var i = 0; i < n; i++) {
+      final x = ((i * 0.23 + 0.1) * size.width + s * (14 + i * 3)) % (size.width + 40) - 20;
+      final y = size.height * (horizon - 0.06 + 0.05 * math.sin(s * 0.9 + i * 1.7) + 0.04 * i);
+      final flap = 0.35 + 0.65 * math.sin(s * 9 + i).abs();
+      final r = size.height * 0.012;
+      final paint = Paint()..color = wings[i % wings.length];
+      for (final side in [-1.0, 1.0]) {
+        canvas.drawOval(Rect.fromCenter(center: Offset(x + side * r * flap, y - r * 0.3), width: r * 2 * flap, height: r * 2.2), paint);
+        canvas.drawOval(Rect.fromCenter(center: Offset(x + side * r * 0.8 * flap, y + r * 0.8), width: r * 1.4 * flap, height: r * 1.5), paint);
+      }
+      canvas.drawLine(Offset(x, y - r), Offset(x, y + r * 1.4), Paint()..color = const Color(0xFF4A3A5A)..strokeWidth = 1.6);
+    }
   }
 
   void _cloud(Canvas canvas, Offset c, double r) {
@@ -341,7 +411,7 @@ class _SkyLifePainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(_SkyLifePainter old) => old.t != t || old.quality != quality;
+  bool shouldRepaint(_SkyLifePainter old) => old.t != t || old.quality != quality || old.richness != richness;
 }
 
 // ---------------------------------------------------------------------------

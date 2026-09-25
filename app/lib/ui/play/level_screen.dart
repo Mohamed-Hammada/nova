@@ -70,6 +70,10 @@ class _LevelScreenState extends ConsumerState<LevelScreen> {
   late final ChoiceLook _look = ChoiceLook.of(_game.id, _place);
   final _companionKey = GlobalKey();
 
+  /// How far up the game's levels this session is (0 to 1): the place grows
+  /// richer as the child advances, and simpler again after a step back.
+  double _richness = 0;
+
   /// Help the scaffold gives as the current round begins.
   RoundHelp _roundHelp = RoundHelp.none;
 
@@ -104,9 +108,11 @@ class _LevelScreenState extends ConsumerState<LevelScreen> {
     final session = PlaySession(mechanicId: _game.mechanicId, trials: trials)..start(rngSeed: seed);
     session.rawEvents.listen(_events.add);
     if (!mounted) return;
+    final steps = _game.rungIds.length - 1;
     setState(() {
       _session = session;
       _scaffold = plan.scaffold;
+      _richness = steps <= 0 ? 0 : (_game.rungIds.indexOf(rung.id) / steps).clamp(0.0, 1.0);
     });
     // Starting: the companion encourages, and says how it will help when the
     // Adaptive Engine chose extra support (or more independence) last time.
@@ -363,6 +369,7 @@ class _LevelScreenState extends ConsumerState<LevelScreen> {
       body: StoryScene(
         theme: place.scene,
         horizon: 0.55,
+        richness: _richness,
         child: Stack(
           children: [
             SafeArea(
@@ -441,16 +448,23 @@ class _LevelScreenState extends ConsumerState<LevelScreen> {
                                   ),
                                 ),
                               );
-                        final panel = NovaPanel(
-                          color: const Color(0xFFFFFCF6),
-                          padding: EdgeInsets.all(wide ? NovaSpace.md : NovaSpace.xs),
-                          child: Stack(
-                            children: [
-                              Positioned.fill(child: stage),
-                              if (_lastCorrect == true) const Positioned.fill(child: IgnorePointer(child: _Sparkles())),
-                            ],
-                          ),
+                        final play = Stack(
+                          children: [
+                            Positioned.fill(child: stage),
+                            if (_lastCorrect == true) const Positioned.fill(child: IgnorePointer(child: _Sparkles())),
+                          ],
                         );
+                        // Choice answers are objects in the place, so they
+                        // stand in the scene itself; rounds with small
+                        // pieces to drag, sort or read play on a storybook
+                        // mat that keeps them easy to see.
+                        final panel = trial is ChoiceTrial
+                            ? Padding(padding: EdgeInsets.all(wide ? NovaSpace.md : NovaSpace.xs), child: play)
+                            : NovaPanel(
+                                color: const Color(0xF2FFFBF2),
+                                padding: EdgeInsets.all(wide ? NovaSpace.md : NovaSpace.xs),
+                                child: play,
+                              );
                         if (_finished) {
                           return _LevelComplete(stars: _stars, l10n: l10n, place: place, onMap: () => Navigator.of(context).pop(true), guide: SizedBox(height: box.maxHeight * 0.55, child: companion));
                         }

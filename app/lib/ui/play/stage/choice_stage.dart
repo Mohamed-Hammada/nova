@@ -196,7 +196,9 @@ class _ChoiceTrialViewState extends State<ChoiceTrialView> {
               QuestionFrame(look: look, child: VisualView(_t.question!, size: questionSize, language: widget.ctx.language)),
               SizedBox(height: short * 0.04),
             ],
-            Wrap(
+            CustomPaint(
+              painter: _GroundPatch(look.ground, floats: holder.lifts),
+              child: Wrap(
               alignment: WrapAlignment.center,
               crossAxisAlignment: WrapCrossAlignment.end,
               spacing: gap,
@@ -220,11 +222,40 @@ class _ChoiceTrialViewState extends State<ChoiceTrialView> {
                   ),
               ],
             ),
+            ),
           ],
         );
       },
     );
   }
+}
+
+/// The patch of sunny ground the answers stand on (or, for things that
+/// float, a soft shadow below them), so they belong to the scene without a
+/// box around them.
+class _GroundPatch extends CustomPainter {
+  _GroundPatch(this.ground, {required this.floats});
+  final Color ground;
+  final bool floats;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final r = Rect.fromCenter(center: Offset(size.width / 2, size.height + (floats ? 14 : 2)), width: size.width + 60, height: math.max(44, size.height * 0.26));
+    if (floats) {
+      canvas.drawOval(r.deflate(8), Paint()
+        ..color = const Color(0x262E1A5C)
+        ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 12));
+      return;
+    }
+    canvas.drawOval(r.shift(const Offset(0, 4)), Paint()
+      ..color = const Color(0x2E2E1A5C)
+      ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 6));
+    canvas.drawOval(r, Paint()..color = Color.lerp(ground, Colors.white, 0.3)!);
+    canvas.drawOval(r.deflate(r.height * 0.16), Paint()..color = Color.lerp(ground, Colors.white, 0.5)!);
+  }
+
+  @override
+  bool shouldRepaint(_GroundPatch old) => old.ground != ground || old.floats != floats;
 }
 
 /// The frame around the question picture: a cream board with the place's
