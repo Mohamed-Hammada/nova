@@ -16,7 +16,7 @@ through the full content -> assessment -> mastery -> adaptive -> persistence pip
 | `docs/superpowers/designs/2026-09-22-nova-game-platform-design.md` | The game platform architecture. |
 | `docs/superpowers/plans/2026-09-22-nova-game-platform-vertical-slice.md` | The task-by-task plan that built `app/` and `tools/content_compiler/`. |
 | `docs/curriculum/` | The eight explanatory chapters and the research log. |
-| `data/` | The specification itself: `schema/` (JSON Schemas) plus YAML for skills, games, transfer tasks, evidence, parameters, assessment rules, language packs, mechanics, signals, journeys (the 50-level map per age group), i18n and audio. |
+| `data/` | The specification itself: `schema/` (JSON Schemas) plus YAML for skills, games, transfer tasks, evidence, parameters, assessment rules, language packs, mechanics, signals, journeys (the 50-level map per age group, divided into stages with level roles and prerequisites), i18n and audio. |
 | `tools/validate/` | The validator (Python) and its tests. |
 | `tools/content_compiler/` | Compiles validated `data/` into `app/assets/content/content_bundle.json`, the app's runtime content. |
 | `app/` | The Flutter app (Android, iOS, desktop and web from one codebase). See "App layout" below. |
