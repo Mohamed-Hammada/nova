@@ -43,7 +43,20 @@ class DriftPersistencePort implements PersistencePort {
             GameRungStateCompanion.insert(childId: childId, gameId: decision.gameId, rungId: decision.nextRungId),
           );
     });
+    await _durabilityBarrier();
   }
+
+  /// Makes the committed session durable on every backend before returning.
+  ///
+  /// On the web (drift over SQLite-on-WebAssembly with IndexedDB storage),
+  /// drift writes to IndexedDB only after a statement that runs OUTSIDE a
+  /// transaction -- the COMMIT itself does not trigger it (drift 2.34/2.35),
+  /// so a committed session could sit in memory and be lost on a reload.
+  /// One trivial statement after the commit forces that write. On native
+  /// SQLite the commit is already durable and this is a no-op read.
+  /// tools/web_smoke/web_smoke.mjs reloads and restarts a real browser to
+  /// prove progress survives.
+  Future<void> _durabilityBarrier() => _db.customStatement('SELECT 1');
 
   @override
   Future<MasteryRecord?> currentMastery({required String childId, required String skillId}) async {

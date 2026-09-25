@@ -1,0 +1,8 @@
+# cmd.exe needs CRLF in batch files; bash needs LF in shell scripts.
+*.bat text eol=crlf
+*.sh  text eol=lf
+
+# Vendored, hash-pinned files (app/web/sqlite_web_assets.json): never convert line endings.
+app/web/drift_worker.js -text
+*.wasm binary
+*.ttf binary

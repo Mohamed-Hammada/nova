@@ -1,261 +1,273 @@
-import 'dart:async';
-import 'dart:math' as math;
-
 import 'package:flutter/material.dart';
-import 'package:nova_app/ui/widgets/jelly_button.dart';
-import 'package:nova_app/ui/widgets/props.dart';
-import 'package:nova_app/core/mechanics/game_mechanic.dart';
-import 'package:nova_app/core/mechanics/raw_events.dart';
+import 'package:nova_app/ui/design/tokens.dart';
+import 'package:nova_app/ui/game/primitives/interactive_object.dart';
 
-/// All counting logic lives here, in plain Dart -- unit-testable without
-/// pumping a widget. DragToCountView below only turns gestures into calls
-/// on this controller and renders the plate/apples.
-///
-/// This mechanic has no continuous animation loop -- it is a discrete
-/// drag-and-drop interaction -- so it is implemented with plain Flutter
-/// Draggable/DragTarget rather than Flame. Flame (declared as a dependency,
-/// Task 4) remains the chosen engine for the app and is exercised starting
-/// with a future continuous/timed mechanic (Plan 2's catch-target), where
-/// its game-loop is what actually earns its keep.
-class DragToCountController implements GameMechanic {
-  DragToCountController({required this.requestedTotal, DateTime Function()? now}) : _now = now ?? DateTime.now;
+// The mechanic's logic is plain Dart in core/; re-exported so existing
+// imports of this file keep resolving DragToCountController.
+export 'package:nova_app/core/mechanics/drag_to_count.dart';
 
-  final int requestedTotal;
-  final DateTime Function() _now;
-  final _controller = StreamController<RawMechanicEvent>.broadcast();
-
-  int _runningTotal = 0;
-  int _hintsThisTrial = 0;
-
-  int get runningTotal => _runningTotal;
-
-  @override
-  String get mechanicId => 'drag-to-count';
-
-  @override
-  Stream<RawMechanicEvent> get rawEvents => _controller.stream;
-
-  @override
-  void start({required int rngSeed}) {
-    _runningTotal = 0;
-    _hintsThisTrial = 0;
-  }
-
-  /// Called when the child drags one apple onto the plate.
-  void placeItem() {
-    _runningTotal += 1;
-    _controller.add(ItemPlaced(runningTotal: _runningTotal, requestedTotal: requestedTotal, usedHint: false, at: _now()));
-  }
-
-  void useHint() => _hintsThisTrial += 1;
-
-  /// Called when the child taps "Done".
-  void submitTrial() {
-    final correct = _runningTotal == requestedTotal;
-    _controller.add(TrialSubmitted(correct: correct, hintsUsedThisTrial: _hintsThisTrial, at: _now()));
-  }
-
-  @override
-  void dispose() => _controller.close();
+/// One item on the table or the plate, as the view sees it.
+class DragToCountItem {
+  const DragToCountItem({required this.id, required this.isDistractor, required this.onPlate});
+  final int id;
+  final bool isDistractor;
+  final bool onPlate;
 }
 
-/// The drag-to-count stage: a shelf of apples, a plate to drop them on,
-/// and a big "Done" button. Pure presentation -- every count goes through
-/// [DragToCountController].
-///
-/// [host] (for example the bear) is drawn behind the plate, so apples are
-/// visibly handed *to* someone. [onDragMove] reports the finger position
-/// while an apple is carried, so the host can watch it.
-class DragToCountView extends StatefulWidget {
-  const DragToCountView({
-    super.key,
-    required this.controller,
-    required this.appleCount,
-    this.host,
-    this.onDragMove,
-    this.onDragEnd,
-    this.appleSize = 72,
-    this.doneLabel = 'Done',
-    this.accent = const Color(0xFF34C77B),
+/// Everything game-specific about how drag-to-count looks and reads: the
+/// same view renders bear-and-apples today and could render
+/// squirrel-and-acorns tomorrow without changing this file.
+class DragToCountSkin {
+  const DragToCountSkin({
+    required this.itemBuilder,
+    required this.plateBuilder,
+    required this.itemLabel,
+    required this.itemOnPlateLabel,
+    required this.giveHint,
+    required this.takeBackHint,
+    required this.plateLabel,
+    required this.plateEmptyLabel,
+    required this.pileLabel,
+    required this.formatNumber,
   });
 
-  final DragToCountController controller;
-  final int appleCount;
-  final Widget? host;
-  final ValueChanged<Offset>? onDragMove;
-  final VoidCallback? onDragEnd;
-  final double appleSize;
-  final String doneLabel;
-  final Color accent;
-
-  @override
-  State<DragToCountView> createState() => _DragToCountViewState();
+  final Widget Function(BuildContext context, DragToCountItem item, double size) itemBuilder;
+  final Widget Function(BuildContext context, bool highlighted, Widget contents) plateBuilder;
+  final String Function(DragToCountItem item) itemLabel;
+  final String Function(DragToCountItem item) itemOnPlateLabel;
+  final String giveHint;
+  final String takeBackHint;
+  final String plateLabel;
+  final String plateEmptyLabel;
+  final String pileLabel;
+  final String Function(int value) formatNumber;
 }
 
-class _DragToCountViewState extends State<DragToCountView> {
-  /// Which tray apples have been handed over, in the order they landed.
-  final _placed = <int>[];
+/// The Flutter face of drag-to-count. Stateless: it renders [items] and
+/// reports intents through [onPlace]/[onRemove]; the session's view model
+/// owns the state and forwards each intent to DragToCountController.
+///
+/// Dragging is never the only way to act. Every item is also a button: a tap,
+/// a click, or Enter/Space when it has keyboard focus moves it to the plate,
+/// and the same on the plate takes it back -- so children who cannot yet
+/// drag, switch-access users, screen-reader users and keyboard users can all
+/// play. Items dropped anywhere but the other zone are not counted.
+class DragToCountView extends StatelessWidget {
+  const DragToCountView({
+    super.key,
+    required this.items,
+    required this.skin,
+    required this.onPlace,
+    required this.onRemove,
+    this.enabled = true,
+    this.showCount = false,
+    this.plateHeader,
+  });
 
-  void _accept(int index) {
-    if (_placed.contains(index)) return;
-    setState(() => _placed.add(index));
-    widget.controller.placeItem();
-  }
+  final List<DragToCountItem> items;
+  final DragToCountSkin skin;
+  final ValueChanged<int> onPlace;
+  final ValueChanged<int> onRemove;
+
+  /// False while feedback is showing: the board is visible but frozen.
+  final bool enabled;
+
+  /// Numbers the target items on the plate (1, 2, 3...). Only on while a hint
+  /// is active -- an always-visible count would do the counting for the
+  /// child.
+  final bool showCount;
+
+  /// Shown above the plate (e.g. the bear making the request).
+  final Widget? plateHeader;
 
   @override
   Widget build(BuildContext context) {
-    final a = widget.appleSize;
-    return Semantics(
-      label: 'Drag apples onto the plate for the bear',
-      child: LayoutBuilder(
-        builder: (context, box) {
-          final plateWidth = (box.maxWidth * 0.5).clamp(200.0, 360.0);
-          return Column(
-            children: [
-              Expanded(
-                child: SizedBox(
-                  width: double.infinity,
-                  child: Stack(
-                    alignment: Alignment.bottomCenter,
-                    clipBehavior: Clip.none,
-                    children: [
-                      if (widget.host != null) Positioned.fill(bottom: plateWidth * 0.18, child: widget.host!),
-                      // Placing an item only counts when it is actually dropped on
-                      // the plate -- Draggable.onDragEnd fires on ANY drag end
-                      // regardless of where it lands, which previously counted a
-                      // drag started and released anywhere on screen.
-                      // DragTarget.onAcceptWithDetails only fires when the drop
-                      // lands on this target.
-                      DragTarget<int>(
-                        onAcceptWithDetails: (d) => _accept(d.data),
-                        builder: (context, candidate, rejected) => TweenAnimationBuilder<double>(
-                          tween: Tween(end: candidate.isNotEmpty ? 1 : 0),
-                          duration: const Duration(milliseconds: 200),
-                          builder: (context, glow, _) => Transform.scale(
-                            scale: 1 + 0.06 * glow,
-                            child: Plate3D(
-                              width: plateWidth,
-                              glow: glow,
-                              child: _PlatedApples(count: _placed.length, appleSize: a * 0.8, plateWidth: plateWidth),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-              const SizedBox(height: 12),
-              _Shelf(
-                child: Wrap(
-                  alignment: WrapAlignment.center,
-                  spacing: a * 0.3,
-                  runSpacing: 8,
-                  children: [
-                    for (var i = 0; i < widget.appleCount; i++)
-                      if (_placed.contains(i))
-                        SizedBox(width: a, height: a)
-                      else
-                        Draggable<int>(
-                          data: i,
-                          onDragUpdate: widget.onDragMove == null ? null : (d) => widget.onDragMove!(d.globalPosition),
-                          onDragEnd: (_) => widget.onDragEnd?.call(),
-                          feedback: Transform.rotate(angle: -0.12, child: Apple3D(size: a * 1.25, lifted: true)),
-                          childWhenDragging: SizedBox(
-                            width: a,
-                            height: a,
-                            child: Opacity(opacity: 0.25, child: Apple3D(size: a)),
-                          ),
-                          child: _Wiggle(child: Apple3D(size: a)),
-                        ),
-                  ],
-                ),
-              ),
-              const SizedBox(height: 14),
-              JellyButton(
-                onPressed: widget.controller.submitTrial,
-                color: widget.accent,
-                icon: Icons.check_rounded,
-                label: widget.doneLabel,
-                size: (a * 0.85).clamp(56.0, 84.0),
-              ),
-              const SizedBox(height: 12),
-            ],
-          );
-        },
-      ),
-    );
+    final pile = items.where((i) => !i.onPlate).toList();
+    final plate = items.where((i) => i.onPlate).toList();
+
+    return LayoutBuilder(builder: (context, constraints) {
+      final wide = constraints.maxWidth >= 720;
+      final itemSize = constraints.maxWidth < 380 ? NovaSize.childTouch : NovaSize.gameItem;
+      final plateZone = _PlateZone(
+        items: plate, skin: skin, itemSize: itemSize, enabled: enabled, showCount: showCount,
+        header: plateHeader, onPlace: onPlace, onRemove: onRemove,
+      );
+      final pileZone = _PileZone(items: pile, skin: skin, itemSize: itemSize, enabled: enabled, onPlace: onPlace, onRemove: onRemove);
+
+      // Wide: table and plate side by side (table on the reading-start side,
+      // so the motion follows reading direction and mirrors under RTL).
+      // Narrow: plate above table, so the bear and plate stay in view.
+      return wide
+          // Both zones as tall as the taller one, even inside a scroll view.
+          ? IntrinsicHeight(
+              child: Row(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
+                Expanded(child: pileZone),
+                const SizedBox(width: NovaSpace.lg),
+                Expanded(child: plateZone),
+              ]),
+            )
+          : Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
+              plateZone,
+              const SizedBox(height: NovaSpace.md),
+              pileZone,
+            ]);
+    });
   }
 }
 
-/// Apples resting on the plate, each dropping in with a bounce.
-class _PlatedApples extends StatelessWidget {
-  const _PlatedApples({required this.count, required this.appleSize, required this.plateWidth});
-  final int count;
-  final double appleSize;
-  final double plateWidth;
+class _PileZone extends StatelessWidget {
+  const _PileZone({required this.items, required this.skin, required this.itemSize, required this.enabled, required this.onPlace, required this.onRemove});
+  final List<DragToCountItem> items;
+  final DragToCountSkin skin;
+  final double itemSize;
+  final bool enabled;
+  final ValueChanged<int> onPlace;
+  final ValueChanged<int> onRemove;
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      clipBehavior: Clip.none,
-      children: [
-        for (var i = 0; i < count; i++)
-          Positioned(
-            left: plateWidth / 2 - appleSize / 2 + ((i % 3) - 1) * appleSize * 0.7 + (i ~/ 3) * appleSize * 0.35,
-            top: plateWidth * 0.21 - appleSize * 0.82 - (i ~/ 3) * appleSize * 0.35,
-            child: TweenAnimationBuilder<double>(
-              tween: Tween(begin: 0, end: 1),
-              duration: const Duration(milliseconds: 650),
-              curve: Curves.bounceOut,
-              builder: (context, v, child) => Transform.translate(offset: Offset(0, -80 * (1 - v)), child: child),
-              child: Apple3D(size: appleSize),
+    // Accepts items dragged back off the plate.
+    return DragTarget<int>(
+      key: const ValueKey('drag-to-count.pile'),
+      onWillAcceptWithDetails: (d) => enabled && _isOnPlate(d.data),
+      onAcceptWithDetails: (d) => onRemove(d.data),
+      builder: (context, candidates, _) => Semantics(
+        container: true,
+        label: skin.pileLabel,
+        child: Container(
+          decoration: BoxDecoration(
+            color: NovaPalette.table,
+            borderRadius: BorderRadius.circular(NovaRadius.lg),
+            border: Border.all(
+              color: candidates.isNotEmpty ? Theme.of(context).colorScheme.primary : Colors.transparent,
+              width: 3,
             ),
           ),
-      ],
+          padding: const EdgeInsets.all(NovaSpace.md),
+          alignment: Alignment.center,
+          child: Wrap(
+            alignment: WrapAlignment.center,
+            spacing: NovaSpace.sm,
+            runSpacing: NovaSpace.sm,
+            children: [
+              for (final item in items)
+                _ItemButton(
+                  key: ValueKey('drag-to-count.item.${item.id}'),
+                  item: item, skin: skin, size: itemSize, enabled: enabled,
+                  label: skin.itemLabel(item), hint: skin.giveHint,
+                  onActivate: () => onPlace(item.id),
+                ),
+            ],
+          ),
+        ),
+      ),
     );
   }
+
+  bool _isOnPlate(int id) => !items.any((i) => i.id == id);
 }
 
-/// A wooden shelf the apples sit on.
-class _Shelf extends StatelessWidget {
-  const _Shelf({required this.child});
-  final Widget child;
+class _PlateZone extends StatelessWidget {
+  const _PlateZone({
+    required this.items, required this.skin, required this.itemSize, required this.enabled,
+    required this.showCount, required this.header, required this.onPlace, required this.onRemove,
+  });
+  final List<DragToCountItem> items;
+  final DragToCountSkin skin;
+  final double itemSize;
+  final bool enabled;
+  final bool showCount;
+  final Widget? header;
+  final ValueChanged<int> onPlace;
+  final ValueChanged<int> onRemove;
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 24),
-      padding: const EdgeInsets.fromLTRB(24, 10, 24, 18),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(28),
-        gradient: const LinearGradient(
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-          colors: [Color(0xFFE2A969), Color(0xFFC07F3F), Color(0xFF8E5426)],
-          stops: [0, 0.6, 1],
-        ),
-        border: Border.all(color: const Color(0xFFF3CB94), width: 2),
-        boxShadow: const [
-          BoxShadow(color: Color(0x552A1640), blurRadius: 18, offset: Offset(0, 10)),
-          BoxShadow(color: Color(0xFF6E3E1A), offset: Offset(0, 6)),
+    var targetNumber = 0;
+    final contents = items.isEmpty
+        ? SizedBox(
+            height: itemSize,
+            child: Center(child: Text(skin.plateEmptyLabel, style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: NovaPalette.inkMuted))),
+          )
+        : Wrap(
+            alignment: WrapAlignment.center,
+            spacing: NovaSpace.xs,
+            runSpacing: NovaSpace.xs,
+            children: [
+              for (final item in items)
+                _ItemButton(
+                  key: ValueKey('drag-to-count.plate-item.${item.id}'),
+                  item: item, skin: skin, size: itemSize, enabled: enabled,
+                  label: skin.itemOnPlateLabel(item), hint: skin.takeBackHint,
+                  badge: showCount && !item.isDistractor ? skin.formatNumber(++targetNumber) : null,
+                  onActivate: () => onRemove(item.id),
+                ),
+            ],
+          );
+
+    // Placing only counts when the drop lands on this target: DragTarget
+    // acceptance, not Draggable.onDragEnd (which fires wherever a drag ends).
+    return DragTarget<int>(
+      key: const ValueKey('drag-to-count.plate'),
+      onWillAcceptWithDetails: (d) => enabled && !items.any((i) => i.id == d.data),
+      onAcceptWithDetails: (d) => onPlace(d.data),
+      builder: (context, candidates, _) => Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          ?header,
+          Semantics(
+            container: true,
+            label: skin.plateLabel,
+            // A steady minimum size, so the plate does not shrink and jump
+            // as items arrive (it still grows when many are on it).
+            child: ConstrainedBox(
+              constraints: BoxConstraints(minWidth: itemSize * 4 + NovaSpace.xl),
+              child: skin.plateBuilder(context, candidates.isNotEmpty, contents),
+            ),
+          ),
         ],
       ),
-      child: child,
     );
   }
 }
 
-/// A gentle one-time wiggle so apples say "pick me up" when they appear.
-class _Wiggle extends StatelessWidget {
-  const _Wiggle({required this.child});
-  final Widget child;
+/// A game item that is both draggable and a button.
+class _ItemButton extends StatelessWidget {
+  const _ItemButton({
+    super.key,
+    required this.item,
+    required this.skin,
+    required this.size,
+    required this.enabled,
+    required this.label,
+    required this.hint,
+    required this.onActivate,
+    this.badge,
+  });
+
+  final DragToCountItem item;
+  final DragToCountSkin skin;
+  final double size;
+  final bool enabled;
+  final String label;
+  final String hint;
+  final VoidCallback onActivate;
+  final String? badge;
 
   @override
-  Widget build(BuildContext context) => TweenAnimationBuilder<double>(
-    tween: Tween(begin: 0, end: 1),
-    duration: const Duration(milliseconds: 900),
-    builder: (context, v, child) => Transform.rotate(angle: 0.18 * (1 - v) * math.sin(v * math.pi * 6), child: child),
-    child: child,
-  );
+  Widget build(BuildContext context) {
+    return InteractiveObject(
+      id: item.id,
+      objectId: item.isDistractor ? 'pear' : 'apple',
+      enabled: enabled,
+      label: label,
+      actionHint: hint,
+      onActivate: onActivate,
+      size: size,
+      badge: badge,
+      visual: skin.itemBuilder(context, item, size),
+      onPlate: item.onPlate,
+    );
+  }
 }
+

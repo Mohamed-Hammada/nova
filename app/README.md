@@ -1,5 +1,12 @@
 # Nova app
 
+The Flutter client: offline-first, no backend. Build, run and test it through the scripts in
+`../scripts/` (they compile the content bundle first). See the repository `README.md`, sections
+"Build and test the app" and "App layout".
+
+Before running `flutter test` or `flutter run` directly from this folder, generate the content
+bundle once with `../scripts/regenerate_content_bundle.sh` (or `..\scripts\regenerate_content_bundle.bat`).
+
 The Flutter client for Nova: Android, iOS, web and desktop from one codebase, fully offline.
 See the root `README.md` for how the content bundle is built, and
 `docs/superpowers/designs/2026-09-22-nova-game-platform-design.md` for the architecture.
@@ -18,13 +25,17 @@ See the root `README.md` for how the content bundle is built, and
 | Path | What it is |
 |---|---|
 | `theme/age_band.dart` | The three age groups (2–3, 4–5, 6–8). Each has a guide character, a world, and an interface scale (bigger targets for younger children). Which games appear still comes from each game's `age_range` in the spec. |
-| `theme/nova_theme.dart`, `theme/strings.dart` | Typography (bundled Baloo Bhaijaan 2, Latin + Arabic), colours, and the app's own English/Arabic interface text. Curriculum text still comes from the content bundle. |
+| `design/` | The design system (tokens, theme, `NovaPage`, `NovaCard`, `NovaButton`, feedback and state views) used by the grown-up and chrome screens. |
+| `theme/nova_theme.dart`, `theme/labels.dart` | Play-screen typography (bundled Noto Sans with Noto Sans Arabic, the same families as the design system) and world colours; `labels.dart` maps enums (age group, world, graphics setting) to localized names. All interface text lives in `lib/l10n/app_en.arb` and `app_ar.arb`; curriculum text still comes from the content bundle. |
 | `theme/motion.dart` | `AmbientMotion`: switches looping decorative animation off for reduced-motion users and for widget tests. One-shot feedback animations always play. |
 | `characters/character_rig.dart` | A small real-time 3D renderer. Each character is a rig of ellipsoids with joints (head, arms, legs, ears, tail, antenna). Every frame it poses, projects and depth-sorts the parts, then shades them with key, fill, bounce, rim and specular light. Eyes, mouths and brows are surface details that turn with the head. No image assets are needed. |
 | `characters/character_view.dart` | Animation: idle breathing, blinking and glancing around, head-tracking (`lookAt`), and one-shot reactions (`happy`, `cheer`, `wave`, `eat`, `encourage`), built from squash-and-stretch, anticipation and eased envelopes. |
 | `scene/world_backdrop.dart` | The animated worlds: Candy Meadow (2–3), Sunny Forest (4–5), Cosmic Lab (6–8). Parallax hills, a light source with bloom, clouds or stars, particles and a vignette. |
 | `widgets/` | Pressable 3D buttons, tilting game cards, speech bubbles, one-shot confetti, glossy apple/plate/star props. |
-| `home_screen.dart`, `age_picker.dart`, `game_screen.dart`, `parent_view.dart` | The screens. The grown-ups area opens with a press-and-hold, so a stray tap from a child doesn't open it. |
+| `home/home_screen.dart` | Home: the companion greeting, the journey card, and every game for the child's age and language. |
+| `game/` | Dedicated game screens (the catalog, starting with *Bear's Apples* on the 3D stage) and their session controller. |
+| `progress/progress_screen.dart` | The grown-ups view: skill progress, then settings (spoken prompts, voice answers, face play, graphics quality). |
+| `settings/` | About me (name, age, companion, world, language), grown-up settings and the permission flow, and `settings_sync.dart`, which loads saved settings at boot and saves each change. |
 
 ### Characters
 
@@ -50,7 +61,7 @@ To add a character, add a `CharacterKind`, a model (a list of `Part`s plus joint
   short stories. They are working choices to be reviewed by language specialists and moved into the
   language packs when narration is recorded.
 - `trial_views.dart` has one view per interaction; `level_screen.dart` runs a level (prompt, hint,
-  repeat, voice answer, guide reactions, star reward); `journey_screen.dart` is the level map.
+  repeat, voice answer, guide reactions, star reward); `journey_screen.dart` is the level map and `journey_card.dart` its entry on Home. Levels whose game has a dedicated catalog screen open that screen, and still earn stars.
 
 ## Settings and personalisation
 

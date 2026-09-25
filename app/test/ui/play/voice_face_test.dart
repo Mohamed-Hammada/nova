@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:nova_app/adapters/in_memory_player_state_port.dart';
+import 'package:nova_app/app.dart';
 import 'package:nova_app/core/content/content_runtime.dart';
 import 'package:nova_app/core/content/models.dart';
 import 'package:nova_app/core/play/stories.dart';
@@ -66,7 +67,8 @@ void main() {
         voiceInputProvider.overrideWithValue(voice),
         voiceAnswersProvider.overrideWith((ref) => true),
       ],
-      child: MaterialApp(
+      child: NovaMaterialApp(
+        locale: const Locale('en'),
         home: AmbientMotion(
           enabled: false,
           child: LevelScreen(journey: Journey(id: 'j', nameKey: '', ageRange: const [2, 8], levels: [JourneyLevel(id: 'v-1', gameId: gameId)]), levelIndex: 0, seed: 4),

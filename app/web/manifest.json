@@ -3,10 +3,10 @@
     "short_name": "Nova",
     "start_url": ".",
     "display": "standalone",
-    "background_color": "#4FB3FF",
-    "theme_color": "#4FB3FF",
-    "description": "Play-based learning for ages 2-8.",
-    "orientation": "any",
+    "background_color": "#FFF8EE",
+    "theme_color": "#2350C8",
+    "description": "Learning games for children aged 2 to 8, in Arabic and English.",
+    "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [
         {

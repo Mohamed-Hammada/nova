@@ -5,7 +5,7 @@ import 'package:nova_app/providers.dart';
 
 import '../characters/character_rig.dart';
 import '../theme/age_band.dart';
-import '../theme/graphics.dart';
+import '../game/stage3d/stage_capability.dart';
 
 /// The age group for an exact age.
 AgeBand bandForAge(int age) => AgeBand.values.firstWhere((b) => age >= b.minAge && age <= b.maxAge, orElse: () => age < 2 ? AgeBand.tiny : AgeBand.champion);
@@ -30,11 +30,12 @@ Future<void> loadSettings(ProviderContainer c, PlayerStatePort store) async {
     if (band != null) c.read(ageBandProvider.notifier).state = band;
   }
   final lang = await get('language');
-  if (lang == 'ar' || lang == 'en') c.read(languageProvider.notifier).state = lang!;
+  if (lang == 'ar' || lang == 'en') c.read(localeProvider.notifier).state = Locale(lang!);
   c.read(childNameProvider.notifier).state = await get('name') ?? '';
   c.read(companionChoiceProvider.notifier).state = _byName(CharacterKind.values, await get('companion'));
   c.read(worldChoiceProvider.notifier).state = _byName(WorldKind.values, await get('world'));
-  c.read(graphicsProvider.notifier).state = _byName(GraphicsQuality.values, await get('graphics')) ?? GraphicsQuality.high;
+  final graphics = await get('graphics');
+  if (graphics != null) c.read(graphicsSettingProvider.notifier).state = GraphicsQualitySetting.fromString(graphics);
   c.read(speechEnabledProvider.notifier).state = (await get('speech')) != 'off';
   c.read(voiceAnswersProvider.notifier).state = (await get('voiceAnswers')) == 'on';
   c.read(cameraPlayProvider.notifier).state = (await get('camera')) == 'on';
@@ -57,11 +58,11 @@ class SettingsSync extends ConsumerWidget {
 
     ref.listen(ageBandProvider, (_, b) => save('band', b.name));
     ref.listen(childAgeProvider, (_, a) => save('age', a?.toString() ?? ''));
-    ref.listen(languageProvider, (_, l) => save('language', l));
+    ref.listen(localeProvider, (_, l) => save('language', l?.languageCode ?? ''));
     ref.listen(childNameProvider, (_, n) => save('name', n));
     ref.listen(companionChoiceProvider, (_, c) => save('companion', c?.name ?? ''));
     ref.listen(worldChoiceProvider, (_, w) => save('world', w?.name ?? ''));
-    ref.listen(graphicsProvider, (_, g) => save('graphics', g.name));
+    ref.listen(graphicsSettingProvider, (_, g) => save('graphics', g.toJson()));
     ref.listen(speechEnabledProvider, (_, on) => save('speech', on ? 'on' : 'off'));
     ref.listen(voiceAnswersProvider, (_, on) => save('voiceAnswers', on ? 'on' : 'off'));
     ref.listen(cameraPlayProvider, (_, on) => save('camera', on ? 'on' : 'off'));

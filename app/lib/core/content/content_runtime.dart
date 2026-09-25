@@ -28,10 +28,10 @@ class ContentRuntime {
   String get schemaVersion => _bundle.schemaVersion;
   String get contentHash => _bundle.contentHash;
 
-  Skill skill(String id) => _skillsById[id] ?? (throw ArgumentError('no such skill: $id'));
-  /// Every game in the bundle, in spec order.
+  /// Every game in the bundle, in bundle order.
   List<Game> get games => List.unmodifiable(_bundle.games);
 
+  Skill skill(String id) => _skillsById[id] ?? (throw ArgumentError('no such skill: $id'));
   List<Journey> get journeys => _bundle.journeys;
 
   /// The journey whose age range contains [age], if any.

@@ -383,9 +383,12 @@ class _Scene extends StatelessWidget {
           Positioned(
             right: size * 0.12,
             top: size * 0.04,
-            child: Text('z z', style: novaText(size * 0.14, weight: 800, color: const Color(0xFF7C6CF2))),
+            // A drawn snore, not words: hidden from screen readers.
+            child: ExcludeSemantics(child: Text(_snore, style: novaText(size * 0.14, weight: 800, color: const Color(0xFF7C6CF2)))),
           ),
       ],
     ),
   );
 }
+
+const _snore = 'z z';

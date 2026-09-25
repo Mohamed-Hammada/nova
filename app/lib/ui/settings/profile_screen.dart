@@ -8,7 +8,8 @@ import '../play/visual_view.dart';
 import '../scene/world_backdrop.dart';
 import '../theme/age_band.dart';
 import '../theme/nova_theme.dart';
-import '../theme/strings.dart';
+import '../l10n.dart';
+import '../theme/labels.dart';
 import '../widgets/jelly_button.dart';
 import 'settings_sync.dart';
 
@@ -33,7 +34,8 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
     final lang = ref.watch(languageProvider);
-    final s = UiStrings.of(lang);
+    final l10n = context.l10n;
+    final rtl = Directionality.of(context) == TextDirection.rtl;
     final band = ref.watch(ageBandProvider);
     final age = ref.watch(childAgeProvider);
     final p = ref.watch(paletteProvider);
@@ -75,10 +77,10 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                       color: p.accent,
                       circle: true,
                       size: 48,
-                      child: Icon(s.isRtl ? Icons.arrow_forward_rounded : Icons.arrow_back_rounded, color: Colors.white, size: 26),
+                      child: Icon(rtl ? Icons.arrow_forward_rounded : Icons.arrow_back_rounded, color: Colors.white, size: 26),
                     ),
                     const SizedBox(width: 12),
-                    Text(s.aboutMe, style: novaText(30, weight: 800, color: ink)),
+                    Text(l10n.aboutMe, style: novaText(30, weight: 800, color: ink)),
                   ],
                 ),
               ),
@@ -90,14 +92,14 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                       padding: const EdgeInsets.fromLTRB(16, 4, 16, 24),
                       children: [
                         section(
-                          s.myName,
+                          l10n.myName,
                           TextField(
                             controller: _name,
                             maxLength: 20,
                             textCapitalization: TextCapitalization.words,
                             style: novaText(26, weight: 700, color: const Color(0xFF2E2440)),
                             decoration: InputDecoration(
-                              hintText: s.typeName,
+                              hintText: l10n.typeName,
                               counterText: '',
                               filled: true,
                               fillColor: Colors.white,
@@ -108,7 +110,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                           ),
                         ),
                         section(
-                          s.howOld,
+                          l10n.howOld,
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
@@ -129,12 +131,12 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                                 ],
                               ),
                               const SizedBox(height: 10),
-                              Text('${s.bandTitle(band)} · ${s.ageYears(band)}', style: novaText(18, weight: 700, color: ink.withValues(alpha: 0.75))),
+                              Text('${bandTitle(context, band)} · ${ageYears(context, band)}', style: novaText(18, weight: 700, color: ink.withValues(alpha: 0.75))),
                             ],
                           ),
                         ),
                         section(
-                          s.myFriend,
+                          l10n.myFriend,
                           Wrap(
                             spacing: 12,
                             runSpacing: 12,
@@ -142,7 +144,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                               _Choice(
                                 selected: companionChoice == null,
                                 color: p.accent,
-                                label: s.automatic,
+                                label: l10n.automatic,
                                 onTap: () => ref.read(companionChoiceProvider.notifier).state = null,
                                 child: CharacterView(kind: band.character, rimColor: p.glow),
                               ),
@@ -158,7 +160,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                           ),
                         ),
                         section(
-                          s.myWorld,
+                          l10n.myWorld,
                           Wrap(
                             spacing: 12,
                             runSpacing: 12,
@@ -166,7 +168,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                               _Choice(
                                 selected: worldChoice == null,
                                 color: p.accent,
-                                label: s.automatic,
+                                label: l10n.automatic,
                                 onTap: () => ref.read(worldChoiceProvider.notifier).state = null,
                                 child: ClipRRect(
                                   borderRadius: BorderRadius.circular(18),
@@ -177,7 +179,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                                 _Choice(
                                   selected: worldChoice == w,
                                   color: p.accent,
-                                  label: s.worldName(w),
+                                  label: worldName(context, w),
                                   onTap: () => ref.read(worldChoiceProvider.notifier).state = w,
                                   child: ClipRRect(
                                     borderRadius: BorderRadius.circular(18),
@@ -188,16 +190,16 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                           ),
                         ),
                         section(
-                          s.languageLabel,
+                          l10n.languageLabel,
                           Wrap(
                             spacing: 12,
                             children: [
-                              for (final (code, label) in const [('en', 'English'), ('ar', 'العربية')])
+                              for (final (code, label) in [('en', l10n.languageNameEnglish), ('ar', l10n.languageNameArabic)])
                                 _Bubble(
                                   wide: true,
                                   selected: lang == code,
                                   color: p.accent,
-                                  onTap: () => ref.read(languageProvider.notifier).state = code,
+                                  onTap: () => ref.read(localeProvider.notifier).state = Locale(code),
                                   child: Text(label, style: novaText(24, weight: 800, color: lang == code ? Colors.white : const Color(0xFF2E2440))),
                                 ),
                             ],

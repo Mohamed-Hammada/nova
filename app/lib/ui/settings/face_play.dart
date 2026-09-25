@@ -30,7 +30,7 @@ class FacePlay extends ConsumerStatefulWidget {
 
 class _FacePlayState extends ConsumerState<FacePlay> {
   late final _buddy = FaceBuddy(
-    onLook: widget.controller.lookAt,
+    onLook: (t) => widget.controller.lookAt(t == null ? null : Offset(t.x, t.y)),
     onCue: (cue) => widget.controller.react(cue == BuddyCue.smileBack ? Reaction.happy : Reaction.wave),
   );
 

@@ -1,0 +1,360 @@
+{
+  "@@locale": "en",
+  "appTitle": "Nova",
+  "@appTitle": {
+    "description": "Product name, shown in the window title and header."
+  },
+  "homeGreeting": "Let's play!",
+  "homeSubtitle": "Pick a game to start.",
+  "playGame": "Play",
+  "@playGame": {
+    "description": "Button on a game card that starts the game."
+  },
+  "grownUps": "For grown-ups",
+  "@grownUps": {
+    "description": "Entry point to the parent/caregiver progress area."
+  },
+  "languageMenuTooltip": "Change language",
+  "languageNameEnglish": "English",
+  "@languageNameEnglish": {
+    "description": "Endonym: always written in English, in every locale."
+  },
+  "languageNameArabic": "العربية",
+  "@languageNameArabic": {
+    "description": "Endonym: always written in Arabic, in every locale."
+  },
+  "loadingMessage": "Getting ready…",
+  "errorTitle": "Something went wrong",
+  "errorContentUnavailable": "The games could not be loaded on this device.",
+  "errorGameUnavailable": "This game could not be started.",
+  "retry": "Try again",
+  "emptyGamesTitle": "No games yet",
+  "emptyGamesBody": "Games will appear here when they are ready.",
+  "leaveGame": "Back to games",
+  "gamePrompt": "{count, plural, =1{Give the bear {countText} apple} other{Give the bear {countText} apples}}",
+  "@gamePrompt": {
+    "description": "What the bear asks for. countText is count already formatted for the locale's digits.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "countText": {
+        "type": "String"
+      }
+    }
+  },
+  "gameHowTo": "Drag the apples to the plate, or tap them.",
+  "done": "Done",
+  "hint": "Help me count",
+  "hintOnPlate": "{countText} on the plate",
+  "@hintOnPlate": {
+    "description": "Shown only after the child asks for help: the running count.",
+    "placeholders": {
+      "countText": {
+        "type": "String"
+      }
+    }
+  },
+  "trialProgress": "Question {current} of {total}",
+  "@trialProgress": {
+    "description": "Screen-reader label for the trial progress dots.",
+    "placeholders": {
+      "current": {
+        "type": "String"
+      },
+      "total": {
+        "type": "String"
+      }
+    }
+  },
+  "feedbackCorrect": "That's just right! The bear is happy.",
+  "feedbackTryAgain": "Not quite. Let's count again.",
+  "feedbackOnlyApples": "The bear only wants apples.",
+  "feedbackMoveOn": "Good try! Let's do the next one.",
+  "next": "Next",
+  "tryAgain": "Try again",
+  "saving": "Saving…",
+  "saveFailed": "Your progress could not be saved.",
+  "sessionCompleteTitle": "All done!",
+  "sessionCompleteBody": "You helped the bear. Well done!",
+  "playAgain": "Play again",
+  "backHome": "Home",
+  "itemApple": "Apple",
+  "itemPear": "Pear",
+  "itemGiveHint": "Give to the bear",
+  "itemOnPlateApple": "Apple on the plate",
+  "itemOnPlatePear": "Pear on the plate",
+  "itemTakeBackHint": "Take back",
+  "plateLabel": "The bear's plate",
+  "plateEmpty": "The plate is empty",
+  "pileLabel": "Fruit on the table",
+  "bearLabel": "The bear",
+  "progressTitle": "Progress",
+  "progressIntro": "What the games have seen so far, skill by skill.",
+  "progressDisclaimer": "This is an early estimate, not a diagnosis.",
+  "progressLoadFailed": "Progress could not be loaded.",
+  "masteryNotYet": "Not yet",
+  "masteryEmerging": "Emerging",
+  "masteryDeveloping": "Developing",
+  "masterySecure": "Secure",
+  "masteryTransfer": "Transfer",
+  "masteryNotYetDescription": "Not enough play yet to say.",
+  "masteryEmergingDescription": "Starting to show this skill, often with support.",
+  "masteryDevelopingDescription": "Succeeds often, still building consistency.",
+  "masterySecureDescription": "Succeeds consistently, without help.",
+  "masteryTransferDescription": "Also uses the skill outside this game.",
+  "masteryStepOf": "Step {current} of {total}",
+  "@masteryStepOf": {
+    "placeholders": {
+      "current": {
+        "type": "String"
+      },
+      "total": {
+        "type": "String"
+      }
+    }
+  },
+  "graphicsQuality": "Graphics Quality",
+  "graphicsAuto": "Auto (Recommended)",
+  "graphicsAutoDesc": "Automatically adapts to device capability",
+  "graphicsHigh": "High",
+  "graphicsHighDesc": "Richest 3D visuals, soft shadows, and effects",
+  "graphicsMedium": "Medium",
+  "graphicsMediumDesc": "Balanced performance and visuals",
+  "graphicsLow": "Low",
+  "graphicsLowDesc": "Best for budget devices",
+  "graphics2D": "2D Mode",
+  "graphics2DDesc": "Classic 2D sprites, saves battery",
+  "close": "Close",
+  "greeting": "Hi! I'm {name}!",
+  "@greeting": {
+    "description": "The guide character introduces itself.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "greetingNamed": "Hi {child}! I'm {name}!",
+  "@greetingNamed": {
+    "placeholders": {
+      "child": {
+        "type": "String"
+      },
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "bandTiny": "Little Stars",
+  "@bandTiny": {
+    "description": "Age group 2-3."
+  },
+  "bandExplorer": "Explorers",
+  "@bandExplorer": {
+    "description": "Age group 4-5."
+  },
+  "bandChampion": "Champions",
+  "@bandChampion": {
+    "description": "Age group 6-8."
+  },
+  "ageYears": "{range} years",
+  "@ageYears": {
+    "placeholders": {
+      "range": {
+        "type": "String"
+      }
+    }
+  },
+  "levelLabel": "Level {number}",
+  "@levelLabel": {
+    "description": "number is already formatted for the locale.",
+    "placeholders": {
+      "number": {
+        "type": "String"
+      }
+    }
+  },
+  "levelDone": "Level complete!",
+  "backToMap": "Map",
+  "journeyTitle": "My Journey",
+  "journeySubtitle": "{count} levels to explore",
+  "@journeySubtitle": {
+    "placeholders": {
+      "count": {
+        "type": "String"
+      }
+    }
+  },
+  "chapter": "Chapter {number}",
+  "@chapter": {
+    "placeholders": {
+      "number": {
+        "type": "String"
+      }
+    }
+  },
+  "starsCount": "{count} of {total} stars",
+  "@starsCount": {
+    "placeholders": {
+      "count": {
+        "type": "String"
+      },
+      "total": {
+        "type": "String"
+      }
+    }
+  },
+  "moreGames": "More games",
+  "settingsTitle": "Settings",
+  "spokenPrompts": "Spoken instructions",
+  "spokenPromptsDesc": "The characters read every instruction aloud.",
+  "voiceAnswers": "Answer by voice (microphone)",
+  "voiceAnswersDesc": "Your child can say answers out loud. Speech is recognised on this device only; nothing is recorded or sent.",
+  "cameraPlay": "Face play (camera)",
+  "cameraPlayDesc": "The characters can see your child smile, look around and play peekaboo. Faces are processed on this device only; no picture is saved or sent.",
+  "notOnThisDevice": "Not available on this device.",
+  "permissionDenied": "Permission was not given. You can allow it in the device settings.",
+  "didntCatch": "I didn't catch that. Say it again, or tap!",
+  "sayIt": "Say it!",
+  "listening": "Listening…",
+  "aboutMe": "About me",
+  "myName": "My name",
+  "typeName": "Type your name",
+  "howOld": "How old am I?",
+  "myFriend": "My friend",
+  "myWorld": "My world",
+  "automatic": "Auto",
+  "languageLabel": "Language",
+  "worldCandyMeadow": "Candy Meadow",
+  "worldSunnyForest": "Sunny Forest",
+  "worldSpaceLab": "Space Lab",
+  "greatJob": "Amazing!",
+  "niceTry": "Nice try!",
+  "repeatInstruction": "Say it again",
+  "closeLevel": "Leave level",
+  "levelLocked": "Level {number}, locked",
+  "@levelLocked": {
+    "placeholders": {
+      "number": {
+        "type": "String"
+      }
+    }
+  },
+  "levelOpen": "Level {number}",
+  "@levelOpen": {
+    "placeholders": {
+      "number": {
+        "type": "String"
+      }
+    }
+  },
+  "promptMatchNumber": "Find the group with {n}.",
+  "@promptMatchNumber": {
+    "placeholders": {
+      "n": {
+        "type": "String"
+      }
+    }
+  },
+  "promptPickMore": "Which one has more?",
+  "promptPickFewer": "Which one has fewer?",
+  "promptWhatNext": "What comes next?",
+  "promptWhatNextTower": "Which tower comes next?",
+  "promptSameFeeling": "Who feels the same?",
+  "promptHowFeel": "{story} How do they feel?",
+  "@promptHowFeel": {
+    "placeholders": {
+      "story": {
+        "type": "String"
+      }
+    }
+  },
+  "promptListenFind": "Listen, then find the picture.",
+  "promptFindWord": "Find the {word}.",
+  "@promptFindWord": {
+    "placeholders": {
+      "word": {
+        "type": "String"
+      }
+    }
+  },
+  "promptRhyme": "What rhymes with {word}?",
+  "@promptRhyme": {
+    "placeholders": {
+      "word": {
+        "type": "String"
+      }
+    }
+  },
+  "promptFirstLetter": "Which letter does {word} start with?",
+  "@promptFirstLetter": {
+    "placeholders": {
+      "word": {
+        "type": "String"
+      }
+    }
+  },
+  "promptBlend": "{parts}… What word is it?",
+  "@promptBlend": {
+    "placeholders": {
+      "parts": {
+        "type": "String"
+      }
+    }
+  },
+  "promptReadFind": "Read the word, then find its picture.",
+  "promptLetterSmall": "Find the small letter for {letter}.",
+  "@promptLetterSmall": {
+    "placeholders": {
+      "letter": {
+        "type": "String"
+      }
+    }
+  },
+  "promptLetterJoined": "Find {letter} at the start of a word.",
+  "@promptLetterJoined": {
+    "placeholders": {
+      "letter": {
+        "type": "String"
+      }
+    }
+  },
+  "promptDragCount": "Give {name} {n} {thing}!",
+  "@promptDragCount": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "n": {
+        "type": "String"
+      },
+      "thing": {
+        "type": "String"
+      }
+    }
+  },
+  "promptTapCount": "Tap each one to count, then choose how many.",
+  "promptJoin": "Watch closely. How many now?",
+  "promptNumberLine": "Where does {n} go? Tap the line.",
+  "@promptNumberLine": {
+    "placeholders": {
+      "n": {
+        "type": "String"
+      }
+    }
+  },
+  "promptSortColour": "Sort by colour!",
+  "promptSortShape": "Sort by shape!",
+  "promptSortBorder": "Gold border: sort by shape. No border: by colour.",
+  "promptNewRule": "New rule!",
+  "promptPairs": "Find the matching pairs.",
+  "promptSimonWatch": "Watch the lights…",
+  "promptSimonGo": "Now you! Tap them in the same order.",
+  "promptFeedFish": "Tap to feed the fish. Wait when a shark comes!",
+  "promptCatch": "Catch every one that matches!",
+  "promptClap": "Tap the drum once for each part of the word.",
+  "promptPrintStart": "Tap where the reading starts.",
+  "promptPrintFollow": "Tap the words in reading order.",
+  "promptBuild": "Build the word for the picture."
+}

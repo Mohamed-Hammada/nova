@@ -4,7 +4,7 @@ import 'package:nova_app/core/ports/face_sensor_port.dart';
 
 void main() {
   late DateTime now;
-  late List<Offset?> looks;
+  late List<({double x, double y})?> looks;
   late List<BuddyCue> cues;
   late FaceBuddy buddy;
 
@@ -22,8 +22,8 @@ void main() {
 
   test('the character looks toward the child', () {
     at(0, const FaceReading(present: true, x: 0.5, y: -0.4));
-    expect(looks.last!.dx, closeTo(0.4, 1e-9));
-    expect(looks.last!.dy, closeTo(-0.2, 1e-9));
+    expect(looks.last!.x, closeTo(0.4, 1e-9));
+    expect(looks.last!.y, closeTo(-0.2, 1e-9));
   });
 
   test('a new smile gets one smile back, not one per frame', () {

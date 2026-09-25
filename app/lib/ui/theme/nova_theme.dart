@@ -3,18 +3,19 @@ import 'package:flutter/material.dart';
 
 import 'age_band.dart';
 
-/// Baloo Bhaijaan 2 (SIL OFL, bundled in assets/fonts) covers both Latin and
-/// Arabic with the same rounded, friendly shapes, so the two launch
-/// languages look like one product.
-const novaFontFamily = 'Baloo';
+/// Noto Sans with Noto Sans Arabic as fallback (SIL OFL, bundled in
+/// assets/fonts): the same families the design system uses, so play screens
+/// and grown-up screens read as one product in both launch languages.
+const novaFontFamily = 'NotoSans';
+const novaFontFallback = ['NotoSansArabic'];
 
 TextStyle novaText(double size, {double weight = 600, Color? color, double height = 1.1}) => TextStyle(
   fontFamily: novaFontFamily,
+  fontFamilyFallback: novaFontFallback,
   fontSize: size,
   height: height,
   color: color,
   fontWeight: FontWeight.values[((weight / 100).round() - 1).clamp(0, 8)],
-  fontVariations: [FontVariation('wght', weight)],
 );
 
 ThemeData novaTheme(AgeBand band, [WorldPalette? palette]) {
@@ -26,7 +27,7 @@ ThemeData novaTheme(AgeBand band, [WorldPalette? palette]) {
     surface: p.surface,
     onSurface: p.onSurface,
   );
-  final base = ThemeData(useMaterial3: true, colorScheme: scheme, fontFamily: novaFontFamily);
+  final base = ThemeData(useMaterial3: true, colorScheme: scheme, fontFamily: novaFontFamily, fontFamilyFallback: novaFontFallback);
   return base.copyWith(
     scaffoldBackgroundColor: p.skyBottom,
     textTheme: base.textTheme.copyWith(

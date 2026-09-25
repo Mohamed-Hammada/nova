@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:io' show Platform;
 import 'dart:ui' show Size;
 
 import 'package:camera/camera.dart';
@@ -9,8 +8,10 @@ import 'package:nova_app/core/ports/face_sensor_port.dart';
 import 'package:nova_app/core/ports/voice_input_port.dart';
 import 'package:speech_to_text/speech_to_text.dart';
 
-VoiceInputPort createVoiceInput() => (Platform.isAndroid || Platform.isIOS) ? SpeechVoiceInput() : const NoVoiceInput();
-FaceSensorPort createFaceSensor() => (Platform.isAndroid || Platform.isIOS) ? MlKitFaceSensor() : const NoFaceSensor();
+bool get _mobile => defaultTargetPlatform == TargetPlatform.android || defaultTargetPlatform == TargetPlatform.iOS;
+
+VoiceInputPort createVoiceInput() => _mobile ? SpeechVoiceInput() : const NoVoiceInput();
+FaceSensorPort createFaceSensor() => _mobile ? MlKitFaceSensor() : const NoFaceSensor();
 
 /// Speech recognition that is required to run on the device
 /// (SpeechListenOptions.onDevice). If the device can only recognise speech
@@ -97,7 +98,7 @@ class MlKitFaceSensor implements FaceSensorPort {
         front,
         ResolutionPreset.low,
         enableAudio: false,
-        imageFormatGroup: Platform.isAndroid ? ImageFormatGroup.nv21 : ImageFormatGroup.bgra8888,
+        imageFormatGroup: defaultTargetPlatform == TargetPlatform.android ? ImageFormatGroup.nv21 : ImageFormatGroup.bgra8888,
       );
       await camera.initialize(); // asks for camera permission; throws if refused
       _camera = camera;

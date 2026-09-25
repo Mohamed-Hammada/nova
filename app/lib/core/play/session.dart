@@ -66,8 +66,11 @@ class PlaySession implements GameMechanic {
 
   /// One to three stars from accuracy. Stars are an engagement reward only;
   /// they never feed mastery (data/signals.yaml: stars is engagement).
-  int get stars => accuracy >= 0.9 ? 3 : (accuracy >= 0.6 ? 2 : 1);
+  int get stars => starsFor(accuracy);
 
   @override
   void dispose() => _events.close();
 }
+
+/// One to three stars for a finished level's accuracy (engagement only).
+int starsFor(double accuracy) => accuracy >= 0.9 ? 3 : (accuracy >= 0.6 ? 2 : 1);

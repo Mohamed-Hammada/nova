@@ -15,7 +15,8 @@ import '../scene/world_backdrop.dart';
 import '../settings/capabilities.dart';
 import '../settings/face_play.dart';
 import '../theme/nova_theme.dart';
-import '../theme/strings.dart';
+import '../l10n.dart';
+import 'visual_view.dart';
 import '../widgets/confetti.dart';
 import '../widgets/jelly_button.dart';
 import '../widgets/props.dart';
@@ -69,8 +70,9 @@ class _LevelScreenState extends ConsumerState<LevelScreen> {
   }
 
   Future<void> _start() async {
-    final rungId = widget.rungOverride ?? await ref.read(persistencePortProvider).currentRung(childId: currentChildId, gameId: _game.id) ?? _game.rungIds.first;
-    final rung = _game.rungsById[rungId] ?? _game.rungsById[_game.rungIds.first]!;
+    // The Adaptive Engine's current rung for this game, via GameRuntime.
+    final plan = await ref.read(gameRuntimeProvider).planSession(childId: currentChildId, gameId: _game.id, skillId: _game.primarySkillIds.first);
+    final rung = widget.rungOverride == null ? plan.rung : (_game.rungsById[widget.rungOverride] ?? plan.rung);
     final seed = widget.seed ?? DateTime.now().millisecondsSinceEpoch;
     final trials = ref.read(trialFactoryProvider).build(game: _game, rung: rung, language: _lang, seed: seed, skin: _level.skin);
     final session = PlaySession(mechanicId: _game.mechanicId, trials: trials)..start(rngSeed: seed);
@@ -93,7 +95,7 @@ class _LevelScreenState extends ConsumerState<LevelScreen> {
     final s = _session;
     if (s == null || s.isFinished) return;
     final t = s.current;
-    final text = trialPrompt(t, _lang, hostName: _hostName);
+    final text = trialPrompt(t, context.l10n, _lang, hostName: _hostName);
     final extra = t is ChoiceTrial ? t.speak : null;
     _speak(extra == null || text.contains(extra) ? text : '$text $extra');
   }
@@ -102,14 +104,14 @@ class _LevelScreenState extends ConsumerState<LevelScreen> {
 
   void _onResponse(bool correct) {
     _session!.record(correct);
-    final s = UiStrings.of(_lang);
+    final l10n = context.l10n;
     // Streams log many quick responses; keep reactions for the other rounds.
     if (_session!.current is StreamItemTrial) {
       if (correct) _guide.react(Reaction.happy);
       return;
     }
     _guide.react(correct ? Reaction.happy : Reaction.encourage);
-    setState(() => _feedback = correct ? s.greatJob : s.tryAgainSoon);
+    setState(() => _feedback = correct ? l10n.greatJob : l10n.niceTry);
   }
 
   /// Whether this round can be answered by voice right now.
@@ -121,11 +123,11 @@ class _LevelScreenState extends ConsumerState<LevelScreen> {
   Future<void> _listen() async {
     final t = _session?.current;
     if (_listening || t == null) return;
-    final s = UiStrings.of(_lang);
+    final l10n = context.l10n;
     await _speech.stop();
     setState(() {
       _listening = true;
-      _feedback = s.listening;
+      _feedback = l10n.listening;
     });
     final heard = await _voice.listen(language: _lang);
     if (!mounted) return;
@@ -139,7 +141,7 @@ class _LevelScreenState extends ConsumerState<LevelScreen> {
           };
     setState(() {
       _listening = false;
-      _feedback = pick == null ? s.didntCatch : null;
+      _feedback = pick == null ? l10n.didntCatch : null;
     });
     if (pick != null) {
       _voicePick.value = null;
@@ -166,7 +168,7 @@ class _LevelScreenState extends ConsumerState<LevelScreen> {
       _confetti++;
     });
     _guide.react(Reaction.cheer);
-    _speak(UiStrings.of(_lang).greatJob);
+    _speak(context.l10n.greatJob);
     await ref.read(playerStatePortProvider).saveLevel(childId: currentChildId, levelId: _level.id, stars: s.stars);
     await ref
         .read(gameRuntimeProvider)
@@ -194,13 +196,13 @@ class _LevelScreenState extends ConsumerState<LevelScreen> {
   Widget build(BuildContext context) {
     final band = ref.watch(ageBandProvider);
     final p = ref.watch(paletteProvider);
-    final s = UiStrings.of(_lang);
+    final l10n = context.l10n;
     final content = ref.watch(contentRuntimeProvider);
     final session = _session;
     final trial = session == null || session.isFinished ? null : session.current;
     final isDrag = trial is DragCountTrial;
     final guideKind = isDrag ? _host : ref.watch(companionProvider);
-    final bubble = _feedback ?? (trial == null ? null : trialPrompt(trial, _lang, hostName: _hostName));
+    final bubble = _feedback ?? (trial == null ? null : trialPrompt(trial, l10n, _lang, hostName: _hostName));
 
     return Scaffold(
       body: WorldBackdrop(
@@ -212,7 +214,7 @@ class _LevelScreenState extends ConsumerState<LevelScreen> {
               child: Column(
                 children: [
                   _TopBar(
-                    title: '${s.levelLabel(widget.levelIndex + 1)} · ${content.i18n(_game.nameKey, _lang)}',
+                    title: '${l10n.levelLabel(numeral(widget.levelIndex + 1, _lang))} · ${contentText(content, _game.nameKey, _lang)}',
                     accent: p.accent,
                     night: p.isNight,
                     progress: session == null ? 0 : (session.index / session.trials.length).clamp(0.0, 1.0),
@@ -247,7 +249,7 @@ class _LevelScreenState extends ConsumerState<LevelScreen> {
                                     onPressed: _listening ? null : _listen,
                                     color: _listening ? const Color(0xFFFF5FA2) : const Color(0xFF34C77B),
                                     icon: Icons.mic_rounded,
-                                    label: _listening ? s.listening : s.sayIt,
+                                    label: _listening ? l10n.listening : l10n.sayIt,
                                     size: 54,
                                   ),
                                 ),
@@ -268,11 +270,11 @@ class _LevelScreenState extends ConsumerState<LevelScreen> {
                                 key: ValueKey('${session!.index}'),
                                 child: trialView(
                                   trial,
-                                  TrialContext(language: _lang, onResponse: _onResponse, onDone: _onDone, hint: _hint, speak: _speak, accent: p.accent, voicePick: _voicePick),
+                                  TrialContext(language: _lang, l10n: l10n, onResponse: _onResponse, onDone: _onDone, hint: _hint, speak: _speak, accent: p.accent, voicePick: _voicePick),
                                 ),
                               );
                         if (_finished) {
-                          return _LevelComplete(stars: _stars, strings: s, accent: p.accent, onMap: () => Navigator.of(context).pop(true), guide: guide);
+                          return _LevelComplete(stars: _stars, l10n: l10n, accent: p.accent, onMap: () => Navigator.of(context).pop(true), guide: guide);
                         }
                         return wide
                             ? Row(
@@ -358,7 +360,7 @@ class _TopBar extends StatelessWidget {
           color: const Color(0xFF3C8DF2),
           circle: true,
           size: 46,
-          semanticLabel: 'repeat',
+          semanticLabel: context.l10n.repeatInstruction,
           child: const Icon(Icons.volume_up_rounded, color: Colors.white, size: 24),
         ),
         const SizedBox(width: 8),
@@ -367,7 +369,7 @@ class _TopBar extends StatelessWidget {
           color: const Color(0xFFFFB12E),
           circle: true,
           size: 46,
-          semanticLabel: 'hint',
+          semanticLabel: context.l10n.hint,
           child: const Icon(Icons.lightbulb_rounded, color: Colors.white, size: 24),
         ),
       ],
@@ -376,9 +378,9 @@ class _TopBar extends StatelessWidget {
 }
 
 class _LevelComplete extends StatelessWidget {
-  const _LevelComplete({required this.stars, required this.strings, required this.accent, required this.onMap, required this.guide});
+  const _LevelComplete({required this.stars, required this.l10n, required this.accent, required this.onMap, required this.guide});
   final int stars;
-  final UiStrings strings;
+  final AppLocalizations l10n;
   final Color accent;
   final VoidCallback onMap;
   final Widget guide;
@@ -400,7 +402,7 @@ class _LevelComplete extends StatelessWidget {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Text(strings.levelDone, style: novaText(34, weight: 800, color: const Color(0xFF2E2440))),
+              Text(l10n.levelDone, style: novaText(34, weight: 800, color: const Color(0xFF2E2440))),
               const SizedBox(height: 14),
               Row(
                 mainAxisSize: MainAxisSize.min,
@@ -419,7 +421,7 @@ class _LevelComplete extends StatelessWidget {
                 ],
               ),
               const SizedBox(height: 20),
-              JellyButton(onPressed: onMap, color: accent, icon: Icons.map_rounded, label: strings.backToMap, size: 62),
+              JellyButton(onPressed: onMap, color: accent, icon: Icons.map_rounded, label: l10n.backToMap, size: 62),
             ],
           ),
         ),

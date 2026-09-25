@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:nova_app/adapters/in_memory_player_state_port.dart';
+import 'package:nova_app/app.dart';
 import 'package:nova_app/core/content/content_runtime.dart';
 import 'package:nova_app/core/content/models.dart';
 import 'package:nova_app/core/play/trial_factory.dart';
@@ -29,10 +30,10 @@ Widget _app(Widget child, {required InMemoryPersistencePort persistence, require
         persistencePortProvider.overrideWithValue(persistence),
         playerStatePortProvider.overrideWithValue(state),
         ttsProvider.overrideWithValue(speech ?? FakeSpeechPort()),
-        languageProvider.overrideWith((ref) => lang),
+        localeProvider.overrideWith((ref) => Locale(lang)),
         ageBandProvider.overrideWith((ref) => band),
       ],
-      child: MaterialApp(home: AmbientMotion(enabled: false, child: child)),
+      child: NovaMaterialApp(locale: Locale(lang), home: AmbientMotion(enabled: false, child: child)),
     );
 
 Journey _single(String gameId) =>

@@ -56,7 +56,48 @@ class TrialFactory {
     'game.lit.ar.letter-forms': _letterForms,
   };
 
+  /// The mechanic each builder implements. A game is only playable when the
+  /// content gives it this same mechanic, so a builder never reads a rung
+  /// ladder written for a different kind of game.
+  static final Map<String, String> _mechanics = {
+    'game.sel.feelings-friends': 'emotion-match',
+    'game.sel.how-would-they-feel': 'story-choice',
+    'game.lit.ar.letter-forms': 'letter-match',
+    'game.lit.en.letter-pairs': 'letter-match',
+    'game.math.bear-apples': 'drag-to-count',
+    'game.math.number-match': 'match-symbol-to-quantity',
+    'game.math.bunny-carrots': 'drag-to-count',
+    'game.math.more-or-less': 'compare-quantities',
+    'game.math.number-catch': 'catch-target',
+    'game.math.pattern-train': 'pattern-continue',
+    'game.math.pattern-builder': 'pattern-continue',
+    'game.math.star-count': 'tap-to-count',
+    'game.math.add-take-away': 'join-separate',
+    'game.math.space-shop': 'join-separate',
+    'game.math.number-line-hop': 'number-line-place',
+    'game.cog.color-sort': 'sort-by-rule',
+    'game.ef.sort-switch': 'switch-sort-rule',
+    'game.memory.peekaboo-pairs': 'match-pairs',
+    'game.memory.simon-lights': 'sequence-recall',
+    'game.ef.feed-the-fish': 'go-no-go',
+    for (final l in ['en', 'ar']) ...{
+      'game.lit.$l.listen-and-find': 'story-choice',
+      'game.lit.$l.word-hunt': 'hear-and-point',
+      'game.lit.$l.clap-syllables': 'segment-sounds',
+      'game.lit.$l.rhyme-time': 'rhyme-select',
+      'game.lit.$l.book-explorer': 'print-follow',
+      'game.lit.$l.letter-catch': 'catch-target',
+      'game.lit.$l.first-sound': 'sound-match',
+      'game.lit.$l.word-builder': 'build-word',
+      'game.lit.$l.sound-blender': 'blend-sounds',
+      'game.lit.$l.word-pictures': 'read-and-match',
+    },
+  };
+
   bool canPlay(String gameId) => _builders.containsKey(gameId);
+
+  /// Whether [game] has a builder for its id and its mechanic.
+  bool canPlayGame(Game game) => canPlay(game.id) && _mechanics[game.id] == game.mechanicId;
 
   Iterable<String> get playableGameIds => _builders.keys;
 

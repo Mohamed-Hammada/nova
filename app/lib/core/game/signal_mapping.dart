@@ -13,17 +13,32 @@ class SignalDraft {
 /// mechanic itself.
 typedef SignalMapper = List<SignalDraft> Function(RawMechanicEvent event);
 
-/// The mapping for every trial-based game: each response is one accuracy
-/// signal plus the hints used on it.
-List<SignalDraft> trialSignalMapper(RawMechanicEvent event) => bearApplesSignalMapper(event);
-
-/// The mapping for game.math.bear-apples specifically.
+/// The mapping for game.math.bear-apples.
+///
+/// Only a trial's FIRST submission is accuracy evidence: a retry that ends
+/// correct must not turn a miss into a hit, nor add a second accuracy sample
+/// for one trial (which would inflate `trials` toward min-trials). A retry is
+/// recorded as `retries` instead (a learning signal the game declares), and
+/// hints used during a retry still count toward `hints_used`, so support
+/// received on a retry lowers Independence as it should.
+///
+/// Placing and removing items produce no signal on their own. (Taking an item
+/// back before submitting could later feed `self_correction`, but what counts
+/// as an unprompted self-correction is a curriculum decision not yet made.)
 List<SignalDraft> bearApplesSignalMapper(RawMechanicEvent event) {
   return switch (event) {
-    TrialSubmitted(:final correct, :final hintsUsedThisTrial) => [
+    TrialSubmitted(attempt: 1, :final correct, :final hintsUsedThisTrial) => [
         SignalDraft('accuracy', correct ? 1.0 : 0.0),
         SignalDraft('hints_used', hintsUsedThisTrial),
       ],
-    ItemPlaced() => const [],
+    TrialSubmitted(:final hintsUsedThisTrial) => [
+        const SignalDraft('retries', 1),
+        SignalDraft('hints_used', hintsUsedThisTrial),
+      ],
+    ItemPlaced() || ItemRemoved() => const [],
   };
 }
+
+/// The mapping for every trial-based game played through PlaySession: the
+/// same rules as bear-apples (first submission is the accuracy sample).
+List<SignalDraft> trialSignalMapper(RawMechanicEvent event) => bearApplesSignalMapper(event);

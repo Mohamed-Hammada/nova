@@ -1,0 +1,9 @@
+# UI chrome strings (buttons, headings, feedback). Curriculum content -- game
+# and skill names, descriptions -- is NOT here: it comes from the compiled
+# content bundle's i18n tables (ContentRuntime.i18n), so it keeps flowing
+# through the validator and compiler.
+arb-dir: lib/l10n
+template-arb-file: app_en.arb
+output-localization-file: app_localizations.dart
+output-class: AppLocalizations
+nullable-getter: false

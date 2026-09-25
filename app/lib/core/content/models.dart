@@ -81,6 +81,120 @@ class TransferProbe {
       );
 }
 
+class CharacterSpec {
+  const CharacterSpec({
+    required this.id,
+    this.nameKey,
+    this.defaultState = 'idle',
+    this.states = const ['idle'],
+  });
+
+  final String id;
+  final String? nameKey;
+  final String defaultState;
+  final List<String> states;
+
+  factory CharacterSpec.fromJson(Map<String, dynamic> json) => CharacterSpec(
+        id: json['id'] as String,
+        nameKey: json['name_key'] as String?,
+        defaultState: json['default_state'] as String? ?? 'idle',
+        states: json['states'] != null ? List<String>.from(json['states'] as List) : const ['idle'],
+      );
+}
+
+class TargetContainerSpec {
+  const TargetContainerSpec({
+    required this.id,
+    this.labelKey,
+    this.emptyLabelKey,
+  });
+
+  final String id;
+  final String? labelKey;
+  final String? emptyLabelKey;
+
+  factory TargetContainerSpec.fromJson(Map<String, dynamic> json) => TargetContainerSpec(
+        id: json['id'] as String,
+        labelKey: json['label_key'] as String?,
+        emptyLabelKey: json['empty_label_key'] as String?,
+      );
+}
+
+class ItemVisualSpec {
+  const ItemVisualSpec({
+    required this.id,
+    required this.labelKey,
+    required this.onTargetLabelKey,
+  });
+
+  final String id;
+  final String labelKey;
+  final String onTargetLabelKey;
+
+  factory ItemVisualSpec.fromJson(Map<String, dynamic> json) => ItemVisualSpec(
+        id: json['id'] as String,
+        labelKey: json['label_key'] as String,
+        onTargetLabelKey: json['on_target_label_key'] as String,
+      );
+}
+
+class GameItemsSpec {
+  const GameItemsSpec({
+    required this.primary,
+    this.distractor,
+  });
+
+  final ItemVisualSpec primary;
+  final ItemVisualSpec? distractor;
+
+  factory GameItemsSpec.fromJson(Map<String, dynamic> json) => GameItemsSpec(
+        primary: ItemVisualSpec.fromJson(json['primary'] as Map<String, dynamic>),
+        distractor: json['distractor'] != null
+            ? ItemVisualSpec.fromJson(json['distractor'] as Map<String, dynamic>)
+            : null,
+      );
+}
+
+class GamePresentation {
+  const GamePresentation({
+    this.theme = 'default',
+    this.background = 'default',
+    this.character,
+    this.targetContainer,
+    this.items,
+    this.environmentElements = const [],
+    this.feedbackEffects = const [],
+  });
+
+  final String theme;
+  final String background;
+  final CharacterSpec? character;
+  final TargetContainerSpec? targetContainer;
+  final GameItemsSpec? items;
+  final List<String> environmentElements;
+  final List<String> feedbackEffects;
+
+  factory GamePresentation.fromJson(Map<String, dynamic> json) => GamePresentation(
+        theme: json['theme'] as String? ?? 'default',
+        background: json['background'] as String? ?? 'default',
+        character: json['character'] != null
+            ? CharacterSpec.fromJson(json['character'] as Map<String, dynamic>)
+            : null,
+        targetContainer: json['target_container'] != null
+            ? TargetContainerSpec.fromJson(json['target_container'] as Map<String, dynamic>)
+            : null,
+        items: json['items'] != null
+            ? GameItemsSpec.fromJson(json['items'] as Map<String, dynamic>)
+            : null,
+        environmentElements: json['environment_elements'] != null
+            ? List<String>.from(json['environment_elements'] as List)
+            : const [],
+        feedbackEffects: json['feedback_effects'] != null
+            ? List<String>.from(json['feedback_effects'] as List)
+            : const [],
+      );
+}
+
 class Game {
   const Game({
     required this.id,
@@ -96,6 +210,7 @@ class Game {
     required this.transferProbes,
     this.ageRange = const [2, 8],
     this.languageDependencies = const [],
+    this.presentation,
   });
 
   final String id;
@@ -115,6 +230,7 @@ class Game {
   final String progressionAdvanceParameter;
   final String progressionRetreatParameter;
   final List<TransferProbe> transferProbes;
+  final GamePresentation? presentation;
 
   factory Game.fromJson(Map<String, dynamic> json) {
     final rungs = (json['difficulty']['rungs'] as List)
@@ -136,6 +252,9 @@ class Game {
           .toList(),
       ageRange: json['age_range'] == null ? const [2, 8] : List<int>.from(json['age_range'] as List),
       languageDependencies: List<String>.from((json['language_dependencies'] as List?) ?? const []),
+      presentation: json['presentation'] != null
+          ? GamePresentation.fromJson(json['presentation'] as Map<String, dynamic>)
+          : null,
     );
   }
 }

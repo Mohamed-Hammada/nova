@@ -1,73 +1,43 @@
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:nova_app/app.dart';
-import 'package:nova_app/core/content/content_runtime.dart';
-import 'package:nova_app/core/content/models.dart';
-import 'package:nova_app/adapters/in_memory_player_state_port.dart';
-import 'package:nova_app/providers.dart';
+import 'package:nova_app/bootstrap.dart';
 
-import 'support/fake_speech_port.dart';
+import 'support/fixture_content.dart';
+import 'support/pump_app.dart';
 
 void main() {
-  testWidgets('NovaApp renders the home screen with the game title', (tester) async {
-    final runtime = ContentRuntime(ContentBundle.fromJson({
-      'schemaVersion': '1.0.0', 'contentVersion': 't', 'contentHash': 't',
-      'skills': [], 'transfer_tasks': [], 'langpacks': [], 'mechanics': [],
-      'games': [
-        {
-          'id': 'game.math.bear-apples', 'name_key': 'game.math.bear-apples.name', 'age_range': [3, 5],
-          'primary_skills': ['math.count.one-to-one-5'], 'secondary_skills': [],
-          'objective': 'x', 'mechanic_id': 'drag-to-count', 'mechanic': 'x',
-          'evidence_basis': 'judgment', 'evidence_refs': ['ev.x'],
-          'difficulty': {
-            'varied': ['item_complexity'], 'anchors': {'item_complexity': ['a']},
-            'rungs': [{'id': 'r1', 'values': {'item_complexity': 0, 'distractors': 0, 'working_memory_load': 0, 'rule_complexity': 0, 'abstraction': 0, 'cognitive_load': 0, 'independence': 0}}],
-          },
-          'scaffolding': {'hints': ['x'], 'adult_prompt': 'x'}, 'signals': ['accuracy'],
-          'progression': {'advance_parameter': 'param.default.advance-accuracy', 'retreat_parameter': 'param.default.retreat-accuracy'},
-          'transfer_probes': [], 'language_dependencies': [],
-        },
-      ],
-      'assessment_rules': [], 'parameters': [], 'signals': [{'id': 'accuracy', 'kind': 'learning', 'description': 'x'}],
-      'i18n': {'en': {'game.math.bear-apples.name': "Bear's Apples"}, 'ar': {}},
-      'audio': {'en': {}, 'ar': {}},
-    }));
+  testWidgets('NovaApp renders the home screen with the playable game from content', (tester) async {
+    await pumpNovaApp(tester);
+    expect(find.text("Bear's Apples"), findsOneWidget);
+    expect(find.text('Count up to 5'), findsOneWidget);
+    // In the bundle, but its mechanic has no implementation: not offered.
+    expect(find.text('Number Match'), findsNothing);
+  });
 
-    await tester.pumpWidget(
-      ProviderScope(
-        overrides: [
-          contentRuntimeProvider.overrideWithValue(runtime),
-          // Idle animation loops forever; switch it off so the tree settles.
-          ambientMotionProvider.overrideWithValue(false),
-          playerStatePortProvider.overrideWithValue(InMemoryPlayerStatePort()),
-          ttsProvider.overrideWithValue(FakeSpeechPort()),
-        ],
-        child: const NovaApp(),
-      ),
-    );
-
+  testWidgets('boot shows a loading state, then the app once content is loaded', (tester) async {
+    await tester.pumpWidget(NovaBootstrap(
+      overrides: deviceFreeOverrides(),
+      load: () => Future.delayed(const Duration(milliseconds: 50), () => BootResult(content: fixtureContent())),
+    ));
+    expect(find.text('Getting ready…'), findsOneWidget);
+    await tester.pumpAndSettle();
     expect(find.text("Bear's Apples"), findsOneWidget);
   });
 
-  testWidgets('the home screen greets the child by name', (tester) async {
-    final runtime = ContentRuntime(ContentBundle.fromJson({
-      'schemaVersion': '1.0.0', 'contentVersion': 't', 'contentHash': 't',
-      'skills': [], 'transfer_tasks': [], 'langpacks': [], 'mechanics': [], 'games': [],
-      'assessment_rules': [], 'parameters': [], 'signals': [], 'i18n': {'en': {}, 'ar': {}}, 'audio': {'en': {}, 'ar': {}},
+  testWidgets('a content bundle that fails to load shows a recoverable error, and retry recovers', (tester) async {
+    var attempts = 0;
+    await tester.pumpWidget(NovaBootstrap(overrides: deviceFreeOverrides(), load: () async {
+      attempts++;
+      if (attempts == 1) throw StateError('bundle missing');
+      return BootResult(content: fixtureContent());
     }));
-    await tester.pumpWidget(
-      ProviderScope(
-        overrides: [
-          contentRuntimeProvider.overrideWithValue(runtime),
-          ambientMotionProvider.overrideWithValue(false),
-          playerStatePortProvider.overrideWithValue(InMemoryPlayerStatePort()),
-          ttsProvider.overrideWithValue(FakeSpeechPort()),
-          childNameProvider.overrideWith((ref) => 'Sara'),
-        ],
-        child: const NovaApp(),
-      ),
-    );
-    await tester.pump(const Duration(seconds: 2));
-    expect(find.text("Hi Sara! I'm Pip!"), findsOneWidget);
+    await tester.pumpAndSettle();
+    expect(find.text('Something went wrong'), findsOneWidget);
+    expect(find.text('The games could not be loaded on this device.'), findsOneWidget);
+
+    await tester.tap(find.widgetWithText(FilledButton, 'Try again'));
+    await tester.pumpAndSettle();
+    expect(find.text("Bear's Apples"), findsOneWidget);
+    expect(attempts, 2);
   });
 }

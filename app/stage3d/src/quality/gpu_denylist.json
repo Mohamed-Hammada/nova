@@ -1,0 +1,16 @@
+{
+  "denylist": [
+    "mali-400",
+    "mali-450",
+    "mali-t720",
+    "mali-t820",
+    "powervr sgx544",
+    "powervr ge8300",
+    "powervr ge8320",
+    "adreno 304",
+    "adreno 306",
+    "adreno 308",
+    "adreno 505",
+    "adreno 506"
+  ]
+}

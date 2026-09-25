@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:ui' show Offset;
 
 import 'package:nova_app/core/ports/face_sensor_port.dart';
 
@@ -12,7 +11,7 @@ class FaceBuddy {
   FaceBuddy({required this.onLook, required this.onCue, DateTime Function()? now}) : _now = now ?? DateTime.now;
 
   /// Where to look (-1..1 each way), or null to go back to idle.
-  final void Function(Offset? target) onLook;
+  final void Function(({double x, double y})? target) onLook;
   final void Function(BuddyCue cue) onCue;
   final DateTime Function() _now;
 
@@ -36,7 +35,7 @@ class FaceBuddy {
     }
     final lost = _lostAt;
     _lostAt = null;
-    onLook(Offset(r.x.clamp(-1.0, 1.0) * 0.8, r.y.clamp(-1.0, 1.0) * 0.5));
+    onLook((x: r.x.clamp(-1.0, 1.0) * 0.8, y: r.y.clamp(-1.0, 1.0) * 0.5));
     if (lost != null && now.difference(lost).inMilliseconds > 1200) {
       _cue(BuddyCue.peekaboo, now);
       return;

@@ -7,7 +7,7 @@ import 'package:nova_app/core/play/trials.dart';
 
 import '../art/pic_art.dart';
 import '../theme/nova_theme.dart';
-import '../theme/prompts.dart';
+import '../l10n.dart';
 import '../widgets/jelly_button.dart';
 import '../widgets/props.dart';
 import 'visual_view.dart';
@@ -21,9 +21,11 @@ class TrialContext {
     required this.hint,
     required this.speak,
     required this.accent,
+    required this.l10n,
     this.voicePick,
   });
   final String language;
+  final AppLocalizations l10n;
 
   /// Log one response (correct or not). Some rounds log several.
   final void Function(bool correct) onResponse;
@@ -40,7 +42,6 @@ class TrialContext {
   /// the number said for counting rounds.
   final ValueNotifier<int?>? voicePick;
 
-  String p(String key, [Map<String, String> args = const {}]) => prompt(key, language, args);
 }
 
 Widget trialView(Trial trial, TrialContext ctx) => switch (trial) {
@@ -59,21 +60,39 @@ Widget trialView(Trial trial, TrialContext ctx) => switch (trial) {
 };
 
 /// The instruction for a round, before any answer.
-String trialPrompt(Trial t, String language, {String hostName = ''}) {
-  String p(String key, [Map<String, String> args = const {}]) => prompt(key, language, args);
+String trialPrompt(Trial t, AppLocalizations l10n, String language, {String hostName = ''}) {
+  String arg(String key) => t is ChoiceTrial ? (t.promptArgs[key] ?? '') : '';
+  String n(int value) => numeral(value, language);
   return switch (t) {
-    ChoiceTrial() => p(t.promptKey, {...t.promptArgs, if (t.promptArgs.containsKey('n')) 'n': numeral(int.parse(t.promptArgs['n']!), language)}),
-    DragCountTrial() => p('drag_count', {'name': hostName, 'n': numeral(t.target, language), 'thing': _thing(t.item, t.target, language)}),
-    TapCountTrial() => p('tap_count'),
-    JoinSeparateTrial() => p('join'),
-    NumberLineTrial() => p('number_line', {'n': numeral(t.target, language)}),
-    SortTrial() => p(t.bordered ? 'sort_border' : (t.rule == SortRule.colour ? 'sort_colour' : 'sort_shape')),
-    PairsTrial() => p('pairs'),
-    SequenceTrial() => p('simon_watch'),
-    StreamItemTrial() => t.targetLabel == null ? p('feed_fish') : p('catch'),
-    ClapTrial() => p('clap'),
-    PrintTrial() => p(t.startOnly ? 'print_start' : 'print_follow'),
-    BuildWordTrial() => p('build'),
+    ChoiceTrial() => switch (t.promptKey) {
+        'match_number' => l10n.promptMatchNumber(n(int.parse(arg('n')))),
+        'pick_more' => l10n.promptPickMore,
+        'pick_fewer' => l10n.promptPickFewer,
+        'what_next' => l10n.promptWhatNext,
+        'what_next_tower' => l10n.promptWhatNextTower,
+        'same_feeling' => l10n.promptSameFeeling,
+        'how_feel' => l10n.promptHowFeel(arg('story')),
+        'listen_find' => l10n.promptListenFind,
+        'find_word' => l10n.promptFindWord(arg('word')),
+        'rhyme' => l10n.promptRhyme(arg('word')),
+        'first_letter' => l10n.promptFirstLetter(arg('word')),
+        'blend' => l10n.promptBlend(arg('parts')),
+        'read_find' => l10n.promptReadFind,
+        'letter_small' => l10n.promptLetterSmall(arg('letter')),
+        'letter_joined' => l10n.promptLetterJoined(arg('letter')),
+        _ => '',
+      },
+    DragCountTrial() => l10n.promptDragCount(hostName, n(t.target), _thing(t.item, t.target, language)),
+    TapCountTrial() => l10n.promptTapCount,
+    JoinSeparateTrial() => l10n.promptJoin,
+    NumberLineTrial() => l10n.promptNumberLine(n(t.target)),
+    SortTrial() => t.bordered ? l10n.promptSortBorder : (t.rule == SortRule.colour ? l10n.promptSortColour : l10n.promptSortShape),
+    PairsTrial() => l10n.promptPairs,
+    SequenceTrial() => l10n.promptSimonWatch,
+    StreamItemTrial() => t.targetLabel == null ? l10n.promptFeedFish : l10n.promptCatch,
+    ClapTrial() => l10n.promptClap,
+    PrintTrial() => t.startOnly ? l10n.promptPrintStart : l10n.promptPrintFollow,
+    BuildWordTrial() => l10n.promptBuild,
   };
 }
 
@@ -397,7 +416,7 @@ class _DragCountTrialViewState extends State<DragCountTrialView> with _Pacing {
           ],
         ),
         const SizedBox(height: 18),
-        JellyButton(onPressed: _submitted ? null : _submit, color: const Color(0xFF34C77B), icon: Icons.check_rounded, label: widget.ctx.p('done'), size: 64),
+        JellyButton(onPressed: _submitted ? null : _submit, color: const Color(0xFF34C77B), icon: Icons.check_rounded, label: widget.ctx.l10n.done, size: 64),
       ],
     );
   }
@@ -867,7 +886,7 @@ class _SortTrialViewState extends State<SortTrialView> with _Pacing {
               margin: const EdgeInsets.only(bottom: 10),
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 6),
               decoration: BoxDecoration(color: const Color(0xFFFF6FA5), borderRadius: BorderRadius.circular(30)),
-              child: Text(widget.ctx.p('new_rule'), style: novaText(22, weight: 800, color: Colors.white)),
+              child: Text(widget.ctx.l10n.promptNewRule, style: novaText(22, weight: 800, color: Colors.white)),
             ),
           ),
         Row(
@@ -875,7 +894,7 @@ class _SortTrialViewState extends State<SortTrialView> with _Pacing {
           children: [
             Icon(t.rule == SortRule.colour ? Icons.palette_rounded : Icons.category_rounded, size: 40, color: const Color(0xFF5B4A70)),
             const SizedBox(width: 8),
-            Text(widget.ctx.p(t.rule == SortRule.colour ? 'sort_colour' : 'sort_shape'), style: novaText(24, weight: 800, color: const Color(0xFF3A2A4A))),
+            Text(t.rule == SortRule.colour ? widget.ctx.l10n.promptSortColour : widget.ctx.l10n.promptSortShape, style: novaText(24, weight: 800, color: const Color(0xFF3A2A4A))),
           ],
         ),
         const SizedBox(height: 16),
@@ -1136,7 +1155,7 @@ class _SequenceTrialViewState extends State<SequenceTrialView> with _Pacing {
     }
     after(Duration(milliseconds: seq.length * step), () {
       setState(() => _playing = false);
-      widget.ctx.speak(widget.ctx.p('simon_go'));
+      widget.ctx.speak(widget.ctx.l10n.promptSimonGo);
     });
   }
 
@@ -1448,7 +1467,7 @@ class _ClapTrialViewState extends State<ClapTrialView> with _Pacing {
                   onPressed: _done || _taps == 0 ? null : _submit,
                   color: const Color(0xFF34C77B),
                   icon: Icons.check_rounded,
-                  label: widget.ctx.p('done'),
+                  label: widget.ctx.l10n.done,
                   size: 60,
                 ),
               ],

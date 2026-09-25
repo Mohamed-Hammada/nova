@@ -1,0 +1,15 @@
+{
+  "_comment": "Vendored so the web build persists progress with the same drift/SQLite code as native, fetching nothing at runtime. Each file must match the package version resolved in pubspec.lock; test/web_platform_guard_test.dart enforces it. To upgrade: scripts/update_web_sqlite_assets.sh, then rerun the tests.",
+  "sqlite3.wasm": {
+    "package": "sqlite3",
+    "version": "3.5.2",
+    "source": "https://github.com/simolus3/sqlite3.dart/releases/download/sqlite3-3.5.2/sqlite3.wasm",
+    "sha256": "13d3f11d05b39ba0618a7115fb41640a5d48b6300f5d3f325f554b42bd6688a4"
+  },
+  "drift_worker.js": {
+    "package": "drift",
+    "version": "2.34.4",
+    "source": "https://github.com/simolus3/drift/releases/download/drift-2.34.4/drift_worker.js",
+    "sha256": "104bc207d4a3a0b70fc249fcd91d72b558cf7a8677fe49b41cafffe22a5144f4"
+  }
+}

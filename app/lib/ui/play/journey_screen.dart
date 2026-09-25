@@ -12,7 +12,10 @@ import '../scene/world_backdrop.dart';
 import '../theme/age_band.dart';
 import '../theme/motion.dart';
 import '../theme/nova_theme.dart';
-import '../theme/strings.dart';
+import '../game/game_catalog.dart';
+import '../game/game_screen.dart';
+import '../l10n.dart';
+import 'package:nova_app/core/play/session.dart';
 import '../widgets/jelly_button.dart';
 import '../widgets/props.dart';
 import 'level_screen.dart';
@@ -46,9 +49,20 @@ class _JourneyScreenState extends ConsumerState<JourneyScreen> {
   }
 
   Future<void> _open(Journey journey, int index) async {
+    final level = journey.levels[index];
+    final gameId = level.gameFor(ref.read(languageProvider));
+    final state = ref.read(playerStatePortProvider);
     await Navigator.of(context).push(
       MaterialPageRoute(
-        builder: (_) => LevelScreen(journey: journey, levelIndex: index),
+        // Games with their own dedicated screen (Bear's Apples on the 3D
+        // stage) play there; every other game plays through LevelScreen.
+        builder: (_) => playableGames.containsKey(gameId)
+            ? GameScreen(
+                gameId: gameId,
+                skillId: ref.read(contentRuntimeProvider).game(gameId).primarySkillIds.first,
+                onComplete: (accuracy) => state.saveLevel(childId: currentChildId, levelId: level.id, stars: starsFor(accuracy)),
+              )
+            : LevelScreen(journey: journey, levelIndex: index),
       ),
     );
     ref.invalidate(levelStarsProvider);
@@ -58,7 +72,8 @@ class _JourneyScreenState extends ConsumerState<JourneyScreen> {
   Widget build(BuildContext context) {
     final band = ref.watch(ageBandProvider);
     final lang = ref.watch(languageProvider);
-    final s = UiStrings.of(lang);
+    final l10n = context.l10n;
+    final rtl = Directionality.of(context) == TextDirection.rtl;
     final p = ref.watch(paletteProvider);
     final companion = ref.watch(companionProvider);
     final content = ref.watch(contentRuntimeProvider);
@@ -111,7 +126,7 @@ class _JourneyScreenState extends ConsumerState<JourneyScreen> {
                                     right: 0,
                                     top: height - _nodeY(c * 10) + 44,
                                     child: Center(
-                                      child: _ChapterBanner(text: s.chapter(c + 1), color: p.accentDeep),
+                                      child: _ChapterBanner(text: l10n.chapter(numeral(c + 1, lang)), color: p.accentDeep),
                                     ),
                                   ),
                                 for (var i = 0; i < levels.length; i++)
@@ -159,7 +174,7 @@ class _JourneyScreenState extends ConsumerState<JourneyScreen> {
                                 color: p.accent,
                                 circle: true,
                                 size: 48,
-                                child: Icon(s.isRtl ? Icons.arrow_forward_rounded : Icons.arrow_back_rounded, color: Colors.white, size: 26),
+                                child: Icon(rtl ? Icons.arrow_forward_rounded : Icons.arrow_back_rounded, color: Colors.white, size: 26),
                               ),
                               const SizedBox(width: 12),
                               Expanded(
@@ -181,7 +196,7 @@ class _JourneyScreenState extends ConsumerState<JourneyScreen> {
                                       const StarShape(size: 24),
                                       const SizedBox(width: 6),
                                       Text(
-                                        s.starsCount(total, levels.length * 3),
+                                        l10n.starsCount(numeral(total, lang), numeral(levels.length * 3, lang)),
                                         style: novaText(15, weight: 700, color: p.isNight ? Colors.white70 : p.onSurface),
                                       ),
                                     ],
@@ -304,7 +319,7 @@ class _LevelNode extends StatelessWidget {
     final color = locked ? const Color(0xFFB9B2C8) : (stars != null ? p.accent : const Color(0xFFFFB12E));
     final node = Semantics(
       button: !locked,
-      label: 'Level $number${locked ? ', locked' : ''}',
+      label: locked ? context.l10n.levelLocked(numeral(number, language)) : context.l10n.levelOpen(numeral(number, language)),
       child: GestureDetector(
         onTap: onTap,
         child: SizedBox(
