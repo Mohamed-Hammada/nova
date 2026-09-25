@@ -81,6 +81,7 @@ class UiStrings {
   );
   String get notOnThisDevice => _t('Not available on this device.', 'غير متاح على هذا الجهاز.');
   String get permissionDenied => _t('Permission was not given. You can allow it in the device settings.', 'لم يُمنح الإذن. يمكنك السماح به من إعدادات الجهاز.');
+  String get didntCatch => _t("I didn't catch that. Say it again, or tap!", 'لم أسمع جيدًا. قلها مرة أخرى أو المس!');
   String get sayIt => _t('Say it!', 'قلها!');
   String get listening => _t('Listening...', 'أستمع...');
   String get aboutMe => _t('About me', 'عنّي');

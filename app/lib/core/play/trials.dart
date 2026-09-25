@@ -274,9 +274,9 @@ class PrintTrial extends Trial {
 
   /// Words in reading order, as (line, index-in-line) pairs.
   List<(int, int)> get order => [
-        for (var l = 0; l < lines.length; l++)
-          for (var i = 0; i < lines[l].length; i++) (l, i),
-      ];
+    for (var l = 0; l < lines.length; l++)
+      for (var i = 0; i < lines[l].length; i++) (l, i),
+  ];
 
   bool isCorrect(List<(int, int)> taps) {
     final want = startOnly ? order.take(1).toList() : order;

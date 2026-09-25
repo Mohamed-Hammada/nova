@@ -14,7 +14,15 @@ import 'visual_view.dart';
 
 /// What every round view gets from the level screen.
 class TrialContext {
-  const TrialContext({required this.language, required this.onResponse, required this.onDone, required this.hint, required this.speak, required this.accent});
+  const TrialContext({
+    required this.language,
+    required this.onResponse,
+    required this.onDone,
+    required this.hint,
+    required this.speak,
+    required this.accent,
+    this.voicePick,
+  });
   final String language;
 
   /// Log one response (correct or not). Some rounds log several.
@@ -27,6 +35,10 @@ class TrialContext {
   final ValueNotifier<int> hint;
   final void Function(String text) speak;
   final Color accent;
+
+  /// A spoken answer, already matched: an option index for choice rounds,
+  /// the number said for counting rounds.
+  final ValueNotifier<int?>? voicePick;
 
   String p(String key, [Map<String, String> args = const {}]) => prompt(key, language, args);
 }
@@ -192,12 +204,19 @@ class _ChoiceTrialViewState extends State<ChoiceTrialView> with _Pacing {
   void initState() {
     super.initState();
     widget.ctx.hint.addListener(_onHint);
+    widget.ctx.voicePick?.addListener(_onVoice);
   }
 
   @override
   void dispose() {
     widget.ctx.hint.removeListener(_onHint);
+    widget.ctx.voicePick?.removeListener(_onVoice);
     super.dispose();
+  }
+
+  void _onVoice() {
+    final i = widget.ctx.voicePick?.value;
+    if (i != null && i >= 0 && i < widget.trial.options.length) _choose(i);
   }
 
   void _onHint() {
@@ -406,11 +425,13 @@ class _TapCountTrialViewState extends State<TapCountTrialView> with _Pacing {
   void initState() {
     super.initState();
     widget.ctx.hint.addListener(_onHint);
+    widget.ctx.voicePick?.addListener(_onVoice);
   }
 
   @override
   void dispose() {
     widget.ctx.hint.removeListener(_onHint);
+    widget.ctx.voicePick?.removeListener(_onVoice);
     super.dispose();
   }
 
@@ -423,6 +444,11 @@ class _TapCountTrialViewState extends State<TapCountTrialView> with _Pacing {
     if (_tapped.contains(i)) return;
     setState(() => _tapped.add(i));
     widget.ctx.speak(numeral(_tapped.length, widget.ctx.language));
+  }
+
+  void _onVoice() {
+    final n = widget.ctx.voicePick?.value;
+    if (n != null && widget.trial.choices.contains(n)) _pick(n);
   }
 
   void _pick(int n) {
@@ -520,12 +546,14 @@ class _JoinSeparateTrialViewState extends State<JoinSeparateTrialView> with Sing
   void initState() {
     super.initState();
     widget.ctx.hint.addListener(_onHint);
+    widget.ctx.voicePick?.addListener(_onVoice);
     after(const Duration(milliseconds: 700), () => _move.forward());
   }
 
   @override
   void dispose() {
     widget.ctx.hint.removeListener(_onHint);
+    widget.ctx.voicePick?.removeListener(_onVoice);
     _move.dispose();
     super.dispose();
   }
@@ -534,6 +562,11 @@ class _JoinSeparateTrialViewState extends State<JoinSeparateTrialView> with Sing
     _move.forward(from: 0);
     setState(() => _pulse = true);
     after(const Duration(milliseconds: 1600), () => setState(() => _pulse = false));
+  }
+
+  void _onVoice() {
+    final n = widget.ctx.voicePick?.value;
+    if (n != null && widget.trial.choices.contains(n)) _pick(n);
   }
 
   void _pick(int n) {

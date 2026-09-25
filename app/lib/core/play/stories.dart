@@ -27,18 +27,18 @@ const situations = [
 ];
 
 String whoName(Who who, String language) => switch (who) {
-      Who.bear => language == 'ar' ? 'الدبّ' : 'bear',
-      Who.bunny => language == 'ar' ? 'الأرنب' : 'bunny',
-      Who.fox => language == 'ar' ? 'الثعلب' : 'fox',
-      Who.robot => language == 'ar' ? 'الروبوت' : 'robot',
-    };
+  Who.bear => language == 'ar' ? 'الدبّ' : 'bear',
+  Who.bunny => language == 'ar' ? 'الأرنب' : 'bunny',
+  Who.fox => language == 'ar' ? 'الثعلب' : 'fox',
+  Who.robot => language == 'ar' ? 'الروبوت' : 'robot',
+};
 
 String emotionWord(Emotion e, String language) => switch (e) {
-      Emotion.happy => language == 'ar' ? 'سعيد' : 'happy',
-      Emotion.sad => language == 'ar' ? 'حزين' : 'sad',
-      Emotion.surprised => language == 'ar' ? 'متفاجئ' : 'surprised',
-      Emotion.angry => language == 'ar' ? 'غاضب' : 'angry',
-    };
+  Emotion.happy => language == 'ar' ? 'سعيد' : 'happy',
+  Emotion.sad => language == 'ar' ? 'حزين' : 'sad',
+  Emotion.surprised => language == 'ar' ? 'متفاجئ' : 'surprised',
+  Emotion.angry => language == 'ar' ? 'غاضب' : 'angry',
+};
 
 /// "The bear is sleeping." / "The fox has a ball. The fox is jumping."
 String sceneSentence(SceneVisual s, String language) {

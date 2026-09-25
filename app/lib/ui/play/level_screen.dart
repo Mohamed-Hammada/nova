@@ -5,12 +5,15 @@ import 'package:nova_app/core/game/signal_mapping.dart';
 import 'package:nova_app/core/mechanics/raw_events.dart';
 import 'package:nova_app/core/play/lexicon.dart';
 import 'package:nova_app/core/play/session.dart';
+import 'package:nova_app/core/play/voice_match.dart';
 import 'package:nova_app/core/play/trials.dart';
 import 'package:nova_app/providers.dart';
 
 import '../characters/character_rig.dart';
 import '../characters/character_view.dart';
 import '../scene/world_backdrop.dart';
+import '../settings/capabilities.dart';
+import '../settings/face_play.dart';
 import '../theme/nova_theme.dart';
 import '../theme/strings.dart';
 import '../widgets/confetti.dart';
@@ -41,6 +44,8 @@ class LevelScreen extends ConsumerStatefulWidget {
 class _LevelScreenState extends ConsumerState<LevelScreen> {
   final _guide = CharacterController();
   final _hint = ValueNotifier<int>(0);
+  final _voicePick = ValueNotifier<int?>(null);
+  bool _listening = false;
   final _events = <RawMechanicEvent>[];
 
   late final JourneyLevel _level = widget.journey.levels[widget.levelIndex];
@@ -48,6 +53,7 @@ class _LevelScreenState extends ConsumerState<LevelScreen> {
   late final Game _game = ref.read(contentRuntimeProvider).game(_level.gameFor(_lang));
 
   late final _speech = ref.read(speechPortProvider);
+  late final _voice = ref.read(voiceInputProvider);
   PlaySession? _session;
   String? _feedback;
   bool _finished = false;
@@ -58,6 +64,7 @@ class _LevelScreenState extends ConsumerState<LevelScreen> {
   void initState() {
     super.initState();
     _speech;
+    _voice;
     _start();
   }
 
@@ -105,6 +112,41 @@ class _LevelScreenState extends ConsumerState<LevelScreen> {
     setState(() => _feedback = correct ? s.greatJob : s.tryAgainSoon);
   }
 
+  /// Whether this round can be answered by voice right now.
+  bool _voiceable(Trial? t) {
+    if (t == null || _finished || !ref.watch(voiceAnswersProvider) || !voiceAnswersSupported) return false;
+    return (t is ChoiceTrial && canAnswerByVoice(t.options, _lang)) || t is TapCountTrial || t is JoinSeparateTrial;
+  }
+
+  Future<void> _listen() async {
+    final t = _session?.current;
+    if (_listening || t == null) return;
+    final s = UiStrings.of(_lang);
+    await _speech.stop();
+    setState(() {
+      _listening = true;
+      _feedback = s.listening;
+    });
+    final heard = await _voice.listen(language: _lang);
+    if (!mounted) return;
+    final pick = heard == null
+        ? null
+        : switch (t) {
+            ChoiceTrial() => matchSpoken(heard, t.options, _lang),
+            TapCountTrial() => matchSpokenNumber(heard, t.choices, _lang),
+            JoinSeparateTrial() => matchSpokenNumber(heard, t.choices, _lang),
+            _ => null,
+          };
+    setState(() {
+      _listening = false;
+      _feedback = pick == null ? s.didntCatch : null;
+    });
+    if (pick != null) {
+      _voicePick.value = null;
+      _voicePick.value = pick;
+    }
+  }
+
   void _onDone() {
     final s = _session!;
     setState(() => _feedback = null);
@@ -143,6 +185,8 @@ class _LevelScreenState extends ConsumerState<LevelScreen> {
     _session?.dispose();
     _guide.dispose();
     _hint.dispose();
+    _voicePick.dispose();
+    _voice.cancel();
     super.dispose();
   }
 
@@ -196,10 +240,23 @@ class _LevelScreenState extends ConsumerState<LevelScreen> {
                                   padding: const EdgeInsets.only(bottom: 4),
                                   child: SpeechBubble(text: bubble, fontSize: (wide ? 18 : 14) * band.uiScale),
                                 ),
+                              if (_voiceable(trial))
+                                Padding(
+                                  padding: const EdgeInsets.only(bottom: 6),
+                                  child: JellyButton(
+                                    onPressed: _listening ? null : _listen,
+                                    color: _listening ? const Color(0xFFFF5FA2) : const Color(0xFF34C77B),
+                                    icon: Icons.mic_rounded,
+                                    label: _listening ? s.listening : s.sayIt,
+                                    size: 54,
+                                  ),
+                                ),
                               Flexible(
-                                child: AspectRatio(
-                                  aspectRatio: 0.85,
-                                  child: CharacterView(kind: guideKind, controller: _guide, rimColor: p.glow),
+                                child: Stack(
+                                  children: [
+                                    AspectRatio(aspectRatio: 0.85, child: CharacterView(kind: guideKind, controller: _guide, rimColor: p.glow)),
+                                    Positioned(top: 0, right: 0, child: FacePlay(controller: _guide)),
+                                  ],
                                 ),
                               ),
                             ],
@@ -211,7 +268,7 @@ class _LevelScreenState extends ConsumerState<LevelScreen> {
                                 key: ValueKey('${session!.index}'),
                                 child: trialView(
                                   trial,
-                                  TrialContext(language: _lang, onResponse: _onResponse, onDone: _onDone, hint: _hint, speak: _speak, accent: p.accent),
+                                  TrialContext(language: _lang, onResponse: _onResponse, onDone: _onDone, hint: _hint, speak: _speak, accent: p.accent, voicePick: _voicePick),
                                 ),
                               );
                         if (_finished) {

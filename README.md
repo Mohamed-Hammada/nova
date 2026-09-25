@@ -16,7 +16,7 @@ through the full content -> assessment -> mastery -> adaptive -> persistence pip
 | `docs/superpowers/designs/2026-09-22-nova-game-platform-design.md` | The game platform architecture. |
 | `docs/superpowers/plans/2026-09-22-nova-game-platform-vertical-slice.md` | The task-by-task plan that built `app/` and `tools/content_compiler/`. |
 | `docs/curriculum/` | The eight explanatory chapters and the research log. |
-| `data/` | The specification itself: `schema/` (JSON Schemas) plus YAML for skills, games, transfer tasks, evidence, parameters, assessment rules, language packs, mechanics, signals, i18n and audio. |
+| `data/` | The specification itself: `schema/` (JSON Schemas) plus YAML for skills, games, transfer tasks, evidence, parameters, assessment rules, language packs, mechanics, signals, journeys (the 50-level map per age group), i18n and audio. |
 | `tools/validate/` | The validator (Python) and its tests. |
 | `tools/content_compiler/` | Compiles validated `data/` into `app/assets/content/content_bundle.json`, the app's runtime content. |
 | `app/` | The Flutter app: pure-Dart domain core (`lib/core/`), platform adapters (`lib/adapters/`), the one real mechanic (`lib/mechanics_flutter/`), and chrome (`lib/ui/`). |
@@ -50,9 +50,12 @@ their own. Use the wrapper scripts instead, which always regenerate the bundle f
 ./scripts/build_web.sh                   # regenerate, then flutter build web (output: app/build/web)
 ```
 
-The app has three age groups (2–3, 4–5, 6–8), each with its own animated 3D guide character and
-world, in English and Arabic (right-to-left). See `app/README.md` for how the presentation layer
-and the character renderer are organised.
+The spec now covers 36 skills (math, thinking skills, feelings, and all eight literacy slots for
+both English and Arabic), 40 games and a 50-level journey for each age group (2–3, 4–5, 6–8). Every
+new record is judgment-class (design inference, `verified: false`) until the research task links
+verified evidence. The app plays every journey game offline, with animated 3D characters, spoken
+prompts, optional voice answers and face play (on-device only, off until a grown-up allows them),
+and per-child settings. See `app/README.md`.
 
 ## Ground rules for any agent working here
 

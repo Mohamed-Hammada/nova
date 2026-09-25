@@ -2,6 +2,12 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>Nova can listen for your child's spoken answers when a grown-up turns this on. Speech stays on this device.</string>
+	<key>NSSpeechRecognitionUsageDescription</key>
+	<string>Nova recognises your child's spoken answers on this device. Nothing is recorded or sent.</string>
+	<key>NSCameraUsageDescription</key>
+	<string>Nova's characters can see your child's smile when a grown-up turns this on. No picture is saved or sent.</string>
 	<key>CADisableMinimumFrameDurationOnPhone</key>
 	<true/>
 	<key>CFBundleDevelopmentRegion</key>

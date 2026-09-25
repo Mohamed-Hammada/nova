@@ -7,10 +7,18 @@ import '../theme/nova_theme.dart';
 import '../theme/strings.dart';
 import 'capabilities.dart';
 
-/// Called when a grown-up switches on the microphone or camera. Returns
-/// whether the device permission was granted. Replaced by the real permission
-/// flow in the voice and face adapters; tests leave it granting.
-final permissionRequestProvider = Provider<Future<bool> Function(String what)>((ref) => (what) async => true);
+/// Called when a grown-up switches on the microphone or camera: asks the
+/// device for permission (through the adapter that will use it) and checks
+/// that the feature can really run on this device. Returns whether it can.
+final permissionRequestProvider = Provider<Future<bool> Function(String what)>(
+  (ref) => (what) async {
+    if (what == 'microphone') return ref.read(voiceInputProvider).prepare(language: ref.read(languageProvider));
+    final face = ref.read(faceSensorProvider);
+    final ok = await face.start();
+    await face.stop();
+    return ok;
+  },
+);
 
 /// Settings only a grown-up changes: sound, microphone, camera, graphics.
 class GrownUpSettings extends ConsumerWidget {
@@ -37,29 +45,29 @@ class GrownUpSettings extends ConsumerWidget {
     }
 
     Widget row(IconData icon, String title, String sub, bool value, ValueChanged<bool>? onChanged) => Padding(
-          padding: const EdgeInsets.symmetric(vertical: 6),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Container(
-                padding: const EdgeInsets.all(10),
-                decoration: BoxDecoration(color: accent.withValues(alpha: 0.15), shape: BoxShape.circle),
-                child: Icon(icon, color: shade(accent, -0.3)),
-              ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(title, style: novaText(18, weight: 800, color: ink)),
-                    Text(onChanged == null ? '$sub ${s.notOnThisDevice}' : sub, style: novaText(14, weight: 500, color: ink.withValues(alpha: 0.7), height: 1.25)),
-                  ],
-                ),
-              ),
-              Switch(value: value, onChanged: onChanged, activeThumbColor: accent),
-            ],
+      padding: const EdgeInsets.symmetric(vertical: 6),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            padding: const EdgeInsets.all(10),
+            decoration: BoxDecoration(color: accent.withValues(alpha: 0.15), shape: BoxShape.circle),
+            child: Icon(icon, color: shade(accent, -0.3)),
           ),
-        );
+          const SizedBox(width: 12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(title, style: novaText(18, weight: 800, color: ink)),
+                Text(onChanged == null ? '$sub ${s.notOnThisDevice}' : sub, style: novaText(14, weight: 500, color: ink.withValues(alpha: 0.7), height: 1.25)),
+              ],
+            ),
+          ),
+          Switch(value: value, onChanged: onChanged, activeThumbColor: accent),
+        ],
+      ),
+    );
 
     return Container(
       margin: const EdgeInsets.only(bottom: 14),
@@ -74,17 +82,38 @@ class GrownUpSettings extends ConsumerWidget {
         children: [
           Text(s.settings, style: novaText(22, weight: 800, color: ink)),
           const SizedBox(height: 6),
-          row(Icons.record_voice_over_rounded, s.spokenPrompts, s.spokenPromptsSub, ref.watch(speechEnabledProvider),
-              (on) => ref.read(speechEnabledProvider.notifier).state = on),
-          row(Icons.mic_rounded, s.voiceAnswers, s.voiceAnswersSub, ref.watch(voiceAnswersProvider) && voiceAnswersSupported,
-              voiceAnswersSupported ? (on) => toggle(voiceAnswersProvider, on, 'microphone') : null),
-          row(Icons.face_retouching_natural_rounded, s.cameraPlay, s.cameraPlaySub, ref.watch(cameraPlayProvider) && facePlaySupported,
-              facePlaySupported ? (on) => toggle(cameraPlayProvider, on, 'camera') : null),
+          row(
+            Icons.record_voice_over_rounded,
+            s.spokenPrompts,
+            s.spokenPromptsSub,
+            ref.watch(speechEnabledProvider),
+            (on) => ref.read(speechEnabledProvider.notifier).state = on,
+          ),
+          row(
+            Icons.mic_rounded,
+            s.voiceAnswers,
+            s.voiceAnswersSub,
+            ref.watch(voiceAnswersProvider) && voiceAnswersSupported,
+            voiceAnswersSupported ? (on) => toggle(voiceAnswersProvider, on, 'microphone') : null,
+          ),
+          row(
+            Icons.face_retouching_natural_rounded,
+            s.cameraPlay,
+            s.cameraPlaySub,
+            ref.watch(cameraPlayProvider) && facePlaySupported,
+            facePlaySupported ? (on) => toggle(cameraPlayProvider, on, 'camera') : null,
+          ),
           const SizedBox(height: 10),
           Text(s.graphics, style: novaText(18, weight: 800, color: ink)),
           const SizedBox(height: 8),
           SegmentedButton<GraphicsQuality>(
-            segments: [for (final q in GraphicsQuality.values) ButtonSegment(value: q, label: Text(s.graphicsName(q.name), style: novaText(15, weight: 700)))],
+            segments: [
+              for (final q in GraphicsQuality.values)
+                ButtonSegment(
+                  value: q,
+                  label: Text(s.graphicsName(q.name), style: novaText(15, weight: 700)),
+                ),
+            ],
             selected: {quality},
             onSelectionChanged: (v) => ref.read(graphicsProvider.notifier).state = v.first,
           ),

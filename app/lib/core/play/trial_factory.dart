@@ -88,16 +88,16 @@ class _Ctx {
   List<T> shuffled<T>(Iterable<T> xs) => (List<T>.of(xs)..shuffle(rng));
 
   Pic? get skinPic => switch (skin) {
-        'apples' => Pic.apple,
-        'carrots' => Pic.carrot,
-        'fish' => Pic.fish,
-        'stars' => Pic.star,
-        'balls' => Pic.ball,
-        'flowers' => Pic.flower,
-        'shells' => Pic.shell,
-        'hearts' => Pic.heart,
-        _ => null,
-      };
+    'apples' => Pic.apple,
+    'carrots' => Pic.carrot,
+    'fish' => Pic.fish,
+    'stars' => Pic.star,
+    'balls' => Pic.ball,
+    'flowers' => Pic.flower,
+    'shells' => Pic.shell,
+    'hearts' => Pic.heart,
+    _ => null,
+  };
 
   /// [answer] placed at a random position among [others]; returns (options, index).
   (List<X>, int) withAnswer<X>(X answer, List<X> others) {
@@ -196,7 +196,10 @@ List<Trial> _numberCatch(_Ctx c) {
   final maxN = c.ic == 0 ? 5 : 10;
   final target = c.between(1, maxN);
   const lookAlike = {6: 9, 9: 6, 1: 7, 7: 1, 3: 8, 8: 3, 2: 5, 5: 2};
-  final others = [for (var n = 1; n <= maxN; n++) if (n != target) n];
+  final others = [
+    for (var n = 1; n <= maxN; n++)
+      if (n != target) n,
+  ];
   return [
     for (var i = 0; i < 12; i++)
       () {
@@ -230,12 +233,7 @@ List<Trial> _patternTrain(_Ctx c) {
         final next = unit[length % unit.length];
         final wrong = <Token>{...unit, t(2)}..remove(next);
         final (options, answer) = c.withAnswer<Token>(next, c.shuffled(wrong).take(2).toList());
-        return ChoiceTrial(
-          promptKey: 'what_next',
-          question: PatternVisual(shown),
-          options: [for (final o in options) TokenVisual(o)],
-          answer: answer,
-        );
+        return ChoiceTrial(promptKey: 'what_next', question: PatternVisual(shown), options: [for (final o in options) TokenVisual(o)], answer: answer);
       }(),
   ];
 }
@@ -265,7 +263,9 @@ List<Trial> _patternBuilder(_Ctx c) {
         return ChoiceTrial(
           promptKey: 'what_next_tower',
           question: TowersVisual(steps),
-          options: [for (final h in heights) TowersVisual([h], withGap: false)],
+          options: [
+            for (final h in heights) TowersVisual([h], withGap: false),
+          ],
           answer: answer,
         );
       }(),
@@ -327,7 +327,11 @@ List<Trial> _joinSeparate(_Ctx c, {required bool bigTotals}) {
 
 List<Trial> _numberLine(_Ctx c) {
   final max = c.ic == 0 ? 10 : 20;
-  final labelEvery = switch (c.abs) { 0 => 1, 1 => 5, _ => 0 };
+  final labelEvery = switch (c.abs) {
+    0 => 1,
+    1 => 5,
+    _ => 0,
+  };
   return [
     for (var i = 0; i < trialsPerSession; i++)
       () {
@@ -344,7 +348,9 @@ List<Trial> _colorSort(_Ctx c) {
   final rule = c.rule == 0 ? SortRule.colour : SortRule.shape;
   final hues = c.shuffled(Hue.values).take(2).toList();
   final shapes = c.shuffled(Shape.values).take(2).toList();
-  final bins = rule == SortRule.colour ? [Token(Shape.circle, hues[0]), Token(Shape.circle, hues[1])] : [Token(shapes[0], Hue.purple), Token(shapes[1], Hue.purple)];
+  final bins = rule == SortRule.colour
+      ? [Token(Shape.circle, hues[0]), Token(Shape.circle, hues[1])]
+      : [Token(shapes[0], Hue.purple), Token(shapes[1], Hue.purple)];
   return [
     for (var i = 0; i < trialsPerSession; i++)
       () {
@@ -412,7 +418,11 @@ List<Trial> _feedFish(_Ctx c) {
     for (var i = 0; i < 12; i++)
       () {
         final go = i < 2 || c.rng.nextDouble() >= noGoRate;
-        return StreamItemTrial(visual: PicVisual(go ? Pic.fish : Pic.shark), isTarget: go, showFor: Duration(milliseconds: ms));
+        return StreamItemTrial(
+          visual: PicVisual(go ? Pic.fish : Pic.shark),
+          isTarget: go,
+          showFor: Duration(milliseconds: ms),
+        );
       }(),
   ];
 }
@@ -491,8 +501,14 @@ List<Trial> _listen(_Ctx c) {
 }
 
 List<Trial> _wordHunt(_Ctx c) {
-  final pool = [for (final p in (c.ic == 0 ? commonPics : lessCommonPics)) if (wordFor(c.lang, p) != null) p];
-  final allPics = [for (final p in [...commonPics, ...lessCommonPics]) if (wordFor(c.lang, p) != null) p];
+  final pool = [
+    for (final p in (c.ic == 0 ? commonPics : lessCommonPics))
+      if (wordFor(c.lang, p) != null) p,
+  ];
+  final allPics = [
+    for (final p in [...commonPics, ...lessCommonPics])
+      if (wordFor(c.lang, p) != null) p,
+  ];
   final choices = c.dist == 0 ? 2 : 4;
   return [
     for (final target in c.shuffled(pool).take(trialsPerSession))

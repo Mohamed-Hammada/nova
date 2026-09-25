@@ -9,6 +9,9 @@ import 'package:nova_app/adapters/speech/tts_speech_port.dart';
 import 'package:nova_app/core/play/trial_factory.dart';
 import 'package:nova_app/core/ports/player_state_port.dart';
 import 'package:nova_app/core/ports/speech_port.dart';
+import 'package:nova_app/core/ports/face_sensor_port.dart';
+import 'package:nova_app/core/ports/voice_input_port.dart';
+import 'package:nova_app/adapters/device/device_ports.dart';
 import 'package:nova_app/core/adaptive/adaptive_model.dart';
 import 'package:nova_app/core/adaptive/adaptive_progression_engine.dart';
 import 'package:nova_app/core/assessment/assessment_engine.dart';
@@ -43,6 +46,10 @@ final playerStatePortProvider = Provider<PlayerStatePort>((ref) => DriftPlayerSt
 final speechEnabledProvider = StateProvider<bool>((ref) => true);
 final ttsProvider = Provider<SpeechPort>((ref) => TtsSpeechPort());
 final speechPortProvider = Provider<SpeechPort>((ref) => ref.watch(speechEnabledProvider) ? ref.watch(ttsProvider) : const SilentSpeechPort());
+
+// Voice answers and face play: on-device only, off until a grown-up allows.
+final voiceInputProvider = Provider<VoiceInputPort>((ref) => createVoiceInput());
+final faceSensorProvider = Provider<FaceSensorPort>((ref) => createFaceSensor());
 
 final trialFactoryProvider = Provider<TrialFactory>((ref) => const TrialFactory());
 

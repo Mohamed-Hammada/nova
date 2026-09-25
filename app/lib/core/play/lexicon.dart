@@ -9,9 +9,52 @@
 library;
 
 enum Pic {
-  apple, pear, carrot, radish, fish, shark, star, ball, flower, shell, heart, bird, gem, balloon,
-  cat, hat, sun, moon, spoon, dish, tree, bee, boat, goat, duck, truck, car, cup, house, book, door,
-  kite, cake, banana, tomato, watermelon, egg, drum, gift, net, bus, butterfly, bear, bunny, fox, robot,
+  apple,
+  pear,
+  carrot,
+  radish,
+  fish,
+  shark,
+  star,
+  ball,
+  flower,
+  shell,
+  heart,
+  bird,
+  gem,
+  balloon,
+  cat,
+  hat,
+  sun,
+  moon,
+  spoon,
+  dish,
+  tree,
+  bee,
+  boat,
+  goat,
+  duck,
+  truck,
+  car,
+  cup,
+  house,
+  book,
+  door,
+  kite,
+  cake,
+  banana,
+  tomato,
+  watermelon,
+  egg,
+  drum,
+  gift,
+  net,
+  bus,
+  butterfly,
+  bear,
+  bunny,
+  fox,
+  robot,
 }
 
 class Word {
@@ -128,7 +171,16 @@ const lessCommonPics = [Pic.shell, Pic.drum, Pic.butterfly, Pic.watermelon, Pic.
 /// English capital letters whose small form looks the same, and letters
 /// children commonly confuse.
 const enLookAlikeCase = ['C', 'O', 'S', 'U', 'V', 'W', 'X', 'Z', 'K', 'P'];
-const enConfusables = {'b': ['d', 'p', 'q'], 'd': ['b', 'p', 'q'], 'p': ['q', 'b', 'd'], 'q': ['p', 'b', 'd'], 'n': ['u', 'm'], 'u': ['n', 'v'], 'm': ['n', 'w'], 'w': ['m', 'v']};
+const enConfusables = {
+  'b': ['d', 'p', 'q'],
+  'd': ['b', 'p', 'q'],
+  'p': ['q', 'b', 'd'],
+  'q': ['p', 'b', 'd'],
+  'n': ['u', 'm'],
+  'u': ['n', 'v'],
+  'm': ['n', 'w'],
+  'w': ['m', 'v'],
+};
 
 /// Arabic letters that join on both sides, grouped by how much the joined
 /// form changes. Letters that never join to the next one (ا د ذ ر ز و)

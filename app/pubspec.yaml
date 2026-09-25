@@ -43,6 +43,9 @@ dependencies:
   flutter_riverpod: ^2.5.1
   just_audio: ^0.9.40
   flutter_tts: ^4.2.5
+  speech_to_text: ^7.5.0
+  camera: ^0.12.1
+  google_mlkit_face_detection: ^0.15.1
 
 dev_dependencies:
   flutter_test:

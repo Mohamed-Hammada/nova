@@ -7,6 +7,7 @@ import 'characters/character_rig.dart';
 import 'characters/character_view.dart';
 import 'game_screen.dart';
 import 'parent_view.dart';
+import 'settings/face_play.dart';
 import 'settings/profile_screen.dart';
 import 'play/game_art.dart';
 import 'play/journey_screen.dart';
@@ -109,6 +110,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                         ),
                       ),
                     ),
+                    PositionedDirectional(bottom: 12, end: 12, child: FacePlay(controller: _guide)),
                     PositionedDirectional(
                       top: 0,
                       start: 0,

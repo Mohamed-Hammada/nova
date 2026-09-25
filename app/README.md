@@ -38,6 +38,45 @@ See the root `README.md` for how the content bundle is built, and
 To add a character, add a `CharacterKind`, a model (a list of `Part`s plus joint pivots) in
 `character_rig.dart`, and its names. The animation layer works for any model.
 
+## Games and journeys (`lib/core/play/`, `lib/ui/play/`)
+
+- `trial_factory.dart` turns a game's current rung (chosen by the Adaptive Engine and stored per game)
+  into seeded rounds, reading the rung's values against that game's anchors in `data/games`. Every
+  game the journeys use has a builder; tests check each rung of each game in both languages.
+- `session.dart` (`PlaySession`) is the generic `GameMechanic`: views report each response and it
+  emits the same `TrialSubmitted` events as before, so assessment, mastery and adaptation are
+  unchanged. Stars (1-3 from accuracy) are an engagement reward only.
+- `lexicon.dart` and `stories.dart` hold the interim English/Arabic word lists, syllables, rhymes and
+  short stories. They are working choices to be reviewed by language specialists and moved into the
+  language packs when narration is recorded.
+- `trial_views.dart` has one view per interaction; `level_screen.dart` runs a level (prompt, hint,
+  repeat, voice answer, guide reactions, star reward); `journey_screen.dart` is the level map.
+
+## Settings and personalisation
+
+- About me (tap the avatar chip): name, exact age, companion, world, language.
+- Grown-ups (press and hold): spoken instructions, voice answers, face play, graphics quality
+  (`ui/theme/graphics.dart`: Low keeps backgrounds still and lighting simple for older phones).
+- Saved through `PlayerStatePort` (drift tables `level_progress_rows`, `setting_rows`; schema v2
+  migration) and loaded before the first frame (`ui/settings/settings_sync.dart`).
+
+## Voice and face (privacy by design)
+
+- Spoken prompts use the device's text-to-speech (`adapters/speech/`). No permission needed.
+- Voice answers (`adapters/device/device_ports_native.dart`) use `speech_to_text` with
+  `onDevice: true`; if the device can only recognise speech in the cloud, the feature reports itself
+  unavailable. `core/play/voice_match.dart` maps what was heard to an answer (numbers, pictures,
+  letters, feelings in both languages); a spoken answer is scored exactly like a tap.
+- Face play uses the front camera at low resolution with ML Kit's bundled on-device face detector.
+  Only a few numbers (face position, smile and eye-open likelihoods) leave the detector; no frame is
+  kept, shown or sent. The guide looks at the child, smiles back and plays peekaboo
+  (`core/play/face_buddy.dart`); a camera badge is visible whenever the camera runs.
+- Both are off until a grown-up switches them on, which triggers the OS permission prompt. Neither is
+  offered on the web (browser speech recognition is cloud-based, and there is no on-device face
+  detector there); the web build uses stubs, so the native plugins never enter it.
+- Android manifest and iOS `Info.plist` declare the microphone and camera use. On iOS, ML Kit needs a
+  deployment target of 15.5 or later in the Podfile.
+
 ## Web
 
 `flutter build web` works. Storage uses SQLite compiled to WebAssembly: `web/sqlite3.wasm` and

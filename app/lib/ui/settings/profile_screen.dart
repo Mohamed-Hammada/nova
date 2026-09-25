@@ -42,18 +42,22 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
     final ink = p.isNight ? Colors.white : const Color(0xFF2E2440);
 
     Widget section(String title, Widget body) => Container(
-          margin: const EdgeInsets.only(bottom: 16),
-          padding: const EdgeInsets.all(18),
-          decoration: BoxDecoration(
-            color: Colors.white.withValues(alpha: p.isNight ? 0.1 : 0.85),
-            borderRadius: BorderRadius.circular(28),
-            border: Border.all(color: Colors.white.withValues(alpha: 0.6), width: 2),
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [Text(title, style: novaText(24, weight: 800, color: ink)), const SizedBox(height: 12), body],
-          ),
-        );
+      margin: const EdgeInsets.only(bottom: 16),
+      padding: const EdgeInsets.all(18),
+      decoration: BoxDecoration(
+        color: Colors.white.withValues(alpha: p.isNight ? 0.1 : 0.85),
+        borderRadius: BorderRadius.circular(28),
+        border: Border.all(color: Colors.white.withValues(alpha: 0.6), width: 2),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(title, style: novaText(24, weight: 800, color: ink)),
+          const SizedBox(height: 12),
+          body,
+        ],
+      ),
+    );
 
     return Scaffold(
       body: WorldBackdrop(
@@ -164,7 +168,10 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                                 color: p.accent,
                                 label: s.automatic,
                                 onTap: () => ref.read(worldChoiceProvider.notifier).state = null,
-                                child: ClipRRect(borderRadius: BorderRadius.circular(18), child: WorldBackdrop(world: band.world, groundLevel: 0.6)),
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(18),
+                                  child: WorldBackdrop(world: band.world, groundLevel: 0.6),
+                                ),
                               ),
                               for (final w in WorldKind.values)
                                 _Choice(
@@ -172,7 +179,10 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                                   color: p.accent,
                                   label: s.worldName(w),
                                   onTap: () => ref.read(worldChoiceProvider.notifier).state = w,
-                                  child: ClipRRect(borderRadius: BorderRadius.circular(18), child: WorldBackdrop(world: w, groundLevel: 0.6)),
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(18),
+                                    child: WorldBackdrop(world: w, groundLevel: 0.6),
+                                  ),
                                 ),
                             ],
                           ),
@@ -216,22 +226,28 @@ class _Bubble extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => GestureDetector(
-        onTap: onTap,
-        child: AnimatedContainer(
-          duration: const Duration(milliseconds: 200),
-          width: wide ? 170 : 72,
-          height: 72,
-          alignment: Alignment.center,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(36),
-            gradient: selected ? LinearGradient(begin: Alignment.topCenter, end: Alignment.bottomCenter, colors: [shade(color, 0.25), color]) : null,
-            color: selected ? null : Colors.white,
-            border: Border.all(color: selected ? Colors.white : const Color(0xFFE2DCEC), width: 3),
-            boxShadow: [BoxShadow(color: (selected ? color : Colors.black).withValues(alpha: selected ? 0.5 : 0.08), blurRadius: selected ? 16 : 8, offset: const Offset(0, 5))],
+    onTap: onTap,
+    child: AnimatedContainer(
+      duration: const Duration(milliseconds: 200),
+      width: wide ? 170 : 72,
+      height: 72,
+      alignment: Alignment.center,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(36),
+        gradient: selected ? LinearGradient(begin: Alignment.topCenter, end: Alignment.bottomCenter, colors: [shade(color, 0.25), color]) : null,
+        color: selected ? null : Colors.white,
+        border: Border.all(color: selected ? Colors.white : const Color(0xFFE2DCEC), width: 3),
+        boxShadow: [
+          BoxShadow(
+            color: (selected ? color : Colors.black).withValues(alpha: selected ? 0.5 : 0.08),
+            blurRadius: selected ? 16 : 8,
+            offset: const Offset(0, 5),
           ),
-          child: child,
-        ),
-      );
+        ],
+      ),
+      child: child,
+    ),
+  );
 }
 
 class _Choice extends StatelessWidget {
@@ -244,31 +260,43 @@ class _Choice extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => GestureDetector(
-        onTap: onTap,
-        child: AnimatedContainer(
-          duration: const Duration(milliseconds: 200),
-          width: 130,
-          padding: const EdgeInsets.all(8),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(24),
-            border: Border.all(color: selected ? color : const Color(0xFFE2DCEC), width: selected ? 5 : 2),
-            boxShadow: [BoxShadow(color: (selected ? color : Colors.black).withValues(alpha: selected ? 0.45 : 0.08), blurRadius: selected ? 18 : 8, offset: const Offset(0, 6))],
+    onTap: onTap,
+    child: AnimatedContainer(
+      duration: const Duration(milliseconds: 200),
+      width: 130,
+      padding: const EdgeInsets.all(8),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(24),
+        border: Border.all(color: selected ? color : const Color(0xFFE2DCEC), width: selected ? 5 : 2),
+        boxShadow: [
+          BoxShadow(
+            color: (selected ? color : Colors.black).withValues(alpha: selected ? 0.45 : 0.08),
+            blurRadius: selected ? 18 : 8,
+            offset: const Offset(0, 6),
           ),
-          child: Column(
+        ],
+      ),
+      child: Column(
+        children: [
+          SizedBox(height: 110, child: child),
+          const SizedBox(height: 6),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              SizedBox(height: 110, child: child),
-              const SizedBox(height: 6),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  if (selected) Icon(Icons.check_circle_rounded, color: color, size: 20),
-                  if (selected) const SizedBox(width: 4),
-                  Flexible(child: Text(label, overflow: TextOverflow.ellipsis, style: novaText(17, weight: 800, color: const Color(0xFF2E2440)))),
-                ],
+              if (selected) Icon(Icons.check_circle_rounded, color: color, size: 20),
+              if (selected) const SizedBox(width: 4),
+              Flexible(
+                child: Text(
+                  label,
+                  overflow: TextOverflow.ellipsis,
+                  style: novaText(17, weight: 800, color: const Color(0xFF2E2440)),
+                ),
               ),
             ],
           ),
-        ),
-      );
+        ],
+      ),
+    ),
+  );
 }
