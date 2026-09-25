@@ -37,6 +37,9 @@ class GameRungState extends Table {
   TextColumn get gameId => text()();
   TextColumn get rungId => text()();
 
+  /// The scaffold the Adaptive Engine chose with the rung (schema v4).
+  TextColumn get scaffold => text().nullable()();
+
   @override
   Set<Column> get primaryKey => {childId, gameId};
 }
@@ -67,6 +70,12 @@ class ActivityRecordRows extends Table {
   IntColumn get bestStars => integer()();
   RealColumn get lastAccuracy => real().nullable()();
 
+  /// How the last session went, from the assessment and adaptive pipeline
+  /// (schema v4): hints per round, and the adaptive move and scaffold.
+  RealColumn get lastHintsPerTrial => real().nullable()();
+  TextColumn get lastMove => text().nullable()();
+  TextColumn get lastScaffold => text().nullable()();
+
   @override
   Set<Column> get primaryKey => {childId, activityId};
 }
@@ -86,7 +95,7 @@ class NovaDatabase extends _$NovaDatabase {
   NovaDatabase(super.executor);
 
   @override
-  int get schemaVersion => 3;
+  int get schemaVersion => 4;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -105,6 +114,14 @@ class NovaDatabase extends _$NovaDatabase {
               '(child_id, activity_id, first_started_at, last_played_at, first_completed_at, attempts, completions, best_stars) '
               'SELECT child_id, level_id, updated_at, updated_at, updated_at, 1, 1, stars FROM level_progress_rows',
             );
+          }
+          if (from >= 3 && from < 4) {
+            await m.addColumn(activityRecordRows, activityRecordRows.lastHintsPerTrial);
+            await m.addColumn(activityRecordRows, activityRecordRows.lastMove);
+            await m.addColumn(activityRecordRows, activityRecordRows.lastScaffold);
+          }
+          if (from < 4) {
+            await m.addColumn(gameRungState, gameRungState.scaffold);
           }
         },
       );

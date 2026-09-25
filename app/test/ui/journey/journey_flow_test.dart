@@ -84,7 +84,7 @@ void main() {
     await tester.tap(find.byKey(const ValueKey('home.continue')));
     await settle(tester);
     // ...and is finished (its game reports the result through the journey).
-    await c.read(journeyRecorderProvider).finish(childId: profile.id, activityId: last.id, stars: 3, accuracy: 1);
+    await c.read(journeyRecorderProvider).finish(childId: profile.id, activityId: last.id, outcome: const SessionOutcome(stars: 3, accuracy: 1));
     tester.state<NavigatorState>(find.byType(Navigator)).pop();
     await settle(tester);
 

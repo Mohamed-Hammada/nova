@@ -7,6 +7,7 @@ class InMemoryPersistencePort implements PersistencePort {
   final Map<String, MasteryRecord> _mastery = {};
   final Map<String, DimensionEstimate> _dimensions = {};
   final Map<String, String> _rungs = {};
+  final Map<String, String> _scaffolds = {};
 
   @override
   Future<void> saveSession({
@@ -23,6 +24,7 @@ class InMemoryPersistencePort implements PersistencePort {
     if (independence != null) _dimensions['$childId:$skillId:independence'] = independence;
     if (transfer != null) _dimensions['$childId:$skillId:transfer'] = transfer;
     _rungs['$childId:${decision.gameId}'] = decision.nextRungId;
+    _scaffolds['$childId:${decision.gameId}'] = decision.scaffold;
   }
 
   @override
@@ -34,4 +36,7 @@ class InMemoryPersistencePort implements PersistencePort {
 
   @override
   Future<String?> currentRung({required String childId, required String gameId}) async => _rungs['$childId:$gameId'];
+
+  @override
+  Future<String?> currentScaffold({required String childId, required String gameId}) async => _scaffolds['$childId:$gameId'];
 }

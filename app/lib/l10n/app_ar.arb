@@ -232,5 +232,9 @@
   "domainAttention": "الانتباه",
   "domainProblemSolving": "حلّ المشكلات",
   "decreaseAge": "أصغر",
-  "increaseAge": "أكبر"
+  "increaseAge": "أكبر",
+  "greatEffort": "يا له من مجهود رائع!",
+  "scaffoldModelled": "سأريك أولًا كيف نلعب!",
+  "scaffoldGuided": "سأساعدك خطوة بخطوة!",
+  "scaffoldIndependent": "أنت جاهز للتحدّي!"
 }

@@ -540,5 +540,9 @@
   "domainAttention": "Attention",
   "domainProblemSolving": "Problem solving",
   "decreaseAge": "Younger",
-  "increaseAge": "Older"
+  "increaseAge": "Older",
+  "greatEffort": "What great effort!",
+  "scaffoldModelled": "Let me show you first!",
+  "scaffoldGuided": "I'll help you along the way!",
+  "scaffoldIndependent": "You're ready for a challenge!"
 }

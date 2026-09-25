@@ -23,6 +23,7 @@ class PlaySession implements GameMechanic {
 
   int _index = 0;
   int _hints = 0;
+  int _totalHints = 0;
   int _correct = 0;
   int _responses = 0;
 
@@ -31,6 +32,9 @@ class PlaySession implements GameMechanic {
   bool get isFinished => _index >= trials.length;
   int get correctCount => _correct;
   int get responseCount => _responses;
+
+  /// Hints used per round across the session.
+  double get hintsPerTrial => trials.isEmpty ? 0 : _totalHints / trials.length;
   double get accuracy => _responses == 0 ? 0 : _correct / _responses;
 
   @override
@@ -41,10 +45,14 @@ class PlaySession implements GameMechanic {
     _index = 0;
     _hints = 0;
     _correct = 0;
+    _totalHints = 0;
     _responses = 0;
   }
 
-  void useHint() => _hints++;
+  void useHint() {
+    _hints++;
+    _totalHints++;
+  }
 
   /// Logs one response for the current trial.
   void record(bool correct) {

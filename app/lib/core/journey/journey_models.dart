@@ -1,3 +1,4 @@
+import 'package:nova_app/core/game/session_plan.dart';
 import 'package:nova_app/core/content/models.dart';
 
 /// The child using Nova. [age] is the child's real, chronological age: it
@@ -113,6 +114,9 @@ class ActivityRecord {
     this.completions = 0,
     this.bestStars = 0,
     this.lastAccuracy,
+    this.lastHintsPerTrial,
+    this.lastMove,
+    this.lastScaffold,
   });
 
   final String childId;
@@ -129,7 +133,21 @@ class ActivityRecord {
   final int bestStars;
   final double? lastAccuracy;
 
+  /// From the last session's assessment and adaptive decision: hints per
+  /// round, and whether the Adaptive Engine moved the game up, kept it, or
+  /// moved it down (with the scaffold it chose). This is session evidence,
+  /// not mastery.
+  final double? lastHintsPerTrial;
+  final AdaptiveMove? lastMove;
+  final String? lastScaffold;
+
   bool get completed => completions > 0;
+
+  /// The last session showed struggle (the Adaptive Engine eased off).
+  bool get struggled => lastMove == AdaptiveMove.retreat;
+
+  /// The last session was accurate and independent enough to move up.
+  bool get thrived => lastMove == AdaptiveMove.advance || lastScaffold == ScaffoldLevel.independent;
 
   ActivityRecord started(DateTime at) => ActivityRecord(
         childId: childId,
@@ -141,9 +159,12 @@ class ActivityRecord {
         completions: completions,
         bestStars: bestStars,
         lastAccuracy: lastAccuracy,
+        lastHintsPerTrial: lastHintsPerTrial,
+        lastMove: lastMove,
+        lastScaffold: lastScaffold,
       );
 
-  ActivityRecord finished(DateTime at, {required bool completed, required int stars, required double accuracy}) => ActivityRecord(
+  ActivityRecord finished(DateTime at, {required bool completed, required int stars, required double accuracy, SessionOutcome? outcome}) => ActivityRecord(
         childId: childId,
         activityId: activityId,
         firstStartedAt: firstStartedAt,
@@ -153,10 +174,30 @@ class ActivityRecord {
         completions: completions + (completed ? 1 : 0),
         bestStars: stars > bestStars ? stars : bestStars,
         lastAccuracy: accuracy,
+        lastHintsPerTrial: outcome?.hintsPerTrial ?? lastHintsPerTrial,
+        lastMove: outcome?.move ?? lastMove,
+        lastScaffold: outcome?.scaffold ?? lastScaffold,
       );
 
   static ActivityRecord fresh(String childId, String activityId, DateTime at) =>
       ActivityRecord(childId: childId, activityId: activityId, firstStartedAt: at, lastPlayedAt: at);
+}
+
+/// What a finished game session reports to the journey: the child's
+/// result, and the Adaptive Engine's decision computed from the session's
+/// learning signals (GameRuntime.completeSession).
+class SessionOutcome {
+  const SessionOutcome({required this.stars, required this.accuracy, this.hintsPerTrial, this.move, this.scaffold, this.finishedAllRounds = true});
+  final int stars;
+
+  /// First-try accuracy, 0..1.
+  final double accuracy;
+  final double? hintsPerTrial;
+
+  /// The Adaptive Engine's decision for the next session of this game.
+  final AdaptiveMove? move;
+  final String? scaffold;
+  final bool finishedAllRounds;
 }
 
 /// Where an activity stands for this child.

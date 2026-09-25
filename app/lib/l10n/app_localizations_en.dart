@@ -799,4 +799,16 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get increaseAge => 'Older';
+
+  @override
+  String get greatEffort => 'What great effort!';
+
+  @override
+  String get scaffoldModelled => 'Let me show you first!';
+
+  @override
+  String get scaffoldGuided => 'I\'ll help you along the way!';
+
+  @override
+  String get scaffoldIndependent => 'You\'re ready for a challenge!';
 }

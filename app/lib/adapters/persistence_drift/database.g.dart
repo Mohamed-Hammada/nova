@@ -846,8 +846,19 @@ class $GameRungStateTable extends GameRungState
     type: DriftSqlType.string,
     requiredDuringInsert: true,
   );
+  static const VerificationMeta _scaffoldMeta = const VerificationMeta(
+    'scaffold',
+  );
   @override
-  List<GeneratedColumn> get $columns => [childId, gameId, rungId];
+  late final GeneratedColumn<String> scaffold = GeneratedColumn<String>(
+    'scaffold',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [childId, gameId, rungId, scaffold];
   @override
   String get aliasedName => _alias ?? actualTableName;
   @override
@@ -884,6 +895,12 @@ class $GameRungStateTable extends GameRungState
     } else if (isInserting) {
       context.missing(_rungIdMeta);
     }
+    if (data.containsKey('scaffold')) {
+      context.handle(
+        _scaffoldMeta,
+        scaffold.isAcceptableOrUnknown(data['scaffold']!, _scaffoldMeta),
+      );
+    }
     return context;
   }
 
@@ -905,6 +922,10 @@ class $GameRungStateTable extends GameRungState
         DriftSqlType.string,
         data['${effectivePrefix}rung_id'],
       )!,
+      scaffold: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}scaffold'],
+      ),
     );
   }
 
@@ -919,10 +940,14 @@ class GameRungStateData extends DataClass
   final String childId;
   final String gameId;
   final String rungId;
+
+  /// The scaffold the Adaptive Engine chose with the rung (schema v4).
+  final String? scaffold;
   const GameRungStateData({
     required this.childId,
     required this.gameId,
     required this.rungId,
+    this.scaffold,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -930,6 +955,9 @@ class GameRungStateData extends DataClass
     map['child_id'] = Variable<String>(childId);
     map['game_id'] = Variable<String>(gameId);
     map['rung_id'] = Variable<String>(rungId);
+    if (!nullToAbsent || scaffold != null) {
+      map['scaffold'] = Variable<String>(scaffold);
+    }
     return map;
   }
 
@@ -938,6 +966,9 @@ class GameRungStateData extends DataClass
       childId: Value(childId),
       gameId: Value(gameId),
       rungId: Value(rungId),
+      scaffold: scaffold == null && nullToAbsent
+          ? const Value.absent()
+          : Value(scaffold),
     );
   }
 
@@ -950,6 +981,7 @@ class GameRungStateData extends DataClass
       childId: serializer.fromJson<String>(json['childId']),
       gameId: serializer.fromJson<String>(json['gameId']),
       rungId: serializer.fromJson<String>(json['rungId']),
+      scaffold: serializer.fromJson<String?>(json['scaffold']),
     );
   }
   @override
@@ -959,6 +991,7 @@ class GameRungStateData extends DataClass
       'childId': serializer.toJson<String>(childId),
       'gameId': serializer.toJson<String>(gameId),
       'rungId': serializer.toJson<String>(rungId),
+      'scaffold': serializer.toJson<String?>(scaffold),
     };
   }
 
@@ -966,16 +999,19 @@ class GameRungStateData extends DataClass
     String? childId,
     String? gameId,
     String? rungId,
+    Value<String?> scaffold = const Value.absent(),
   }) => GameRungStateData(
     childId: childId ?? this.childId,
     gameId: gameId ?? this.gameId,
     rungId: rungId ?? this.rungId,
+    scaffold: scaffold.present ? scaffold.value : this.scaffold,
   );
   GameRungStateData copyWithCompanion(GameRungStateCompanion data) {
     return GameRungStateData(
       childId: data.childId.present ? data.childId.value : this.childId,
       gameId: data.gameId.present ? data.gameId.value : this.gameId,
       rungId: data.rungId.present ? data.rungId.value : this.rungId,
+      scaffold: data.scaffold.present ? data.scaffold.value : this.scaffold,
     );
   }
 
@@ -984,37 +1020,42 @@ class GameRungStateData extends DataClass
     return (StringBuffer('GameRungStateData(')
           ..write('childId: $childId, ')
           ..write('gameId: $gameId, ')
-          ..write('rungId: $rungId')
+          ..write('rungId: $rungId, ')
+          ..write('scaffold: $scaffold')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode => Object.hash(childId, gameId, rungId);
+  int get hashCode => Object.hash(childId, gameId, rungId, scaffold);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
       (other is GameRungStateData &&
           other.childId == this.childId &&
           other.gameId == this.gameId &&
-          other.rungId == this.rungId);
+          other.rungId == this.rungId &&
+          other.scaffold == this.scaffold);
 }
 
 class GameRungStateCompanion extends UpdateCompanion<GameRungStateData> {
   final Value<String> childId;
   final Value<String> gameId;
   final Value<String> rungId;
+  final Value<String?> scaffold;
   final Value<int> rowid;
   const GameRungStateCompanion({
     this.childId = const Value.absent(),
     this.gameId = const Value.absent(),
     this.rungId = const Value.absent(),
+    this.scaffold = const Value.absent(),
     this.rowid = const Value.absent(),
   });
   GameRungStateCompanion.insert({
     required String childId,
     required String gameId,
     required String rungId,
+    this.scaffold = const Value.absent(),
     this.rowid = const Value.absent(),
   }) : childId = Value(childId),
        gameId = Value(gameId),
@@ -1023,12 +1064,14 @@ class GameRungStateCompanion extends UpdateCompanion<GameRungStateData> {
     Expression<String>? childId,
     Expression<String>? gameId,
     Expression<String>? rungId,
+    Expression<String>? scaffold,
     Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
       if (childId != null) 'child_id': childId,
       if (gameId != null) 'game_id': gameId,
       if (rungId != null) 'rung_id': rungId,
+      if (scaffold != null) 'scaffold': scaffold,
       if (rowid != null) 'rowid': rowid,
     });
   }
@@ -1037,12 +1080,14 @@ class GameRungStateCompanion extends UpdateCompanion<GameRungStateData> {
     Value<String>? childId,
     Value<String>? gameId,
     Value<String>? rungId,
+    Value<String?>? scaffold,
     Value<int>? rowid,
   }) {
     return GameRungStateCompanion(
       childId: childId ?? this.childId,
       gameId: gameId ?? this.gameId,
       rungId: rungId ?? this.rungId,
+      scaffold: scaffold ?? this.scaffold,
       rowid: rowid ?? this.rowid,
     );
   }
@@ -1059,6 +1104,9 @@ class GameRungStateCompanion extends UpdateCompanion<GameRungStateData> {
     if (rungId.present) {
       map['rung_id'] = Variable<String>(rungId.value);
     }
+    if (scaffold.present) {
+      map['scaffold'] = Variable<String>(scaffold.value);
+    }
     if (rowid.present) {
       map['rowid'] = Variable<int>(rowid.value);
     }
@@ -1071,6 +1119,7 @@ class GameRungStateCompanion extends UpdateCompanion<GameRungStateData> {
           ..write('childId: $childId, ')
           ..write('gameId: $gameId, ')
           ..write('rungId: $rungId, ')
+          ..write('scaffold: $scaffold, ')
           ..write('rowid: $rowid')
           ..write(')'))
         .toString();
@@ -1706,6 +1755,40 @@ class $ActivityRecordRowsTable extends ActivityRecordRows
     type: DriftSqlType.double,
     requiredDuringInsert: false,
   );
+  static const VerificationMeta _lastHintsPerTrialMeta = const VerificationMeta(
+    'lastHintsPerTrial',
+  );
+  @override
+  late final GeneratedColumn<double> lastHintsPerTrial =
+      GeneratedColumn<double>(
+        'last_hints_per_trial',
+        aliasedName,
+        true,
+        type: DriftSqlType.double,
+        requiredDuringInsert: false,
+      );
+  static const VerificationMeta _lastMoveMeta = const VerificationMeta(
+    'lastMove',
+  );
+  @override
+  late final GeneratedColumn<String> lastMove = GeneratedColumn<String>(
+    'last_move',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _lastScaffoldMeta = const VerificationMeta(
+    'lastScaffold',
+  );
+  @override
+  late final GeneratedColumn<String> lastScaffold = GeneratedColumn<String>(
+    'last_scaffold',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
   @override
   List<GeneratedColumn> get $columns => [
     childId,
@@ -1717,6 +1800,9 @@ class $ActivityRecordRowsTable extends ActivityRecordRows
     completions,
     bestStars,
     lastAccuracy,
+    lastHintsPerTrial,
+    lastMove,
+    lastScaffold,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -1813,6 +1899,30 @@ class $ActivityRecordRowsTable extends ActivityRecordRows
         ),
       );
     }
+    if (data.containsKey('last_hints_per_trial')) {
+      context.handle(
+        _lastHintsPerTrialMeta,
+        lastHintsPerTrial.isAcceptableOrUnknown(
+          data['last_hints_per_trial']!,
+          _lastHintsPerTrialMeta,
+        ),
+      );
+    }
+    if (data.containsKey('last_move')) {
+      context.handle(
+        _lastMoveMeta,
+        lastMove.isAcceptableOrUnknown(data['last_move']!, _lastMoveMeta),
+      );
+    }
+    if (data.containsKey('last_scaffold')) {
+      context.handle(
+        _lastScaffoldMeta,
+        lastScaffold.isAcceptableOrUnknown(
+          data['last_scaffold']!,
+          _lastScaffoldMeta,
+        ),
+      );
+    }
     return context;
   }
 
@@ -1858,6 +1968,18 @@ class $ActivityRecordRowsTable extends ActivityRecordRows
         DriftSqlType.double,
         data['${effectivePrefix}last_accuracy'],
       ),
+      lastHintsPerTrial: attachedDatabase.typeMapping.read(
+        DriftSqlType.double,
+        data['${effectivePrefix}last_hints_per_trial'],
+      ),
+      lastMove: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}last_move'],
+      ),
+      lastScaffold: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}last_scaffold'],
+      ),
     );
   }
 
@@ -1878,6 +2000,12 @@ class ActivityRecordRow extends DataClass
   final int completions;
   final int bestStars;
   final double? lastAccuracy;
+
+  /// How the last session went, from the assessment and adaptive pipeline
+  /// (schema v4): hints per round, and the adaptive move and scaffold.
+  final double? lastHintsPerTrial;
+  final String? lastMove;
+  final String? lastScaffold;
   const ActivityRecordRow({
     required this.childId,
     required this.activityId,
@@ -1888,6 +2016,9 @@ class ActivityRecordRow extends DataClass
     required this.completions,
     required this.bestStars,
     this.lastAccuracy,
+    this.lastHintsPerTrial,
+    this.lastMove,
+    this.lastScaffold,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -1904,6 +2035,15 @@ class ActivityRecordRow extends DataClass
     map['best_stars'] = Variable<int>(bestStars);
     if (!nullToAbsent || lastAccuracy != null) {
       map['last_accuracy'] = Variable<double>(lastAccuracy);
+    }
+    if (!nullToAbsent || lastHintsPerTrial != null) {
+      map['last_hints_per_trial'] = Variable<double>(lastHintsPerTrial);
+    }
+    if (!nullToAbsent || lastMove != null) {
+      map['last_move'] = Variable<String>(lastMove);
+    }
+    if (!nullToAbsent || lastScaffold != null) {
+      map['last_scaffold'] = Variable<String>(lastScaffold);
     }
     return map;
   }
@@ -1923,6 +2063,15 @@ class ActivityRecordRow extends DataClass
       lastAccuracy: lastAccuracy == null && nullToAbsent
           ? const Value.absent()
           : Value(lastAccuracy),
+      lastHintsPerTrial: lastHintsPerTrial == null && nullToAbsent
+          ? const Value.absent()
+          : Value(lastHintsPerTrial),
+      lastMove: lastMove == null && nullToAbsent
+          ? const Value.absent()
+          : Value(lastMove),
+      lastScaffold: lastScaffold == null && nullToAbsent
+          ? const Value.absent()
+          : Value(lastScaffold),
     );
   }
 
@@ -1943,6 +2092,11 @@ class ActivityRecordRow extends DataClass
       completions: serializer.fromJson<int>(json['completions']),
       bestStars: serializer.fromJson<int>(json['bestStars']),
       lastAccuracy: serializer.fromJson<double?>(json['lastAccuracy']),
+      lastHintsPerTrial: serializer.fromJson<double?>(
+        json['lastHintsPerTrial'],
+      ),
+      lastMove: serializer.fromJson<String?>(json['lastMove']),
+      lastScaffold: serializer.fromJson<String?>(json['lastScaffold']),
     );
   }
   @override
@@ -1958,6 +2112,9 @@ class ActivityRecordRow extends DataClass
       'completions': serializer.toJson<int>(completions),
       'bestStars': serializer.toJson<int>(bestStars),
       'lastAccuracy': serializer.toJson<double?>(lastAccuracy),
+      'lastHintsPerTrial': serializer.toJson<double?>(lastHintsPerTrial),
+      'lastMove': serializer.toJson<String?>(lastMove),
+      'lastScaffold': serializer.toJson<String?>(lastScaffold),
     };
   }
 
@@ -1971,6 +2128,9 @@ class ActivityRecordRow extends DataClass
     int? completions,
     int? bestStars,
     Value<double?> lastAccuracy = const Value.absent(),
+    Value<double?> lastHintsPerTrial = const Value.absent(),
+    Value<String?> lastMove = const Value.absent(),
+    Value<String?> lastScaffold = const Value.absent(),
   }) => ActivityRecordRow(
     childId: childId ?? this.childId,
     activityId: activityId ?? this.activityId,
@@ -1983,6 +2143,11 @@ class ActivityRecordRow extends DataClass
     completions: completions ?? this.completions,
     bestStars: bestStars ?? this.bestStars,
     lastAccuracy: lastAccuracy.present ? lastAccuracy.value : this.lastAccuracy,
+    lastHintsPerTrial: lastHintsPerTrial.present
+        ? lastHintsPerTrial.value
+        : this.lastHintsPerTrial,
+    lastMove: lastMove.present ? lastMove.value : this.lastMove,
+    lastScaffold: lastScaffold.present ? lastScaffold.value : this.lastScaffold,
   );
   ActivityRecordRow copyWithCompanion(ActivityRecordRowsCompanion data) {
     return ActivityRecordRow(
@@ -2007,6 +2172,13 @@ class ActivityRecordRow extends DataClass
       lastAccuracy: data.lastAccuracy.present
           ? data.lastAccuracy.value
           : this.lastAccuracy,
+      lastHintsPerTrial: data.lastHintsPerTrial.present
+          ? data.lastHintsPerTrial.value
+          : this.lastHintsPerTrial,
+      lastMove: data.lastMove.present ? data.lastMove.value : this.lastMove,
+      lastScaffold: data.lastScaffold.present
+          ? data.lastScaffold.value
+          : this.lastScaffold,
     );
   }
 
@@ -2021,7 +2193,10 @@ class ActivityRecordRow extends DataClass
           ..write('attempts: $attempts, ')
           ..write('completions: $completions, ')
           ..write('bestStars: $bestStars, ')
-          ..write('lastAccuracy: $lastAccuracy')
+          ..write('lastAccuracy: $lastAccuracy, ')
+          ..write('lastHintsPerTrial: $lastHintsPerTrial, ')
+          ..write('lastMove: $lastMove, ')
+          ..write('lastScaffold: $lastScaffold')
           ..write(')'))
         .toString();
   }
@@ -2037,6 +2212,9 @@ class ActivityRecordRow extends DataClass
     completions,
     bestStars,
     lastAccuracy,
+    lastHintsPerTrial,
+    lastMove,
+    lastScaffold,
   );
   @override
   bool operator ==(Object other) =>
@@ -2050,7 +2228,10 @@ class ActivityRecordRow extends DataClass
           other.attempts == this.attempts &&
           other.completions == this.completions &&
           other.bestStars == this.bestStars &&
-          other.lastAccuracy == this.lastAccuracy);
+          other.lastAccuracy == this.lastAccuracy &&
+          other.lastHintsPerTrial == this.lastHintsPerTrial &&
+          other.lastMove == this.lastMove &&
+          other.lastScaffold == this.lastScaffold);
 }
 
 class ActivityRecordRowsCompanion extends UpdateCompanion<ActivityRecordRow> {
@@ -2063,6 +2244,9 @@ class ActivityRecordRowsCompanion extends UpdateCompanion<ActivityRecordRow> {
   final Value<int> completions;
   final Value<int> bestStars;
   final Value<double?> lastAccuracy;
+  final Value<double?> lastHintsPerTrial;
+  final Value<String?> lastMove;
+  final Value<String?> lastScaffold;
   final Value<int> rowid;
   const ActivityRecordRowsCompanion({
     this.childId = const Value.absent(),
@@ -2074,6 +2258,9 @@ class ActivityRecordRowsCompanion extends UpdateCompanion<ActivityRecordRow> {
     this.completions = const Value.absent(),
     this.bestStars = const Value.absent(),
     this.lastAccuracy = const Value.absent(),
+    this.lastHintsPerTrial = const Value.absent(),
+    this.lastMove = const Value.absent(),
+    this.lastScaffold = const Value.absent(),
     this.rowid = const Value.absent(),
   });
   ActivityRecordRowsCompanion.insert({
@@ -2086,6 +2273,9 @@ class ActivityRecordRowsCompanion extends UpdateCompanion<ActivityRecordRow> {
     required int completions,
     required int bestStars,
     this.lastAccuracy = const Value.absent(),
+    this.lastHintsPerTrial = const Value.absent(),
+    this.lastMove = const Value.absent(),
+    this.lastScaffold = const Value.absent(),
     this.rowid = const Value.absent(),
   }) : childId = Value(childId),
        activityId = Value(activityId),
@@ -2104,6 +2294,9 @@ class ActivityRecordRowsCompanion extends UpdateCompanion<ActivityRecordRow> {
     Expression<int>? completions,
     Expression<int>? bestStars,
     Expression<double>? lastAccuracy,
+    Expression<double>? lastHintsPerTrial,
+    Expression<String>? lastMove,
+    Expression<String>? lastScaffold,
     Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
@@ -2116,6 +2309,9 @@ class ActivityRecordRowsCompanion extends UpdateCompanion<ActivityRecordRow> {
       if (completions != null) 'completions': completions,
       if (bestStars != null) 'best_stars': bestStars,
       if (lastAccuracy != null) 'last_accuracy': lastAccuracy,
+      if (lastHintsPerTrial != null) 'last_hints_per_trial': lastHintsPerTrial,
+      if (lastMove != null) 'last_move': lastMove,
+      if (lastScaffold != null) 'last_scaffold': lastScaffold,
       if (rowid != null) 'rowid': rowid,
     });
   }
@@ -2130,6 +2326,9 @@ class ActivityRecordRowsCompanion extends UpdateCompanion<ActivityRecordRow> {
     Value<int>? completions,
     Value<int>? bestStars,
     Value<double?>? lastAccuracy,
+    Value<double?>? lastHintsPerTrial,
+    Value<String?>? lastMove,
+    Value<String?>? lastScaffold,
     Value<int>? rowid,
   }) {
     return ActivityRecordRowsCompanion(
@@ -2142,6 +2341,9 @@ class ActivityRecordRowsCompanion extends UpdateCompanion<ActivityRecordRow> {
       completions: completions ?? this.completions,
       bestStars: bestStars ?? this.bestStars,
       lastAccuracy: lastAccuracy ?? this.lastAccuracy,
+      lastHintsPerTrial: lastHintsPerTrial ?? this.lastHintsPerTrial,
+      lastMove: lastMove ?? this.lastMove,
+      lastScaffold: lastScaffold ?? this.lastScaffold,
       rowid: rowid ?? this.rowid,
     );
   }
@@ -2176,6 +2378,15 @@ class ActivityRecordRowsCompanion extends UpdateCompanion<ActivityRecordRow> {
     if (lastAccuracy.present) {
       map['last_accuracy'] = Variable<double>(lastAccuracy.value);
     }
+    if (lastHintsPerTrial.present) {
+      map['last_hints_per_trial'] = Variable<double>(lastHintsPerTrial.value);
+    }
+    if (lastMove.present) {
+      map['last_move'] = Variable<String>(lastMove.value);
+    }
+    if (lastScaffold.present) {
+      map['last_scaffold'] = Variable<String>(lastScaffold.value);
+    }
     if (rowid.present) {
       map['rowid'] = Variable<int>(rowid.value);
     }
@@ -2194,6 +2405,9 @@ class ActivityRecordRowsCompanion extends UpdateCompanion<ActivityRecordRow> {
           ..write('completions: $completions, ')
           ..write('bestStars: $bestStars, ')
           ..write('lastAccuracy: $lastAccuracy, ')
+          ..write('lastHintsPerTrial: $lastHintsPerTrial, ')
+          ..write('lastMove: $lastMove, ')
+          ..write('lastScaffold: $lastScaffold, ')
           ..write('rowid: $rowid')
           ..write(')'))
         .toString();
@@ -2691,6 +2905,7 @@ typedef $$GameRungStateTableCreateCompanionBuilder =
       required String childId,
       required String gameId,
       required String rungId,
+      Value<String?> scaffold,
       Value<int> rowid,
     });
 typedef $$GameRungStateTableUpdateCompanionBuilder =
@@ -2698,6 +2913,7 @@ typedef $$GameRungStateTableUpdateCompanionBuilder =
       Value<String> childId,
       Value<String> gameId,
       Value<String> rungId,
+      Value<String?> scaffold,
       Value<int> rowid,
     });
 
@@ -2722,6 +2938,11 @@ class $$GameRungStateTableFilterComposer
 
   ColumnFilters<String> get rungId => $composableBuilder(
     column: $table.rungId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get scaffold => $composableBuilder(
+    column: $table.scaffold,
     builder: (column) => ColumnFilters(column),
   );
 }
@@ -2749,6 +2970,11 @@ class $$GameRungStateTableOrderingComposer
     column: $table.rungId,
     builder: (column) => ColumnOrderings(column),
   );
+
+  ColumnOrderings<String> get scaffold => $composableBuilder(
+    column: $table.scaffold,
+    builder: (column) => ColumnOrderings(column),
+  );
 }
 
 class $$GameRungStateTableAnnotationComposer
@@ -2768,6 +2994,9 @@ class $$GameRungStateTableAnnotationComposer
 
   GeneratedColumn<String> get rungId =>
       $composableBuilder(column: $table.rungId, builder: (column) => column);
+
+  GeneratedColumn<String> get scaffold =>
+      $composableBuilder(column: $table.scaffold, builder: (column) => column);
 }
 
 class $$GameRungStateTableTableManager
@@ -2808,11 +3037,13 @@ class $$GameRungStateTableTableManager
                 Value<String> childId = const Value.absent(),
                 Value<String> gameId = const Value.absent(),
                 Value<String> rungId = const Value.absent(),
+                Value<String?> scaffold = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => GameRungStateCompanion(
                 childId: childId,
                 gameId: gameId,
                 rungId: rungId,
+                scaffold: scaffold,
                 rowid: rowid,
               ),
           createCompanionCallback:
@@ -2820,11 +3051,13 @@ class $$GameRungStateTableTableManager
                 required String childId,
                 required String gameId,
                 required String rungId,
+                Value<String?> scaffold = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => GameRungStateCompanion.insert(
                 childId: childId,
                 gameId: gameId,
                 rungId: rungId,
+                scaffold: scaffold,
                 rowid: rowid,
               ),
           withReferenceMapper: (p0) => p0
@@ -3196,6 +3429,9 @@ typedef $$ActivityRecordRowsTableCreateCompanionBuilder =
       required int completions,
       required int bestStars,
       Value<double?> lastAccuracy,
+      Value<double?> lastHintsPerTrial,
+      Value<String?> lastMove,
+      Value<String?> lastScaffold,
       Value<int> rowid,
     });
 typedef $$ActivityRecordRowsTableUpdateCompanionBuilder =
@@ -3209,6 +3445,9 @@ typedef $$ActivityRecordRowsTableUpdateCompanionBuilder =
       Value<int> completions,
       Value<int> bestStars,
       Value<double?> lastAccuracy,
+      Value<double?> lastHintsPerTrial,
+      Value<String?> lastMove,
+      Value<String?> lastScaffold,
       Value<int> rowid,
     });
 
@@ -3263,6 +3502,21 @@ class $$ActivityRecordRowsTableFilterComposer
 
   ColumnFilters<double> get lastAccuracy => $composableBuilder(
     column: $table.lastAccuracy,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<double> get lastHintsPerTrial => $composableBuilder(
+    column: $table.lastHintsPerTrial,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get lastMove => $composableBuilder(
+    column: $table.lastMove,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get lastScaffold => $composableBuilder(
+    column: $table.lastScaffold,
     builder: (column) => ColumnFilters(column),
   );
 }
@@ -3320,6 +3574,21 @@ class $$ActivityRecordRowsTableOrderingComposer
     column: $table.lastAccuracy,
     builder: (column) => ColumnOrderings(column),
   );
+
+  ColumnOrderings<double> get lastHintsPerTrial => $composableBuilder(
+    column: $table.lastHintsPerTrial,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get lastMove => $composableBuilder(
+    column: $table.lastMove,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get lastScaffold => $composableBuilder(
+    column: $table.lastScaffold,
+    builder: (column) => ColumnOrderings(column),
+  );
 }
 
 class $$ActivityRecordRowsTableAnnotationComposer
@@ -3367,6 +3636,19 @@ class $$ActivityRecordRowsTableAnnotationComposer
 
   GeneratedColumn<double> get lastAccuracy => $composableBuilder(
     column: $table.lastAccuracy,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<double> get lastHintsPerTrial => $composableBuilder(
+    column: $table.lastHintsPerTrial,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get lastMove =>
+      $composableBuilder(column: $table.lastMove, builder: (column) => column);
+
+  GeneratedColumn<String> get lastScaffold => $composableBuilder(
+    column: $table.lastScaffold,
     builder: (column) => column,
   );
 }
@@ -3420,6 +3702,9 @@ class $$ActivityRecordRowsTableTableManager
                 Value<int> completions = const Value.absent(),
                 Value<int> bestStars = const Value.absent(),
                 Value<double?> lastAccuracy = const Value.absent(),
+                Value<double?> lastHintsPerTrial = const Value.absent(),
+                Value<String?> lastMove = const Value.absent(),
+                Value<String?> lastScaffold = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => ActivityRecordRowsCompanion(
                 childId: childId,
@@ -3431,6 +3716,9 @@ class $$ActivityRecordRowsTableTableManager
                 completions: completions,
                 bestStars: bestStars,
                 lastAccuracy: lastAccuracy,
+                lastHintsPerTrial: lastHintsPerTrial,
+                lastMove: lastMove,
+                lastScaffold: lastScaffold,
                 rowid: rowid,
               ),
           createCompanionCallback:
@@ -3444,6 +3732,9 @@ class $$ActivityRecordRowsTableTableManager
                 required int completions,
                 required int bestStars,
                 Value<double?> lastAccuracy = const Value.absent(),
+                Value<double?> lastHintsPerTrial = const Value.absent(),
+                Value<String?> lastMove = const Value.absent(),
+                Value<String?> lastScaffold = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => ActivityRecordRowsCompanion.insert(
                 childId: childId,
@@ -3455,6 +3746,9 @@ class $$ActivityRecordRowsTableTableManager
                 completions: completions,
                 bestStars: bestStars,
                 lastAccuracy: lastAccuracy,
+                lastHintsPerTrial: lastHintsPerTrial,
+                lastMove: lastMove,
+                lastScaffold: lastScaffold,
                 rowid: rowid,
               ),
           withReferenceMapper: (p0) => p0

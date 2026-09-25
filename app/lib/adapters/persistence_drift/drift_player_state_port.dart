@@ -1,4 +1,5 @@
 import 'package:drift/drift.dart';
+import 'package:nova_app/core/game/session_plan.dart';
 import 'package:nova_app/core/journey/journey_models.dart';
 import 'package:nova_app/core/ports/player_state_port.dart';
 
@@ -39,6 +40,9 @@ class DriftPlayerStatePort implements PlayerStatePort {
           completions: r.completions,
           bestStars: r.bestStars,
           lastAccuracy: r.lastAccuracy,
+          lastHintsPerTrial: r.lastHintsPerTrial,
+          lastMove: r.lastMove == null ? null : AdaptiveMove.values.where((m) => m.name == r.lastMove).firstOrNull,
+          lastScaffold: r.lastScaffold,
         ),
     ];
   }
@@ -55,6 +59,9 @@ class DriftPlayerStatePort implements PlayerStatePort {
           completions: record.completions,
           bestStars: record.bestStars,
           lastAccuracy: Value(record.lastAccuracy),
+          lastHintsPerTrial: Value(record.lastHintsPerTrial),
+          lastMove: Value(record.lastMove?.name),
+          lastScaffold: Value(record.lastScaffold),
         ),
       );
 

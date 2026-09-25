@@ -67,7 +67,7 @@ void main() {
     final before = engine.evaluate(child(4), const {});
     final first = before.recommended!;
     await recorder.start(childId: 'c', activityId: first.id);
-    expect(await recorder.finish(childId: 'c', activityId: first.id, stars: 2, accuracy: 0.8), isTrue);
+    expect(await recorder.finish(childId: 'c', activityId: first.id, outcome: const SessionOutcome(stars: 2, accuracy: 0.8)), isTrue);
 
     final records = {for (final r in await port.activityRecords(childId: 'c')) r.activityId: r};
     expect(records[first.id]!.completed, isTrue);
@@ -84,7 +84,7 @@ void main() {
     final recorder = JourneyRecorder(port, curriculum, now: () => t0);
     final id = engine.evaluate(child(4), const {}).recommended!.id;
     await recorder.start(childId: 'c', activityId: id);
-    expect(await recorder.finish(childId: 'c', activityId: id, stars: 0, accuracy: 0.2, finishedAllRounds: false), isFalse);
+    expect(await recorder.finish(childId: 'c', activityId: id, outcome: const SessionOutcome(stars: 0, accuracy: 0.2, finishedAllRounds: false)), isFalse);
     final r = (await port.activityRecords(childId: 'c')).single;
     expect(r.completed, isFalse);
     expect(r.attempts, 1);

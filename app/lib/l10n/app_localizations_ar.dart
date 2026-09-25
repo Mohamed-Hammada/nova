@@ -795,4 +795,16 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get increaseAge => 'أكبر';
+
+  @override
+  String get greatEffort => 'يا له من مجهود رائع!';
+
+  @override
+  String get scaffoldModelled => 'سأريك أولًا كيف نلعب!';
+
+  @override
+  String get scaffoldGuided => 'سأساعدك خطوة بخطوة!';
+
+  @override
+  String get scaffoldIndependent => 'أنت جاهز للتحدّي!';
 }

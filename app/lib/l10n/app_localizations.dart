@@ -1495,6 +1495,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Older'**
   String get increaseAge;
+
+  /// No description provided for @greatEffort.
+  ///
+  /// In en, this message translates to:
+  /// **'What great effort!'**
+  String get greatEffort;
+
+  /// No description provided for @scaffoldModelled.
+  ///
+  /// In en, this message translates to:
+  /// **'Let me show you first!'**
+  String get scaffoldModelled;
+
+  /// No description provided for @scaffoldGuided.
+  ///
+  /// In en, this message translates to:
+  /// **'I\'ll help you along the way!'**
+  String get scaffoldGuided;
+
+  /// No description provided for @scaffoldIndependent.
+  ///
+  /// In en, this message translates to:
+  /// **'You\'re ready for a challenge!'**
+  String get scaffoldIndependent;
 }
 
 class _AppLocalizationsDelegate
