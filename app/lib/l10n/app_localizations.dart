@@ -1681,6 +1681,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Gentle chimes and pops while playing. Everything is also shown on screen.'**
   String get soundEffectsDesc;
+
+  /// Companion: several right on the first try in a row
+  ///
+  /// In en, this message translates to:
+  /// **'You\'re on a roll!'**
+  String get onARoll;
+
+  /// Companion: the child missed twice in a row; reassurance
+  ///
+  /// In en, this message translates to:
+  /// **'I\'m right here with you. Let\'s look again together!'**
+  String get withYou;
 }
 
 class _AppLocalizationsDelegate

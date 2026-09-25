@@ -83,9 +83,12 @@ void main() {
     // Same seed and rung give the same rounds, so the answers are known.
     final game = _content.game(gameId);
     final trials = const TrialFactory().build(game: game, rung: game.rungsById[game.rungIds.first]!, language: 'en', seed: 11, skin: 'apples').cast<ChoiceTrial>();
-    for (final t in trials) {
+    for (final (i, t) in trials.indexed) {
       await tester.tap(find.byType(ChoiceHolder).at(t.answer));
-      await tester.pump(const Duration(milliseconds: 1200));
+      await tester.pump(const Duration(milliseconds: 200));
+      // A run of strong play gets a bigger celebration from the companion.
+      if (i == 2) expect(find.text("You're on a roll!"), findsOneWidget);
+      await tester.pump(const Duration(milliseconds: 1000));
     }
     await tester.pump(const Duration(seconds: 2));
     await tester.runAsync(() => Future<void>.delayed(const Duration(milliseconds: 50)));
@@ -119,7 +122,10 @@ void main() {
           // A miss is followed by another try in the same round: only the
           // first try counts toward accuracy.
           await tester.tap(find.byType(ChoiceHolder).at((t.answer + 1) % t.options.length));
-          await tester.pump(const Duration(milliseconds: 1000));
+          await tester.pump(const Duration(milliseconds: 200));
+          // After misses in a row the companion stays close.
+          if (t != trials.first) expect(find.text("I'm right here with you. Let's look again together!"), findsOneWidget);
+          await tester.pump(const Duration(milliseconds: 800));
         }
         await tester.tap(find.byType(ChoiceHolder).at(t.answer));
         await tester.pump(const Duration(milliseconds: 1300));

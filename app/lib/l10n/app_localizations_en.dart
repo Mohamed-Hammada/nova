@@ -902,4 +902,10 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get soundEffectsDesc =>
       'Gentle chimes and pops while playing. Everything is also shown on screen.';
+
+  @override
+  String get onARoll => 'You\'re on a roll!';
+
+  @override
+  String get withYou => 'I\'m right here with you. Let\'s look again together!';
 }

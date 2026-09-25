@@ -627,5 +627,13 @@
   },
   "@soundEffectsDesc": {
     "description": "Explains the sound effects setting."
+  },
+  "onARoll": "You're on a roll!",
+  "@onARoll": {
+    "description": "Companion: several right on the first try in a row"
+  },
+  "withYou": "I'm right here with you. Let's look again together!",
+  "@withYou": {
+    "description": "Companion: the child missed twice in a row; reassurance"
   }
 }

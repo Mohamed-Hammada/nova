@@ -213,6 +213,12 @@ class _LevelScreenState extends ConsumerState<LevelScreen> {
     });
   }
 
+  /// Rounds in a row answered right on the first try, and rounds in a row
+  /// that started with a miss: the companion celebrates a run of strong
+  /// play and stays close when things are hard.
+  int _streak = 0;
+  int _missStreak = 0;
+
   /// Hints the child asked for in the current round.
   int _hintsThisRound = 0;
 
@@ -229,13 +235,19 @@ class _LevelScreenState extends ConsumerState<LevelScreen> {
       return;
     }
     _sfx.play(correct ? Sfx.success : Sfx.retry);
+    if (attempt == 1) {
+      _streak = correct ? _streak + 1 : 0;
+      _missStreak = correct ? 0 : _missStreak + 1;
+    }
+    final onARoll = correct && attempt == 1 && _streak >= 3 && _streak % 3 == 0;
+    final needsCompany = !correct && attempt == 1 && _missStreak >= 2;
     // Success is celebrated; a miss gets a soft "oh!" that turns straight
     // into encouragement -- never a buzzer or a red cross.
     if (correct) {
       // First-try success gets the big reaction; finding it after a miss is
       // celebrated warmly too.
-      _guide.react(attempt == 1 ? Reaction.happy : Reaction.encourage);
-      _guide.setMood(CharacterMood.happy, hold: const Duration(milliseconds: 1400));
+      _guide.react(onARoll ? Reaction.cheer : (attempt == 1 ? Reaction.happy : Reaction.encourage));
+      _guide.setMood(onARoll ? CharacterMood.excited : CharacterMood.happy, hold: const Duration(milliseconds: 1400));
     } else {
       _guide.setMood(CharacterMood.gentleDisappointment, hold: const Duration(milliseconds: 500));
       Future<void>.delayed(const Duration(milliseconds: 700), () {
@@ -244,7 +256,9 @@ class _LevelScreenState extends ConsumerState<LevelScreen> {
     }
     setState(() {
       _lastCorrect = correct;
-      _feedback = correct ? (attempt == 1 ? l10n.greatJob : l10n.foundIt) : (retries ? l10n.retryNudge : l10n.tryAgainGently);
+      _feedback = correct
+          ? (onARoll ? l10n.onARoll : (attempt == 1 ? l10n.greatJob : l10n.foundIt))
+          : (needsCompany ? l10n.withYou : (retries ? l10n.retryNudge : l10n.tryAgainGently));
     });
   }
 

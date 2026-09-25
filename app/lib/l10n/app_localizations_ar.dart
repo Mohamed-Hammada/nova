@@ -898,4 +898,10 @@ class AppLocalizationsAr extends AppLocalizations {
   @override
   String get soundEffectsDesc =>
       'رنّات وأصوات لطيفة أثناء اللعب. كل شيء يظهر على الشاشة أيضًا.';
+
+  @override
+  String get onARoll => 'يا سلام! إجابة صحيحة تلو الأخرى!';
+
+  @override
+  String get withYou => 'أنا معك هنا. هيّا ننظر معًا مرة أخرى!';
 }
