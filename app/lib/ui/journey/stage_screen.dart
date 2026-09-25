@@ -188,7 +188,7 @@ class _StageScreenState extends ConsumerState<StageScreen> {
       locked: status == ActivityStatus.locked,
       highlight: status == ActivityStatus.recommended,
       status: '${activityStatusLabel(l10n, status)}. ${roleLabel(l10n, activity.role)}',
-      badge: JourneyBadge(status: status),
+      badge: status == ActivityStatus.available ? null : JourneyBadge(status: status),
       onTap: () async {
         if (status == ActivityStatus.locked) {
           // A locked activity explains itself instead of doing nothing.

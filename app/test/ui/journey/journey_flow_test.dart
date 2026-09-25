@@ -39,7 +39,7 @@ void main() {
     expect(app.container.read(childAgeProvider), 4);
     expect(app.container.read(childNameProvider), 'Sara');
     expect(app.container.read(ageBandProvider), AgeBand.explorer);
-    expect(find.text('Welcome back, Sara!'), findsOneWidget);
+    expect(find.text('Your adventure begins, Sara!'), findsOneWidget);
     expect(find.textContaining("We're exploring Counting Orchard!"), findsOneWidget);
     final progress = app.container.read(journeyProgressProvider)!;
     expect(progress.current.stage.startsAtAge(4), isTrue);

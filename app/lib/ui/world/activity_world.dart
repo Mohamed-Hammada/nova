@@ -179,13 +179,17 @@ class CategoryLandmark extends StatelessWidget {
   Widget build(BuildContext context) => SizedBox(
         width: size,
         height: size,
-        child: CustomPaint(painter: _LandmarkPainter(category)),
+        // Number blocks show the digits the child reads (Eastern Arabic in Arabic).
+        child: CustomPaint(painter: _LandmarkPainter(category, arabicDigits: Localizations.maybeLocaleOf(context)?.languageCode == 'ar')),
       );
 }
 
 class _LandmarkPainter extends CustomPainter {
-  _LandmarkPainter(this.c);
+  _LandmarkPainter(this.c, {this.arabicDigits = false});
   final ActivityCategory c;
+  final bool arabicDigits;
+
+  String _d(int n) => arabicDigits ? '٠١٢٣٤٥٦٧٨٩'[n] : '$n';
 
   Paint _lit(Rect r, Color base) => Paint()
     ..shader = ui.Gradient.radial(r.topLeft + Offset(r.width * 0.35, r.height * 0.3), r.longestSide * 0.9, [shade(base, 0.35), base, shade(base, -0.25)], [0, 0.5, 1]);
@@ -202,7 +206,7 @@ class _LandmarkPainter extends CustomPainter {
     canvas.drawRRect(rr.shift(Offset(0, r.height * 0.08)), Paint()..color = shade(color, -0.35));
     canvas.drawRRect(rr, _lit(r, color));
     final tp = TextPainter(
-      text: TextSpan(text: digit, style: TextStyle(fontSize: r.height * 0.62, fontWeight: FontWeight.w900, color: Colors.white, fontFamily: 'NotoSans')),
+      text: TextSpan(text: digit, style: TextStyle(fontSize: r.height * 0.62, fontWeight: FontWeight.w900, color: Colors.white, fontFamily: 'NotoSans', fontFamilyFallback: const ['NotoSansArabic'])),
       textDirection: TextDirection.ltr,
     )..layout();
     tp.paint(canvas, r.center - Offset(tp.width / 2, tp.height / 2));
@@ -214,9 +218,9 @@ class _LandmarkPainter extends CustomPainter {
     _shadow(canvas, s);
     switch (c) {
       case ActivityCategory.numbers:
-        _block(canvas, Rect.fromLTWH(w * 0.08, h * 0.5, w * 0.4, h * 0.36), const Color(0xFFFF7A59), '1');
-        _block(canvas, Rect.fromLTWH(w * 0.52, h * 0.5, w * 0.4, h * 0.36), const Color(0xFF3C8DF2), '2');
-        _block(canvas, Rect.fromLTWH(w * 0.3, h * 0.1, w * 0.4, h * 0.36), const Color(0xFFFFB02E), '3');
+        _block(canvas, Rect.fromLTWH(w * 0.08, h * 0.5, w * 0.4, h * 0.36), const Color(0xFFFF7A59), _d(1));
+        _block(canvas, Rect.fromLTWH(w * 0.52, h * 0.5, w * 0.4, h * 0.36), const Color(0xFF3C8DF2), _d(2));
+        _block(canvas, Rect.fromLTWH(w * 0.3, h * 0.1, w * 0.4, h * 0.36), const Color(0xFFFFB02E), _d(3));
       case ActivityCategory.language:
         final left = Path()
           ..moveTo(w * 0.5, h * 0.3)
@@ -335,5 +339,5 @@ class _LandmarkPainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(_LandmarkPainter old) => old.c != c;
+  bool shouldRepaint(_LandmarkPainter old) => old.c != c || old.arabicDigits != arabicDigits;
 }

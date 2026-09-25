@@ -29,7 +29,7 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(_directionOf(tester, find.byType(HomeScreen)), TextDirection.rtl);
-      expect(find.text('أهلًا بعودتك!'), findsOneWidget);
+      expect(find.text('تبدأ مغامرتك!'), findsOneWidget);
       expect(find.text('تفاحات الدبّ'), findsOneWidget, reason: 'content strings follow the locale too');
     });
 

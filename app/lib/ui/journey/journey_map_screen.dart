@@ -11,6 +11,7 @@ import '../l10n.dart';
 import '../play/visual_view.dart';
 import '../scene/story_scene.dart';
 import '../world/activity_world.dart';
+import 'journey_labels.dart';
 import 'journey_providers.dart';
 import 'stage_screen.dart';
 
@@ -166,8 +167,10 @@ class _StageNode extends ConsumerWidget {
         Positioned.fill(
           child: DecoratedBox(decoration: BoxDecoration(shape: BoxShape.circle, boxShadow: NovaShadow.glow(NovaStory.sunshine, strength: 0.65))),
         ),
-      Opacity(
-        opacity: locked ? 0.5 : 1,
+      ColorFiltered(
+        // Locked places are drawn in soft, misty colours: still solid, so
+        // the trail passes behind them, but clearly not open yet.
+        colorFilter: locked ? lockedMist : noFilter,
         child: NovaFloat(
           amplitude: locked ? 0 : 3,
           phase: progress.stage.index * 0.19,
@@ -202,6 +205,7 @@ class _StageNode extends ConsumerWidget {
     );
   }
 }
+
 
 class _StatusDot extends StatelessWidget {
   const _StatusDot({required this.status});

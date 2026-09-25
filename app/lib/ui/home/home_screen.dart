@@ -7,6 +7,7 @@ import 'package:nova_app/ui/characters/character_view.dart';
 import 'package:nova_app/ui/design/nova_design.dart';
 import 'package:nova_app/ui/l10n.dart';
 import 'package:nova_app/core/journey/journey_models.dart';
+import 'package:nova_app/ui/journey/journey_labels.dart';
 import 'package:nova_app/ui/journey/journey_map_screen.dart';
 import 'package:nova_app/ui/journey/journey_providers.dart';
 import 'package:nova_app/ui/journey/play_activity.dart';
@@ -224,7 +225,11 @@ class _HeroState extends ConsumerState<_Hero> {
     final rtl = Directionality.of(context) == TextDirection.rtl;
     final friend = rtl ? companion.displayNameAr : companion.displayName;
     final child = ref.watch(childNameProvider).trim();
-    final greeting = child.isEmpty ? l10n.welcomeBackNoName : l10n.welcomeBack(child);
+    // "Welcome back" once the child has played; before that, a beginning.
+    final returning = (ref.watch(activityRecordsProvider).value ?? const {}).isNotEmpty;
+    final greeting = returning
+        ? (child.isEmpty ? l10n.welcomeBackNoName : l10n.welcomeBack(child))
+        : (child.isEmpty ? l10n.onboardingReadyNoName : l10n.onboardingReady(child));
     // The companion names the adventure the child is on.
     final journey = ref.watch(journeyProgressProvider);
     final adventure = journey == null
@@ -260,7 +265,7 @@ class _HeroState extends ConsumerState<_Hero> {
           header: true,
           child: Text(
             greeting,
-            style: NovaType.display(context, color: NovaStory.plumDeep).copyWith(shadows: const [Shadow(color: Color(0xCCFFFFFF), blurRadius: 12)]),
+            style: NovaType.of(context, widget.wide ? 30 : 23, weight: FontWeight.w800, color: NovaStory.plumDeep).copyWith(shadows: const [Shadow(color: Color(0xCCFFFFFF), blurRadius: 12)]),
           ),
         ),
         const SizedBox(height: NovaSpace.xs),
@@ -531,8 +536,8 @@ class _StripStop extends ConsumerWidget {
             Stack(
               clipBehavior: Clip.none,
               children: [
-                Opacity(
-                  opacity: locked ? 0.5 : 1,
+                ColorFiltered(
+                  colorFilter: locked ? lockedMist : noFilter,
                   child: FloatingIsland(
                     width: island,
                     grass: locked ? const Color(0xFFB9C4B0) : place.scene.ground,

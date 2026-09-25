@@ -178,10 +178,13 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                   constraints: const BoxConstraints(maxWidth: 560),
                   child: Column(mainAxisSize: MainAxisSize.min, children: [
                     Row(crossAxisAlignment: CrossAxisAlignment.end, children: [
-                      SizedBox(
-                        width: 150,
-                        height: 170,
-                        child: ExcludeSemantics(child: CharacterView(key: ValueKey(companion), kind: companion, controller: _guide, entrance: Reaction.wave)),
+                      NovaFloat(
+                        amplitude: 4,
+                        child: FloatingIsland(
+                          width: 170,
+                          childHeight: 180,
+                          child: ExcludeSemantics(child: CharacterView(key: ValueKey(companion), kind: companion, controller: _guide, entrance: Reaction.wave)),
+                        ),
                       ),
                       Flexible(child: NovaSpeechBubble(text: say, size: 19)),
                     ]),

@@ -64,3 +64,15 @@ class JourneyBadge extends StatelessWidget {
     );
   }
 }
+
+/// Locked places are drawn in soft, misty colours: still solid (the trail
+/// passes behind them), but clearly not open yet.
+const lockedMist = ColorFilter.matrix([
+  0.33, 0.45, 0.12, 0, 60, //
+  0.28, 0.5, 0.12, 0, 62,
+  0.28, 0.45, 0.17, 0, 70,
+  0, 0, 0, 1, 0,
+]);
+
+/// Leaves colours unchanged.
+const noFilter = ColorFilter.mode(Colors.transparent, BlendMode.dst);
