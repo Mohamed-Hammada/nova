@@ -1,0 +1,104 @@
+{
+  "@@locale": "en",
+
+  "appTitle": "Nova",
+  "@appTitle": {"description": "Product name, shown in the window title and header."},
+
+  "homeGreeting": "Let's play!",
+  "homeSubtitle": "Pick a game to start.",
+  "playGame": "Play",
+  "@playGame": {"description": "Button on a game card that starts the game."},
+  "grownUps": "For grown-ups",
+  "@grownUps": {"description": "Entry point to the parent/caregiver progress area."},
+  "languageMenuTooltip": "Change language",
+  "languageNameEnglish": "English",
+  "@languageNameEnglish": {"description": "Endonym: always written in English, in every locale."},
+  "languageNameArabic": "العربية",
+  "@languageNameArabic": {"description": "Endonym: always written in Arabic, in every locale."},
+
+  "loadingMessage": "Getting ready…",
+  "errorTitle": "Something went wrong",
+  "errorContentUnavailable": "The games could not be loaded on this device.",
+  "errorGameUnavailable": "This game could not be started.",
+  "retry": "Try again",
+  "emptyGamesTitle": "No games yet",
+  "emptyGamesBody": "Games will appear here when they are ready.",
+
+  "leaveGame": "Back to games",
+  "gamePrompt": "{count, plural, =1{Give the bear {countText} apple} other{Give the bear {countText} apples}}",
+  "@gamePrompt": {
+    "description": "What the bear asks for. countText is count already formatted for the locale's digits.",
+    "placeholders": {
+      "count": {"type": "int"},
+      "countText": {"type": "String"}
+    }
+  },
+  "gameHowTo": "Drag the apples to the plate, or tap them.",
+  "done": "Done",
+  "hint": "Help me count",
+  "hintOnPlate": "{countText} on the plate",
+  "@hintOnPlate": {
+    "description": "Shown only after the child asks for help: the running count.",
+    "placeholders": {"countText": {"type": "String"}}
+  },
+  "trialProgress": "Question {current} of {total}",
+  "@trialProgress": {
+    "description": "Screen-reader label for the trial progress dots.",
+    "placeholders": {"current": {"type": "String"}, "total": {"type": "String"}}
+  },
+  "feedbackCorrect": "That's just right! The bear is happy.",
+  "feedbackTryAgain": "Not quite. Let's count again.",
+  "feedbackOnlyApples": "The bear only wants apples.",
+  "feedbackMoveOn": "Good try! Let's do the next one.",
+  "next": "Next",
+  "tryAgain": "Try again",
+  "saving": "Saving…",
+  "saveFailed": "Your progress could not be saved.",
+  "sessionCompleteTitle": "All done!",
+  "sessionCompleteBody": "You helped the bear. Well done!",
+  "playAgain": "Play again",
+  "backHome": "Home",
+
+  "itemApple": "Apple",
+  "itemPear": "Pear",
+  "itemGiveHint": "Give to the bear",
+  "itemOnPlateApple": "Apple on the plate",
+  "itemOnPlatePear": "Pear on the plate",
+  "itemTakeBackHint": "Take back",
+  "plateLabel": "The bear's plate",
+  "plateEmpty": "The plate is empty",
+  "pileLabel": "Fruit on the table",
+  "bearLabel": "The bear",
+
+  "progressTitle": "Progress",
+  "progressIntro": "What the games have seen so far, skill by skill.",
+  "progressDisclaimer": "This is an early estimate, not a diagnosis.",
+  "progressLoadFailed": "Progress could not be loaded.",
+  "masteryNotYet": "Not yet",
+  "masteryEmerging": "Emerging",
+  "masteryDeveloping": "Developing",
+  "masterySecure": "Secure",
+  "masteryTransfer": "Transfer",
+  "masteryNotYetDescription": "Not enough play yet to say.",
+  "masteryEmergingDescription": "Starting to show this skill, often with support.",
+  "masteryDevelopingDescription": "Succeeds often, still building consistency.",
+  "masterySecureDescription": "Succeeds consistently, without help.",
+  "masteryTransferDescription": "Also uses the skill outside this game.",
+  "masteryStepOf": "Step {current} of {total}",
+  "@masteryStepOf": {
+    "placeholders": {"current": {"type": "String"}, "total": {"type": "String"}}
+  },
+
+  "graphicsQuality": "Graphics Quality",
+  "graphicsAuto": "Auto (Recommended)",
+  "graphicsAutoDesc": "Automatically adapts to device capability",
+  "graphicsHigh": "High",
+  "graphicsHighDesc": "Richest 3D visuals, soft shadows, and effects",
+  "graphicsMedium": "Medium",
+  "graphicsMediumDesc": "Balanced performance and visuals",
+  "graphicsLow": "Low",
+  "graphicsLowDesc": "Best for budget devices",
+  "graphics2D": "2D Mode",
+  "graphics2DDesc": "Classic 2D sprites, saves battery",
+  "close": "Close"
+}

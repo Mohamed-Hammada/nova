@@ -1,0 +1,191 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Stage3DProtocolV1",
+  "description": "Version 1 protocol messages between Flutter host and Stage3D Three.js scene.",
+  "type": "object",
+  "required": ["v", "type"],
+  "properties": {
+    "v": {
+      "type": "integer",
+      "const": 1
+    },
+    "type": {
+      "type": "string"
+    }
+  },
+  "oneOf": [
+    {
+      "title": "InitMessage",
+      "properties": {
+        "v": { "const": 1 },
+        "type": { "const": "init" },
+        "sceneId": { "type": "string" },
+        "characterId": { "type": "string" },
+        "localeDir": { "type": "string", "enum": ["ltr", "rtl"] },
+        "reducedMotion": { "type": "boolean" },
+        "qualityTier": { "type": "string", "enum": ["low", "medium", "high"] }
+      },
+      "required": ["v", "type", "sceneId", "characterId", "localeDir", "reducedMotion", "qualityTier"]
+    },
+    {
+      "title": "SetItemsMessage",
+      "properties": {
+        "v": { "const": 1 },
+        "type": { "const": "setItems" },
+        "items": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["id", "kind", "onPlate"],
+            "properties": {
+              "id": { "type": "string" },
+              "kind": { "type": "string", "enum": ["target", "distractor"] },
+              "onPlate": { "type": "boolean" }
+            }
+          }
+        }
+      },
+      "required": ["v", "type", "items"]
+    },
+    {
+      "title": "CharacterMessage",
+      "properties": {
+        "v": { "const": 1 },
+        "type": { "const": "character" },
+        "state": {
+          "type": "string",
+          "enum": ["idle", "thinking", "encourage", "happy", "celebrate", "confused"]
+        },
+        "pointAt": {
+          "type": "string",
+          "enum": ["basket", "pile"]
+        }
+      },
+      "required": ["v", "type", "state"]
+    },
+    {
+      "title": "HintMessage",
+      "properties": {
+        "v": { "const": 1 },
+        "type": { "const": "hint" },
+        "showCount": { "type": "boolean" }
+      },
+      "required": ["v", "type", "showCount"]
+    },
+    {
+      "title": "FreezeMessage",
+      "properties": {
+        "v": { "const": 1 },
+        "type": { "const": "freeze" },
+        "frozen": { "type": "boolean" }
+      },
+      "required": ["v", "type", "frozen"]
+    },
+    {
+      "title": "CelebrateMessage",
+      "properties": {
+        "v": { "const": 1 },
+        "type": { "const": "celebrate" }
+      },
+      "required": ["v", "type"]
+    },
+    {
+      "title": "QualityMessage",
+      "properties": {
+        "v": { "const": 1 },
+        "type": { "const": "quality" },
+        "tier": { "type": "string", "enum": ["low", "medium", "high"] },
+        "source": { "type": "string", "enum": ["auto", "parent"] }
+      },
+      "required": ["v", "type", "tier", "source"]
+    },
+    {
+      "title": "ReadyMessage",
+      "properties": {
+        "v": { "const": 1 },
+        "type": { "const": "ready" },
+        "protocolVersion": { "type": "integer", "const": 1 },
+        "tier": { "type": "string", "enum": ["low", "medium", "high"] }
+      },
+      "required": ["v", "type", "protocolVersion", "tier"]
+    },
+    {
+      "title": "ItemDroppedMessage",
+      "properties": {
+        "v": { "const": 1 },
+        "type": { "const": "itemDropped" },
+        "id": { "type": "string" },
+        "zone": { "type": "string", "enum": ["plate", "pile"] }
+      },
+      "required": ["v", "type", "id", "zone"]
+    },
+    {
+      "title": "CharacterTappedMessage",
+      "properties": {
+        "v": { "const": 1 },
+        "type": { "const": "characterTapped" }
+      },
+      "required": ["v", "type"]
+    },
+    {
+      "title": "LayoutMessage",
+      "properties": {
+        "v": { "const": 1 },
+        "type": { "const": "layout" },
+        "rects": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["id", "rect"],
+            "properties": {
+              "id": { "type": "string" },
+              "rect": {
+                "type": "object",
+                "required": ["x", "y", "width", "height"],
+                "properties": {
+                  "x": { "type": "number" },
+                  "y": { "type": "number" },
+                  "width": { "type": "number" },
+                  "height": { "type": "number" }
+                }
+              }
+            }
+          }
+        }
+      },
+      "required": ["v", "type", "rects"]
+    },
+    {
+      "title": "PerfMessage",
+      "properties": {
+        "v": { "const": 1 },
+        "type": { "const": "perf" },
+        "fps": { "type": "number" },
+        "drawCalls": { "type": "integer" },
+        "tier": { "type": "string", "enum": ["low", "medium", "high"] }
+      },
+      "required": ["v", "type", "fps", "drawCalls", "tier"]
+    },
+    {
+      "title": "TierChangedMessage",
+      "properties": {
+        "v": { "const": 1 },
+        "type": { "const": "tierChanged" },
+        "from": { "type": "string", "enum": ["low", "medium", "high"] },
+        "to": { "type": "string", "enum": ["low", "medium", "high"] },
+        "reason": { "type": "string" }
+      },
+      "required": ["v", "type", "from", "to", "reason"]
+    },
+    {
+      "title": "ErrorMessage",
+      "properties": {
+        "v": { "const": 1 },
+        "type": { "const": "error" },
+        "code": { "type": "string" },
+        "message": { "type": "string" }
+      },
+      "required": ["v", "type", "code", "message"]
+    }
+  ]
+}

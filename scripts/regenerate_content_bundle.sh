@@ -11,4 +11,16 @@
 # (app/test/core/game/game_runtime_real_bundle_test.dart).
 set -euo pipefail
 cd "$(dirname "${BASH_SOURCE[0]}")/.."
-tools/validate/.venv/Scripts/python.exe tools/content_compiler/compile.py
+
+# The validator's virtualenv: Scripts/ on Windows (Git Bash), bin/ elsewhere.
+python=""
+for candidate in tools/validate/.venv/Scripts/python.exe tools/validate/.venv/bin/python; do
+  if [ -x "$candidate" ]; then python="$candidate"; break; fi
+done
+if [ -z "$python" ]; then
+  echo "error: no Python virtualenv at tools/validate/.venv." >&2
+  echo "Create it first (see README.md, 'Run the validator'):" >&2
+  echo "  python -m venv tools/validate/.venv && tools/validate/.venv/bin/python -m pip install -r tools/validate/requirements.txt" >&2
+  exit 1
+fi
+"$python" tools/content_compiler/compile.py

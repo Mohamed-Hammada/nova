@@ -1,0 +1,31 @@
+{
+  "characterId": "bear",
+  "name": "Bear",
+  "version": 1,
+  "lods": {
+    "low": "models/bear.low.glb",
+    "medium": "models/bear.medium.glb",
+    "high": "models/bear.high.glb"
+  },
+  "clips": {
+    "idle": "idle",
+    "idle_alt": "idle_alt",
+    "think": "think",
+    "encourage": "encourage",
+    "happy": "happy",
+    "celebrate": "celebrate",
+    "confused": "confused",
+    "tap_react": "tap_react",
+    "point": "point"
+  },
+  "bones": {
+    "head": "Head",
+    "root": "Root",
+    "spine": "Spine"
+  },
+  "dimensions": {
+    "height": 1.52,
+    "width": 0.86,
+    "depth": 0.45
+  }
+}

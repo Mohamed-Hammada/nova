@@ -1,16 +1,9 @@
-import 'dart:io';
-
-import 'package:drift/drift.dart';
-import 'package:drift/native.dart';
-import 'package:path/path.dart' as p;
-import 'package:path_provider/path_provider.dart';
-// ignore: unused_import
-import 'package:sqlite3_flutter_libs/sqlite3_flutter_libs.dart'; // ensures the native sqlite3 lib is bundled with the app; no symbol from it is referenced directly
-
-QueryExecutor openConnection() {
-  return LazyDatabase(() async {
-    final dir = await getApplicationDocumentsDirectory();
-    final file = p.join(dir.path, 'nova.sqlite');
-    return NativeDatabase.createInBackground(File(file));
-  });
-}
+// Platform selection for the drift connection, done at compile time by a
+// conditional export so neither side's platform libraries leak into the
+// other's build: native builds never see package:web/drift wasm, and web
+// builds never see dart:io/dart:ffi (which is what made `flutter build web`
+// fail before this split). DriftPersistencePort, the schema, and every SQL
+// statement are shared -- only how the SQLite engine is reached differs.
+//
+// Both libraries export the same `QueryExecutor openConnection()`.
+export 'connection_native.dart' if (dart.library.js_interop) 'connection_web.dart';
