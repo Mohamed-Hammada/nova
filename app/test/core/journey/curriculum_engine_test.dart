@@ -1,6 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:nova_app/adapters/in_memory_player_state_port.dart';
 import 'package:nova_app/core/content/models.dart';
+import 'package:nova_app/core/game/session_plan.dart';
 import 'package:nova_app/core/journey/curriculum_engine.dart';
 import 'package:nova_app/core/journey/journey_models.dart';
 import 'package:nova_app/core/journey/journey_recorder.dart';
@@ -180,5 +181,121 @@ void main() {
     final p = engine.evaluate(child(4), finishAll(engine.evaluate(child(4), const {}).current.stage.required.take(2)));
     expect(p.domains.fold<int>(0, (a, d) => a + d.done), 2);
     expect(p.domains.every((d) => d.total >= d.done), isTrue);
+  });
+
+  group('child evidence shapes the recommendation, inside the curriculum', () {
+    // One session's result as the journey records it: completion plus the
+    // Adaptive Engine's move for the game.
+    ActivityRecord played(Activity a, DateTime at, {required AdaptiveMove move, int stars = 2, double accuracy = 0.7, String scaffold = ScaffoldLevel.hintOnRequest, int attempts = 1}) {
+      var r = ActivityRecord.fresh('c', a.id, at);
+      for (var i = 0; i < attempts; i++) {
+        r = r.started(at);
+      }
+      return r.finished(at, completed: true, stars: stars, accuracy: accuracy, outcome: SessionOutcome(stars: stars, accuracy: accuracy, move: move, scaffold: scaffold));
+    }
+
+    test('two children who both completed the same activity get different next steps', () {
+      final stage = engine.evaluate(child(4), const {}).current.stage;
+      final first = engine.evaluate(child(4), const {}).recommended!;
+      final t = t0.add(const Duration(hours: 1));
+      // Child A: accurate and independent.
+      final a = engine.evaluate(child(4), {first.id: played(first, t, move: AdaptiveMove.advance, stars: 3, accuracy: 0.95)});
+      // Child B: struggled, the Adaptive Engine eased the game.
+      final b = engine.evaluate(child(4), {first.id: played(first, t, move: AdaptiveMove.retreat, stars: 1, accuracy: 0.5)});
+      expect(a.statusOf(first.id).isDone, isTrue);
+      expect(b.statusOf(first.id).isDone, isTrue);
+      expect(a.recommendation!.reason, isNot(b.recommendation!.reason));
+      expect(b.recommendation!.reason, anyOf(RecommendationReason.practice, RecommendationReason.tryAgainEasier));
+      expect(b.recommended!.stageId, stage.id);
+    });
+
+    test('after a hard session: practice in the same area, or the same game again (now easier)', () {
+      final p = engine.evaluate(child(4), const {});
+      final stage = p.current.stage;
+      final hard = stage.required.first;
+      final r = engine.evaluate(child(4), {hard.id: played(hard, t0, move: AdaptiveMove.retreat, stars: 1, accuracy: 0.4)});
+      final rec = r.recommendation!;
+      if (rec.reason == RecommendationReason.practice) {
+        expect(rec.activity.domain, hard.domain);
+        expect(rec.activity.role, anyOf(LevelRole.practice, LevelRole.review));
+      } else {
+        expect(rec.reason, RecommendationReason.tryAgainEasier);
+        expect(rec.activity.id, hard.id);
+      }
+      // A replay keeps its "done" mark.
+      expect(r.statusOf(hard.id).isDone, isTrue);
+    });
+
+    test('the journey does not loop on one game: after repeated hard sessions it moves on', () {
+      final stage = engine.evaluate(child(4), const {}).current.stage;
+      // Pick a required activity whose area has no practice/review activity in the stage.
+      final lonely = stage.required.where((a) => !stage.activities.any((o) => o.id != a.id && o.domain == a.domain && (o.role == LevelRole.practice || o.role == LevelRole.review)));
+      if (lonely.isEmpty) return;
+      final hard = lonely.first;
+      final again = engine.evaluate(child(4), {hard.id: played(hard, t0, move: AdaptiveMove.retreat, attempts: 1)});
+      expect(again.recommended!.id, hard.id);
+      final movedOn = engine.evaluate(child(4), {hard.id: played(hard, t0, move: AdaptiveMove.retreat, attempts: CurriculumEngine.maxRetries)});
+      expect(movedOn.recommended!.id, isNot(hard.id));
+      expect(movedOn.recommendation!.reason, RecommendationReason.next);
+    });
+
+    test('after accurate, independent play: a challenge -- but only once its prerequisites are done', () {
+      final stage = engine.evaluate(child(4), const {}).current.stage;
+      final challenge = stage.activities.firstWhere((a) => a.role == LevelRole.challenge);
+      final other = stage.required.firstWhere((a) => !challenge.prerequisites.contains(a.id));
+      // Strong play, but the challenge's prerequisites are not finished: no bypass.
+      final early = engine.evaluate(child(4), {other.id: played(other, t0, move: AdaptiveMove.advance, stars: 3, accuracy: 1)});
+      expect(early.statusOf(challenge.id), ActivityStatus.locked);
+      expect(early.recommended!.id, isNot(challenge.id));
+      expect(early.recommendation!.reason, isNot(RecommendationReason.stretch));
+
+      // Prerequisites done, the last session strong: the challenge comes next.
+      final records = {
+        for (final (i, id) in challenge.prerequisites.indexed)
+          id: played(stage.activities.firstWhere((a) => a.id == id), t0.add(Duration(minutes: i)), move: AdaptiveMove.advance, stars: 3, accuracy: 1),
+      };
+      final ready = engine.evaluate(child(4), records);
+      expect(ready.recommended!.id, challenge.id);
+      expect(ready.recommendation!.reason, RecommendationReason.stretch);
+
+      // Same completions with a productive (not strong) last session: required work first.
+      final steady = {for (final e in records.entries) e.key: played(stage.activities.firstWhere((a) => a.id == e.key), t0, move: AdaptiveMove.stay)};
+      expect(engine.evaluate(child(4), steady).recommended!.role, LevelRole.required);
+    });
+
+    test('a struggling child is never sent into a locked stage or a locked activity', () {
+      final p = engine.evaluate(child(4), const {});
+      final hard = p.current.stage.required.first;
+      final r = engine.evaluate(child(4), {hard.id: played(hard, t0, move: AdaptiveMove.retreat)});
+      expect(engine.canStart(r, r.recommended!.id), isTrue);
+      expect(r.recommended!.stageId, r.current.stage.id);
+    });
+
+    test('mastery evidence orders required work: skills not yet secure come first', () {
+      final p = engine.evaluate(child(4), const {});
+      final first = p.recommended!;
+      final secure = ChildEvidence(masteryBySkill: {for (final s in first.skills) s: 'secure'});
+      final withEvidence = engine.evaluate(child(4), const {}, evidence: secure);
+      final others = p.current.stage.required.where((a) => !secure.isSecure(a.skills));
+      if (others.isNotEmpty) expect(withEvidence.recommended!.id, isNot(first.id));
+      // Secure evidence never completes an activity or a stage by itself.
+      expect(withEvidence.statusOf(first.id).isDone, isFalse);
+      expect(withEvidence.currentIndex, p.currentIndex);
+    });
+
+    test('completion is not mastery: finishing activities adds no mastery evidence', () {
+      final p = engine.evaluate(child(4), finishAll(engine.evaluate(child(4), const {}).current.stage.required));
+      expect(p.stages[p.entryIndex].status, StageStatus.completed);
+      expect(const ChildEvidence().isSecure(p.stages[p.entryIndex].stage.required.first.skills), isFalse);
+    });
+
+    test('changing age keeps the session evidence and never fakes completion of new content', () {
+      final first = engine.evaluate(child(4), const {}).recommended!;
+      final records = {first.id: played(first, t0, move: AdaptiveMove.retreat, stars: 1, accuracy: 0.4)};
+      final at6 = engine.evaluate(child(6), records);
+      expect(at6.statusOf(first.id).isDone, isTrue);
+      expect(at6.current.requiredDone, 0, reason: 'nothing in the new stage is marked done');
+      expect(records[first.id]!.lastMove, AdaptiveMove.retreat);
+    });
   });
 }

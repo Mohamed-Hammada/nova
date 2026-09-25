@@ -1519,6 +1519,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'You\'re ready for a challenge!'**
   String get scaffoldIndependent;
+
+  /// No description provided for @recPractice.
+  ///
+  /// In en, this message translates to:
+  /// **'Let\'s practise that a little more!'**
+  String get recPractice;
+
+  /// No description provided for @recTryAgain.
+  ///
+  /// In en, this message translates to:
+  /// **'Let\'s try that one again together!'**
+  String get recTryAgain;
 }
 
 class _AppLocalizationsDelegate

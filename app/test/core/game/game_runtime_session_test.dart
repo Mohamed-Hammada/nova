@@ -124,4 +124,69 @@ void main() {
       expect(await stateAfter(events), 'developing');
     });
   });
+
+  group('the adaptive loop end to end (real content): session -> signals -> assessment -> adaptive -> next session', () {
+    // Six rounds, each: correct on the first try or not, with hints.
+    List<RawMechanicEvent> session({required int correct, int hintsPerRound = 0, int rounds = 6}) => [
+          for (var i = 0; i < rounds; i++) TrialSubmitted(correct: i < correct, hintsUsedThisTrial: hintsPerRound, at: clock.now()),
+        ];
+
+    Future<(AdaptiveDecision, String, String)> play(InMemoryPersistencePort persistence, List<RawMechanicEvent> events) async {
+      final runtime = buildRuntime(loadRealBundle(), persistence, clock);
+      final decision = await runtime.completeSession(childId: 'c1', gameId: _game, skillId: _skill, rawEvents: events, mapper: bearApplesSignalMapper);
+      final next = await runtime.planSession(childId: 'c1', gameId: _game, skillId: _skill);
+      return (decision, next.rung.id, next.scaffold);
+    }
+
+    Future<void> startAt(InMemoryPersistencePort persistence, String rung) => persistence.saveSession(
+          childId: 'c1', skillId: _skill,
+          mastery: MasteryRecord(childId: 'c1', skillId: _skill, state: null, confidence: 0, updatedAt: clock.now()),
+          performance: null, independence: null, transfer: null,
+          decision: AdaptiveDecision(childId: 'c1', gameId: _game, nextRungId: rung, scaffold: ScaffoldLevel.hintOnRequest, reason: 'x'),
+        );
+
+    test('strong, independent play: the next session is one rung harder', () async {
+      final (d, rung, scaffold) = await play(InMemoryPersistencePort(), session(correct: 6));
+      expect(d.move, AdaptiveMove.advance);
+      expect(rung, 'r2');
+      expect(scaffold, ScaffoldLevel.hintOnRequest);
+    });
+
+    test('accurate but with a hint every round: same rung, so help can fade first', () async {
+      final (d, rung, _) = await play(InMemoryPersistencePort(), session(correct: 6, hintsPerRound: 1));
+      expect(d.move, AdaptiveMove.stay);
+      expect(rung, 'r1');
+    });
+
+    test('productive range: the same rung', () async {
+      final persistence = InMemoryPersistencePort();
+      await startAt(persistence, 'r2');
+      final (d, rung, _) = await play(persistence, session(correct: 4));
+      expect(d.move, AdaptiveMove.stay);
+      expect(rung, 'r2');
+    });
+
+    test('struggling: one rung easier, with guided help in the next session', () async {
+      final persistence = InMemoryPersistencePort();
+      await startAt(persistence, 'r2');
+      final (d, rung, scaffold) = await play(persistence, session(correct: 1, hintsPerRound: 1));
+      expect(d.move, AdaptiveMove.retreat);
+      expect(rung, 'r1');
+      expect(scaffold, ScaffoldLevel.guided);
+    });
+
+    test('struggling on the first rung: the next session shows how first', () async {
+      final (d, rung, scaffold) = await play(InMemoryPersistencePort(), session(correct: 1));
+      expect(d.move, AdaptiveMove.retreat);
+      expect(rung, 'r1');
+      expect(scaffold, ScaffoldLevel.modelled);
+    });
+
+    test('mastery comes from the assessment pipeline, not from finishing: a hard finished session is not Secure', () async {
+      final persistence = InMemoryPersistencePort();
+      await play(persistence, session(correct: 2));
+      final mastery = await buildRuntime(loadRealBundle(), persistence, clock).currentMastery(childId: 'c1', skillId: _skill);
+      expect(mastery?.state, isNot(anyOf('secure', 'transfer')));
+    });
+  });
 }

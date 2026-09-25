@@ -811,4 +811,10 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get scaffoldIndependent => 'You\'re ready for a challenge!';
+
+  @override
+  String get recPractice => 'Let\'s practise that a little more!';
+
+  @override
+  String get recTryAgain => 'Let\'s try that one again together!';
 }

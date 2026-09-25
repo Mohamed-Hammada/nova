@@ -551,7 +551,7 @@ class _LevelComplete extends StatelessWidget {
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Text(l10n.youDidIt, style: NovaType.display(context, color: place.deep)),
+                      Text(stars <= 1 ? l10n.greatEffort : l10n.youDidIt, textAlign: TextAlign.center, style: NovaType.display(context, color: place.deep)),
                       const SizedBox(height: NovaSpace.xxs),
                       Text(l10n.levelDone, style: NovaType.body(context)),
                       const SizedBox(height: NovaSpace.md),

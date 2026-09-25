@@ -29,11 +29,7 @@ Future<void> playJourneyActivity(BuildContext context, WidgetRef ref, Activity a
   await Navigator.of(context).push(
     MaterialPageRoute<void>(
       builder: (_) => playableGames.containsKey(gameId)
-          ? GameScreen(
-              gameId: gameId,
-              skillId: ref.read(contentRuntimeProvider).game(gameId).primarySkillIds.first,
-              onComplete: finished,
-            )
+          ? GameScreen(gameId: gameId, skillId: ref.read(contentRuntimeProvider).game(gameId).primarySkillIds.first, onComplete: finished)
           : LevelScreen(
               journey: Journey(id: 'journey.activity', nameKey: '', ageRange: [activity.minAge, activity.maxAge], levels: [activity.level]),
               levelIndex: 0,
@@ -43,6 +39,7 @@ Future<void> playJourneyActivity(BuildContext context, WidgetRef ref, Activity a
   );
 
   ref.invalidate(activityRecordsProvider);
+  ref.invalidate(childEvidenceProvider);
   ref.invalidate(levelStarsProvider);
   await ref.read(activityRecordsProvider.future);
   final after = ref.read(journeyProgressProvider);

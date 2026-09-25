@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:nova_app/core/game/session_plan.dart';
 import 'package:nova_app/core/journey/journey_models.dart';
+import 'package:nova_app/ui/design/nova_design.dart';
 import 'package:nova_app/providers.dart';
 import 'package:nova_app/ui/journey/journey_providers.dart';
 import 'package:nova_app/ui/journey/onboarding_screen.dart';
@@ -160,5 +162,34 @@ void main() {
     expect(progress.statusOf(done.id).isDone, isTrue, reason: 'completed activities stay completed');
     expect(progress.firstVisibleIndex, lessThan(progress.entryIndex), reason: 'earlier history is still shown');
     expect((await port.activityRecords(childId: currentChildId)).single.completed, isTrue);
+  });
+
+  testWidgets('after a hard session the journey recommends practice, and Home shows that same recommendation', (tester) async {
+    final app = await pumpNovaApp(tester, content: content, size: const Size(1280, 900));
+    final c = app.container;
+    final first = c.read(journeyProgressProvider)!.recommended!;
+    final recorder = c.read(journeyRecorderProvider);
+    await recorder.start(childId: currentChildId, activityId: first.id);
+    // What a hard session reports after GameRuntime: low accuracy, lots of
+    // help, and the Adaptive Engine easing the game.
+    await recorder.finish(
+      childId: currentChildId,
+      activityId: first.id,
+      outcome: const SessionOutcome(stars: 1, accuracy: 0.3, hintsPerTrial: 1.5, move: AdaptiveMove.retreat, scaffold: ScaffoldLevel.modelled),
+    );
+    c.invalidate(activityRecordsProvider);
+    await settle(tester);
+
+    final progress = c.read(journeyProgressProvider)!;
+    expect(progress.recommendation!.reason, anyOf(RecommendationReason.practice, RecommendationReason.tryAgainEasier));
+    expect(progress.statusOf(first.id).isDone, isTrue, reason: 'completion is recorded even when it was hard');
+    expect(find.textContaining(progress.recommendation!.reason == RecommendationReason.practice ? 'practise that a little more' : 'try that one again'), findsOneWidget);
+    // One source of truth: the Continue card names the engine's recommendation.
+    final name = contentText(content, content.game(progress.recommended!.gameFor('en')).nameKey, 'en');
+    expect(find.descendant(of: find.byType(NovaPanel).first, matching: find.text(name)), findsOneWidget);
+    // Nothing in the child-facing text judges the child.
+    for (final word in ['wrong', 'fail', 'Wrong', 'Fail']) {
+      expect(find.textContaining(word), findsNothing);
+    }
   });
 }

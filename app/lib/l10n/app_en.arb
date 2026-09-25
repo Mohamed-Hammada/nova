@@ -544,5 +544,7 @@
   "greatEffort": "What great effort!",
   "scaffoldModelled": "Let me show you first!",
   "scaffoldGuided": "I'll help you along the way!",
-  "scaffoldIndependent": "You're ready for a challenge!"
+  "scaffoldIndependent": "You're ready for a challenge!",
+  "recPractice": "Let's practise that a little more!",
+  "recTryAgain": "Let's try that one again together!"
 }

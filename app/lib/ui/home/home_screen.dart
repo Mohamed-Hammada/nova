@@ -232,11 +232,18 @@ class _HeroState extends ConsumerState<_Hero> {
         : (child.isEmpty ? l10n.onboardingReadyNoName : l10n.onboardingReady(child));
     // The companion names the adventure the child is on.
     final journey = ref.watch(journeyProgressProvider);
+    // The companion says why the next activity was chosen -- from the same
+    // curriculum/adaptive recommendation the button plays.
     final adventure = journey == null
         ? l10n.letsExplore
         : journey.finished
         ? l10n.journeyAllDone
-        : l10n.weAreIn(contentText(ref.watch(contentRuntimeProvider), journey.current.stage.nameKey, ref.watch(languageProvider)));
+        : switch (journey.recommendation?.reason) {
+            RecommendationReason.practice => l10n.recPractice,
+            RecommendationReason.tryAgainEasier => l10n.recTryAgain,
+            RecommendationReason.stretch => l10n.scaffoldIndependent,
+            _ => l10n.weAreIn(contentText(ref.watch(contentRuntimeProvider), journey.current.stage.nameKey, ref.watch(languageProvider))),
+          };
 
     final stage = FloatingIsland(
       width: widget.wide ? 300 : 170,

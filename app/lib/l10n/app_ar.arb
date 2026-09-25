@@ -236,5 +236,7 @@
   "greatEffort": "يا له من مجهود رائع!",
   "scaffoldModelled": "سأريك أولًا كيف نلعب!",
   "scaffoldGuided": "سأساعدك خطوة بخطوة!",
-  "scaffoldIndependent": "أنت جاهز للتحدّي!"
+  "scaffoldIndependent": "أنت جاهز للتحدّي!",
+  "recPractice": "هيّا نتدرّب عليها قليلًا بعد!",
+  "recTryAgain": "هيّا نجرّبها مرة أخرى معًا!"
 }

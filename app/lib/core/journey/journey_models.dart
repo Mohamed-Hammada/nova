@@ -200,6 +200,47 @@ class SessionOutcome {
   final bool finishedAllRounds;
 }
 
+/// What the child has shown so far, beyond their activity records: the
+/// Mastery Engine's state per skill (absent: no evidence yet; null value:
+/// "Not yet"). Read from GameRuntime by the app and handed in here, so the
+/// curriculum engine stays pure.
+class ChildEvidence {
+  const ChildEvidence({this.masteryBySkill = const {}});
+  final Map<String, String?> masteryBySkill;
+
+  static const _secure = {'secure', 'transfer'};
+
+  /// Whether every one of [skills] already has secure (or transfer) evidence.
+  bool isSecure(List<String> skills) => skills.isNotEmpty && skills.every((s) => _secure.contains(masteryBySkill[s]));
+}
+
+/// Why an activity is recommended.
+enum RecommendationReason {
+  /// The next required activity of the stage.
+  next,
+
+  /// More practice in an area the last session found hard.
+  practice,
+
+  /// The same activity again, which the Adaptive Engine has made easier.
+  tryAgainEasier,
+
+  /// A challenge, after accurate and independent play.
+  stretch,
+
+  /// Optional, practice or review work once required work is done.
+  explore,
+
+  /// Everything is done: revisit an earlier activity.
+  review,
+}
+
+class Recommendation {
+  const Recommendation(this.activity, this.reason);
+  final Activity activity;
+  final RecommendationReason reason;
+}
+
 /// Where an activity stands for this child.
 enum ActivityStatus {
   /// Its stage is not open yet, or its prerequisites are unfinished.
@@ -256,7 +297,7 @@ class JourneyProgress {
     required this.entryIndex,
     required this.currentIndex,
     required this.firstVisibleIndex,
-    required this.recommended,
+    required this.recommendation,
     required this.domains,
     required this.finished,
   });
@@ -275,7 +316,10 @@ class JourneyProgress {
   /// The first stage worth showing: the starting point, or earlier if the
   /// child has history there (history never disappears).
   final int firstVisibleIndex;
-  final Activity? recommended;
+  /// The next activity and why the engine chose it.
+  final Recommendation? recommendation;
+
+  Activity? get recommended => recommendation?.activity;
   final List<DomainProgress> domains;
 
   /// Every stage from the starting point on is complete.

@@ -807,4 +807,10 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get scaffoldIndependent => 'أنت جاهز للتحدّي!';
+
+  @override
+  String get recPractice => 'هيّا نتدرّب عليها قليلًا بعد!';
+
+  @override
+  String get recTryAgain => 'هيّا نجرّبها مرة أخرى معًا!';
 }
