@@ -57,7 +57,7 @@ void main() {
     await tester.pump();
     await tester.tap(find.text('التالي'));
     await settle(tester);
-    expect(find.text('المحطة الأولى: بستان العدّ'), findsOneWidget);
+    expect(find.text('المحطة الأولى: بستان الأرقام'), findsOneWidget);
     await tester.tap(find.byKey(const ValueKey('onboarding.start')));
     await settle(tester);
     expect(app.container.read(journeyProgressProvider)!.current.stage.id, 'stage.explorer.counting-orchard');
@@ -191,5 +191,29 @@ void main() {
     for (final word in ['wrong', 'fail', 'Wrong', 'Fail']) {
       expect(find.textContaining(word), findsNothing);
     }
+  });
+
+  testWidgets('grown-ups see completion and mastery evidence separately, recent performance and areas to practise', (tester) async {
+    final app = await pumpNovaApp(tester, content: content, size: const Size(1280, 900));
+    final c = app.container;
+    final first = c.read(journeyProgressProvider)!.recommended!;
+    await c.read(journeyRecorderProvider).finish(
+          childId: currentChildId,
+          activityId: first.id,
+          outcome: const SessionOutcome(stars: 1, accuracy: 0.5, hintsPerTrial: 1, move: AdaptiveMove.retreat, scaffold: ScaffoldLevel.guided),
+        );
+    c.invalidate(activityRecordsProvider);
+    await settle(tester);
+    await tester.tap(find.byTooltip('For grown-ups'));
+    await settle(tester);
+
+    expect(find.text('Mastery evidence'), findsOneWidget);
+    expect(find.text('Activity completion'), findsOneWidget);
+    expect(find.text('Age: 4 years old'), findsOneWidget);
+    expect(find.textContaining('50% right on the first try'), findsOneWidget);
+    expect(find.textContaining('Easier level, more help'), findsOneWidget);
+    expect(find.text('Areas to practise more'), findsOneWidget);
+    // The skill is not called secure just because an activity was completed.
+    expect(find.textContaining('Secure.'), findsNothing);
   });
 }

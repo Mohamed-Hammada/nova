@@ -29,7 +29,7 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(_directionOf(tester, find.byType(HomeScreen)), TextDirection.rtl);
-      expect(find.text('تبدأ مغامرتك!'), findsOneWidget);
+      expect(find.text('هيّا نبدأ المغامرة!'), findsOneWidget);
       expect(find.text('تفاحات الدبّ'), findsOneWidget, reason: 'content strings follow the locale too');
     });
 
@@ -94,7 +94,7 @@ void main() {
     testWidgets('in Arabic, the in-game request and progress are written with Arabic digits', (tester) async {
       await pumpNovaApp(tester, content: fixtureContent(minTrials: 3), locale: NovaLocales.arabic);
       await openBearApples(tester, name: 'تفاحات الدبّ');
-      expect(find.bySemanticsLabel('السؤال ١ من ٣'), findsOneWidget);
+      expect(find.bySemanticsLabel('الجولة ١ من ٣'), findsOneWidget);
       expect(find.textContaining(RegExp('[123456789]')), findsNothing, reason: 'no Western digits in Arabic play');
     });
   });

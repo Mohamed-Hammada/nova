@@ -42,4 +42,13 @@ def summary(spec: Spec) -> str:
         f"assessment rules: {len(spec.assessment_rules)}",
         f"parameters: {counts(status, ('provisional', 'pilot_calibrated', 'validated'))}",
         "journeys: " + (", ".join(f"{j['id']} ages {j['age_range']} ({len(j['levels'])} levels)" for j in spec.journeys) or "none"),
+        _stage_copy_line(spec),
     ])
+
+
+def _stage_copy_line(spec) -> str:
+    """How many stage names still await curriculum/content review (their
+    text is placeholder copy; ids are unaffected by rewording)."""
+    stages = [stage for journey in spec.journeys for stage in journey.get("stages", [])]
+    draft = [stage["id"] for stage in stages if stage.get("copy_status", "draft") != "reviewed"]
+    return f"stage copy: {len(stages) - len(draft)} reviewed, {len(draft)} draft (awaiting curriculum/content review)"
