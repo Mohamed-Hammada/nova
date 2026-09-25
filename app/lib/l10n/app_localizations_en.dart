@@ -869,4 +869,30 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get practiced => 'Practiced';
+
+  @override
+  String choiceLabel(String n) {
+    return 'Choice $n';
+  }
+
+  @override
+  String get choiceTried => 'Already tried';
+
+  @override
+  String get retryNudge => 'So close! Let\'s try another one.';
+
+  @override
+  String get foundIt => 'We found it!';
+
+  @override
+  String get revealHere => 'Here it is! Let\'s tap it.';
+
+  @override
+  String get firstStepHint => 'Not this one. Now there are fewer to look at!';
+
+  @override
+  String get showHint => 'Look where my hand is pointing!';
+
+  @override
+  String get demoThisOne => 'Watch me: I\'d pick this one!';
 }

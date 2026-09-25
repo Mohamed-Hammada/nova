@@ -1621,6 +1621,54 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Practiced'**
   String get practiced;
+
+  /// Choice round: choiceLabel
+  ///
+  /// In en, this message translates to:
+  /// **'Choice {n}'**
+  String choiceLabel(String n);
+
+  /// Choice round: choiceTried
+  ///
+  /// In en, this message translates to:
+  /// **'Already tried'**
+  String get choiceTried;
+
+  /// Choice round: retryNudge
+  ///
+  /// In en, this message translates to:
+  /// **'So close! Let\'s try another one.'**
+  String get retryNudge;
+
+  /// Choice round: foundIt
+  ///
+  /// In en, this message translates to:
+  /// **'We found it!'**
+  String get foundIt;
+
+  /// Choice round: revealHere
+  ///
+  /// In en, this message translates to:
+  /// **'Here it is! Let\'s tap it.'**
+  String get revealHere;
+
+  /// Choice round: firstStepHint
+  ///
+  /// In en, this message translates to:
+  /// **'Not this one. Now there are fewer to look at!'**
+  String get firstStepHint;
+
+  /// Choice round: showHint
+  ///
+  /// In en, this message translates to:
+  /// **'Look where my hand is pointing!'**
+  String get showHint;
+
+  /// Choice round: demoThisOne
+  ///
+  /// In en, this message translates to:
+  /// **'Watch me: I\'d pick this one!'**
+  String get demoThisOne;
 }
 
 class _AppLocalizationsDelegate

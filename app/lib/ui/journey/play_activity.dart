@@ -7,6 +7,7 @@ import 'package:nova_app/providers.dart';
 import '../game/game_catalog.dart';
 import '../game/game_screen.dart';
 import '../play/level_screen.dart';
+import '../world/activity_world.dart';
 import 'journey_providers.dart';
 import 'stage_celebration.dart';
 
@@ -24,6 +25,10 @@ Future<void> playJourneyActivity(BuildContext context, WidgetRef ref, Activity a
 
   final language = ref.read(languageProvider);
   final gameId = activity.gameFor(language);
+  // The activity is played in its stage's place, so a game replayed in a
+  // later stage looks different.
+  final stage = before.stages.map((s) => s.stage).where((s) => s.id == activity.stageId).firstOrNull;
+  final place = stage == null ? null : ActivityCategory.fromPlace(stage.place);
   Future<void> finished(SessionOutcome outcome) => recorder.finish(childId: currentChildId, activityId: activity.id, outcome: outcome);
 
   await Navigator.of(context).push(
@@ -34,6 +39,7 @@ Future<void> playJourneyActivity(BuildContext context, WidgetRef ref, Activity a
               journey: Journey(id: 'journey.activity', nameKey: '', ageRange: [activity.minAge, activity.maxAge], levels: [activity.level]),
               levelIndex: 0,
               onFinished: finished,
+              place: place,
             ),
     ),
   );

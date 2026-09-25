@@ -865,4 +865,30 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get practiced => 'تمّ التدرّب';
+
+  @override
+  String choiceLabel(String n) {
+    return 'الخيار $n';
+  }
+
+  @override
+  String get choiceTried => 'جرّبناه من قبل';
+
+  @override
+  String get retryNudge => 'اقتربنا! هيّا نجرّب واحدًا آخر.';
+
+  @override
+  String get foundIt => 'وجدناه!';
+
+  @override
+  String get revealHere => 'ها هو! هيّا نضغط عليه.';
+
+  @override
+  String get firstStepHint => 'ليس هذا. الآن صار الاختيار أسهل!';
+
+  @override
+  String get showHint => 'هنا، حيث تشير يدي!';
+
+  @override
+  String get demoThisOne => 'سأريك: أختار هذا!';
 }

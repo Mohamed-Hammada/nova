@@ -80,8 +80,8 @@ void main() {
     await tester.tap(find.text('Say it!'));
     await tester.pump(const Duration(milliseconds: 300));
 
-    final cards = tester.widgetList<OptionCard>(find.byType(OptionCard)).toList();
-    expect(cards[first.answer].state, OptionState.right);
+    final cards = tester.widgetList<ChoiceHolder>(find.byType(ChoiceHolder)).toList();
+    expect(cards[first.answer].state, HolderState.right);
     await tester.pumpWidget(const SizedBox());
     await tester.pump(const Duration(seconds: 3));
   });

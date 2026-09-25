@@ -10,39 +10,12 @@ import '../theme/nova_theme.dart';
 import '../l10n.dart';
 import '../widgets/jelly_button.dart';
 import '../widgets/props.dart';
+import 'stage/choice_stage.dart';
+import 'trial_context.dart';
 import 'visual_view.dart';
 
-/// What every round view gets from the level screen.
-class TrialContext {
-  const TrialContext({
-    required this.language,
-    required this.onResponse,
-    required this.onDone,
-    required this.hint,
-    required this.speak,
-    required this.accent,
-    required this.l10n,
-    this.voicePick,
-  });
-  final String language;
-  final AppLocalizations l10n;
-
-  /// Log one response (correct or not). Some rounds log several.
-  final void Function(bool correct) onResponse;
-
-  /// The round is over; move to the next.
-  final VoidCallback onDone;
-
-  /// Ticks each time the child asks for a hint.
-  final ValueNotifier<int> hint;
-  final void Function(String text) speak;
-  final Color accent;
-
-  /// A spoken answer, already matched: an option index for choice rounds,
-  /// the number said for counting rounds.
-  final ValueNotifier<int?>? voicePick;
-
-}
+export 'stage/choice_stage.dart' show ChoiceTrialView, ChoiceHolder, HolderState;
+export 'trial_context.dart';
 
 Widget trialView(Trial trial, TrialContext ctx) => switch (trial) {
   ChoiceTrial() => ChoiceTrialView(trial: trial, ctx: ctx),
@@ -205,101 +178,6 @@ mixin _Pacing<T extends StatefulWidget> on State<T> {
 // ---------------------------------------------------------------------------
 // Choice
 // ---------------------------------------------------------------------------
-
-class ChoiceTrialView extends StatefulWidget {
-  const ChoiceTrialView({super.key, required this.trial, required this.ctx});
-  final ChoiceTrial trial;
-  final TrialContext ctx;
-
-  @override
-  State<ChoiceTrialView> createState() => _ChoiceTrialViewState();
-}
-
-class _ChoiceTrialViewState extends State<ChoiceTrialView> with _Pacing {
-  int? _chosen;
-  bool _pulse = false;
-
-  @override
-  void initState() {
-    super.initState();
-    widget.ctx.hint.addListener(_onHint);
-    widget.ctx.voicePick?.addListener(_onVoice);
-  }
-
-  @override
-  void dispose() {
-    widget.ctx.hint.removeListener(_onHint);
-    widget.ctx.voicePick?.removeListener(_onVoice);
-    super.dispose();
-  }
-
-  void _onVoice() {
-    final i = widget.ctx.voicePick?.value;
-    if (i != null && i >= 0 && i < widget.trial.options.length) _choose(i);
-  }
-
-  void _onHint() {
-    if (widget.trial.speak != null) widget.ctx.speak(widget.trial.speak!);
-    setState(() => _pulse = true);
-    after(const Duration(milliseconds: 1400), () => setState(() => _pulse = false));
-  }
-
-  void _choose(int i) {
-    if (_chosen != null) return;
-    final correct = widget.trial.isCorrect(i);
-    setState(() => _chosen = i);
-    widget.ctx.onResponse(correct);
-    after(Duration(milliseconds: correct ? 900 : 1500), widget.ctx.onDone);
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final t = widget.trial;
-    return LayoutBuilder(
-      builder: (context, box) {
-        final n = t.options.length;
-        final short = math.min(box.maxWidth, box.maxHeight);
-        final hasQuestion = t.question != null;
-        final optionSize = math
-            .min((box.maxWidth - 24) / n - 16, (hasQuestion ? box.maxHeight * 0.44 : box.maxHeight * 0.62))
-            .clamp(72.0, t.optionsAreBig ? 280.0 : 210.0);
-        return Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            if (hasQuestion) ...[
-              Container(
-                padding: const EdgeInsets.all(12),
-                decoration: BoxDecoration(color: Colors.white.withValues(alpha: 0.75), borderRadius: BorderRadius.circular(28)),
-                child: VisualView(t.question!, size: (short * 0.3).clamp(80.0, 200.0), language: widget.ctx.language),
-              ),
-              SizedBox(height: short * 0.05),
-            ],
-            Wrap(
-              alignment: WrapAlignment.center,
-              spacing: 16,
-              runSpacing: 16,
-              children: [
-                for (var i = 0; i < n; i++)
-                  OptionCard(
-                    key: ValueKey(i),
-                    size: optionSize,
-                    pulse: _pulse && i == t.answer,
-                    state: _chosen == null
-                        ? OptionState.idle
-                        : i == _chosen
-                        ? (t.isCorrect(i) ? OptionState.right : OptionState.wrong)
-                        : (i == t.answer ? OptionState.reveal : OptionState.dim),
-                    onTap: () => _choose(i),
-                    child: VisualView(t.options[i], size: optionSize * 0.8, language: widget.ctx.language),
-                  ),
-              ],
-            ),
-          ],
-        );
-      },
-    );
-  }
-}
 
 /// A row of numeral answers, used after counting or watching.
 class NumberChoices extends StatelessWidget {

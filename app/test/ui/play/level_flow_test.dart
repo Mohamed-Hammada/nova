@@ -81,8 +81,8 @@ void main() {
     final game = _content.game(gameId);
     final trials = const TrialFactory().build(game: game, rung: game.rungsById[game.rungIds.first]!, language: 'en', seed: 11, skin: 'apples').cast<ChoiceTrial>();
     for (final t in trials) {
-      await tester.tap(find.byType(OptionCard).at(t.answer));
-      await tester.pump(const Duration(milliseconds: 1000));
+      await tester.tap(find.byType(ChoiceHolder).at(t.answer));
+      await tester.pump(const Duration(milliseconds: 1200));
     }
     await tester.pump(const Duration(seconds: 2));
     await tester.runAsync(() => Future<void>.delayed(const Duration(milliseconds: 50)));
@@ -112,9 +112,14 @@ void main() {
       final rung = (await persistence.currentRung(childId: currentChildId, gameId: gameId)) ?? game.rungIds.first;
       final trials = const TrialFactory().build(game: game, rung: game.rungsById[rung]!, language: 'en', seed: seed, skin: 'apples').cast<ChoiceTrial>();
       for (final t in trials) {
-        final pick = right ? t.answer : (t.answer + 1) % t.options.length;
-        await tester.tap(find.byType(OptionCard).at(pick));
-        await tester.pump(const Duration(milliseconds: 1700));
+        if (!right) {
+          // A miss is followed by another try in the same round: only the
+          // first try counts toward accuracy.
+          await tester.tap(find.byType(ChoiceHolder).at((t.answer + 1) % t.options.length));
+          await tester.pump(const Duration(milliseconds: 1000));
+        }
+        await tester.tap(find.byType(ChoiceHolder).at(t.answer));
+        await tester.pump(const Duration(milliseconds: 1300));
       }
       await tester.pump(const Duration(seconds: 2));
       await tester.runAsync(() => Future<void>.delayed(const Duration(milliseconds: 50)));

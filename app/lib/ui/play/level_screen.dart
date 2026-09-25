@@ -23,6 +23,7 @@ import 'visual_view.dart';
 import '../widgets/confetti.dart';
 import '../widgets/jelly_button.dart';
 import '../widgets/props.dart';
+import 'stage/choice_look.dart';
 import 'trial_views.dart';
 
 /// Plays one journey level: builds its rounds from the game's current rung
@@ -30,7 +31,7 @@ import 'trial_views.dart';
 /// through GameRuntime -- the same content -> signals -> assessment ->
 /// mastery -> adaptive pipeline as before -- and records the stars earned.
 class LevelScreen extends ConsumerStatefulWidget {
-  const LevelScreen({super.key, required this.journey, required this.levelIndex, this.seed, this.rungOverride, this.onFinished});
+  const LevelScreen({super.key, required this.journey, required this.levelIndex, this.seed, this.rungOverride, this.onFinished, this.place});
   final Journey journey;
   final int levelIndex;
 
@@ -46,6 +47,11 @@ class LevelScreen extends ConsumerStatefulWidget {
   /// Forces a rung (previews and tests only); normally the Adaptive Engine's choice is used.
   final String? rungOverride;
 
+  /// The place the level is played in: a journey activity plays in its
+  /// stage's place, so the same game looks different from stage to stage.
+  /// Defaults to the game's own place.
+  final ActivityCategory? place;
+
   @override
   ConsumerState<LevelScreen> createState() => _LevelScreenState();
 }
@@ -60,7 +66,12 @@ class _LevelScreenState extends ConsumerState<LevelScreen> {
   late final JourneyLevel _level = widget.journey.levels[widget.levelIndex];
   late final String _lang = ref.read(languageProvider);
   late final Game _game = ref.read(contentRuntimeProvider).game(_level.gameFor(_lang));
-  late final ActivityCategory _place = ActivityCategory.of(_game);
+  late final ActivityCategory _place = widget.place ?? ActivityCategory.of(_game);
+  late final ChoiceLook _look = ChoiceLook.of(_game.id, _place);
+  final _companionKey = GlobalKey();
+
+  /// Help the scaffold gives as the current round begins.
+  RoundHelp _roundHelp = RoundHelp.none;
 
   /// Whether the last answer was right (null: no answer yet this round).
   bool? _lastCorrect;
@@ -137,18 +148,67 @@ class _LevelScreenState extends ConsumerState<LevelScreen> {
   /// round when modelled, the first round when guided. It counts as a hint
   /// in the session's signals, so unrequested help never reads as
   /// independent work.
+  ///
+  /// Choice rounds show it in the world: a demonstration with the
+  /// companion's hand when modelled, a first step (one wrong answer floats
+  /// away) when guided. Other rounds get their usual hint once they are on
+  /// screen.
   void _scaffoldRound() {
     final s = _session;
     if (s == null || s.isFinished) return;
-    if (_scaffold == ScaffoldLevel.modelled || (_scaffold == ScaffoldLevel.guided && s.index == 0)) {
-      s.useHint();
-      _hint.value++;
+    final help = _scaffold == ScaffoldLevel.modelled
+        ? RoundHelp.show
+        : (_scaffold == ScaffoldLevel.guided && s.index == 0 ? RoundHelp.firstStep : RoundHelp.none);
+    setState(() => _roundHelp = help);
+    if (help == RoundHelp.none) return;
+    s.useHint();
+    if (s.current is! ChoiceTrial) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) _hint.value++;
+      });
     }
   }
 
-  void _onResponse(bool correct) {
-    _session!.record(correct);
+  /// The companion turns toward something on screen.
+  void _lookAt(Offset? at) {
+    final box = _companionKey.currentContext?.findRenderObject() as RenderBox?;
+    if (at == null || box == null || !box.hasSize) return;
+    final from = box.localToGlobal(box.size.center(Offset.zero));
+    final d = at - from;
+    final len = d.distance;
+    if (len < 1) return;
+    _guide.lookAt(Offset(d.dx / len, d.dy / len));
+    Future<void>.delayed(const Duration(milliseconds: 2200), () {
+      if (mounted) _guide.lookAt(null);
+    });
+  }
+
+  /// The companion takes part in the round: it shows, points and cheers on.
+  void _onMoment(PlayMoment moment, Offset? at) {
+    if (_finished) return;
     final l10n = context.l10n;
+    _lookAt(at);
+    final text = switch (moment) {
+      PlayMoment.firstStep => l10n.firstStepHint,
+      PlayMoment.show => _scaffold == ScaffoldLevel.modelled && _hintsThisRound == 0 ? l10n.demoThisOne : l10n.showHint,
+      PlayMoment.reveal => l10n.revealHere,
+    };
+    _guide.react(moment == PlayMoment.reveal ? Reaction.encourage : Reaction.happy);
+    _guide.setMood(CharacterMood.encouraging, hold: const Duration(milliseconds: 1600));
+    _speak(text);
+    setState(() {
+      _feedback = text;
+      _lastCorrect = null;
+    });
+  }
+
+  /// Hints the child asked for in the current round.
+  int _hintsThisRound = 0;
+
+  void _onResponse(bool correct, {int attempt = 1}) {
+    _session!.record(correct, attempt: attempt);
+    final l10n = context.l10n;
+    final retries = _session!.current is ChoiceTrial;
     // Streams log many quick responses; keep reactions for the other rounds.
     if (_session!.current is StreamItemTrial) {
       if (correct) _guide.react(Reaction.happy);
@@ -157,7 +217,9 @@ class _LevelScreenState extends ConsumerState<LevelScreen> {
     // Success is celebrated; a miss gets a soft "oh!" that turns straight
     // into encouragement -- never a buzzer or a red cross.
     if (correct) {
-      _guide.react(Reaction.happy);
+      // First-try success gets the big reaction; finding it after a miss is
+      // celebrated warmly too.
+      _guide.react(attempt == 1 ? Reaction.happy : Reaction.encourage);
       _guide.setMood(CharacterMood.happy, hold: const Duration(milliseconds: 1400));
     } else {
       _guide.setMood(CharacterMood.gentleDisappointment, hold: const Duration(milliseconds: 500));
@@ -167,7 +229,7 @@ class _LevelScreenState extends ConsumerState<LevelScreen> {
     }
     setState(() {
       _lastCorrect = correct;
-      _feedback = correct ? l10n.greatJob : l10n.tryAgainGently;
+      _feedback = correct ? (attempt == 1 ? l10n.greatJob : l10n.foundIt) : (retries ? l10n.retryNudge : l10n.tryAgainGently);
     });
   }
 
@@ -213,6 +275,7 @@ class _LevelScreenState extends ConsumerState<LevelScreen> {
     setState(() {
       _feedback = null;
       _lastCorrect = null;
+      _hintsThisRound = 0;
     });
     if (s.next()) {
       setState(() {});
@@ -277,6 +340,7 @@ class _LevelScreenState extends ConsumerState<LevelScreen> {
 
   void _hintPressed() {
     _session!.useHint();
+    _hintsThisRound++;
     _hint.value++;
     _guide.setMood(CharacterMood.thinking, hold: const Duration(milliseconds: 1200));
     _announce();
@@ -320,6 +384,7 @@ class _LevelScreenState extends ConsumerState<LevelScreen> {
                         final wide = box.maxWidth > 700;
                         final guideWidth = wide ? (box.maxWidth * 0.24).clamp(180.0, 280.0) : (box.maxWidth * 0.32).clamp(100.0, 150.0);
                         final companion = SizedBox(
+                          key: _companionKey,
                           width: guideWidth,
                           child: NovaFloat(
                             amplitude: 3,
@@ -361,7 +426,19 @@ class _LevelScreenState extends ConsumerState<LevelScreen> {
                                 key: ValueKey('${session!.index}'),
                                 child: trialView(
                                   trial,
-                                  TrialContext(language: _lang, l10n: l10n, onResponse: _onResponse, onDone: _onDone, hint: _hint, speak: _speak, accent: place.color, voicePick: _voicePick),
+                                  TrialContext(
+                                    language: _lang,
+                                    l10n: l10n,
+                                    onResponse: _onResponse,
+                                    onDone: _onDone,
+                                    hint: _hint,
+                                    speak: _speak,
+                                    accent: place.color,
+                                    voicePick: _voicePick,
+                                    look: _look,
+                                    startHelp: _roundHelp,
+                                    onMoment: _onMoment,
+                                  ),
                                 ),
                               );
                         final panel = NovaPanel(

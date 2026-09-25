@@ -54,11 +54,16 @@ class PlaySession implements GameMechanic {
     _totalHints++;
   }
 
-  /// Logs one response for the current trial.
-  void record(bool correct) {
-    _responses++;
-    if (correct) _correct++;
-    _events.add(TrialSubmitted(correct: correct, hintsUsedThisTrial: _hints, at: _now()));
+  /// Logs one response for the current trial. [attempt] is 1 for the first
+  /// try; a second try after a miss (the try-again flow) is logged as a
+  /// retry. Only first tries count toward accuracy and stars, so help and
+  /// second chances never inflate what the child showed independently.
+  void record(bool correct, {int attempt = 1}) {
+    if (attempt <= 1) {
+      _responses++;
+      if (correct) _correct++;
+    }
+    _events.add(TrialSubmitted(correct: correct, hintsUsedThisTrial: _hints, attempt: attempt, at: _now()));
     _hints = 0;
   }
 

@@ -253,5 +253,13 @@
   "moveRetreat": "مستوى أسهل مع مساعدة أكثر",
   "needsPractice": "مجالات تحتاج إلى مزيد من التدريب",
   "needsPracticeNone": "لا يبرز شيء حتى الآن.",
-  "practiced": "تمّ التدرّب"
+  "practiced": "تمّ التدرّب",
+  "choiceLabel": "الخيار {n}",
+  "choiceTried": "جرّبناه من قبل",
+  "retryNudge": "اقتربنا! هيّا نجرّب واحدًا آخر.",
+  "foundIt": "وجدناه!",
+  "revealHere": "ها هو! هيّا نضغط عليه.",
+  "firstStepHint": "ليس هذا. الآن صار الاختيار أسهل!",
+  "showHint": "هنا، حيث تشير يدي!",
+  "demoThisOne": "سأريك: أختار هذا!"
 }

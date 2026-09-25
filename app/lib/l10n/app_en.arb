@@ -582,5 +582,42 @@
   "moveRetreat": "Easier level, more help",
   "needsPractice": "Areas to practise more",
   "needsPracticeNone": "Nothing stands out yet.",
-  "practiced": "Practiced"
+  "practiced": "Practiced",
+  "choiceLabel": "Choice {n}",
+  "@choiceLabel": {
+    "description": "Choice round: choiceLabel",
+    "placeholders": {
+      "n": {
+        "type": "String"
+      }
+    }
+  },
+  "choiceTried": "Already tried",
+  "@choiceTried": {
+    "description": "Choice round: choiceTried"
+  },
+  "retryNudge": "So close! Let's try another one.",
+  "@retryNudge": {
+    "description": "Choice round: retryNudge"
+  },
+  "foundIt": "We found it!",
+  "@foundIt": {
+    "description": "Choice round: foundIt"
+  },
+  "revealHere": "Here it is! Let's tap it.",
+  "@revealHere": {
+    "description": "Choice round: revealHere"
+  },
+  "firstStepHint": "Not this one. Now there are fewer to look at!",
+  "@firstStepHint": {
+    "description": "Choice round: firstStepHint"
+  },
+  "showHint": "Look where my hand is pointing!",
+  "@showHint": {
+    "description": "Choice round: showHint"
+  },
+  "demoThisOne": "Watch me: I'd pick this one!",
+  "@demoThisOne": {
+    "description": "Choice round: demoThisOne"
+  }
 }
