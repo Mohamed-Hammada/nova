@@ -127,25 +127,29 @@ async function waitFor(cdp, predicate, what, timeoutMs = 20000) {
 
 // Clicks the centre of the first semantics node whose own label is [label],
 // with real mouse events (the same path a child's tap takes).
-async function click(cdp, label, { index = 0, timeoutMs = 8000 } = {}) {
+async function click(cdp, label, { index = 0, timeoutMs = 8000, prefix = false, scroll = false } = {}) {
   const end = Date.now() + timeoutMs;
   let rect = null;
   while (Date.now() < end) {
     rect = await evaluate(cdp, `(() => {
       const nodes = [...document.querySelectorAll('flt-semantics')].filter((n) => {
         const own = [...n.childNodes].filter((c) => c.nodeType === 3 || c.tagName === 'SPAN').map((c) => c.textContent).join('').trim();
-        return (own === ${JSON.stringify(label)} || n.getAttribute('aria-label') === ${JSON.stringify(label)}) && n.getAttribute('aria-disabled') !== 'true';
+        const name = n.getAttribute('aria-label') ?? own;
+        const match = ${prefix} ? (own.startsWith(${JSON.stringify(label)}) || name.startsWith(${JSON.stringify(label)})) : (own === ${JSON.stringify(label)} || name === ${JSON.stringify(label)});
+        return match && n.getAttribute('aria-disabled') !== 'true';
       });
       const n = nodes[${index}];
       if (!n) return null;
       const r = n.getBoundingClientRect();
-      return { x: r.left + r.width / 2, y: r.top + r.height / 2 };
+      return { x: r.left + r.width / 2, y: r.top + r.height / 2, visible: r.top >= 0 && r.bottom <= innerHeight };
     })()`);
-    if (rect) break;
+    if (rect && (rect.visible || !scroll)) break;
+    // Off screen in a scrolling list: scroll down and look again.
+    if (scroll) await cdp.send('Input.dispatchMouseEvent', { type: 'mouseWheel', x: 640, y: 450, deltaX: 0, deltaY: 300 });
     await sleep(150);
   }
   if (!rect) {
-    fail(`no enabled "${label}" on screen`);
+    fail(`no enabled "${label}" on screen; screen shows: ${(await semanticsText(cdp)).slice(0, 400)}`);
   }
   for (const type of ['mouseMoved', 'mousePressed', 'mouseReleased']) {
     await cdp.send('Input.dispatchMouseEvent', { type, x: rect.x, y: rect.y, button: 'left', buttons: type === 'mousePressed' ? 1 : 0, clickCount: 1 });
@@ -176,6 +180,39 @@ async function openApp(cdp) {
     await click(cdp, "Let's go!");
   }
   return waitFor(cdp, (t) => t.includes('For grown-ups') && t.includes('My journey'), 'the home screen');
+}
+
+// Plays one choice game from its place to the end, choosing answers in
+// order: a miss is followed by another try in the same round (the try-again
+// flow), and after two misses the companion's hand shows the answer.
+async function playChoiceGame(cdp, place, game) {
+  await click(cdp, place, { prefix: true, scroll: true });
+  await waitFor(cdp, (t) => t.includes(`${game}. Play`), `${game} in ${place}`);
+  await click(cdp, `${game}. Play`, { scroll: true });
+  let rounds = 0;
+  let retries = 0;
+  for (;;) {
+    const text = await waitFor(cdp, (t) => /Round \d+ of \d+/.test(t) || t.includes('Level complete!'), `a round of ${game}`);
+    if (text.includes('Level complete!')) break;
+    const round = text.match(/Round (\d+) of/)[1];
+    for (let n = 1; n <= 4; n++) {
+      const has = await evaluate(cdp, `[...document.querySelectorAll('flt-semantics')].some((e) => {
+        const own = [...e.childNodes].filter((c) => c.nodeType === 3 || c.tagName === 'SPAN').map((c) => c.textContent).join('').trim();
+        return (e.getAttribute('aria-label') ?? own) === 'Choice ${n}' && e.getAttribute('aria-disabled') !== 'true';
+      })`);
+      if (!has) continue;
+      await click(cdp, `Choice ${n}`, { timeoutMs: 2000 });
+      await sleep(1300);
+      const now = await semanticsText(cdp);
+      if (now.includes('Level complete!') || !now.includes(`Round ${round} of`)) break;
+      retries++;
+    }
+    if (++rounds > 12) fail(`${game} did not end`);
+  }
+  await click(cdp, 'Map');
+  await click(cdp, 'Home', { prefix: true });
+  await waitFor(cdp, (t) => t.includes('For grown-ups'), 'home again');
+  return { rounds, retries };
 }
 
 async function readProgress(cdp) {
@@ -236,6 +273,13 @@ try {
   await readProgress(cdp);
   await waitFor(cdp, (t) => t.includes('Secure'), 'Secure after a browser restart (progress was lost?)');
   step('Secure survives a browser restart');
+
+  await click(cdp, 'Back');
+  await waitFor(cdp, (t) => t.includes('For grown-ups'), 'home');
+  for (const [place, game] of [['Number Meadow', 'Number Match'], ['Number Meadow', 'More or Less'], ['Story Woods', 'Word Hunt'], ['Sound Valley', 'Rhyme Time'], ['Heart Garden', 'Feelings Friends']]) {
+    const { rounds, retries } = await playChoiceGame(cdp, place, game);
+    step(`played ${game} (${place}) to the end: ${rounds} rounds, ${retries} tries again after a miss`);
+  }
   cdp.close();
 
   if (foreignRequests.size) fail(`requests left the app's origin:\n  ${[...foreignRequests].join('\n  ')}`);
