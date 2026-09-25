@@ -1,5 +1,5 @@
 name: nova_app
-description: "A new Flutter project."
+description: "Nova: play-based learning for ages 2-8."
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
@@ -71,6 +71,14 @@ flutter:
 
   assets:
     - assets/content/content_bundle.json
+
+  # Baloo Bhaijaan 2 (SIL Open Font License, see assets/fonts/OFL.txt):
+  # one rounded family covering both Latin and Arabic, bundled so text never
+  # depends on a network font service.
+  fonts:
+    - family: Baloo
+      fonts:
+        - asset: assets/fonts/BalooBhaijaan2.ttf
 
   # To add assets to your application, add an assets section, like this:
   # assets:

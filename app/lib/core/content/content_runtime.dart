@@ -29,6 +29,9 @@ class ContentRuntime {
   String get contentHash => _bundle.contentHash;
 
   Skill skill(String id) => _skillsById[id] ?? (throw ArgumentError('no such skill: $id'));
+  /// Every game in the bundle, in spec order.
+  List<Game> get games => List.unmodifiable(_bundle.games);
+
   Game game(String id) => _gamesById[id] ?? (throw ArgumentError('no such game: $id'));
   TransferTask transferTask(String id) => _tasksById[id] ?? (throw ArgumentError('no such transfer task: $id'));
 

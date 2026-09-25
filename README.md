@@ -4,7 +4,7 @@ An evidence-informed child development platform for ages 2-8 (Arabic and English
 languages later through language packs). This repository holds two sub-projects: **1. the Master
 Curriculum Specification** (the skill graph, games, assessment rules and language packs as YAML, a
 Python validator that enforces the rules, and explanatory chapters) and **2. the Game Platform
-vertical slice** (a client-side, offline-first Flutter app that plays one real game end to end
+vertical slice** (a client-side, offline-first Flutter app for Android and the web that plays one real game end to end
 through the full content -> assessment -> mastery -> adaptive -> persistence pipeline).
 
 ## Where things are
@@ -47,7 +47,12 @@ their own. Use the wrapper scripts instead, which always regenerate the bundle f
 ./scripts/regenerate_content_bundle.sh   # just the bundle, e.g. after editing data/
 ./scripts/test_app.sh                    # regenerate, then flutter test
 ./scripts/build_apk_debug.sh             # regenerate, then flutter build apk --debug
+./scripts/build_web.sh                   # regenerate, then flutter build web (output: app/build/web)
 ```
+
+The app has three age groups (2–3, 4–5, 6–8), each with its own animated 3D guide character and
+world, in English and Arabic (right-to-left). See `app/README.md` for how the presentation layer
+and the character renderer are organised.
 
 ## Ground rules for any agent working here
 

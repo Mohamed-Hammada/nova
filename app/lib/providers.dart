@@ -15,6 +15,7 @@ import 'package:nova_app/core/ports/clock_port.dart';
 import 'package:nova_app/core/ports/persistence_port.dart';
 import 'package:nova_app/core/signals/signal_bus.dart';
 import 'package:nova_app/core/signals/signal_collector.dart';
+import 'package:nova_app/ui/theme/age_band.dart';
 
 // Real content: loaded once at app start via loadContentRuntimeFromAssets()
 // and overridden into this provider before runApp (see main.dart).
@@ -47,3 +48,12 @@ final gameRuntimeProvider = Provider<GameRuntime>((ref) {
 
 // A single fixed local child for this slice; multiple children are Plan 2.
 const currentChildId = 'local-child';
+
+// Presentation settings. Held in memory for now; persisting them per child
+// arrives with multiple child profiles (Plan 2).
+final ageBandProvider = StateProvider<AgeBand>((ref) => AgeBand.explorer);
+final languageProvider = StateProvider<String>((ref) => 'en');
+
+// Looping decorative animation (idle characters, drifting clouds). Tests
+// switch it off so the widget tree can settle; see ui/theme/motion.dart.
+final ambientMotionProvider = Provider<bool>((ref) => true);

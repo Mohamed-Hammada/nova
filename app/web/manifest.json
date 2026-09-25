@@ -1,12 +1,12 @@
 {
-    "name": "nova_app",
-    "short_name": "nova_app",
+    "name": "Nova",
+    "short_name": "Nova",
     "start_url": ".",
     "display": "standalone",
-    "background_color": "#0175C2",
-    "theme_color": "#0175C2",
-    "description": "A new Flutter project.",
-    "orientation": "portrait-primary",
+    "background_color": "#4FB3FF",
+    "theme_color": "#4FB3FF",
+    "description": "Play-based learning for ages 2-8.",
+    "orientation": "any",
     "prefer_related_applications": false,
     "icons": [
         {

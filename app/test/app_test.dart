@@ -32,7 +32,11 @@ void main() {
 
     await tester.pumpWidget(
       ProviderScope(
-        overrides: [contentRuntimeProvider.overrideWithValue(runtime)],
+        overrides: [
+          contentRuntimeProvider.overrideWithValue(runtime),
+          // Idle animation loops forever; switch it off so the tree settles.
+          ambientMotionProvider.overrideWithValue(false),
+        ],
         child: const NovaApp(),
       ),
     );

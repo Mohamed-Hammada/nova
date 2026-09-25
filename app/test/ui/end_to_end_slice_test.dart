@@ -92,6 +92,8 @@ void main() {
           persistencePortProvider.overrideWithValue(persistence as PersistencePort),
           clockPortProvider.overrideWithValue(clock as ClockPort),
           audioPortProvider.overrideWithValue(audio as AudioPort),
+          // Idle animation loops forever; switch it off so pumpAndSettle settles.
+          ambientMotionProvider.overrideWithValue(false),
         ],
         child: const NovaApp(),
       ),
@@ -120,5 +122,47 @@ void main() {
     // Developing -- this is GameRuntime always computing independence
     // alongside performance (design doc section 5), not a UI shortcut.
     expect(find.textContaining('Secure'), findsOneWidget);
+  });
+
+  testWidgets('picking an age group shows only the games made for that age', (tester) async {
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: [
+          contentRuntimeProvider.overrideWithValue(_fixtureRuntime()),
+          persistencePortProvider.overrideWithValue(InMemoryPersistencePort() as PersistencePort),
+          audioPortProvider.overrideWithValue(FakeAudioPort() as AudioPort),
+          ambientMotionProvider.overrideWithValue(false),
+        ],
+        child: const NovaApp(),
+      ),
+    );
+    await tester.pumpAndSettle();
+    expect(find.text("Bear's Apples"), findsOneWidget); // ages 3-5, default band 4-5
+
+    await tester.tap(find.text('Explorers'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Champions'));
+    await tester.pumpAndSettle();
+
+    expect(find.text("Bear's Apples"), findsNothing); // not made for 6-8
+    expect(find.text('Champions'), findsOneWidget);
+  });
+
+  testWidgets('switching to Arabic lays the app out right-to-left with Arabic content', (tester) async {
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: [
+          contentRuntimeProvider.overrideWithValue(_fixtureRuntime()),
+          ambientMotionProvider.overrideWithValue(false),
+        ],
+        child: const NovaApp(),
+      ),
+    );
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('ع'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('تفاحات الدبّ'), findsOneWidget);
+    expect(Directionality.of(tester.element(find.text('تفاحات الدبّ'))), TextDirection.rtl);
   });
 }

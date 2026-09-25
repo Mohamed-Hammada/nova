@@ -94,10 +94,14 @@ class Game {
     required this.progressionAdvanceParameter,
     required this.progressionRetreatParameter,
     required this.transferProbes,
+    this.ageRange = const [2, 8],
   });
 
   final String id;
   final String nameKey;
+
+  /// [min, max] age in years the game is designed for.
+  final List<int> ageRange;
   final List<String> primarySkillIds;
   final String mechanicId;
   final List<String> rungIds;
@@ -126,6 +130,7 @@ class Game {
       transferProbes: (json['transfer_probes'] as List)
           .map((p) => TransferProbe.fromJson(p as Map<String, dynamic>))
           .toList(),
+      ageRange: json['age_range'] == null ? const [2, 8] : List<int>.from(json['age_range'] as List),
     );
   }
 }

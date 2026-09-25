@@ -75,4 +75,24 @@ void main() {
 
     expect(controller.runningTotal, 0);
   });
+
+  testWidgets('an apple handed over leaves the shelf and cannot be counted twice', (tester) async {
+    final controller = DragToCountController(requestedTotal: 1, now: () => DateTime(2026, 1, 1));
+    await tester.pumpWidget(MaterialApp(home: Scaffold(body: DragToCountView(controller: controller, appleCount: 2))));
+
+    Future<void> dragFirstToPlate() async {
+      final appleCenter = tester.getCenter(find.byType(Draggable<int>).first);
+      final plateCenter = tester.getCenter(find.byType(DragTarget<int>));
+      await tester.drag(find.byType(Draggable<int>).first, plateCenter - appleCenter);
+      await tester.pumpAndSettle();
+    }
+
+    await dragFirstToPlate();
+    expect(controller.runningTotal, 1);
+    expect(find.byType(Draggable<int>), findsOneWidget);
+
+    await dragFirstToPlate();
+    expect(controller.runningTotal, 2);
+    expect(find.byType(Draggable<int>), findsNothing);
+  });
 }

@@ -1,16 +1,4 @@
-import 'dart:io';
-
-import 'package:drift/drift.dart';
-import 'package:drift/native.dart';
-import 'package:path/path.dart' as p;
-import 'package:path_provider/path_provider.dart';
-// ignore: unused_import
-import 'package:sqlite3_flutter_libs/sqlite3_flutter_libs.dart'; // ensures the native sqlite3 lib is bundled with the app; no symbol from it is referenced directly
-
-QueryExecutor openConnection() {
-  return LazyDatabase(() async {
-    final dir = await getApplicationDocumentsDirectory();
-    final file = p.join(dir.path, 'nova.sqlite');
-    return NativeDatabase.createInBackground(File(file));
-  });
-}
+// Picks the SQLite backend for the platform: native sqlite3 via FFI on
+// Android/iOS/desktop, and sqlite3 compiled to WebAssembly on the web
+// (dart:ffi does not exist there). Both expose the same openConnection().
+export 'connection_native.dart' if (dart.library.js_interop) 'connection_web.dart';
