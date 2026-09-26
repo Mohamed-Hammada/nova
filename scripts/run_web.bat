@@ -8,7 +8,9 @@ pushd "%~dp0..\app"
 call flutter pub get || (popd & exit /b 1)
 set "DEVICE=-d chrome"
 echo %* | findstr /C:"-d " >nul && set "DEVICE="
-call flutter run %DEVICE% --no-web-resources-cdn --web-port 8686 %*
+set "PORT_FLAG=--web-port 8686"
+echo %* | findstr /C:"--web-port" >nul && set "PORT_FLAG="
+call flutter run %DEVICE% --no-web-resources-cdn %PORT_FLAG% %*
 set "RESULT=%ERRORLEVEL%"
 popd
 exit /b %RESULT%
