@@ -43,12 +43,12 @@ void main() {
     expect(tester.takeException(), isNull);
   });
 
-  testWidgets('a place shows two, three, or four activity stations per row as the window widens', (tester) async {
+  testWidgets('an adventure shows two, three, or four activity stations per row as the window widens', (tester) async {
     // Content width: the window less its gutters, capped on wide screens.
     for (final (width, available, perRow) in [(390.0, 390.0 - 32, 2), (820.0, 820.0 - 64, 3), (1440.0, 1120.0, 4)]) {
-      await pumpNovaApp(tester, size: Size(width, 900));
-      await openPlace(tester, 'numbers');
-      final station = tester.getSize(find.byKey(const ValueKey('station.game.math.bear-apples'))).width;
+      await pumpNovaApp(tester, size: Size(width, 900), content: loadRealBundle());
+      await openStage(tester, 'stage.explorer.counting-orchard');
+      final station = tester.getSize(find.byKey(const ValueKey('activity.explorer-001'))).width;
       expect(((available + NovaSpace.md) / (station + NovaSpace.md)).round(), perRow, reason: 'width $width');
     }
   });

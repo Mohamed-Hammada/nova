@@ -41,17 +41,17 @@ void main() {
         semantics.dispose();
       });
 
-      testWidgets('a place, and a choice game played in it, meet the guidelines', (tester) async {
+      testWidgets('an adventure, and a choice game played in it, meet the guidelines', (tester) async {
         final semantics = tester.ensureSemantics();
         await pumpNovaApp(tester, locale: locale, content: loadRealBundle());
-        await openPlace(tester, 'numbers');
+        await openStage(tester, 'stage.explorer.counting-orchard');
         await expectAccessible(tester);
         // The way back is its own button, never merged into the heading.
-        final back = tester.getSemantics(find.bySemanticsLabel(lookupAppLocalizations(locale).backHome));
+        final back = tester.getSemantics(find.bySemanticsLabel(lookupAppLocalizations(locale).myJourney));
         expect(back.flagsCollection.isButton, isTrue);
         expect(back.flagsCollection.isHeader, isFalse);
 
-        await tester.tap(find.byKey(const ValueKey('station.game.math.number-match')));
+        await tester.tap(find.byKey(const ValueKey('activity.explorer-003')));
         for (var i = 0; i < 8; i++) {
           await tester.pump(const Duration(milliseconds: 250));
         }

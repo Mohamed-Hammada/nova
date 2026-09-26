@@ -80,6 +80,12 @@ class Activity {
   DevelopmentalDomain get domain => domains.first;
   bool get isRequired => role == LevelRole.required;
 
+  /// Whether the game is made for a child of [age] (its spec age range).
+  bool suitsAge(int age) => minAge <= age && age <= maxAge;
+
+  /// Whether it can be played in [language].
+  bool supportsLanguage(String language) => languages.isEmpty || languages.contains(language);
+
   /// The game played for a child using [language].
   String gameFor(String language) => level.gameFor(language);
 }
@@ -327,6 +333,13 @@ class JourneyProgress {
 
   StageProgress get current => stages[currentIndex];
   List<StageProgress> get visible => stages.sublist(firstVisibleIndex);
+
+  /// Whether stage [index] is on the path the child is walking: from their
+  /// starting point up to the adventure they are on. The curriculum put
+  /// them there, so its activities are theirs even when a game's own age
+  /// range starts a little later (progress may run ahead of age). Anywhere
+  /// else, an activity is only open if its game suits the child's age.
+  bool onPath(int index) => entryIndex <= index && index <= currentIndex;
 
   ActivityStatus statusOf(String activityId) {
     for (final s in stages) {

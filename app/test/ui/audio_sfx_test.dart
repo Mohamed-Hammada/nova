@@ -43,8 +43,8 @@ void main() {
   testWidgets('play has sound: answers sweep in, a chime for a right answer, a gentle "hmm?" for a miss', (tester) async {
     final sfx = _Recorder();
     await pumpNovaApp(tester, content: loadRealBundle(), size: const Size(1280, 900), soundEffects: sfx);
-    await openPlace(tester, 'numbers');
-    await tester.tap(find.byKey(const ValueKey('station.game.math.number-match')));
+    await openStage(tester, 'stage.explorer.counting-orchard');
+    await tester.tap(find.byKey(const ValueKey('activity.explorer-003')));
     for (var i = 0; i < 8; i++) {
       await tester.pump(const Duration(milliseconds: 250));
     }

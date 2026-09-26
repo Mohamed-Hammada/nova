@@ -77,21 +77,21 @@ Future<AppHarness> pumpNovaApp(
   return AppHarness(persistence: store, clock: clock, audio: audio, container: container);
 }
 
-/// Opens the first game from Home and waits for the first trial.
+/// Opens the next activity from Home (a bundle without a curriculum offers
+/// one: Bear's Apples in the fixture) and waits for the first trial.
 Future<void> openBearApples(WidgetTester tester, {String name = "Bear's Apples"}) async {
-  // Home -> Number Meadow (the place for counting games) -> the activity.
-  await openPlace(tester, 'numbers');
-  final station = find.byKey(const ValueKey('station.game.math.bear-apples'));
-  await tester.ensureVisible(station);
+  expect(find.descendant(of: find.byKey(const ValueKey('home.next')), matching: find.text(name), matchRoot: true), findsOneWidget);
+  final play = find.byKey(const ValueKey('home.continue'));
+  await tester.ensureVisible(play);
   await tester.pumpAndSettle();
-  expect(find.descendant(of: station, matching: find.text(name)), findsOneWidget);
-  await tester.tap(station);
+  await tester.tap(play);
   await tester.pumpAndSettle();
 }
 
-/// Opens one place of the world from Home, e.g. 'numbers'.
-Future<void> openPlace(WidgetTester tester, String place) async {
-  final finder = find.byKey(ValueKey('place.$place'));
+/// Opens one adventure of the journey from Home's journey strip, e.g.
+/// 'stage.explorer.counting-orchard'.
+Future<void> openStage(WidgetTester tester, String stageId) async {
+  final finder = find.byKey(ValueKey('home.stage.$stageId'));
   await tester.scrollUntilVisible(finder, 200, scrollable: find.byType(Scrollable).first);
   await tester.ensureVisible(finder);
   await tester.pumpAndSettle();

@@ -91,7 +91,7 @@ void main() {
     await settle(tester);
 
     expect(find.byType(StageCelebration), findsOneWidget);
-    expect(find.text('You finished this adventure!'), findsOneWidget);
+    expect(find.text('Well done! You finished Counting Orchard!'), findsOneWidget);
     await settle(tester);
     expect(find.text('A new adventure is waiting!'), findsOneWidget);
     await tester.tap(find.text("Let's go!"));
@@ -105,6 +105,50 @@ void main() {
     // History stays: every completion is still recorded.
     final records = await port.activityRecords(childId: profile.id);
     expect(records.where((r) => r.completed).length, required.length);
+  });
+
+  testWidgets('finishing the last age-4 adventure opens a bigger adventure; the child is still 4', (tester) async {
+    final app = await pumpNovaApp(tester, content: content, size: const Size(1280, 900));
+    final c = app.container;
+    final port = c.read(playerStatePortProvider);
+    final t = DateTime(2026, 1, 1);
+    Future<void> finish(Activity a) => port.saveActivityRecord(ActivityRecord.fresh(currentChildId, a.id, t).started(t).finished(t, completed: true, stars: 2, accuracy: 0.8));
+    // Counting Orchard and Story Bridge done; Echo Valley all but one.
+    final stages = c.read(curriculumProvider).stages.where((s) => s.startsAtAge(4)).toList();
+    expect(stages.last.id, 'stage.explorer.echo-valley');
+    for (final s in stages.take(2)) {
+      for (final a in s.required) {
+        await finish(a);
+      }
+    }
+    final echo = stages.last.required.toList();
+    for (final a in echo.take(echo.length - 1)) {
+      await finish(a);
+    }
+    c.invalidate(activityRecordsProvider);
+    await settle(tester);
+    final before = c.read(journeyProgressProvider)!;
+    expect(before.current.stage.id, 'stage.explorer.echo-valley');
+    expect(before.recommended!.id, echo.last.id);
+
+    await tester.tap(find.byKey(const ValueKey('home.continue')));
+    await settle(tester);
+    await c.read(journeyRecorderProvider).finish(childId: currentChildId, activityId: echo.last.id, outcome: const SessionOutcome(stars: 3, accuracy: 1));
+    tester.state<NavigatorState>(find.byType(Navigator)).pop();
+    await settle(tester);
+
+    expect(find.text('Well done! You finished Echo Valley!'), findsOneWidget);
+    await settle(tester);
+    expect(find.text('A bigger adventure begins!'), findsOneWidget);
+    expect(find.textContaining('years old'), findsNothing);
+    await tester.tap(find.text("Let's go!"));
+    await settle(tester);
+
+    final after = c.read(journeyProgressProvider)!;
+    expect(after.current.stage.id, 'stage.explorer.lily-pond');
+    expect(c.read(childAgeProvider), 4);
+    expect(after.profile.age, 4);
+    expect(tester.widget<Text>(find.byKey(const ValueKey('home.stage'))).data, 'Lily Pond');
   });
 
   testWidgets('the journey map shows where the child is, what is done and what is locked', (tester) async {

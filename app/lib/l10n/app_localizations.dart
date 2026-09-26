@@ -995,7 +995,7 @@ abstract class AppLocalizations {
   /// No description provided for @companionHello.
   ///
   /// In en, this message translates to:
-  /// **'I\'m {name}. Where shall we go today?'**
+  /// **'I\'m {name}. Let\'s keep going!'**
   String companionHello(String name);
 
   /// No description provided for @continueJourney.
@@ -1303,6 +1303,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'A new adventure is waiting!'**
   String get newAdventure;
+
+  /// No description provided for @currentAdventure.
+  ///
+  /// In en, this message translates to:
+  /// **'Current adventure'**
+  String get currentAdventure;
+
+  /// No description provided for @stageCompleteNamed.
+  ///
+  /// In en, this message translates to:
+  /// **'Well done! You finished {stage}!'**
+  String stageCompleteNamed(String stage);
+
+  /// No description provided for @biggerAdventure.
+  ///
+  /// In en, this message translates to:
+  /// **'A bigger adventure begins!'**
+  String get biggerAdventure;
+
+  /// No description provided for @exploreMoreHint.
+  ///
+  /// In en, this message translates to:
+  /// **'More to play on your journey'**
+  String get exploreMoreHint;
 
   /// No description provided for @journeyAllDone.
   ///
@@ -1627,6 +1651,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Choice {n}'**
   String choiceLabel(String n);
+
+  /// No description provided for @cardLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Card {n}'**
+  String cardLabel(String n);
+
+  /// No description provided for @cardFaceLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Card {n}: {picture}'**
+  String cardFaceLabel(String n, String picture);
+
+  /// No description provided for @drumLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Drum'**
+  String get drumLabel;
 
   /// Choice round: choiceTried
   ///

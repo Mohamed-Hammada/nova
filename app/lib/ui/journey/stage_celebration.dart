@@ -20,6 +20,11 @@ class StageCelebration extends ConsumerStatefulWidget {
   /// The adventure it unlocked (null when the whole journey is finished).
   final JourneyStage? next;
 
+  /// The next adventure belongs to the next age group's part of the
+  /// journey. Said as "a bigger adventure", never as a change of age: the
+  /// child's age is theirs and progress never touches it.
+  bool get opensNextAgeGroup => next != null && next!.ageRange.first > completed.ageRange.last;
+
   @override
   ConsumerState<StageCelebration> createState() => _StageCelebrationState();
 }
@@ -39,13 +44,17 @@ class _StageCelebrationState extends ConsumerState<StageCelebration> {
       _guide.react(Reaction.surprise);
       _guide.setMood(CharacterMood.excited, hold: const Duration(milliseconds: 1800));
       final l10n = context.l10n;
-      ref.read(speechPortProvider).speak(widget.next == null ? l10n.journeyAllDone : l10n.newAdventure, language: ref.read(languageProvider));
+      ref.read(speechPortProvider).speak(_nextLine(l10n), language: ref.read(languageProvider));
     });
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (mounted) ref.read(soundEffectsProvider).play(Sfx.celebrate);
-      if (mounted) ref.read(speechPortProvider).speak(context.l10n.stageComplete, language: ref.read(languageProvider));
+      if (mounted) ref.read(speechPortProvider).speak(_doneLine(context.l10n), language: ref.read(languageProvider));
     });
   }
+
+  String _doneLine(AppLocalizations l10n) => l10n.stageCompleteNamed(contentText(ref.read(contentRuntimeProvider), widget.completed.nameKey, ref.read(languageProvider)));
+
+  String _nextLine(AppLocalizations l10n) => widget.next == null ? l10n.journeyAllDone : (widget.opensNextAgeGroup ? l10n.biggerAdventure : l10n.newAdventure);
 
   @override
   void dispose() {
@@ -88,9 +97,7 @@ class _StageCelebrationState extends ConsumerState<StageCelebration> {
                 child: NovaPanel(
                   child: Column(mainAxisSize: MainAxisSize.min, children: [
                     SizedBox(width: 150, height: 150, child: CharacterView(kind: ref.watch(companionProvider), controller: _guide)),
-                    Semantics(liveRegion: true, child: Text(l10n.stageComplete, textAlign: TextAlign.center, style: NovaType.display(context, color: done.deep))),
-                    const SizedBox(height: NovaSpace.xs),
-                    Text(contentText(content, widget.completed.nameKey, lang), style: NovaType.title(context)),
+                    Semantics(liveRegion: true, child: Text(_doneLine(l10n), textAlign: TextAlign.center, style: NovaType.display(context, color: done.deep))),
                     const SizedBox(height: NovaSpace.md),
                     Wrap(
                       alignment: WrapAlignment.center,
@@ -119,7 +126,7 @@ class _StageCelebrationState extends ConsumerState<StageCelebration> {
                       opacity: reveal ? 1 : 0,
                       duration: NovaMotion.of(context, NovaMotion.medium),
                       child: Column(children: [
-                        Text(widget.next == null ? l10n.journeyAllDone : l10n.newAdventure, textAlign: TextAlign.center, style: NovaType.title(context, color: NovaStory.plum)),
+                        Text(_nextLine(l10n), key: const ValueKey('celebration.next'), textAlign: TextAlign.center, style: NovaType.title(context, color: NovaStory.plum)),
                         if (widget.next != null) Text(contentText(content, widget.next!.nameKey, lang), style: NovaType.body(context)),
                         const SizedBox(height: NovaSpace.md),
                         NovaPlayButton(label: l10n.letsGo, icon: Icons.explore_rounded, color: (next ?? done).deep, onPressed: () => Navigator.of(context).pop()),

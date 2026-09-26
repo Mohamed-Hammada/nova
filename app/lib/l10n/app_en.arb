@@ -367,7 +367,7 @@
   },
   "welcomeBackNoName": "Welcome back!",
   "letsExplore": "Let's explore together.",
-  "companionHello": "I'm {name}. Where shall we go today?",
+  "companionHello": "I'm {name}. Let's keep going!",
   "@companionHello": {
     "placeholders": {
       "name": {
@@ -495,6 +495,17 @@
   "exploreMore": "Explore more",
   "stageComplete": "You finished this adventure!",
   "newAdventure": "A new adventure is waiting!",
+  "currentAdventure": "Current adventure",
+  "stageCompleteNamed": "Well done! You finished {stage}!",
+  "@stageCompleteNamed": {
+    "placeholders": {
+      "stage": {
+        "type": "String"
+      }
+    }
+  },
+  "biggerAdventure": "A bigger adventure begins!",
+  "exploreMoreHint": "More to play on your journey",
   "journeyAllDone": "You finished the whole journey! Replay any adventure.",
   "statusCompleted": "Done",
   "statusLocked": "Locked",
@@ -592,6 +603,26 @@
       }
     }
   },
+  "cardLabel": "Card {n}",
+  "@cardLabel": {
+    "placeholders": {
+      "n": {
+        "type": "String"
+      }
+    }
+  },
+  "cardFaceLabel": "Card {n}: {picture}",
+  "@cardFaceLabel": {
+    "placeholders": {
+      "n": {
+        "type": "String"
+      },
+      "picture": {
+        "type": "String"
+      }
+    }
+  },
+  "drumLabel": "Drum",
   "choiceTried": "Already tried",
   "@choiceTried": {
     "description": "Choice round: choiceTried"

@@ -163,8 +163,11 @@ class CurriculumEngine {
         status = StageStatus.locked;
       }
       final open = status != StageStatus.locked;
+      // Off the child's path (earlier adventures, or ones finished at an
+      // older age), a game not made for their age stays shut.
+      final onPath = entry <= s.index && s.index <= current;
       progress.add(StageProgress(stage: s, status: status, activities: {
-        for (final a in s.activities) a.id: _status(a, records, open: open),
+        for (final a in s.activities) a.id: _status(a, records, open: open && (onPath || a.suitsAge(profile.age))),
       }));
     }
 
@@ -286,6 +289,49 @@ class CurriculumEngine {
   }
 
   /// Whether a child may start [activityId] now. Locked activities (a
-  /// stage not yet reached, or unfinished prerequisites) cannot be started.
-  bool canStart(JourneyProgress progress, String activityId) => progress.statusOf(activityId).canStart;
+  /// stage not yet reached, or unfinished prerequisites) cannot be started,
+  /// and off the child's path neither can a game not made for their age --
+  /// not even a replay of one finished long ago.
+  bool canStart(JourneyProgress progress, String activityId) {
+    if (!progress.statusOf(activityId).canStart) return false;
+    final activity = curriculum.activity(activityId);
+    if (activity == null) return false;
+    final stage = curriculum.stages.firstWhere((s) => s.id == activity.stageId);
+    return progress.onPath(stage.index) || activity.suitsAge(progress.profile.age);
+  }
+
+  /// A small, hand-picked set of other things the child may play besides
+  /// the recommendation ("Explore more"). It never widens what is open: every
+  /// activity here can be started now, is made for the child's age (even on
+  /// their path) and plays in [language].
+  ///
+  /// In order: the current adventure's extra work not yet done (practice,
+  /// optional, challenge, review, then required), then favourites to replay
+  /// from the current adventure and the ones before it. One activity per
+  /// game, so the choice is varied.
+  List<Activity> explore(JourneyProgress progress, {required String language, int limit = 4}) {
+    final recommended = progress.recommended?.id;
+    bool eligible(Activity a) => a.id != recommended && canStart(progress, a.id) && a.suitsAge(progress.profile.age) && a.supportsLanguage(language);
+
+    final current = progress.current;
+    final fresh = [
+      for (final role in [LevelRole.practice, LevelRole.optional, LevelRole.challenge, LevelRole.review, LevelRole.required])
+        for (final a in current.stage.activities)
+          if (a.role == role && !current.activities[a.id]!.isDone) a,
+    ];
+    final replays = [
+      for (var i = progress.currentIndex; i >= progress.firstVisibleIndex; i--)
+        for (final a in progress.stages[i].stage.activities)
+          if (progress.stages[i].activities[a.id]!.isDone) a,
+    ];
+
+    final out = <Activity>[];
+    final games = <String>{if (progress.recommended != null) progress.recommended!.gameFor(language)};
+    for (final a in [...fresh, ...replays]) {
+      if (out.length >= limit) break;
+      if (!eligible(a) || !games.add(a.gameFor(language))) continue;
+      out.add(a);
+    }
+    return out;
+  }
 }

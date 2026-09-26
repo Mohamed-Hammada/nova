@@ -11,7 +11,7 @@ import '../l10n.dart';
 import '../play/visual_view.dart';
 import '../scene/story_scene.dart';
 import '../world/activity_world.dart';
-import '../world/category_screen.dart';
+import '../world/activity_station.dart';
 import 'journey_labels.dart';
 import 'journey_providers.dart';
 import 'play_activity.dart';
@@ -132,7 +132,7 @@ class _StageScreenState extends ConsumerState<StageScreen> {
                               for (var i = 0; i < stage.activities.length; i++)
                                 Padding(
                                   padding: EdgeInsets.only(top: i.isOdd ? NovaSpace.lg : 0),
-                                  child: _station(context, stage.activities[i], stageProgress.activities[stage.activities[i].id]!, stationWidth, i, lang),
+                                  child: _station(context, progress, place, stage.activities[i], stageProgress.activities[stage.activities[i].id]!, stationWidth, i, lang),
                                 ),
                             ],
                           ),
@@ -173,8 +173,11 @@ class _StageScreenState extends ConsumerState<StageScreen> {
     );
   }
 
-  Widget _station(BuildContext context, Activity activity, ActivityStatus status, double width, int i, String lang) {
+  Widget _station(BuildContext context, JourneyProgress progress, ActivityCategory place, Activity activity, ActivityStatus shown, double width, int i, String lang) {
     final l10n = context.l10n;
+    // The engine has the last word on what may start (a finished game off
+    // the child's path that is not made for their age stays shut).
+    final status = ref.read(curriculumEngineProvider).canStart(progress, activity.id) ? shown : ActivityStatus.locked;
     final content = ref.read(contentRuntimeProvider);
     final gameId = activity.gameFor(lang);
     if (!content.hasGame(gameId)) return const SizedBox.shrink();
@@ -182,7 +185,8 @@ class _StageScreenState extends ConsumerState<StageScreen> {
     return ActivityStation(
       key: ValueKey('activity.${activity.id}'),
       game: game,
-      category: ActivityCategory.of(game),
+      // The station wears its adventure's place, not the game's own area.
+      category: place,
       width: width,
       phase: i * 0.21,
       locked: status == ActivityStatus.locked,

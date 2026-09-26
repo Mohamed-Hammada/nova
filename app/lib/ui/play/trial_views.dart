@@ -947,15 +947,25 @@ class _PairsTrialViewState extends State<PairsTrialView> with _Pacing {
               runSpacing: 14,
               children: [
                 for (var i = 0; i < cards.length; i++)
-                  GestureDetector(
+                  Semantics(
+                    button: true,
+                    // Face up, a card names its picture, so the game can be
+                    // played by ear as well as by eye.
+                    label: _peek || _found.contains(i) || _open.contains(i)
+                        ? widget.ctx.l10n.cardFaceLabel(numeral(i + 1, widget.ctx.language), wordFor(widget.ctx.language, cards[i])?.text ?? cards[i].name)
+                        : widget.ctx.l10n.cardLabel(numeral(i + 1, widget.ctx.language)),
+                    excludeSemantics: true,
                     onTap: () => _flip(i),
-                    child: _FlipCard(
-                      size: size,
-                      back: widget.ctx.look.tint,
-                      backDeep: widget.ctx.look.deep,
-                      faceUp: _peek || _found.contains(i) || _open.contains(i),
-                      found: _found.contains(i),
-                      child: PicArt(cards[i], size: size * 0.72),
+                    child: GestureDetector(
+                      onTap: () => _flip(i),
+                      child: _FlipCard(
+                        size: size,
+                        back: widget.ctx.look.tint,
+                        backDeep: widget.ctx.look.deep,
+                        faceUp: _peek || _found.contains(i) || _open.contains(i),
+                        found: _found.contains(i),
+                        child: PicArt(cards[i], size: size * 0.72),
+                      ),
                     ),
                   ),
               ],
@@ -1344,15 +1354,21 @@ class _ClapTrialViewState extends State<ClapTrialView> with _Pacing {
         Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            GestureDetector(
+            Semantics(
+              button: true,
+              label: widget.ctx.l10n.drumLabel,
+              excludeSemantics: true,
               onTap: _done ? null : () => setState(() => _taps = math.min(_taps + 1, 6)),
-              child: TweenAnimationBuilder<double>(
-                key: ValueKey(_taps),
-                tween: Tween(begin: 0.85, end: 1),
-                duration: const Duration(milliseconds: 250),
-                curve: Curves.elasticOut,
-                builder: (context, v, child) => Transform.scale(scale: v, child: child),
-                child: const PicArt(Pic.drum, size: 150),
+              child: GestureDetector(
+                onTap: _done ? null : () => setState(() => _taps = math.min(_taps + 1, 6)),
+                child: TweenAnimationBuilder<double>(
+                  key: ValueKey(_taps),
+                  tween: Tween(begin: 0.85, end: 1),
+                  duration: const Duration(milliseconds: 250),
+                  curve: Curves.elasticOut,
+                  builder: (context, v, child) => Transform.scale(scale: v, child: child),
+                  child: const PicArt(Pic.drum, size: 150),
+                ),
               ),
             ),
             const SizedBox(width: 24),

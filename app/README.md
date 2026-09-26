@@ -31,10 +31,10 @@ See the root `README.md` for how the content bundle is built, and
 | `characters/character_rig.dart` | The Nova character system: a small real-time 3D renderer and one shared character template. Every companion has the same big-head proportions, eyes, soft clay finish and outfit (zip hoodie, trousers, sneakers); a character is a `CharacterLook` (colours plus species parts: ears, snout, tail, antenna). |
 | `characters/character_view.dart` | Animation: idle breathing, blinking and glancing, head-tracking (`lookAt`), ten held moods (idle, happy, curious, excited, surprised, thinking, confused, encouraging, celebrating, gentle disappointment) that blend over a moment, and one-shot reactions (`happy`, `cheer`, `wave`, `eat`, `encourage`, `surprise`). |
 | `scene/story_scene.dart` | `StoryScene`: the 2.5D storybook landscape every screen sits in (sky, sun, hills, rounded trees, meadow, path, props), cached, with only clouds and motes moving; mirrors in RTL and stays still with reduced motion or Low graphics. `FloatingIsland` is the stage for characters, places and stages. |
-| `world/` | The places of the Nova world (`activity_world.dart`: Number Meadow, Story Woods, Sound Valley, Heart Garden, Memory Cove, Discovery Hill, Splash Pond, each with a scene theme and painted landmark) and the place screen, where activities stand as stations. |
+| `world/` | The places of the Nova world (`activity_world.dart`: Number Meadow, Story Woods, Sound Valley, Heart Garden, Memory Cove, Discovery Hill, Splash Pond, each with a scene theme and painted landmark) and the activity station (`activity_station.dart`). A place is presentation only: a journey stage's `place` dresses its scene, landmark and stations. The child never chooses a place or an area to practise; there is no category screen. |
 | `journey/` | The child's journey: first-launch onboarding (name, age), the adventure map, the stage screen, the stage-complete celebration, and `play_activity.dart`, which records starts and finishes through the curriculum engine. |
 | `widgets/` | Pressable 3D buttons, tilting game cards, speech bubbles, one-shot confetti, glossy apple/plate/star props. |
-| `home/home_screen.dart` | Home, built around the journey: who the child is (avatar, name, companion greeting), what to do next (one "continue your journey" action from the engine's recommendation), how far they have come (a past → current → ahead strip), then places to explore and treasures. |
+| `home/home_screen.dart` | Home, built around the journey: who the child is (avatar, name, companion greeting), what to do next (one "continue your journey" action from the engine's recommendation), how far they have come (a past → current → ahead strip), a small "Explore more" set chosen by `CurriculumEngine.explore` (open, age-appropriate activities of the journey; never the catalog), then treasures. |
 | `game/` | Dedicated game screens (the catalog, starting with *Bear's Apples* on the 3D stage) and their session controller. |
 | `progress/progress_screen.dart` | The grown-ups view: journey stage, developmental areas (a share of activities, not a score), activity history, skill progress, then settings (child's age, spoken prompts, voice answers, face play, graphics quality). |
 | `settings/` | About me (name, age, companion, world, language), grown-up settings and the permission flow, and `settings_sync.dart`, which loads saved settings at boot and saves each change. |
@@ -81,7 +81,16 @@ Bear's Apples' `bear`) draw it through the same system.
   starting point: the engine works from activity records, so performance-based adaptation can be
   added there later.
 - The child's age is chronological and changes only when a grown-up (or "About me") changes it.
-  Changing it re-positions the journey; activity records are never deleted.
+  Changing it re-positions the journey; activity records are never deleted. Finishing the age-4
+  stages moves the journey on to the age-5 stages ("a bigger adventure begins") while the child
+  stays 4.
+- Age eligibility, in the engine only (`CurriculumEngine.canStart`): on the child's own path (from
+  their starting stage to the current one) the curriculum decides, so progress may run ahead of age.
+  Anywhere else (earlier adventures, stages finished at another age) an activity opens only if its
+  game's `age_range` includes the child's age, and a dedicated game screen gets no exemption.
+  `CurriculumEngine.explore` picks Home's "Explore more" (at most four, one per game): open,
+  age-appropriate activities in the child's language, from the current stage and replays of what
+  they finished. There is no path from the UI to the whole catalog.
 - `ActivityRecord`s (first started, last played, first completed, attempts, completions, best stars,
   last accuracy) are stored through `PlayerStatePort` (drift table `activity_record_rows`, schema v3;
   the migration turns levels finished earlier into completed records).

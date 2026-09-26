@@ -298,4 +298,132 @@ void main() {
       expect(records[first.id]!.lastMove, AdaptiveMove.retreat);
     });
   });
+
+  group('journey first: what a child can reach', () {
+    List<String> stagesForAge(int age) => [for (final s in curriculum.stages) if (s.startsAtAge(age)) s.id];
+
+    /// Finishes required work stage by stage until [until] holds.
+    Map<String, ActivityRecord> progressUntil(ChildProfile profile, bool Function(JourneyProgress) until) {
+      var records = <String, ActivityRecord>{};
+      for (var guard = 0; guard < curriculum.stages.length; guard++) {
+        final p = engine.evaluate(profile, records);
+        if (until(p)) return records;
+        records = finishAll(p.current.stage.required.where((a) => !p.statusOf(a.id).isDone), into: records);
+      }
+      fail('never reached');
+    }
+
+    test('a new age-4 child gets the age-4 journey, and its content is open', () {
+      expect(stagesForAge(4), ['stage.explorer.counting-orchard', 'stage.explorer.story-bridge', 'stage.explorer.echo-valley']);
+      final p = engine.evaluate(child(4), const {});
+      expect(p.current.stage.id, 'stage.explorer.counting-orchard');
+      expect(p.recommended!.stageId, 'stage.explorer.counting-orchard');
+      expect(engine.canStart(p, p.recommended!.id), isTrue);
+    });
+
+    test('age-5 content is not open before the child gets there', () {
+      final p = engine.evaluate(child(4), const {});
+      for (final s in p.stages.where((s) => s.stage.ageRange.first >= 5)) {
+        expect(s.status, StageStatus.locked, reason: s.stage.id);
+        for (final a in s.stage.activities) {
+          expect(engine.canStart(p, a.id), isFalse, reason: a.id);
+        }
+      }
+      for (final language in ['en', 'ar']) {
+        expect(engine.explore(p, language: language).where((a) => curriculum.stages.firstWhere((s) => s.id == a.stageId).ageRange.first >= 5), isEmpty);
+      }
+    });
+
+    test('finishing the age-4 adventures opens the next age group, and the child is still 4', () {
+      final profile = child(4);
+      final records = progressUntil(profile, (p) => !p.current.stage.startsAtAge(4));
+      final p = engine.evaluate(profile, records);
+      expect(p.current.stage.id, 'stage.explorer.lily-pond');
+      expect(p.current.status, StageStatus.current);
+      for (final id in stagesForAge(4)) {
+        expect(p.stages.firstWhere((s) => s.stage.id == id).status, StageStatus.completed, reason: id);
+      }
+      // The curriculum put them here: the adventure's activities are theirs.
+      expect(p.recommended!.stageId, 'stage.explorer.lily-pond');
+      expect(engine.canStart(p, p.recommended!.id), isTrue);
+      // Progress is not age.
+      expect(p.profile.age, 4);
+      expect(profile.age, 4);
+      expect(p.entryIndex, engine.entryIndexFor(4));
+    });
+
+    test('a grown-up changes the age from 4 to 6: the age-6 curriculum, with every record kept', () {
+      final records = progressUntil(child(4), (p) => p.currentIndex > p.entryIndex + 1);
+      final snapshot = Map.of(records);
+      final at6 = engine.evaluate(child(6), records);
+      expect(at6.current.stage.id, stagesForAge(6).first);
+      expect(at6.recommended!.stageId, at6.current.stage.id);
+      for (final r in records.values.where((r) => r.completed)) {
+        expect(at6.statusOf(r.activityId).isDone, isTrue, reason: r.activityId);
+      }
+      expect(at6.current.requiredDone, 0, reason: 'nothing new is marked done');
+      expect(at6.firstVisibleIndex, lessThan(at6.entryIndex), reason: 'the age-4 history is still on the map');
+      expect(records, snapshot);
+    });
+
+    test('Explore more only offers open activities made for the age of the child, in their language', () {
+      for (final age in [2, 3, 4, 5, 6, 7, 8]) {
+        for (final records in [<String, ActivityRecord>{}, progressUntil(child(age), (p) => p.currentIndex > p.entryIndex || p.finished)]) {
+          // Also after the age changed: history from other ages must not leak in.
+          for (final shown in [age, if (age > 2) age - 2, if (age < 7) age + 2]) {
+            final p = engine.evaluate(child(shown), records);
+            for (final language in ['en', 'ar']) {
+              final offered = engine.explore(p, language: language);
+              expect(offered.length, lessThanOrEqualTo(4));
+              for (final a in offered) {
+                final why = 'age $shown, $language, ${a.id}';
+                expect(a.suitsAge(shown), isTrue, reason: why);
+                expect(a.supportsLanguage(language), isTrue, reason: why);
+                expect(engine.canStart(p, a.id), isTrue, reason: why);
+                expect(p.statusOf(a.id), isNot(ActivityStatus.locked), reason: why);
+                expect(curriculum.stages.firstWhere((s) => s.id == a.stageId).index, lessThanOrEqualTo(p.currentIndex), reason: why);
+                expect(a.id, isNot(p.recommended?.id), reason: why);
+              }
+            }
+          }
+        }
+      }
+    });
+
+    test('a game with its own dedicated screen gets no exemption from the age rule', () {
+      // Bear's Apples (ages 3-5) has a dedicated screen. A 7-year-old never
+      // reaches it off their path, even with it finished long ago.
+      final bear = curriculum.activities.where((a) => a.gameFor('en') == 'game.math.bear-apples').toList();
+      expect(bear, isNotEmpty);
+      final records = finishAll(bear);
+      final p = engine.evaluate(child(7), records);
+      for (final a in bear) {
+        expect(engine.canStart(p, a.id), isFalse, reason: a.id);
+        expect(p.statusOf(a.id).isDone, isTrue, reason: 'history stays visible');
+      }
+      expect(engine.explore(p, language: 'en').where((a) => a.gameFor('en') == 'game.math.bear-apples'), isEmpty);
+      // Never finished: shown locked, not open.
+      final fresh = engine.evaluate(child(7), const {});
+      for (final a in bear) {
+        expect(fresh.statusOf(a.id), ActivityStatus.locked, reason: a.id);
+      }
+    });
+
+    test('prerequisites cannot be bypassed through Explore more', () {
+      final p = engine.evaluate(child(4), const {});
+      final gated = p.current.stage.activities.where((a) => a.prerequisites.isNotEmpty).toList();
+      expect(gated, isNotEmpty);
+      final offered = engine.explore(p, language: 'en', limit: 50).map((a) => a.id);
+      for (final a in gated) {
+        expect(offered, isNot(contains(a.id)));
+      }
+    });
+
+    test('every stage names a real place, which is what dresses it', () {
+      final places = {'numbers', 'language', 'sounds', 'feelings', 'memory', 'discovery', 'movement'};
+      for (final s in curriculum.stages) {
+        expect(places, contains(s.place), reason: s.id);
+      }
+    });
+  });
 }

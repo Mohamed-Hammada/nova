@@ -67,3 +67,11 @@ void setChildAge(WidgetRef ref, int age) {
   ref.read(childAgeProvider.notifier).state = age;
   ref.read(ageBandProvider.notifier).state = bandForAge(age);
 }
+
+/// "Explore more": the few other activities the curriculum engine offers
+/// the child right now (never the catalog; see CurriculumEngine.explore).
+final exploreActivitiesProvider = Provider<List<Activity>>((ref) {
+  final progress = ref.watch(journeyProgressProvider);
+  if (progress == null) return const [];
+  return ref.watch(curriculumEngineProvider).explore(progress, language: ref.watch(languageProvider));
+});

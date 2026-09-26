@@ -20,31 +20,36 @@ import 'package:nova_app/ui/settings/profile_screen.dart';
 import 'package:nova_app/ui/shell/language_menu.dart';
 import 'package:nova_app/ui/widgets/props.dart';
 import 'package:nova_app/ui/world/activity_world.dart';
-import 'package:nova_app/ui/world/category_screen.dart';
+import 'package:nova_app/ui/world/activity_station.dart';
 import 'package:nova_app/ui/world/open_activity.dart';
 import 'package:nova_app/ui/world/world_providers.dart';
 
-/// Home: the child's own corner of the Nova world.
+/// Home: the child's own corner of the Nova world, built around their
+/// journey.
 ///
 /// Read top to bottom it answers, in order: who is my friend (the companion
 /// greeting the child by name), what should I do next (one big "continue"
-/// action), where can I go (the places, each a floating island), and what
-/// have I done (stars and badges). Only the next step is loud; everything
-/// else waits a scroll away.
+/// action on the adventure the child is on), where am I on my journey (done,
+/// here, ahead), a few other things Nova offers right now, and what have I
+/// done (stars and badges). The child never picks a developmental area: the
+/// curriculum engine decides what comes next and what else is open, and
+/// Home only shows its answer.
 class HomeScreen extends ConsumerWidget {
   const HomeScreen({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = context.l10n;
-    final places = ref.watch(placesProvider);
     final journey = ref.watch(journeyProgressProvider);
+    final explore = ref.watch(exploreActivitiesProvider);
+    // Without a curriculum (an older bundle) there is still one next game.
+    final empty = journey == null && ref.watch(offeredGamesProvider).isEmpty;
     return Scaffold(
       body: StoryScene(
         theme: SceneTheme.meadow,
         horizon: 0.5,
         child: SafeArea(
-          child: places.isEmpty
+          child: empty
               ? NovaEmptyView(title: l10n.emptyGamesTitle, body: l10n.emptyGamesBody, icon: Icons.extension_rounded)
               : LayoutBuilder(
                   builder: (context, box) {
@@ -61,12 +66,12 @@ class HomeScreen extends ConsumerWidget {
                             const SizedBox(height: NovaSpace.md),
                             _Hero(wide: wide),
                             if (journey != null) ...[const SizedBox(height: NovaSpace.xl), _SectionTitle(l10n.myJourney), const SizedBox(height: NovaSpace.sm), _JourneyStrip(progress: journey)],
-                            const SizedBox(height: NovaSpace.xl),
-                            _SectionTitle(journey != null ? l10n.exploreMore : l10n.placesToExplore),
-                            const SizedBox(height: NovaSpace.sm),
-                            LayoutBuilder(
-                              builder: (context, inner) => _Places(places: places, width: inner.maxWidth),
-                            ),
+                            if (journey != null && explore.isNotEmpty) ...[
+                              const SizedBox(height: NovaSpace.xl),
+                              _SectionTitle(l10n.exploreMore),
+                              const SizedBox(height: NovaSpace.sm),
+                              _Explore(progress: journey, activities: explore),
+                            ],
                             const SizedBox(height: NovaSpace.xl),
                             _SectionTitle(l10n.myTreasures),
                             const SizedBox(height: NovaSpace.sm),
@@ -335,10 +340,11 @@ class _NextAdventure extends ConsumerWidget {
     final useJourney = game != null;
     game ??= fallback.isEmpty ? null : fallback.first;
     if (game == null) return const SizedBox.shrink();
-    final category = ActivityCategory.of(game);
+    final stage = useJourney ? progress!.current : null;
+    // The adventure's place dresses the card; outside a journey, the game's.
+    final category = stage != null ? ActivityCategory.fromPlace(stage.stage.place) : ActivityCategory.of(game);
     final gameName = contentText(content, game.nameKey, lang);
     final started = (ref.watch(activityRecordsProvider).value ?? const {}).isNotEmpty;
-    final stage = progress?.current;
 
     Future<void> play() async {
       onPlay();
@@ -367,9 +373,13 @@ class _NextAdventure extends ConsumerWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(started ? l10n.continueJourney : l10n.startJourney, style: NovaType.title(context)),
+                    if (stage != null) ...[
+                      Text(l10n.currentAdventure, style: NovaType.label(context, color: category.deep)),
+                      Text(contentText(content, stage.stage.nameKey, lang), key: const ValueKey('home.stage'), style: NovaType.title(context), maxLines: 2, overflow: TextOverflow.ellipsis),
+                    ] else
+                      Text(started ? l10n.continueJourney : l10n.startJourney, style: NovaType.title(context)),
                     const SizedBox(height: 2),
-                    Text(gameName, style: NovaType.body(context), maxLines: 2, overflow: TextOverflow.ellipsis),
+                    Text(gameName, key: const ValueKey('home.next'), style: NovaType.body(context), maxLines: 2, overflow: TextOverflow.ellipsis),
                     const SizedBox(height: 6),
                     if (stage != null)
                       SizedBox(
@@ -529,6 +539,7 @@ class _StripStop extends ConsumerWidget {
       StageStatus.earlier => l10n.statusEarlier,
     };
     return Semantics(
+      key: ValueKey('home.stage.${progress.stage.id}'),
       button: !locked,
       label: '$name. $status',
       excludeSemantics: true,
@@ -600,88 +611,47 @@ class _StripStop extends ConsumerWidget {
 }
 
 // ---------------------------------------------------------------------------
-// Places
+// Explore more
 // ---------------------------------------------------------------------------
 
-class _Places extends ConsumerWidget {
-  const _Places({required this.places, required this.width});
-  final Map<ActivityCategory, List<Game>> places;
-  final double width;
+/// A few other activities Nova offers right now, small beside the journey:
+/// extra work in the current adventure and favourites to replay. They come
+/// from the curriculum engine (never the whole catalog), so each is open,
+/// made for the child's age and played as part of the journey.
+class _Explore extends ConsumerWidget {
+  const _Explore({required this.progress, required this.activities});
+  final JourneyProgress progress;
+  final List<Activity> activities;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final columns = (width / 170).floor().clamp(2, 4);
-    const gap = NovaSpace.md;
-    final w = (width - gap * (columns - 1)) / columns;
-    var i = 0;
-    return Wrap(
-      spacing: gap,
-      runSpacing: gap,
-      children: [
-        for (final MapEntry(key: category, value: games) in places.entries) _Place(key: ValueKey('place.${category.name}'), category: category, count: games.length, width: w, phase: (i++) * 0.17),
-      ],
-    );
-  }
-}
-
-/// One place: its landmark on a floating island, its name and how many
-/// activities wait there.
-class _Place extends ConsumerWidget {
-  const _Place({super.key, required this.category, required this.count, required this.width, required this.phase});
-  final ActivityCategory category;
-  final int count;
-  final double width;
-  final double phase;
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final l10n = context.l10n;
+    final content = ref.watch(contentRuntimeProvider);
     final lang = ref.watch(languageProvider);
-    final name = category.title(l10n);
-    final islandWidth = width * 0.78;
-    return Semantics(
-      button: true,
-      label: '$name. ${l10n.activitiesCount(numeral(count, lang))}',
-      excludeSemantics: true,
-      child: GestureDetector(
-        onTap: () => Navigator.of(context).push(MaterialPageRoute<void>(builder: (_) => CategoryScreen(category: category))),
-        child: Container(
-          width: width,
-          padding: const EdgeInsets.fromLTRB(NovaSpace.xs, NovaSpace.sm, NovaSpace.xs, NovaSpace.sm),
-          decoration: BoxDecoration(color: NovaStory.cloud.withValues(alpha: 0.35), borderRadius: BorderRadius.circular(NovaRadius.xl)),
-          child: Column(
+    final stages = {for (final s in progress.stages) s.stage.id: s.stage};
+    return NovaPanel(
+      padding: const EdgeInsets.all(NovaSpace.md),
+      child: LayoutBuilder(
+        builder: (context, box) {
+          const gap = NovaSpace.md;
+          final columns = (box.maxWidth / 170).floor().clamp(2, 4);
+          final w = (box.maxWidth - gap * (columns - 1)) / columns;
+          return Wrap(
+            spacing: gap,
+            runSpacing: gap,
             children: [
-              NovaFloat(
-                phase: phase,
-                amplitude: 4,
-                child: FloatingIsland(
-                  width: islandWidth,
-                  grass: category.scene.ground,
-                  childHeight: islandWidth * 0.78,
-                  child: Center(
-                    child: CategoryLandmark(category: category, size: islandWidth * 0.72),
+              for (var i = 0; i < activities.length; i++)
+                if (content.hasGame(activities[i].gameFor(lang)))
+                  ActivityStation(
+                    key: ValueKey('explore.${activities[i].id}'),
+                    game: content.game(activities[i].gameFor(lang)),
+                    category: ActivityCategory.fromPlace(stages[activities[i].stageId]?.place ?? 'numbers'),
+                    width: w,
+                    phase: i * 0.21,
+                    onTap: () => playJourneyActivity(context, ref, activities[i]),
                   ),
-                ),
-              ),
-              const SizedBox(height: NovaSpace.xs),
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
-                decoration: BoxDecoration(color: category.color, borderRadius: BorderRadius.circular(NovaRadius.pill), boxShadow: NovaShadow.contact),
-                child: Text(
-                  name,
-                  style: NovaType.label(context, color: Colors.white),
-                  textAlign: TextAlign.center,
-                  maxLines: 2,
-                ),
-              ),
-              const SizedBox(height: 4),
-              Text(
-                l10n.activitiesCount(numeral(count, lang)),
-                style: NovaType.of(context, 13, weight: FontWeight.w700, color: NovaStory.ink),
-              ),
             ],
-          ),
-        ),
+          );
+        },
       ),
     );
   }

@@ -523,7 +523,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String companionHello(String name) {
-    return 'I\'m $name. Where shall we go today?';
+    return 'I\'m $name. Let\'s keep going!';
   }
 
   @override
@@ -696,6 +696,20 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get newAdventure => 'A new adventure is waiting!';
+
+  @override
+  String get currentAdventure => 'Current adventure';
+
+  @override
+  String stageCompleteNamed(String stage) {
+    return 'Well done! You finished $stage!';
+  }
+
+  @override
+  String get biggerAdventure => 'A bigger adventure begins!';
+
+  @override
+  String get exploreMoreHint => 'More to play on your journey';
 
   @override
   String get journeyAllDone =>
@@ -874,6 +888,19 @@ class AppLocalizationsEn extends AppLocalizations {
   String choiceLabel(String n) {
     return 'Choice $n';
   }
+
+  @override
+  String cardLabel(String n) {
+    return 'Card $n';
+  }
+
+  @override
+  String cardFaceLabel(String n, String picture) {
+    return 'Card $n: $picture';
+  }
+
+  @override
+  String get drumLabel => 'Drum';
 
   @override
   String get choiceTried => 'Already tried';
