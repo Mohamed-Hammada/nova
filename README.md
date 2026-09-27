@@ -53,6 +53,8 @@ clear error when a prerequisite is missing:
 | Build the web app into `app/build/web` | `scripts\build_web.bat` | `./scripts/build_web.sh` |
 | Build, serve and smoke-test the web app | `scripts\web_smoke_test.bat` | `./scripts/web_smoke_test.sh` |
 | Build a debug APK | `scripts\build_apk_debug.bat` | `./scripts/build_apk_debug.sh` |
+| Build a release APK | `scripts\build_apk_release.bat` | `./scripts/build_apk_release.sh` |
+| One-click APK generator (root) | `build_apk.bat` | - |
 
 Prerequisites: Flutter (3.41+) on `PATH`, and the validator's Python virtualenv at
 `tools/validate/.venv` (see "Run the validator"); the smoke test also needs Node.js 22+ and Google
