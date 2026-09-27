@@ -122,3 +122,114 @@
     nothing in it addresses digital delivery - the paths it describes are for adults working with
     children, with objects. It therefore supports the ordering of Nova's two counting skills; it
     supports no claim that a tablet game teaches them.
+# Added 2026-09-27 (research rule): the sources behind Make Ten and Number Path. Each was checked
+# against its publisher record and abstract (Crossref / OpenAlex).
+- id: ev.math.murata-2004
+  title: 'Paths to learning ten-structured understandings of teen sums: addition solution methods of Japanese Grade 1 students'
+  citation: Murata, A. (2004). Cognition and Instruction, 22(2), 185-218. doi:10.1207/s1532690xci2202_2
+  url: https://doi.org/10.1207/s1532690xci2202_2
+  verified: true
+  research_origin: [JP]
+  evidence_type: program_evidence
+  evidence_strength: emerging
+  population: Japanese Grade 1 students (about 6-7 years) followed over one school year in a classroom
+  delivery: teacher_led
+  language: ja
+  finding: >-
+    Children moved through the levels of quantity conception described in US and European research,
+    by varied individual paths, and "gradually came to use the culturally valued break-apart-to-make-ten
+    method", with counting and visual grouping supporting the process; the classroom instruction that
+    supported this conceptual structure is described.
+  limits: >-
+    A descriptive classroom study of one Japanese first grade, not a controlled trial. Nova takes from it
+    the Japanese sequence -- the parts of ten first (いくつといくつ), then teen sums by making ten -- not an
+    effect size.
+- id: ev.math.kullberg-2020
+  title: Effects of learning addition and subtraction in preschool by making the first ten numbers and their relations visible with finger patterns
+  citation: Kullberg, A., Björklund, C., Brkovic, I., & Runesson Kempe, U. (2020). Educational Studies in Mathematics, 103(2), 157-172. doi:10.1007/s10649-019-09927-1
+  url: https://doi.org/10.1007/s10649-019-09927-1
+  verified: true
+  research_origin: [SE]
+  evidence_type: quasi_experimental
+  evidence_strength: moderate
+  population: 103 five-year-olds in Swedish preschools (intervention 65, control 38)
+  delivery: teacher_led
+  language: sv
+  finding: >-
+    An 8-month programme making the part-part-whole relations of the numbers to ten visible (with
+    finger patterns) raised arithmetic outcomes significantly above the control group, the difference
+    remained a year later, and children "learned to recognize and use part-part-whole relations in novel
+    arithmetic tasks".
+  limits: Teacher-led programme with finger patterns, not an app; groups were not randomised.
+- id: ev.math.siegler-ramani-2008
+  title: "Playing linear numerical board games promotes low-income children's numerical development"
+  citation: Siegler, R. S., & Ramani, G. B. (2008). Developmental Science, 11(5), 655-661. doi:10.1111/j.1467-7687.2008.00714.x
+  url: https://doi.org/10.1111/j.1467-7687.2008.00714.x
+  verified: true
+  research_origin: [US]
+  evidence_type: rct
+  evidence_strength: moderate
+  population: preschoolers from low-income and middle-income families, USA
+  delivery: mixed
+  language: en
+  finding: >-
+    Playing a simple linear numerical board game for four 15-minute sessions eliminated the gap in
+    numerical estimation between low-income and more affluent preschoolers; the same game with colours
+    instead of numbers had no such effect.
+  limits: Small samples and short sessions with an adult; a physical board game, not an app.
+- id: ev.math.ramani-siegler-2008
+  title: "Promoting broad and stable improvements in low-income children's numerical knowledge through playing number board games"
+  citation: Ramani, G. B., & Siegler, R. S. (2008). Child Development, 79(2), 375-394. doi:10.1111/j.1467-8624.2007.01131.x
+  url: https://doi.org/10.1111/j.1467-8624.2007.01131.x
+  verified: true
+  research_origin: [US]
+  evidence_type: rct
+  evidence_strength: moderate
+  population: low-income preschoolers (mean age 5.4 years), USA
+  delivery: mixed
+  language: en
+  finding: >-
+    About an hour of playing a linear number board game improved magnitude comparison, number line
+    estimation, counting and numeral identification, with gains still present 9 weeks later; an
+    identical game with coloured squares did not. Home experience with number board games correlated
+    with numerical knowledge.
+  limits: A physical game played with an adult who had the child say each number while moving; Nova's
+    screen version keeps the linear path and the counting aloud but has not itself been tested.
+- id: ev.math.urakami-sugimura-2017
+  title: 'Is numerical estimation in young children based on numerical representations? (幼児における数の位置の見積りは数量表象に基づいているのか？)'
+  citation: Urakami, M., & Sugimura, S. (2017). Journal of Science Education in Japan (科学教育研究), 41(3), 295-302.
+  url: https://www.jstage.jst.go.jp/article/jssej/41/3/41_295/_article/-char/ja/
+  verified: true
+  research_origin: [JP]
+  evidence_type: developmental_framework
+  evidence_strength: emerging
+  population: 59 children in a private day nursery in Hiroshima (19 aged about 5;5, 40 aged about 6;3)
+  delivery: not_applicable
+  language: ja
+  finding: >-
+    On a 0-20 number-to-position task, preschoolers' estimates reflected a mental representation of a
+    specific unit -- a developing mental number line -- even when they counted along the line with a
+    finger; the representation shaped where they placed numbers.
+  limits: >-
+    A small experimental study of how preschoolers place numbers on a line, not of a game that teaches
+    it. Nova cites it for why a linear, numbered path suits this age, alongside the board-game trials.
+- id: ev.math.murata-2008
+  title: 'Mathematics teaching and learning as a mediating process: the case of tape diagrams'
+  citation: Murata, A. (2008). Mathematical Thinking and Learning, 10(4), 374-406. doi:10.1080/10986060802291642
+  url: https://doi.org/10.1080/10986060802291642
+  verified: true
+  research_origin: [JP]
+  evidence_type: program_evidence
+  evidence_strength: emerging
+  population: Japanese elementary mathematics classrooms and curriculum (grades 1-6)
+  delivery: teacher_led
+  language: ja
+  finding: >-
+    The tape diagram (テープ図) is "a central visual representation used in Japanese mathematics
+    curriculum"; used consistently and coherently over the grades, one representation "can bridge
+    student understanding over time, focusing on mathematical relationships and problem-solving
+    processes" -- from adding and taking away in story problems onward.
+  limits: >-
+    An analysis of curriculum and classroom practice, not a controlled trial. Nova takes the
+    representation (parts and whole drawn as lengths of one tape) for its story problems, not an
+    effect size.

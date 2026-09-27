@@ -4,6 +4,10 @@
 abstract class SpeechPort {
   Future<void> speak(String text, {required String language});
   Future<void> stop();
+
+  /// Whether this device has a voice for [language] (so a grown-up can be
+  /// told when one is missing). Ports that cannot tell say yes.
+  Future<bool> canSpeak(String language) async => true;
 }
 
 /// Says nothing; used when spoken prompts are turned off.
@@ -13,4 +17,6 @@ class SilentSpeechPort implements SpeechPort {
   Future<void> speak(String text, {required String language}) async {}
   @override
   Future<void> stop() async {}
+  @override
+  Future<bool> canSpeak(String language) async => true;
 }

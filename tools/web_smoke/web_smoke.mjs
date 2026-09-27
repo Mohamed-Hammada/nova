@@ -12,7 +12,13 @@
 //      current adventure and never offers a choice of area; playing what
 //      the journey recommends finishes a stage, which is celebrated and
 //      unlocks the next; the child's age stays 4 throughout; and a grown-up
-//      changing the age to 6 moves the journey there with history kept.
+//      changing the age to 6 moves the journey there with history kept;
+//   6. Settings is one tap from Home: music and sound effects switch off
+//      (and nothing is loaded while they are off), stay off across a
+//      reload, switch back on (the background loads the place's music);
+//      the settings, the journey and the skill evidence all survive a
+//      reload; and the stage is finished through several different game
+//      mechanics.
 //
 // Usage: node tools/web_smoke/web_smoke.mjs [--port 8787] [--chrome <path>]
 // Normally run through scripts/web_smoke_test.(sh|bat), which builds and
@@ -51,6 +57,9 @@ const CATEGORY_NAMES = ['Number Meadow', 'Story Woods', 'Sound Valley', 'Heart G
 // reload and the restart exactly as it would for a real user.
 const profile = mkdtempSync(join(tmpdir(), 'nova-web-smoke-'));
 const foreignRequests = new Set();
+// Every audio file the page asked for, in order (background loops and
+// sound effects), to check the audio settings really take effect.
+const audioRequests = [];
 const consoleLines = [];
 let chrome;
 
@@ -100,6 +109,7 @@ function connect(url) {
     } else if (msg.method === 'Network.requestWillBeSent') {
       const u = msg.params.request.url;
       if (/^(https?|wss?):/.test(u) && !u.startsWith(appOrigin)) foreignRequests.add(u);
+      if (/\/assets\/(sfx|audio\/music|audio\/ambience)\//.test(u)) audioRequests.push(u.replace(/^.*\/assets\//, 'assets/'));
     }
   });
   const send = (method, params = {}) => new Promise((resolve, reject) => {
@@ -303,7 +313,9 @@ async function playRecommended(cdp) {
     await click(cdp, 'Home');
     return 'apples';
   }
-  let kind = 'choice';
+  // The kind of game, from the first round this test recognises.
+  let kind = null;
+  const title = first.match(/Level \d+ · ([^|]+)/)?.[1]?.trim();
   for (let rounds = 0; ; rounds++) {
     const text = await waitFor(cdp, (t) => /Round \d+ of \d+/.test(t) || t.includes('Level complete!'), 'a round');
     if (text.includes('Level complete!')) break;
@@ -311,19 +323,53 @@ async function playRecommended(cdp) {
     const round = text.match(/Round (\d+) of/)[1];
     const now = await labels(cdp);
     if (now.includes('Drum')) {
-      kind = 'clap';
+      kind ??= 'clap';
       await playClapRound(cdp);
     } else if (now.some((l) => /^Card \d+/.test(l))) {
-      kind = 'pairs';
+      kind ??= 'pairs';
       await playPairsRound(cdp, round);
-    } else if (now.includes('Choice 1')) {
+    } else if (now.some((l) => /^Choice \d+$/.test(l))) {
+      kind ??= 'choice';
       await playChoiceRound(cdp, round);
     } else {
-      fail(`an activity this test cannot play; screen shows: ${text.slice(0, 300)}`);
+      // Between rounds, or rounds that play by themselves when left alone
+      // (a go/no-go stream: holding back is an answer). Anything else never
+      // ends, and fails.
+      await sleep(1500);
+      if (rounds > 10) fail(`an activity this test cannot play; screen shows: ${text.slice(0, 300)}`);
     }
   }
   await click(cdp, 'Map');
-  return kind;
+  kind ??= 'stream';
+  return title ? `${kind}: ${title.replace(/ (Say it again|Round \d).*$/, '')}` : kind;
+}
+
+// The on/off state of the settings switch whose label starts with [label].
+async function switchState(cdp, label) {
+  return waitForValue(cdp, `(() => {
+    const n = [...document.querySelectorAll('flt-semantics')].find((e) => {
+      const name = (e.getAttribute('aria-label') ?? e.textContent ?? '').trim();
+      return name.startsWith(${JSON.stringify(label)}) && (e.hasAttribute('aria-checked') || e.querySelector('[aria-checked]'));
+    });
+    if (!n) return null;
+    const holder = n.hasAttribute('aria-checked') ? n : n.querySelector('[aria-checked]');
+    return holder.getAttribute('aria-checked');
+  })()`, `the "${label}" switch`);
+}
+
+async function openSettings(cdp) {
+  await click(cdp, 'Settings');
+  await waitFor(cdp, (t) => t.includes('Music') && t.includes('Sound effects') && t.includes('Voice and narration'), 'the settings screen');
+}
+
+// Sets the switch [label] on or off (tapping its row) and checks it took.
+async function setSwitch(cdp, label, on) {
+  if ((await switchState(cdp, label)) !== String(on)) await click(cdp, label, { prefix: true, scroll: true });
+  const end = Date.now() + 5000;
+  while ((await switchState(cdp, label)) !== String(on)) {
+    if (Date.now() > end) fail(`"${label}" did not switch ${on ? 'on' : 'off'}`);
+    await sleep(150);
+  }
 }
 
 async function readProgress(cdp) {
@@ -347,10 +393,36 @@ try {
   }
   step('Home: Counting Orchard is the current adventure, Bear\'s Apples is next, no category grid');
 
-  step('play a full session (the journey\'s first activity)');
+  // Home plays its own music (it loads as soon as the page does).
+  for (let i = 0; i < 60 && !audioRequests.includes('assets/audio/music/home.mp3'); i++) await sleep(150);
+  if (!audioRequests.includes('assets/audio/music/home.mp3')) fail(`Home's music never loaded; audio requested: ${audioRequests.join(', ') || 'none'}`);
+  step('Home plays its own music (assets/audio/music/home.mp3)');
+
+  // Settings, straight from Home: music and sound effects off.
+  await openSettings(cdp);
+  step('Settings opens straight from Home (the gear)');
+  await setSwitch(cdp, 'Music', false);
+  await setSwitch(cdp, 'Sound effects', false);
+  step('music and sound effects switched off');
+  await click(cdp, 'Done', { scroll: true });
+  await waitFor(cdp, (t) => t.includes('For grown-ups') && t.includes('My journey'), 'home after settings');
+
+  step('reload: the switches stay off');
+  await openApp(cdp);
+  await openSettings(cdp);
+  if ((await switchState(cdp, 'Music')) !== 'false' || (await switchState(cdp, 'Sound effects')) !== 'false') fail('music / sound effects did not stay off after a reload');
+  await click(cdp, 'Done', { scroll: true });
+  await waitFor(cdp, (t) => t.includes('My journey'), 'home');
+  step('after a reload, music and sound effects are still off');
+
+  const quietFrom = audioRequests.length;
+  step('play a full session (the journey\'s first activity) with sound off');
   await click(cdp, "Let's go!");
   const trials = await playBearApples(cdp);
   step(`completed ${trials} trials, all correct`);
+  const whileQuiet = audioRequests.slice(quietFrom);
+  if (whileQuiet.length) fail(`audio loaded while music and sound effects were off: ${whileQuiet.join(', ')}`);
+  step('nothing audible was even loaded while sound was off');
 
   await click(cdp, 'For grown-ups');
   await waitFor(cdp, (t) => /Step \d of 4/.test(t), 'progress after the session');
@@ -380,6 +452,15 @@ try {
   await click(cdp, 'Back');
   await waitFor(cdp, (t) => t.includes('For grown-ups'), 'home');
 
+  // Sound back on for the rest of the journey.
+  await openSettings(cdp);
+  await setSwitch(cdp, 'Music', true);
+  await setSwitch(cdp, 'Sound effects', true);
+  await setSwitch(cdp, 'Reduced motion', true);
+  await click(cdp, 'Done', { scroll: true });
+  await waitFor(cdp, (t) => t.includes('My journey'), 'home');
+  step('music and sound effects back on (and reduced motion on)');
+
   // Home is the journey: the adventure the child is on and what comes next,
   // never a choice of area to practise.
   const home = await waitFor(cdp, (t) => t.includes('Current adventure') && t.includes('Counting Orchard') && t.includes('1 of 6 done'), 'Home: the current adventure, 1 of 6 done');
@@ -405,6 +486,12 @@ try {
     step(`played the recommended activity (${played.at(-1)}); ${done ?? '?'} of 6 done`);
   }
   step(`finished Counting Orchard after ${played.length} activities: ${played.join(', ')}`);
+  const mechanics = new Set(played.map((p) => p.split(':')[0]));
+  if (mechanics.size < 3) fail(`the journey should vary the kind of game; played only: ${played.join(', ')}`);
+  step(`the journey varied the game: ${[...mechanics].join(', ')}`);
+  if (!audioRequests.includes('assets/audio/music/numbers.mp3')) fail(`the orchard's music never loaded with music on; audio requested: ${audioRequests.join(', ')}`);
+  if (!audioRequests.some((u) => u.startsWith('assets/sfx/'))) fail('no sound effect loaded with sound effects on');
+  step('with sound on, the orchard\'s own music and the sound effects load');
   await waitFor(cdp, (t) => t.includes('A new adventure is waiting!') && t.includes('Story Bridge'), 'the next adventure unlocking');
   step('stage celebration: a new adventure is waiting, Story Bridge');
   await click(cdp, "Let's go!");
@@ -414,13 +501,28 @@ try {
   step('Home and the map moved on to Story Bridge; Counting Orchard is done');
   await click(cdp, 'Home');
 
-  await click(cdp, 'For grown-ups');
+  step('reload: settings, journey and skill evidence are all still there');
+  await openApp(cdp);
+  await waitFor(cdp, (t) => t.includes('Current adventure') && t.includes('Story Bridge'), 'Home still on Story Bridge after a reload');
+  await openSettings(cdp);
+  for (const [label, on] of [['Music', true], ['Sound effects', true], ['Reduced motion', true]]) {
+    if ((await switchState(cdp, label)) !== String(on)) fail(`"${label}" did not stay ${on ? 'on' : 'off'} after a reload`);
+  }
+  await click(cdp, 'Done', { scroll: true });
+  await readProgress(cdp);
+  const evidence = await waitFor(cdp, (t) => /\d+ sessions · \d+ rounds/.test(t), 'the skill evidence (practice history) after a reload');
+  if (!evidence.includes('Secure')) fail('the Secure skill was lost after a reload');
+  step(`after a reload: settings kept, Story Bridge still current, skill evidence kept (${evidence.match(/\d+ sessions · \d+ rounds · \d+ settings/)?.[0]})`);
+  await click(cdp, 'Back');
+  await waitFor(cdp, (t) => t.includes('Current adventure'), 'home');
+
+  await openSettings(cdp);
   await waitFor(cdp, (t) => t.includes('4 years old'), 'the age in settings');
   step('the child is still 4: progress never changes the age');
-  await click(cdp, 'Older', { scroll: true });
-  await click(cdp, 'Older', { scroll: true });
+  await click(cdp, 'Older', { scroll: true, timeoutMs: 20000 });
+  await click(cdp, 'Older', { scroll: true, timeoutMs: 20000 });
   await waitFor(cdp, (t) => t.includes('6 years old'), 'the new age');
-  await click(cdp, 'Back');
+  await click(cdp, 'Done', { scroll: true, timeoutMs: 20000 });
   await waitFor(cdp, (t) => t.includes('Current adventure') && t.includes('Pattern Peaks'), 'Home at the age-6 curriculum');
   await click(cdp, 'Journey map', { scroll: true });
   await waitFor(cdp, (t) => t.includes('Counting Orchard. Done') && t.includes('Pattern Peaks. You are here'), 'history kept after the age change');
@@ -429,7 +531,7 @@ try {
 
   if (foreignRequests.size) fail(`requests left the app's origin:\n  ${[...foreignRequests].join('\n  ')}`);
   step(`no request left ${appOrigin}`);
-  console.log('PASS: web app follows the journey, persists progress locally, and stays on its own origin');
+  console.log('PASS: web app follows the journey, persists progress, skill evidence and settings locally, honours the audio settings, and stays on its own origin');
 } catch (error) {
   if (consoleLines.length) console.error(`browser console:\n  ${consoleLines.slice(-25).join('\n  ')}`);
   if (!process.exitCode) {

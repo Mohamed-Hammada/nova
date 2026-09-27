@@ -198,3 +198,64 @@
     our results"; nothing here is about Arabic-speaking children. Grade level did not moderate the
     relation, but the included studies span to postsecondary, so this is not an estimate specific
     to 3-6 year olds. Nothing in it concerns digital delivery.
+
+# ---------------------------------------------------------------------------
+# Communication and social skills (Japanese research; added 2026-09-27)
+# ---------------------------------------------------------------------------
+# Both entries were checked against the full text on J-STAGE. The first gives the
+# structure (six skills in a 2x3 hierarchy) but was built with Japanese university
+# students; the second is the preschool evidence that the same kinds of skill are
+# distinct and measurable in 4-6 year olds. Neither shows that a game teaches them.
+
+- id: ev.sel.fujimoto-daibo-2007
+  title: "ENDCORE: A hierarchical structure theory of communication skills (コミュニケーション・スキルに関する諸因子の階層構造への統合の試み)"
+  citation: Fujimoto, M., & Daibo, I. (2007). ENDCORE - A hierarchical structure theory of communication skills. The Japanese Journal of Personality (パーソナリティ研究), 15(3), 347-361.
+  url: https://www.jstage.jst.go.jp/article/personality/15/3/15_3_347/_article/-char/en
+  verified: true
+  research_origin: [JP]
+  evidence_type: developmental_framework
+  evidence_strength: emerging
+  population: 233 Japanese university students (154 men, mean age 19.6; 79 women, mean age 19.9), self-report
+  delivery: not_applicable
+  language: ja
+  finding: >-
+    Existing communication and social-skill scales were sorted (KJ method) into six main skills,
+    arranged as three basic skills -- self-control (自己統制), expressivity (表現力) and decoding
+    (解読力) -- under three interpersonal skills -- assertion (自己主張), other-acceptance (他者受容)
+    and relationship regulation (関係調整) -- and grouped into an expressive system (expressivity,
+    assertion), a responsive system (decoding, other-acceptance) and a management system
+    (self-control, relationship regulation). Each main skill has four sub-skills (e.g. expressivity:
+    verbal, gestural and facial expression and conveying emotion; relationship regulation: valuing
+    and maintaining relationships and handling opinion and emotional conflicts). A structural model
+    of this hierarchy fitted the data (GFI .980, CFI .981, RMSEA .090); the basic skills related to
+    both basic and interpersonal measures, the interpersonal skills only to interpersonal ones.
+  limits: >-
+    A self-report scale (24 items, 7-point "good at / poor at") for adults; self-control had modest
+    reliability (alpha .68). Nova uses the model only as an organising framework for ages 2-8, with
+    child-appropriate versions of each skill; it is not a validated measure for young children and
+    Nova does not administer it.
+
+- id: ev.sel.takahashi-2008
+  title: "Social skills of preschoolers: stability of factor structures and predictive validity from a nationwide cohort study in Japan (就学前児の社会的スキル)"
+  citation: Takahashi, Y., Okada, K., Hoshino, T., & Anme, T. (2008). Social skills of preschoolers - Stability of factor structures and predictive validity from a nationwide cohort study in Japan. Japanese Journal of Educational Psychology (教育心理学研究), 56(1), 81-92.
+  url: https://www.jstage.jst.go.jp/article/jjep1953/56/1/56_81/_article/-char/ja/
+  verified: true
+  research_origin: [JP]
+  evidence_type: developmental_framework
+  evidence_strength: moderate
+  population: 4-6 year olds in 98 licensed day nurseries in 21 prefectures of Japan (10,981 valid records; 4,140 four-year-olds, 3,993 five-year-olds, 3,122 six-year-olds), rated by their childcare staff, 2000-2006
+  delivery: not_applicable
+  language: ja
+  finding: >-
+    Preschoolers' social skills showed the three-factor structure repeatedly found in Western research:
+    cooperation (協調: helping others, sharing, cooperative and empathic behaviour), self-restraint
+    (自己抑制: handling conflict appropriately, taking turns and yielding while holding back one's own
+    wants) and self-expression (自己表現: introducing oneself, leading a conversation, stating requests
+    clearly). The structure was stable across ages 4, 5 and 6 and across boys and girls, with high
+    internal consistency and test-retest stability; scores related concurrently and predictively to
+    later problem behaviour and autistic traits.
+  limits: >-
+    A caregiver-rated measurement study, not an intervention: it shows these skills are distinct and
+    meaningful in 4-6 year olds, not that practising them in an app improves them. Children attended
+    night-care-affiliated nurseries. Nova's games use it to decide which skills to practise and what
+    behaviour each looks like at this age.

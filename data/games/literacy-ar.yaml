@@ -70,8 +70,8 @@
   objective: Clap once for each part of the word.
   mechanic_id: segment-sounds
   mechanic: A word is spoken with its picture; the child taps the drum once for each syllable.
-  evidence_basis: judgment
-  evidence_refs: [ev.design.literacy-games]
+  evidence_basis: framework
+  evidence_refs: [ev.design.literacy-games, ev.literacy.kakihana-2009]
   difficulty:
     varied: [item_complexity]
     anchors:
@@ -325,4 +325,31 @@
   signals: [accuracy, hints_used, retries, error_type, completion]
   progression: {advance_parameter: param.default.advance-accuracy, retreat_parameter: param.default.retreat-accuracy}
   transfer_probes: []
+  language_dependencies: [ar]
+- id: game.lit.ar.story-time
+  name_key: game.lit.ar.story-time.name
+  age_range: [3, 6]
+  primary_skills: [lit.ar.listening]
+  secondary_skills: []
+  objective: Listen to a picture story and answer questions about it.
+  mechanic_id: story-choice
+  mechanic: 'A short picture story is told page by page; after each page the child answers a question as in dialogic reading: who, what happened, or finish the sentence.'
+  evidence_basis: empirical
+  evidence_refs: [ev.literacy.mol-2008]
+  difficulty:
+    varied: [distractors]
+    anchors:
+      distractors: [two pictures to choose from, three pictures to choose from]
+    rungs:
+    - id: r1
+      values: {item_complexity: 0, distractors: 0, working_memory_load: 0, rule_complexity: 0, abstraction: 0, cognitive_load: 0, independence: 0}
+    - id: r2
+      values: {item_complexity: 0, distractors: 1, working_memory_load: 0, rule_complexity: 0, abstraction: 0, cognitive_load: 0, independence: 0}
+  scaffolding:
+    hints: [The page is read again., The companion points at the part of the picture that answers.]
+    adult_prompt: 'Read a picture book together and ask: who is this? what happened? what will happen next? then add a word to the child''s answer.'
+  signals: [accuracy, hints_used, retries, error_type, completion]
+  progression: {advance_parameter: param.default.advance-accuracy, retreat_parameter: param.default.retreat-accuracy}
+  transfer_probes:
+  - {id: probe.story-retell, type: cross_game, delayed: false, skill: lit.ar.listening, mechanic_id: retell, task_ref: task.lit.ar.retell, changes: From answering questions on screen to retelling a real book aloud., preserved: Following and recalling a story.}
   language_dependencies: [ar]

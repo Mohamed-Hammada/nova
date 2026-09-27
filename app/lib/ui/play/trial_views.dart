@@ -45,6 +45,18 @@ String trialPrompt(Trial t, AppLocalizations l10n, String language, {String host
         'what_next_tower' => l10n.promptWhatNextTower,
         'same_feeling' => l10n.promptSameFeeling,
         'how_feel' => l10n.promptHowFeel(arg('story')),
+        'show_feeling' => l10n.promptShowFeeling(arg('story')),
+        'make_ten' => l10n.promptMakeTen(n(int.parse(arg('shown'))), n(int.parse(arg('total')))),
+        'path_hop' => l10n.promptPathHop(n(int.parse(arg('at'))), n(int.parse(arg('hops')))),
+        'story_q' => '${arg('page')} ${arg('ask')}',
+        'cherry_ten' => l10n.promptCherryTen(n(int.parse(arg('a')))),
+        'cherry_rest' => l10n.promptCherryRest(n(int.parse(arg('b'))), n(int.parse(arg('ten')))),
+        'cherry_sum' => l10n.promptCherrySum(n(int.parse(arg('a'))), n(int.parse(arg('b')))),
+        'tape_story' => arg('story'),
+        'what_say' => l10n.promptWhatSay(arg('story')),
+        'help_friend' => l10n.promptHelpFriend(arg('story')),
+        'calm_way' => l10n.promptCalmWay(arg('story')),
+        'fair_way' => l10n.promptFairWay(arg('story')),
         'listen_find' => l10n.promptListenFind,
         'find_word' => l10n.promptFindWord(arg('word')),
         'rhyme' => l10n.promptRhyme(arg('word')),
@@ -256,7 +268,7 @@ class _DragCountTrialViewState extends State<DragCountTrialView> with _Pacing {
     _submitted = true;
     final targets = _placed.where((i) => _pile[i] == widget.trial.item).length;
     final distractors = _placed.length - targets;
-    widget.ctx.onResponse(widget.trial.isCorrect(targets, distractors));
+    widget.ctx.respond(widget.trial.isCorrect(targets, distractors), errors: widget.trial.errorsFor(targets, distractors));
     after(const Duration(milliseconds: 1100), widget.ctx.onDone);
   }
 
@@ -267,7 +279,10 @@ class _DragCountTrialViewState extends State<DragCountTrialView> with _Pacing {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         DragTarget<int>(
-          onAcceptWithDetails: (d) => setState(() => _placed.add(d.data)),
+          onAcceptWithDetails: (d) {
+            widget.ctx.onHandle?.call(true);
+            setState(() => _placed.add(d.data));
+          },
           builder: (context, candidate, _) => Transform.scale(
             scale: candidate.isNotEmpty ? 1.06 : 1,
             child: Plate3D(
@@ -291,6 +306,7 @@ class _DragCountTrialViewState extends State<DragCountTrialView> with _Pacing {
               else
                 Draggable<int>(
                   data: i,
+                  onDragStarted: () => widget.ctx.onHandle?.call(false),
                   feedback: Transform.rotate(angle: -0.1, child: PicArt(_pile[i], size: a * 1.2)),
                   childWhenDragging: SizedBox(width: a, height: a),
                   child: PicArt(_pile[i], size: a),
@@ -355,7 +371,7 @@ class _TapCountTrialViewState extends State<TapCountTrialView> with _Pacing {
   void _pick(int n) {
     if (_chosen != null) return;
     setState(() => _chosen = n);
-    widget.ctx.onResponse(widget.trial.isCorrect(n));
+    widget.ctx.respond(widget.trial.isCorrect(n), errors: widget.trial.errorsFor(n));
     after(const Duration(milliseconds: 1200), widget.ctx.onDone);
   }
 
@@ -476,7 +492,7 @@ class _JoinSeparateTrialViewState extends State<JoinSeparateTrialView> with Sing
   void _pick(int n) {
     if (_chosen != null) return;
     setState(() => _chosen = n);
-    widget.ctx.onResponse(widget.trial.isCorrect(n));
+    widget.ctx.respond(widget.trial.isCorrect(n), errors: widget.trial.errorsFor(n));
     after(const Duration(milliseconds: 1200), widget.ctx.onDone);
   }
 
@@ -577,7 +593,7 @@ class _NumberLineTrialViewState extends State<NumberLineTrialView> with _Pacing 
   void _tap(int mark) {
     if (_mark != null) return;
     setState(() => _mark = mark);
-    widget.ctx.onResponse(widget.trial.isCorrect(mark));
+    widget.ctx.respond(widget.trial.isCorrect(mark), errors: widget.trial.errorsFor(mark));
     after(const Duration(milliseconds: 1400), widget.ctx.onDone);
   }
 
@@ -741,7 +757,7 @@ class _SortTrialViewState extends State<SortTrialView> with _Pacing {
   void _drop(int bin) {
     if (_bin != null) return;
     setState(() => _bin = bin);
-    widget.ctx.onResponse(widget.trial.isCorrect(bin));
+    widget.ctx.respond(widget.trial.isCorrect(bin), errors: widget.trial.errorsFor(bin));
     after(const Duration(milliseconds: 900), widget.ctx.onDone);
   }
 
@@ -790,6 +806,7 @@ class _SortTrialViewState extends State<SortTrialView> with _Pacing {
         if (_bin == null)
           Draggable<int>(
             data: 0,
+            onDragStarted: () => widget.ctx.onHandle?.call(false),
             feedback: Material(type: MaterialType.transparency, child: card),
             childWhenDragging: const SizedBox(width: 130, height: 130),
             child: card,
@@ -804,7 +821,10 @@ class _SortTrialViewState extends State<SortTrialView> with _Pacing {
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 18),
                 child: DragTarget<int>(
-                  onAcceptWithDetails: (_) => _drop(i),
+                  onAcceptWithDetails: (_) {
+                    widget.ctx.onHandle?.call(true);
+                    _drop(i);
+                  },
                   builder: (context, candidate, _) => GestureDetector(
                     onTap: () => _drop(i),
                     child: _Bin(
@@ -920,7 +940,7 @@ class _PairsTrialViewState extends State<PairsTrialView> with _Pacing {
         _busy = false;
       });
       if (_found.length == cards.length) {
-        widget.ctx.onResponse(widget.trial.isCorrect(_wrong));
+        widget.ctx.respond(widget.trial.isCorrect(_wrong), errors: widget.trial.errorsFor(_wrong));
         after(const Duration(milliseconds: 900), widget.ctx.onDone);
       }
     });
@@ -1083,7 +1103,7 @@ class _SequenceTrialViewState extends State<SequenceTrialView> with _Pacing {
     if (_response[i] != seq[i] || _response.length == seq.length) {
       final ok = widget.trial.isCorrect(_response);
       setState(() => _result = ok);
-      widget.ctx.onResponse(ok);
+      widget.ctx.respond(ok, errors: widget.trial.errorsFor(_response));
       after(const Duration(milliseconds: 1100), widget.ctx.onDone);
     }
   }
@@ -1183,7 +1203,7 @@ class _StreamItemTrialViewState extends State<StreamItemTrialView> with SingleTi
   void _finish() {
     if (_ended) return;
     _ended = true;
-    widget.ctx.onResponse(widget.trial.isCorrect(tapped: _tapped));
+    widget.ctx.respond(widget.trial.isCorrect(tapped: _tapped), errors: widget.trial.errorsFor(tapped: _tapped));
     after(const Duration(milliseconds: 250), widget.ctx.onDone);
   }
 
@@ -1332,7 +1352,7 @@ class _ClapTrialViewState extends State<ClapTrialView> with _Pacing {
   void _submit() {
     if (_done || _taps == 0) return;
     setState(() => _done = true);
-    widget.ctx.onResponse(widget.trial.isCorrect(_taps));
+    widget.ctx.respond(widget.trial.isCorrect(_taps), errors: widget.trial.errorsFor(_taps));
     after(const Duration(milliseconds: 1100), widget.ctx.onDone);
   }
 
@@ -1437,7 +1457,7 @@ class _PrintTrialViewState extends State<PrintTrialView> with _Pacing {
     if (_taps[i] != want[i] || _taps.length == want.length) {
       final ok = widget.trial.isCorrect(_taps);
       setState(() => _result = ok);
-      widget.ctx.onResponse(ok);
+      widget.ctx.respond(ok, errors: widget.trial.errorsFor(_taps));
       after(const Duration(milliseconds: 1200), widget.ctx.onDone);
     }
   }
@@ -1544,7 +1564,7 @@ class _BuildWordTrialViewState extends State<BuildWordTrialView> with _Pacing {
       if (_placed.length == _letters.length) {
         _done = true;
         widget.ctx.speak(widget.trial.word.text);
-        widget.ctx.onResponse(widget.trial.isCorrect(_wrong));
+        widget.ctx.respond(widget.trial.isCorrect(_wrong), errors: widget.trial.errorsFor(_wrong));
         after(const Duration(milliseconds: 1300), widget.ctx.onDone);
       }
     } else {
@@ -1588,7 +1608,10 @@ class _BuildWordTrialViewState extends State<BuildWordTrialView> with _Pacing {
                         child: s < _placed.length
                             ? tile(t.tiles[_placed[s]], color: const Color(0xFF34C77B))
                             : DragTarget<int>(
-                                onAcceptWithDetails: (d) => _offer(d.data),
+                                onAcceptWithDetails: (d) {
+                                  widget.ctx.onHandle?.call(true);
+                                  _offer(d.data);
+                                },
                                 builder: (context, cand, _) => Container(
                                   width: 72,
                                   height: 80,
@@ -1617,6 +1640,7 @@ class _BuildWordTrialViewState extends State<BuildWordTrialView> with _Pacing {
                   duration: const Duration(milliseconds: 180),
                   child: Draggable<int>(
                     data: i,
+                    onDragStarted: () => widget.ctx.onHandle?.call(false),
                     feedback: Material(type: MaterialType.transparency, child: tile(t.tiles[i])),
                     childWhenDragging: const SizedBox(width: 72, height: 80),
                     child: GestureDetector(

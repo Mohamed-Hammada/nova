@@ -16,6 +16,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "validate"))
 
 from nova_validate.cli import run_all  # noqa: E402
 from nova_validate.loader import load_spec  # noqa: E402
+from nova_validate.research_rules import check_new_game_research  # noqa: E402
 
 SCHEMA_VERSION = "1.0.0"
 
@@ -38,6 +39,8 @@ def _read_content_version(data_root: Path) -> str:
 def build_bundle(data_root: Path) -> dict:
     spec = load_spec(data_root)
     issues = run_all(spec, data_root / "schema")
+    # Every new game is based on published research (product rule).
+    issues += check_new_game_research(spec, data_root / "research_grandfathered.json")
     errors = [issue for issue in issues if issue.level == "error"]
     if errors:
         raise ValueError("\n".join(str(issue) for issue in errors))

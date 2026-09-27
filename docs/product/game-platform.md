@@ -78,7 +78,12 @@ LevelScreen -> round view -> PlaySession -> GameRuntime     what happened
 
 | Sound | Meaning |
 |---|---|
-| tap, pop | Something was chosen, or a bubble or hint cleared an answer away. |
+| tap, select | A button pressed; something chosen among others. |
+| pick, drop | Something picked up to drag, and set down where it goes. |
+| pop | A bubble or hint cleared an answer away. |
+| hint | The child asked for help (the light bulb). |
+| transition | Setting off for an activity's place. |
+| companion_* | The companion's wordless voice: wave, happy, encourage, thinking, surprise, celebrate. |
 | success | A right answer. |
 | retry | A gentle rising "hmm?" after a miss. |
 | show | The companion's helping hand appears. |
@@ -86,9 +91,10 @@ LevelScreen -> round view -> PlaySession -> GameRuntime     what happened
 | unlock | A new stage opens. |
 | whoosh | Answers arrive. |
 
-The sounds are synthesised in the script, so there are no licensing or download concerns. The
-whole set is about 230 KB. Sound effects are silent unless the build's asset manifest lists them,
-and a grown-up can turn them off in settings.
+The sounds are synthesised in the script, so there are no licensing or download concerns. Sound
+effects are silent unless the build's asset manifest lists them, and a grown-up can turn them off
+in Settings (the gear on Home). Background music and ambience per place are a separate layer
+(`tools/sfx/generate_music.py`); see [skill-profile-and-audio.md](skill-profile-and-audio.md).
 
 ## Content decisions still open (copy_status: draft)
 

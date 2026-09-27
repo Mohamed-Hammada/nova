@@ -61,6 +61,8 @@ class GameSessionController extends ChangeNotifier {
     this.maxAttemptsPerTrial = 2,
     void Function(GameCue cue)? onCue,
     DateTime Function()? now,
+    this.activityId,
+    this.context,
   })  : assert(maxAttemptsPerTrial >= 1),
         _runtime = runtime,
         _trialGenerator = trialGenerator,
@@ -76,6 +78,11 @@ class GameSessionController extends ChangeNotifier {
   final String childId;
   final String gameId;
   final String skillId;
+
+  /// The journey activity this session is, and its picture skin: recorded
+  /// with the skill evidence.
+  final String? activityId;
+  final String? context;
 
   /// A presentation choice (how many tries before moving on), not an
   /// assessment rule: only a trial's first attempt is accuracy evidence
@@ -255,6 +262,7 @@ class GameSessionController extends ChangeNotifier {
       final decision = await _runtime.completeSession(
         childId: childId, gameId: gameId, skillId: skillId,
         rawEvents: List.of(_events), mapper: _signalMapper,
+        activityId: activityId, context: context,
       );
       _lastMove = decision.move;
       _lastScaffold = decision.scaffold;

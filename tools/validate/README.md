@@ -12,3 +12,11 @@ python -m venv .venv
 ```
 
 Exit code is 1 when any error is found. Warnings do not fail the run.
+
+## Research rule for new games
+
+Every game that is not on the frozen list `data/research_grandfathered.json` must cite at least one
+verified empirical or framework source (`research_rules.py`). Japanese research is preferred: the
+validator warns when none of a new game's evidence has `research_origin: [JP]`. The content compiler
+applies the same rule. Never add ids to the frozen list; it records only the games that predate the
+rule (2026-09-27). See `docs/product/communication-skills-endcore.md`.

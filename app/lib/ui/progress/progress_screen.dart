@@ -1,9 +1,14 @@
 import 'package:nova_app/ui/settings/grown_up_settings.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart' show DateFormat;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:nova_app/core/mastery/mastery_record.dart';
 import 'package:nova_app/core/game/session_plan.dart';
+import 'package:nova_app/core/content/models.dart';
 import 'package:nova_app/core/journey/journey_models.dart';
+import 'package:nova_app/core/skills/endcore.dart';
+import 'package:nova_app/core/skills/error_types.dart';
+import 'package:nova_app/core/skills/skill_profile.dart';
 import 'package:nova_app/providers.dart';
 import 'package:nova_app/ui/journey/journey_labels.dart';
 import 'package:nova_app/ui/journey/journey_providers.dart';
@@ -31,8 +36,64 @@ String masteryDescription(AppLocalizations l10n, String? state) => switch (state
   _ => l10n.masteryNotYetDescription,
 };
 
-/// For grown-ups: each skill the playable games assess, with its current
-/// mastery state as the engines computed it. Read-only; presentation only.
+/// A skill's profile for the local child, through GameRuntime: all its
+/// sessions' evidence, accumulated. Invalidated after each session.
+final skillProfileProvider = FutureProvider.autoDispose.family<SkillProfile, String>((ref, skillId) {
+  return ref.watch(gameRuntimeProvider).skillProfile(childId: currentChildId, skillId: skillId);
+});
+
+String trendLabel(AppLocalizations l10n, Trend t) => switch (t) {
+  Trend.improving => l10n.trendImproving,
+  Trend.steady => l10n.trendSteady,
+  Trend.declining => l10n.trendDeclining,
+  Trend.unknown => l10n.trendUnknown,
+};
+
+String? independenceLabel(AppLocalizations l10n, Independence i) => switch (i) {
+  Independence.independent => l10n.independenceIndependent,
+  Independence.occasionalHelp => l10n.independenceOccasional,
+  Independence.needsHelp => l10n.independenceNeedsHelp,
+  Independence.unknown => null,
+};
+
+String confidenceLabel(AppLocalizations l10n, double c) => c < 0.45 ? l10n.confidenceEarly : (c < 0.75 ? l10n.confidenceGrowing : l10n.confidenceGood);
+
+String errorLabel(AppLocalizations l10n, String type) => switch (type) {
+  ErrorType.overCount => l10n.errOverCount,
+  ErrorType.underCount => l10n.errUnderCount,
+  ErrorType.wrongObject => l10n.errWrongObject,
+  ErrorType.distractorSelected => l10n.errDistractor,
+  ErrorType.choseSmaller => l10n.errChoseSmaller,
+  ErrorType.choseBigger => l10n.errChoseBigger,
+  ErrorType.sequenceBreak => l10n.errSequenceBreak,
+  ErrorType.impulsiveResponse => l10n.errImpulsive,
+  ErrorType.missedTarget => l10n.errMissedTarget,
+  ErrorType.rulePerseveration => l10n.errPerseveration,
+  ErrorType.repeatedError => l10n.errRepeated,
+  ErrorType.passiveResponse => l10n.errPassive,
+  ErrorType.aggressiveResponse => l10n.errAggressive,
+  ErrorType.unkindResponse => l10n.errUnkind,
+  ErrorType.selfFocused => l10n.errSelfFocused,
+  _ => type,
+};
+
+String selectionReasonLabel(AppLocalizations l10n, SelectionReason r) => switch (r) {
+  SelectionReason.nextRequired => l10n.reasonNextRequired,
+  SelectionReason.practiceMissingSkill => l10n.reasonPracticeMissingSkill,
+  SelectionReason.addressRepeatedError => l10n.reasonRepeatedError,
+  SelectionReason.buildIndependence => l10n.reasonIndependence,
+  SelectionReason.reinforceSecureSkill => l10n.reasonReinforce,
+  SelectionReason.transferProbe => l10n.reasonTransfer,
+  SelectionReason.stretch => l10n.reasonStretch,
+  SelectionReason.tryAgainEasier => l10n.reasonTryAgain,
+  SelectionReason.variety => l10n.reasonVariety,
+  SelectionReason.review => l10n.reasonReview,
+};
+
+/// For grown-ups: each skill the playable games assess, described from all
+/// the evidence so far -- state, trend, confidence, independence, practice
+/// history, transfer and recurring mistakes. Descriptive, never a score.
+/// Presentation only.
 class ProgressScreen extends ConsumerWidget {
   const ProgressScreen({super.key});
 
@@ -59,8 +120,14 @@ class ProgressScreen extends ConsumerWidget {
             // spec 3.5/3.6), and Nova's claims are non-clinical.
             NovaFeedbackBanner(kind: NovaFeedbackKind.info, message: l10n.progressDisclaimer),
             const SizedBox(height: NovaSpace.lg),
+            const CommunicationSkillsGrid(),
+            const SizedBox(height: NovaSpace.lg),
+            const JapaneseMathMethods(),
+            const SizedBox(height: NovaSpace.lg),
             // Mastery evidence: the assessment pipeline's view, skill by skill.
             Semantics(header: true, child: Text(l10n.masteryEvidenceTitle, style: theme.textTheme.titleLarge)),
+            const SizedBox(height: NovaSpace.xxs),
+            Text(l10n.skillProfileNote, style: theme.textTheme.bodySmall),
             const SizedBox(height: NovaSpace.sm),
             for (final skillId in skillIds) ...[_SkillProgressCard(skillId: skillId), const SizedBox(height: NovaSpace.md)],
             const _JourneyReport(),
@@ -95,7 +162,21 @@ class _SkillProgressCard extends ConsumerWidget {
           Text(contentText(content, skill.descriptionKey, language), style: theme.textTheme.bodyMedium?.copyWith(color: theme.colorScheme.onSurfaceVariant)),
           const SizedBox(height: NovaSpace.md),
           switch (mastery) {
-            AsyncData(:final value) => _MasteryView(record: value),
+            AsyncData(:final value) => Builder(builder: (context) {
+              final profile = ref.watch(skillProfileProvider(skillId)).value;
+              // The profile is the whole evidence (including a grown-up's
+              // report of a home task); the stored record is the fallback.
+              final record = profile != null && (profile.hasEvidence || profile.transferEvidence > 0) && value != null
+                  ? MasteryRecord(childId: value.childId, skillId: skillId, state: profile.state.key, confidence: profile.confidence, updatedAt: value.updatedAt)
+                  : value;
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  _MasteryView(record: record),
+                  if (profile != null) _ProfileView(skillId: skillId, profile: profile),
+                ],
+              );
+            }),
             AsyncError() => Row(
               children: [
                 Expanded(child: Text(l10n.progressLoadFailed, style: theme.textTheme.bodyLarge)),
@@ -136,6 +217,254 @@ class _MasteryView extends StatelessWidget {
           Text(masteryDescription(l10n, state), style: theme.textTheme.bodyLarge),
           const SizedBox(height: NovaSpace.md),
           _Ladder(reached: reached),
+        ],
+      ),
+    );
+  }
+}
+
+/// The child's communication and social skills on the ENDCORE map
+/// (Fujimoto & Daibo, 2007): the basic skills underneath, the skills for
+/// getting on with others above, in expressing, understanding and managing
+/// columns. Each cell names the state its games have shown so far.
+class CommunicationSkillsGrid extends ConsumerWidget {
+  const CommunicationSkillsGrid({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = context.l10n;
+    final theme = Theme.of(context);
+    final profiles = ref.watch(childEvidenceProvider).value?.profiles ?? const <String, SkillProfile>{};
+    String name(EndcoreSkill s) => switch (s) {
+      EndcoreSkill.expressivity => l10n.commExpressivity,
+      EndcoreSkill.decoding => l10n.commDecoding,
+      EndcoreSkill.selfControl => l10n.commSelfControl,
+      EndcoreSkill.assertion => l10n.commAssertion,
+      EndcoreSkill.otherAcceptance => l10n.commOtherAcceptance,
+      EndcoreSkill.relationships => l10n.commRelationships,
+    };
+    String column(EndcoreSystem s) => switch (s) {
+      EndcoreSystem.expressing => l10n.commExpressing,
+      EndcoreSystem.understanding => l10n.commUnderstanding,
+      EndcoreSystem.managing => l10n.commManaging,
+    };
+
+    Widget cell(EndcoreSkill skill) {
+      final c = EndcoreCell.from(skill, profiles);
+      final state = c.state;
+      final label = state == null ? l10n.commNoEvidence : masteryLabel(l10n, state.key);
+      final filled = state != null && state.index >= SkillState.developing.index;
+      return Semantics(
+        label: '${name(skill)}: $label',
+        excludeSemantics: true,
+        child: Container(
+          key: ValueKey('endcore.${skill.name}'),
+          constraints: const BoxConstraints(minHeight: 76),
+          padding: const EdgeInsets.all(NovaSpace.xs),
+          decoration: BoxDecoration(
+            color: filled ? theme.colorScheme.primaryContainer : theme.colorScheme.surfaceContainerLowest,
+            borderRadius: BorderRadius.circular(NovaRadius.md),
+            border: Border.all(color: state == null ? theme.colorScheme.outlineVariant : theme.colorScheme.primary, width: 1.5),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(name(skill), style: theme.textTheme.labelLarge),
+              const SizedBox(height: NovaSpace.xxs),
+              Text(label, style: theme.textTheme.bodySmall),
+            ],
+          ),
+        ),
+      );
+    }
+
+    Widget row(EndcoreLevel level) => Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        SizedBox(width: 72, child: Padding(padding: const EdgeInsets.only(top: NovaSpace.xs), child: Text(level == EndcoreLevel.basic ? l10n.commBasic : l10n.commInterpersonal, style: theme.textTheme.labelMedium))),
+        for (final system in EndcoreSystem.values) ...[
+          const SizedBox(width: NovaSpace.xxs),
+          Expanded(child: cell(EndcoreSkill.at(level, system))),
+        ],
+      ],
+    );
+
+    return NovaCard(
+      key: const ValueKey('progress.communication'),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Semantics(header: true, child: Text(l10n.commSkillsTitle, style: theme.textTheme.titleLarge)),
+          const SizedBox(height: NovaSpace.xxs),
+          Text(l10n.commSkillsIntro, style: theme.textTheme.bodySmall),
+          const SizedBox(height: NovaSpace.sm),
+          Row(
+            children: [
+              const SizedBox(width: 72),
+              for (final system in EndcoreSystem.values) ...[
+                const SizedBox(width: NovaSpace.xxs),
+                Expanded(child: Text(column(system), textAlign: TextAlign.center, style: theme.textTheme.labelMedium)),
+              ],
+            ],
+          ),
+          const SizedBox(height: NovaSpace.xxs),
+          // The skills for getting on with others sit on the basic ones.
+          row(EndcoreLevel.interpersonal),
+          const SizedBox(height: NovaSpace.xxs),
+          row(EndcoreLevel.basic),
+        ],
+      ),
+    );
+  }
+}
+
+/// For grown-ups: the Japanese ways of learning number Nova's math games
+/// follow, each with the game that practises it and something to try at
+/// home (docs/product/japanese-math-methods-ar.md has the sources).
+class JapaneseMathMethods extends StatelessWidget {
+  const JapaneseMathMethods({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = context.l10n;
+    final theme = Theme.of(context);
+    final methods = [
+      (Icons.grid_on_rounded, l10n.jpMakeTenTitle, l10n.jpMakeTenBody),
+      (Icons.call_split_rounded, l10n.jpCherryTitle, l10n.jpCherryBody),
+      (Icons.view_week_rounded, l10n.jpTapeTitle, l10n.jpTapeBody),
+      (Icons.linear_scale_rounded, l10n.jpPathTitle, l10n.jpPathBody),
+    ];
+    return NovaCard(
+      key: const ValueKey('progress.japaneseMath'),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Semantics(header: true, child: Text(l10n.jpMathTitle, style: theme.textTheme.titleLarge)),
+          const SizedBox(height: NovaSpace.xxs),
+          Text(l10n.jpMathIntro, style: theme.textTheme.bodySmall),
+          for (final (icon, title, body) in methods)
+            Padding(
+              padding: const EdgeInsets.only(top: NovaSpace.sm),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Icon(icon, color: theme.colorScheme.primary),
+                  const SizedBox(width: NovaSpace.sm),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(title, style: theme.textTheme.titleSmall),
+                        Text(body, style: theme.textTheme.bodyMedium),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+        ],
+      ),
+    );
+  }
+}
+
+/// What the evidence says about the skill, line by line: trend,
+/// independence, confidence, practice history, transfer and any mistake
+/// that keeps coming back. With a secure skill and a probe task for it, a
+/// grown-up can report how the task went at home (transfer evidence).
+class _ProfileView extends ConsumerStatefulWidget {
+  const _ProfileView({required this.skillId, required this.profile});
+  final String skillId;
+  final SkillProfile profile;
+
+  @override
+  ConsumerState<_ProfileView> createState() => _ProfileViewState();
+}
+
+class _ProfileViewState extends ConsumerState<_ProfileView> {
+  bool _reported = false;
+
+  Future<void> _report(bool passed) async {
+    await ref.read(gameRuntimeProvider).recordTransferProbe(childId: currentChildId, skillId: widget.skillId, passed: passed);
+    ref.invalidate(masteryProvider(widget.skillId));
+    ref.invalidate(skillProfileProvider(widget.skillId));
+    ref.invalidate(childEvidenceProvider);
+    if (mounted) setState(() => _reported = true);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final p = widget.profile;
+    if (!p.hasEvidence) return const SizedBox.shrink();
+    final l10n = context.l10n;
+    final theme = Theme.of(context);
+    final lang = ref.watch(languageProvider);
+    final content = ref.watch(contentRuntimeProvider);
+    final independence = independenceLabel(l10n, p.independence);
+    final transfer = p.state == SkillState.transfer || p.transferEvidence > 0
+        ? l10n.transferShown
+        : (p.readyForTransfer ? l10n.transferReady : l10n.transferNotYet);
+    final homeTasks = {
+      for (final g in content.gamesForSkill(widget.skillId))
+        for (final probe in g.transferProbes)
+          if (probe.skillId == widget.skillId)
+            if (content.probeTarget(probe.taskRef) case TransferTask task) contentText(content, task.nameKey, lang),
+    };
+
+    Widget line(IconData icon, String text, {Key? key}) => Padding(
+      key: key,
+      padding: const EdgeInsets.only(top: NovaSpace.xxs),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Icon(icon, size: 20, color: theme.colorScheme.primary),
+          const SizedBox(width: NovaSpace.xs),
+          Expanded(child: Text(text, style: theme.textTheme.bodyMedium)),
+        ],
+      ),
+    );
+
+    return Padding(
+      padding: const EdgeInsets.only(top: NovaSpace.md),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          line(
+            switch (p.trend) {
+              Trend.improving => Icons.trending_up_rounded,
+              Trend.declining => Icons.trending_down_rounded,
+              _ => Icons.trending_flat_rounded,
+            },
+            trendLabel(l10n, p.trend),
+            key: ValueKey('profile.${widget.skillId}.trend'),
+          ),
+          if (independence != null) line(Icons.front_hand_rounded, independence),
+          line(Icons.verified_rounded, confidenceLabel(l10n, p.confidence)),
+          line(
+            Icons.history_rounded,
+            l10n.practiceHistory(numeral(p.sessions, lang), numeral(p.attempts, lang), numeral(p.contexts.length, lang)),
+            key: ValueKey('profile.${widget.skillId}.history'),
+          ),
+          if (p.lastPracticed != null) line(Icons.event_rounded, l10n.lastPracticed(DateFormat.MMMd(lang).format(p.lastPracticed!))),
+          line(Icons.swap_horiz_rounded, transfer),
+          for (final e in p.repeatedErrors) line(Icons.replay_rounded, l10n.repeatedError(errorLabel(l10n, e))),
+          if (p.selfCorrections > 0) line(Icons.auto_fix_high_rounded, l10n.selfCorrected(numeral(p.selfCorrections, lang))),
+          if ((p.readyForTransfer || _reported) && homeTasks.isNotEmpty) ...[
+            const SizedBox(height: NovaSpace.sm),
+            for (final task in homeTasks) Text(l10n.tryAtHome(task), style: theme.textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w600)),
+            const SizedBox(height: NovaSpace.xs),
+            if (_reported)
+              Text(l10n.tryAtHomeThanks, style: theme.textTheme.bodyMedium)
+            else
+              Wrap(
+                spacing: NovaSpace.xs,
+                runSpacing: NovaSpace.xs,
+                children: [
+                  NovaButton(key: ValueKey('probe.${widget.skillId}.passed'), label: l10n.tryAtHomeDidIt, icon: Icons.thumb_up_rounded, onPressed: () => _report(true)),
+                  NovaButton(label: l10n.tryAtHomeNotYet, variant: NovaButtonVariant.secondary, onPressed: () => _report(false)),
+                ],
+              ),
+          ],
         ],
       ),
     );
@@ -267,6 +596,10 @@ class _JourneyReport extends ConsumerWidget {
                 ),
               ),
             Text(l10n.areasNote, style: theme.textTheme.bodySmall),
+            if (progress.recommendation?.why case final why?) ...[
+              const SizedBox(height: NovaSpace.sm),
+              Text(l10n.whyNext(selectionReasonLabel(l10n, why.reason)), key: const ValueKey('progress.whyNext'), style: theme.textTheme.bodyMedium),
+            ],
             heading(l10n.recentPerformance),
             if (records.isEmpty) Text(l10n.noHistoryYet, style: theme.textTheme.bodyMedium),
             for (final r in records.take(12))

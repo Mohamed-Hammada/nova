@@ -1,0 +1,138 @@
+# Communication and social-skills games. Each is based on published Japanese research (the
+# research rule): the ENDCORE model (Fujimoto & Daibo, 2007) for which skill it practises, and the
+# preschool social-skill factors (Takahashi et al., 2008) for what that skill looks like at this age.
+- id: game.sel.show-my-feeling
+  name_key: game.sel.show-my-feeling.name
+  age_range: [2, 5]
+  primary_skills: [sel.comm.expressivity]
+  secondary_skills: []
+  objective: Show how you feel.
+  mechanic_id: emotion-match
+  mechanic: 'A short moment happens to the child ("your tower fell down"); the child picks the face that shows how they feel, as they would show a friend.'
+  evidence_basis: framework
+  evidence_refs: [ev.sel.fujimoto-daibo-2007, ev.sel.takahashi-2008]
+  difficulty:
+    varied: [distractors]
+    anchors:
+      distractors: [two ways to choose from, three ways to choose from]
+    rungs:
+    - id: r1
+      values: {item_complexity: 0, distractors: 0, working_memory_load: 0, rule_complexity: 0, abstraction: 0, cognitive_load: 0, independence: 0}
+    - id: r2
+      values: {item_complexity: 0, distractors: 1, working_memory_load: 0, rule_complexity: 0, abstraction: 0, cognitive_load: 0, independence: 0}
+  scaffolding:
+    hints: ['The moment is told again.', 'The companion shows the feeling with its whole body.']
+    adult_prompt: Take turns showing a feeling with your face and body and guessing it.
+  signals: [accuracy, hints_used, retries, error_type, completion]
+  progression: {advance_parameter: param.default.advance-accuracy, retreat_parameter: param.default.retreat-accuracy}
+  transfer_probes:
+  - {id: probe.show-my-feeling-in-life, type: cross_context, delayed: false, skill: sel.comm.expressivity, mechanic_id: real-life-social, task_ref: task.sel.show-feelings, changes: From a story on screen to the child's own everyday play., preserved: The same social choice (what to say or do) in a real moment.}
+  language_dependencies: []
+- id: game.sel.kind-words
+  name_key: game.sel.kind-words.name
+  age_range: [4, 8]
+  primary_skills: [sel.comm.assertion]
+  secondary_skills: []
+  objective: Say what you need, kindly and clearly.
+  mechanic_id: story-choice
+  mechanic: 'Something happens (a friend takes your crayon); the child chooses what to say: a clear, kind request, saying nothing, or grabbing and shouting.'
+  evidence_basis: framework
+  evidence_refs: [ev.sel.fujimoto-daibo-2007, ev.sel.takahashi-2008]
+  difficulty:
+    varied: [distractors]
+    anchors:
+      distractors: [two ways to choose from, three ways to choose from]
+    rungs:
+    - id: r1
+      values: {item_complexity: 0, distractors: 0, working_memory_load: 0, rule_complexity: 0, abstraction: 0, cognitive_load: 0, independence: 0}
+    - id: r2
+      values: {item_complexity: 0, distractors: 1, working_memory_load: 0, rule_complexity: 0, abstraction: 0, cognitive_load: 0, independence: 0}
+  scaffolding:
+    hints: ['Each way of answering is read aloud again.', 'The companion asks: would that tell them what you need, kindly?']
+    adult_prompt: Practise asking for a turn or for help in your own words, and praise clear, kind asking.
+  signals: [accuracy, hints_used, retries, error_type, completion]
+  progression: {advance_parameter: param.default.advance-accuracy, retreat_parameter: param.default.retreat-accuracy}
+  transfer_probes:
+  - {id: probe.kind-words-in-life, type: cross_context, delayed: false, skill: sel.comm.assertion, mechanic_id: real-life-social, task_ref: task.sel.ask-kindly, changes: From a story on screen to the child's own everyday play., preserved: The same social choice (what to say or do) in a real moment.}
+  language_dependencies: []
+- id: game.sel.help-a-friend
+  name_key: game.sel.help-a-friend.name
+  age_range: [3, 8]
+  primary_skills: [sel.comm.other-acceptance]
+  secondary_skills: []
+  objective: Choose a kind way to help.
+  mechanic_id: story-choice
+  mechanic: 'A friend feels bad or likes something different; the child chooses what would help or show respect.'
+  evidence_basis: framework
+  evidence_refs: [ev.sel.fujimoto-daibo-2007, ev.sel.takahashi-2008]
+  difficulty:
+    varied: [distractors]
+    anchors:
+      distractors: [two ways to choose from, three ways to choose from]
+    rungs:
+    - id: r1
+      values: {item_complexity: 0, distractors: 0, working_memory_load: 0, rule_complexity: 0, abstraction: 0, cognitive_load: 0, independence: 0}
+    - id: r2
+      values: {item_complexity: 0, distractors: 1, working_memory_load: 0, rule_complexity: 0, abstraction: 0, cognitive_load: 0, independence: 0}
+  scaffolding:
+    hints: ['The friend''s face is shown bigger.', 'The companion asks: how does your friend feel?']
+    adult_prompt: When a sibling or friend is sad, ask together what might help them.
+  signals: [accuracy, hints_used, retries, error_type, completion]
+  progression: {advance_parameter: param.default.advance-accuracy, retreat_parameter: param.default.retreat-accuracy}
+  transfer_probes:
+  - {id: probe.help-a-friend-in-life, type: cross_context, delayed: false, skill: sel.comm.other-acceptance, mechanic_id: real-life-social, task_ref: task.sel.help-at-home, changes: From a story on screen to the child's own everyday play., preserved: The same social choice (what to say or do) in a real moment.}
+  language_dependencies: []
+- id: game.sel.calm-down
+  name_key: game.sel.calm-down.name
+  age_range: [3, 8]
+  primary_skills: [sel.comm.self-control]
+  secondary_skills: []
+  objective: Find a calm way.
+  mechanic_id: story-choice
+  mechanic: 'The child hears about a big feeling or a hard wait; they choose a calm way (breathe, count, ask a grown-up) instead of hitting, throwing or grabbing.'
+  evidence_basis: framework
+  evidence_refs: [ev.sel.fujimoto-daibo-2007, ev.sel.takahashi-2008]
+  difficulty:
+    varied: [distractors]
+    anchors:
+      distractors: [two ways to choose from, three ways to choose from]
+    rungs:
+    - id: r1
+      values: {item_complexity: 0, distractors: 0, working_memory_load: 0, rule_complexity: 0, abstraction: 0, cognitive_load: 0, independence: 0}
+    - id: r2
+      values: {item_complexity: 0, distractors: 1, working_memory_load: 0, rule_complexity: 0, abstraction: 0, cognitive_load: 0, independence: 0}
+  scaffolding:
+    hints: ['The companion breathes slowly with the child.', 'Each way is shown with the companion trying it.']
+    adult_prompt: Practise a calm-down breath together when nobody is upset, so it is ready when someone is.
+  signals: [accuracy, hints_used, retries, error_type, completion]
+  progression: {advance_parameter: param.default.advance-accuracy, retreat_parameter: param.default.retreat-accuracy}
+  transfer_probes:
+  - {id: probe.calm-down-in-life, type: cross_context, delayed: false, skill: sel.comm.self-control, mechanic_id: real-life-social, task_ref: task.sel.calm-at-home, changes: From a story on screen to the child's own everyday play., preserved: The same social choice (what to say or do) in a real moment.}
+  language_dependencies: []
+- id: game.sel.fair-play
+  name_key: game.sel.fair-play.name
+  age_range: [5, 8]
+  primary_skills: [sel.comm.relationships]
+  secondary_skills: []
+  objective: Keep the friendship good.
+  mechanic_id: story-choice
+  mechanic: 'Two friends want the same thing, or have quarrelled; the child chooses what keeps the friendship good: take turns, share, make up.'
+  evidence_basis: framework
+  evidence_refs: [ev.sel.fujimoto-daibo-2007, ev.sel.takahashi-2008]
+  difficulty:
+    varied: [distractors]
+    anchors:
+      distractors: [two ways to choose from, three ways to choose from]
+    rungs:
+    - id: r1
+      values: {item_complexity: 0, distractors: 0, working_memory_load: 0, rule_complexity: 0, abstraction: 0, cognitive_load: 0, independence: 0}
+    - id: r2
+      values: {item_complexity: 0, distractors: 1, working_memory_load: 0, rule_complexity: 0, abstraction: 0, cognitive_load: 0, independence: 0}
+  scaffolding:
+    hints: ['The two friends say how each of them feels.', 'The companion asks: what would be fair for both?']
+    adult_prompt: In real play, notice and praise taking turns and making up after a quarrel.
+  signals: [accuracy, hints_used, retries, error_type, completion]
+  progression: {advance_parameter: param.default.advance-accuracy, retreat_parameter: param.default.retreat-accuracy}
+  transfer_probes:
+  - {id: probe.fair-play-in-life, type: cross_context, delayed: false, skill: sel.comm.relationships, mechanic_id: real-life-social, task_ref: task.sel.turns-at-home, changes: From a story on screen to the child's own everyday play., preserved: The same social choice (what to say or do) in a real moment.}
+  language_dependencies: []

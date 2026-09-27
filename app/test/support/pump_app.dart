@@ -6,6 +6,7 @@ import 'package:nova_app/app.dart';
 import 'package:nova_app/core/content/content_runtime.dart';
 import 'package:nova_app/core/ports/audio_port.dart';
 import 'package:nova_app/core/ports/clock_port.dart';
+import 'package:nova_app/core/ports/loop_audio_port.dart';
 import 'package:nova_app/core/ports/persistence_port.dart';
 import 'package:nova_app/providers.dart';
 
@@ -47,6 +48,10 @@ Future<AppHarness> pumpNovaApp(
   int? age = 4,
   // Records sound effects; they are silent otherwise.
   AudioPort? soundEffects,
+  // Makes the background's loop players; silent otherwise.
+  LoopPlayer Function()? loopPlayers,
+  // The device's text-to-speech (a fake that says it has every voice by default).
+  FakeSpeechPort? tts,
 }) async {
   tester.view.physicalSize = size * tester.view.devicePixelRatio;
   addTearDown(tester.view.resetPhysicalSize);
@@ -64,6 +69,8 @@ Future<AppHarness> pumpNovaApp(
     audioPortProvider.overrideWithValue(audio as AudioPort),
     ...deviceFreeOverrides(persistence: store),
     if (soundEffects != null) soundEffectsPortProvider.overrideWithValue(soundEffects),
+    if (loopPlayers != null) loopPlayerFactoryProvider.overrideWithValue(loopPlayers),
+    if (tts != null) ttsProvider.overrideWithValue(tts),
   ]);
   addTearDown(container.dispose);
   if (locale != null) container.read(localeProvider.notifier).state = locale;

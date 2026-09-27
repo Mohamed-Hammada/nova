@@ -2,6 +2,7 @@ import 'dart:ui' show PlatformDispatcher;
 
 import 'package:flutter/widgets.dart' show Locale;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:nova_app/adapters/audio_player/just_audio_loop_player.dart';
 import 'package:nova_app/adapters/audio_player/just_audio_port.dart';
 import 'package:nova_app/adapters/clock_device/system_clock.dart';
 import 'package:nova_app/adapters/persistence_drift/connection.dart';
@@ -24,6 +25,7 @@ import 'package:nova_app/core/game/game_runtime.dart';
 import 'package:nova_app/core/mastery/mastery_engine.dart';
 import 'package:nova_app/core/mastery/mastery_record.dart';
 import 'package:nova_app/core/ports/audio_port.dart';
+import 'package:nova_app/core/ports/loop_audio_port.dart';
 import 'package:nova_app/core/ports/clock_port.dart';
 import 'package:nova_app/core/ports/persistence_port.dart';
 import 'package:nova_app/core/signals/signal_bus.dart';
@@ -57,6 +59,23 @@ final soundEffectsPortProvider = Provider<AudioPort>((ref) {
   return JustAudioPort(bundledAssets: bundled, voices: 3);
 });
 
+/// Background music and ambience (ui/audio/background_audio.dart), unless a
+/// grown-up turned music off. Its own players: never the effects' or the
+/// narration's.
+final musicEnabledProvider = StateProvider<bool>((ref) => true);
+
+/// Makes the background's loop players; null without an asset manifest
+/// (tests, previews), where the background stays silent.
+final loopPlayerFactoryProvider = Provider<LoopPlayer Function()?>((ref) {
+  final bundled = ref.watch(bundledAssetsProvider);
+  if (bundled == null) return null;
+  return () => JustAudioLoopPlayer(bundledAssets: bundled);
+});
+
+/// Recorded narration (content audio: game names, cue lines), unless a
+/// grown-up turned voice off -- the same switch as spoken prompts.
+final narrationPortProvider = Provider<AudioPort>((ref) => ref.watch(speechEnabledProvider) ? ref.watch(audioPortProvider) : const SilentAudioPort());
+
 // One database for the app's lifetime, shared by both storage ports.
 // openConnection() is chosen at compile time per platform
 // (adapters/persistence_drift/connection.dart): native SQLite on devices,
@@ -76,6 +95,10 @@ final playerStatePortProvider = Provider<PlayerStatePort>((ref) => DriftPlayerSt
 final speechEnabledProvider = StateProvider<bool>((ref) => true);
 final ttsProvider = Provider<SpeechPort>((ref) => TtsSpeechPort());
 final speechPortProvider = Provider<SpeechPort>((ref) => ref.watch(speechEnabledProvider) ? ref.watch(ttsProvider) : const SilentSpeechPort());
+
+/// Whether the device has a voice for a language (Settings tells a grown-up
+/// how to add a missing one).
+final voiceAvailableProvider = FutureProvider.family<bool, String>((ref, language) => ref.watch(ttsProvider).canSpeak(language));
 
 // Voice answers and face play: on-device only, off until a grown-up allows.
 final voiceInputProvider = Provider<VoiceInputPort>((ref) => createVoiceInput());
@@ -153,6 +176,13 @@ final graphicsProvider = Provider<GraphicsQuality>((ref) => switch (ref.watch(gr
       GraphicsQualitySetting.high || GraphicsQualitySetting.auto => GraphicsQuality.high,
     });
 final voiceAnswersProvider = StateProvider<bool>((ref) => false);
+
+/// Whether the hint button is offered during play (the Adaptive Engine's
+/// own scaffolding still applies either way).
+final hintsEnabledProvider = StateProvider<bool>((ref) => true);
+
+/// A grown-up's request for less motion, on top of the device setting.
+final reducedMotionProvider = StateProvider<bool>((ref) => false);
 final cameraPlayProvider = StateProvider<bool>((ref) => false);
 
 // Looping decorative animation (idle characters, drifting clouds). Tests

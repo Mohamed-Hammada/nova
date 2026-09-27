@@ -69,6 +69,12 @@ class ChoiceLook {
   /// pattern train is always a train); colours still follow the place.
   static const byGame = <String, Holder>{
     'game.math.pattern-train': Holder.carriage,
+    // Sentences (what to say or do) need a flat card: the same text size for
+    // every option, so length or shape never hints at the answer.
+    'game.sel.kind-words': Holder.card,
+    'game.sel.help-a-friend': Holder.card,
+    'game.sel.calm-down': Holder.card,
+    'game.sel.fair-play': Holder.card,
   };
 
   /// The look for [gameId] played in [place]. The same game played in a

@@ -1,3 +1,4 @@
+import 'package:nova_app/core/skills/error_types.dart';
 import 'lexicon.dart';
 
 /// One round inside a level. Each game turns its current rung into a list of
@@ -62,9 +63,13 @@ class NumeralVisual extends Visual {
 }
 
 class TextVisual extends Visual {
-  const TextVisual(this.text, {this.isLetter = false});
+  const TextVisual(this.text, {this.isLetter = false, this.isSentence = false});
   final String text;
   final bool isLetter;
+
+  /// A short sentence (what to say or do): wraps over a few lines instead of
+  /// shrinking to one.
+  final bool isSentence;
 }
 
 class TokenVisual extends Visual {
@@ -83,6 +88,50 @@ class TowersVisual extends Visual {
   const TowersVisual(this.heights, {this.withGap = true});
   final List<int> heights;
   final bool withGap;
+}
+
+/// A five- or ten-frame with [filled] dots (the Japanese いくつといくつ
+/// picture of a number's parts). [showDots] false shows only the numeral.
+class FrameVisual extends Visual {
+  const FrameVisual(this.filled, {this.slots = 10, this.showDots = true});
+  final int filled;
+  final int slots;
+  final bool showDots;
+}
+
+/// A numbered path (1..[length]) with a frog on square [at] and the number
+/// of hops the spinner showed ([hops]).
+class PathVisual extends Visual {
+  const PathVisual({required this.length, required this.at, required this.hops});
+  final int length;
+  final int at;
+  final int hops;
+}
+
+/// さくらんぼ計算 (the cherry method): [a] + [b], with [b] split into two
+/// cherries -- the part that makes [a] up to ten, and what is left. A null
+/// cherry is the one the round asks for; [askTotal] asks for the whole sum.
+class CherryVisual extends Visual {
+  const CherryVisual({required this.a, required this.b, this.first, this.second, this.askTotal = false});
+  final int a;
+  final int b;
+  final int? first;
+  final int? second;
+  final bool askTotal;
+}
+
+/// テープ図 (a tape diagram): two parts side by side under the whole; the
+/// null one is missing.
+class TapeVisual extends Visual {
+  const TapeVisual({this.partA, this.partB, this.whole, required this.sizeA, required this.sizeB});
+  final int? partA;
+  final int? partB;
+  final int? whole;
+
+  /// The true sizes, so the tape is drawn to scale even when a number is
+  /// hidden.
+  final int sizeA;
+  final int sizeB;
 }
 
 class FaceVisual extends Visual {
@@ -113,6 +162,7 @@ class ChoiceTrial extends Trial {
     required this.answer,
     this.speak,
     this.optionsAreBig = false,
+    this.optionErrors = const [],
   });
 
   /// Key into the app's prompt strings (ui/theme/prompts.dart).
@@ -126,7 +176,18 @@ class ChoiceTrial extends Trial {
   final String? speak;
   final bool optionsAreBig;
 
+  /// What picking each wrong option means, when the game knows more than
+  /// "a distractor" (e.g. the smaller group for "more"). Empty: any wrong
+  /// option is a distractor.
+  final List<String?> optionErrors;
+
   bool isCorrect(int chosen) => chosen == answer;
+
+  List<String> errorsFor(int chosen) {
+    if (chosen == answer) return const [];
+    final specific = chosen < optionErrors.length ? optionErrors[chosen] : null;
+    return [specific ?? ErrorType.distractorSelected];
+  }
 }
 
 /// Drag the requested number onto the plate (drag-to-count).
@@ -139,6 +200,12 @@ class DragCountTrial extends Trial {
   final int distractorCount;
 
   bool isCorrect(int placedTargets, int placedDistractors) => placedTargets == target && placedDistractors == 0;
+
+  List<String> errorsFor(int placedTargets, int placedDistractors) => [
+        if (placedDistractors > 0) ErrorType.wrongObject,
+        if (placedTargets > target) ErrorType.overCount,
+        if (placedTargets < target) ErrorType.underCount,
+      ];
 }
 
 /// Tap each object while counting, then choose how many (tap-to-count).
@@ -151,6 +218,8 @@ class TapCountTrial extends Trial {
   final int seed;
 
   bool isCorrect(int chosen) => chosen == count;
+
+  List<String> errorsFor(int chosen) => _countErrors(chosen, count);
 }
 
 /// Watch a group change, then choose how many now (join-separate).
@@ -168,6 +237,8 @@ class JoinSeparateTrial extends Trial {
 
   int get result => start + change;
   bool isCorrect(int chosen) => chosen == result;
+
+  List<String> errorsFor(int chosen) => _countErrors(chosen, result);
 }
 
 /// Tap where a number goes on a line (number-line-place).
@@ -183,6 +254,8 @@ class NumberLineTrial extends Trial {
   final int tolerance;
 
   bool isCorrect(int mark) => (mark - target).abs() <= tolerance;
+
+  List<String> errorsFor(int mark) => isCorrect(mark) ? const [] : _countErrors(mark, target);
 }
 
 enum SortRule { colour, shape }
@@ -212,6 +285,14 @@ class SortTrial extends Trial {
   }
 
   bool isCorrect(int bin) => bin == answer;
+
+  /// Right by the other rule, wrong by this one: sorting by the old rule
+  /// after the rule changed.
+  List<String> errorsFor(int bin) {
+    if (bin == answer) return const [];
+    final other = rule == SortRule.colour ? bins[bin].shape == card.shape : bins[bin].hue == card.hue;
+    return [if (other) ErrorType.rulePerseveration else ErrorType.wrongObject];
+  }
 }
 
 /// Find all pairs on a board of face-down cards (match-pairs).
@@ -223,6 +304,8 @@ class PairsTrial extends Trial {
   /// A board counts as correct when the child needed no more wrong turns
   /// than there are pairs -- guessing on first sight is expected.
   bool isCorrect(int wrongTurns) => wrongTurns <= pairs;
+
+  List<String> errorsFor(int wrongTurns) => isCorrect(wrongTurns) ? const [] : const [ErrorType.wrongObject];
 }
 
 /// Watch lights flash in order, then repeat the order (sequence-recall).
@@ -238,6 +321,8 @@ class SequenceTrial extends Trial {
     }
     return true;
   }
+
+  List<String> errorsFor(List<int> response) => isCorrect(response) ? const [] : const [ErrorType.sequenceBreak];
 }
 
 /// One item passing by: act on targets, hold back on the rest (go-no-go and
@@ -251,6 +336,13 @@ class StreamItemTrial extends Trial {
   final StreamTheme theme;
 
   bool isCorrect({required bool tapped}) => tapped == isTarget;
+
+  /// Acting on a "don't" item is the impulsive error go/no-go is about;
+  /// letting a target go by is a miss.
+  List<String> errorsFor({required bool tapped}) {
+    if (tapped == isTarget) return const [];
+    return [tapped ? ErrorType.impulsiveResponse : ErrorType.missedTarget];
+  }
 }
 
 enum StreamTheme { sea, balloons, bubbles }
@@ -261,6 +353,8 @@ class ClapTrial extends Trial {
   final Word word;
 
   bool isCorrect(int taps) => taps == word.parts.length;
+
+  List<String> errorsFor(int taps) => _countErrors(taps, word.parts.length);
 }
 
 /// Tap where reading starts, or tap the words in reading order (print-follow).
@@ -286,6 +380,8 @@ class PrintTrial extends Trial {
     }
     return true;
   }
+
+  List<String> errorsFor(List<(int, int)> taps) => isCorrect(taps) ? const [] : const [ErrorType.sequenceBreak];
 }
 
 /// Drag letter tiles into slots to build the pictured word (build-word).
@@ -297,4 +393,12 @@ class BuildWordTrial extends Trial {
 
   /// Built with no wrong tile placed.
   bool isCorrect(int wrongPlacements) => wrongPlacements == 0;
+
+  List<String> errorsFor(int wrongPlacements) => isCorrect(wrongPlacements) ? const [] : const [ErrorType.wrongObject];
 }
+
+/// Too many or too few, for any answer that is a count.
+List<String> _countErrors(int given, int wanted) => [
+      if (given > wanted) ErrorType.overCount,
+      if (given < wanted) ErrorType.underCount,
+    ];

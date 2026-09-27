@@ -2414,6 +2414,1051 @@ class ActivityRecordRowsCompanion extends UpdateCompanion<ActivityRecordRow> {
   }
 }
 
+class $SkillEvidenceRowsTable extends SkillEvidenceRows
+    with TableInfo<$SkillEvidenceRowsTable, SkillEvidenceRow> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $SkillEvidenceRowsTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+    'id',
+    aliasedName,
+    false,
+    hasAutoIncrement: true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'PRIMARY KEY AUTOINCREMENT',
+    ),
+  );
+  static const VerificationMeta _childIdMeta = const VerificationMeta(
+    'childId',
+  );
+  @override
+  late final GeneratedColumn<String> childId = GeneratedColumn<String>(
+    'child_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _skillIdMeta = const VerificationMeta(
+    'skillId',
+  );
+  @override
+  late final GeneratedColumn<String> skillId = GeneratedColumn<String>(
+    'skill_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _sessionIdMeta = const VerificationMeta(
+    'sessionId',
+  );
+  @override
+  late final GeneratedColumn<String> sessionId = GeneratedColumn<String>(
+    'session_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _atMeta = const VerificationMeta('at');
+  @override
+  late final GeneratedColumn<DateTime> at = GeneratedColumn<DateTime>(
+    'at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _gameIdMeta = const VerificationMeta('gameId');
+  @override
+  late final GeneratedColumn<String> gameId = GeneratedColumn<String>(
+    'game_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _mechanicIdMeta = const VerificationMeta(
+    'mechanicId',
+  );
+  @override
+  late final GeneratedColumn<String> mechanicId = GeneratedColumn<String>(
+    'mechanic_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _activityIdMeta = const VerificationMeta(
+    'activityId',
+  );
+  @override
+  late final GeneratedColumn<String> activityId = GeneratedColumn<String>(
+    'activity_id',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _contextMeta = const VerificationMeta(
+    'context',
+  );
+  @override
+  late final GeneratedColumn<String> context = GeneratedColumn<String>(
+    'context',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _rungIdMeta = const VerificationMeta('rungId');
+  @override
+  late final GeneratedColumn<String> rungId = GeneratedColumn<String>(
+    'rung_id',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _scaffoldMeta = const VerificationMeta(
+    'scaffold',
+  );
+  @override
+  late final GeneratedColumn<String> scaffold = GeneratedColumn<String>(
+    'scaffold',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _trialsMeta = const VerificationMeta('trials');
+  @override
+  late final GeneratedColumn<int> trials = GeneratedColumn<int>(
+    'trials',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _correctMeta = const VerificationMeta(
+    'correct',
+  );
+  @override
+  late final GeneratedColumn<int> correct = GeneratedColumn<int>(
+    'correct',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _hintsMeta = const VerificationMeta('hints');
+  @override
+  late final GeneratedColumn<int> hints = GeneratedColumn<int>(
+    'hints',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _hintRequestsMeta = const VerificationMeta(
+    'hintRequests',
+  );
+  @override
+  late final GeneratedColumn<int> hintRequests = GeneratedColumn<int>(
+    'hint_requests',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _adultAssistsMeta = const VerificationMeta(
+    'adultAssists',
+  );
+  @override
+  late final GeneratedColumn<int> adultAssists = GeneratedColumn<int>(
+    'adult_assists',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _retriesMeta = const VerificationMeta(
+    'retries',
+  );
+  @override
+  late final GeneratedColumn<int> retries = GeneratedColumn<int>(
+    'retries',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _selfCorrectionsMeta = const VerificationMeta(
+    'selfCorrections',
+  );
+  @override
+  late final GeneratedColumn<int> selfCorrections = GeneratedColumn<int>(
+    'self_corrections',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _errorsJsonMeta = const VerificationMeta(
+    'errorsJson',
+  );
+  @override
+  late final GeneratedColumn<String> errorsJson = GeneratedColumn<String>(
+    'errors_json',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    childId,
+    skillId,
+    sessionId,
+    at,
+    gameId,
+    mechanicId,
+    activityId,
+    context,
+    rungId,
+    scaffold,
+    trials,
+    correct,
+    hints,
+    hintRequests,
+    adultAssists,
+    retries,
+    selfCorrections,
+    errorsJson,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'skill_evidence_rows';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<SkillEvidenceRow> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('child_id')) {
+      context.handle(
+        _childIdMeta,
+        childId.isAcceptableOrUnknown(data['child_id']!, _childIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_childIdMeta);
+    }
+    if (data.containsKey('skill_id')) {
+      context.handle(
+        _skillIdMeta,
+        skillId.isAcceptableOrUnknown(data['skill_id']!, _skillIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_skillIdMeta);
+    }
+    if (data.containsKey('session_id')) {
+      context.handle(
+        _sessionIdMeta,
+        sessionId.isAcceptableOrUnknown(data['session_id']!, _sessionIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_sessionIdMeta);
+    }
+    if (data.containsKey('at')) {
+      context.handle(_atMeta, at.isAcceptableOrUnknown(data['at']!, _atMeta));
+    } else if (isInserting) {
+      context.missing(_atMeta);
+    }
+    if (data.containsKey('game_id')) {
+      context.handle(
+        _gameIdMeta,
+        gameId.isAcceptableOrUnknown(data['game_id']!, _gameIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_gameIdMeta);
+    }
+    if (data.containsKey('mechanic_id')) {
+      context.handle(
+        _mechanicIdMeta,
+        mechanicId.isAcceptableOrUnknown(data['mechanic_id']!, _mechanicIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_mechanicIdMeta);
+    }
+    if (data.containsKey('activity_id')) {
+      context.handle(
+        _activityIdMeta,
+        activityId.isAcceptableOrUnknown(data['activity_id']!, _activityIdMeta),
+      );
+    }
+    if (data.containsKey('context')) {
+      context.handle(
+        _contextMeta,
+        this.context.isAcceptableOrUnknown(data['context']!, _contextMeta),
+      );
+    }
+    if (data.containsKey('rung_id')) {
+      context.handle(
+        _rungIdMeta,
+        rungId.isAcceptableOrUnknown(data['rung_id']!, _rungIdMeta),
+      );
+    }
+    if (data.containsKey('scaffold')) {
+      context.handle(
+        _scaffoldMeta,
+        scaffold.isAcceptableOrUnknown(data['scaffold']!, _scaffoldMeta),
+      );
+    }
+    if (data.containsKey('trials')) {
+      context.handle(
+        _trialsMeta,
+        trials.isAcceptableOrUnknown(data['trials']!, _trialsMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_trialsMeta);
+    }
+    if (data.containsKey('correct')) {
+      context.handle(
+        _correctMeta,
+        correct.isAcceptableOrUnknown(data['correct']!, _correctMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_correctMeta);
+    }
+    if (data.containsKey('hints')) {
+      context.handle(
+        _hintsMeta,
+        hints.isAcceptableOrUnknown(data['hints']!, _hintsMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_hintsMeta);
+    }
+    if (data.containsKey('hint_requests')) {
+      context.handle(
+        _hintRequestsMeta,
+        hintRequests.isAcceptableOrUnknown(
+          data['hint_requests']!,
+          _hintRequestsMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_hintRequestsMeta);
+    }
+    if (data.containsKey('adult_assists')) {
+      context.handle(
+        _adultAssistsMeta,
+        adultAssists.isAcceptableOrUnknown(
+          data['adult_assists']!,
+          _adultAssistsMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_adultAssistsMeta);
+    }
+    if (data.containsKey('retries')) {
+      context.handle(
+        _retriesMeta,
+        retries.isAcceptableOrUnknown(data['retries']!, _retriesMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_retriesMeta);
+    }
+    if (data.containsKey('self_corrections')) {
+      context.handle(
+        _selfCorrectionsMeta,
+        selfCorrections.isAcceptableOrUnknown(
+          data['self_corrections']!,
+          _selfCorrectionsMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_selfCorrectionsMeta);
+    }
+    if (data.containsKey('errors_json')) {
+      context.handle(
+        _errorsJsonMeta,
+        errorsJson.isAcceptableOrUnknown(data['errors_json']!, _errorsJsonMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_errorsJsonMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  SkillEvidenceRow map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return SkillEvidenceRow(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}id'],
+      )!,
+      childId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}child_id'],
+      )!,
+      skillId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}skill_id'],
+      )!,
+      sessionId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}session_id'],
+      )!,
+      at: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}at'],
+      )!,
+      gameId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}game_id'],
+      )!,
+      mechanicId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}mechanic_id'],
+      )!,
+      activityId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}activity_id'],
+      ),
+      context: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}context'],
+      ),
+      rungId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}rung_id'],
+      ),
+      scaffold: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}scaffold'],
+      ),
+      trials: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}trials'],
+      )!,
+      correct: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}correct'],
+      )!,
+      hints: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}hints'],
+      )!,
+      hintRequests: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}hint_requests'],
+      )!,
+      adultAssists: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}adult_assists'],
+      )!,
+      retries: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}retries'],
+      )!,
+      selfCorrections: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}self_corrections'],
+      )!,
+      errorsJson: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}errors_json'],
+      )!,
+    );
+  }
+
+  @override
+  $SkillEvidenceRowsTable createAlias(String alias) {
+    return $SkillEvidenceRowsTable(attachedDatabase, alias);
+  }
+}
+
+class SkillEvidenceRow extends DataClass
+    implements Insertable<SkillEvidenceRow> {
+  final int id;
+  final String childId;
+  final String skillId;
+  final String sessionId;
+  final DateTime at;
+  final String gameId;
+  final String mechanicId;
+  final String? activityId;
+  final String? context;
+  final String? rungId;
+  final String? scaffold;
+  final int trials;
+  final int correct;
+  final int hints;
+  final int hintRequests;
+  final int adultAssists;
+  final int retries;
+  final int selfCorrections;
+
+  /// Error type -> count, as JSON.
+  final String errorsJson;
+  const SkillEvidenceRow({
+    required this.id,
+    required this.childId,
+    required this.skillId,
+    required this.sessionId,
+    required this.at,
+    required this.gameId,
+    required this.mechanicId,
+    this.activityId,
+    this.context,
+    this.rungId,
+    this.scaffold,
+    required this.trials,
+    required this.correct,
+    required this.hints,
+    required this.hintRequests,
+    required this.adultAssists,
+    required this.retries,
+    required this.selfCorrections,
+    required this.errorsJson,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<int>(id);
+    map['child_id'] = Variable<String>(childId);
+    map['skill_id'] = Variable<String>(skillId);
+    map['session_id'] = Variable<String>(sessionId);
+    map['at'] = Variable<DateTime>(at);
+    map['game_id'] = Variable<String>(gameId);
+    map['mechanic_id'] = Variable<String>(mechanicId);
+    if (!nullToAbsent || activityId != null) {
+      map['activity_id'] = Variable<String>(activityId);
+    }
+    if (!nullToAbsent || context != null) {
+      map['context'] = Variable<String>(context);
+    }
+    if (!nullToAbsent || rungId != null) {
+      map['rung_id'] = Variable<String>(rungId);
+    }
+    if (!nullToAbsent || scaffold != null) {
+      map['scaffold'] = Variable<String>(scaffold);
+    }
+    map['trials'] = Variable<int>(trials);
+    map['correct'] = Variable<int>(correct);
+    map['hints'] = Variable<int>(hints);
+    map['hint_requests'] = Variable<int>(hintRequests);
+    map['adult_assists'] = Variable<int>(adultAssists);
+    map['retries'] = Variable<int>(retries);
+    map['self_corrections'] = Variable<int>(selfCorrections);
+    map['errors_json'] = Variable<String>(errorsJson);
+    return map;
+  }
+
+  SkillEvidenceRowsCompanion toCompanion(bool nullToAbsent) {
+    return SkillEvidenceRowsCompanion(
+      id: Value(id),
+      childId: Value(childId),
+      skillId: Value(skillId),
+      sessionId: Value(sessionId),
+      at: Value(at),
+      gameId: Value(gameId),
+      mechanicId: Value(mechanicId),
+      activityId: activityId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(activityId),
+      context: context == null && nullToAbsent
+          ? const Value.absent()
+          : Value(context),
+      rungId: rungId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(rungId),
+      scaffold: scaffold == null && nullToAbsent
+          ? const Value.absent()
+          : Value(scaffold),
+      trials: Value(trials),
+      correct: Value(correct),
+      hints: Value(hints),
+      hintRequests: Value(hintRequests),
+      adultAssists: Value(adultAssists),
+      retries: Value(retries),
+      selfCorrections: Value(selfCorrections),
+      errorsJson: Value(errorsJson),
+    );
+  }
+
+  factory SkillEvidenceRow.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return SkillEvidenceRow(
+      id: serializer.fromJson<int>(json['id']),
+      childId: serializer.fromJson<String>(json['childId']),
+      skillId: serializer.fromJson<String>(json['skillId']),
+      sessionId: serializer.fromJson<String>(json['sessionId']),
+      at: serializer.fromJson<DateTime>(json['at']),
+      gameId: serializer.fromJson<String>(json['gameId']),
+      mechanicId: serializer.fromJson<String>(json['mechanicId']),
+      activityId: serializer.fromJson<String?>(json['activityId']),
+      context: serializer.fromJson<String?>(json['context']),
+      rungId: serializer.fromJson<String?>(json['rungId']),
+      scaffold: serializer.fromJson<String?>(json['scaffold']),
+      trials: serializer.fromJson<int>(json['trials']),
+      correct: serializer.fromJson<int>(json['correct']),
+      hints: serializer.fromJson<int>(json['hints']),
+      hintRequests: serializer.fromJson<int>(json['hintRequests']),
+      adultAssists: serializer.fromJson<int>(json['adultAssists']),
+      retries: serializer.fromJson<int>(json['retries']),
+      selfCorrections: serializer.fromJson<int>(json['selfCorrections']),
+      errorsJson: serializer.fromJson<String>(json['errorsJson']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<int>(id),
+      'childId': serializer.toJson<String>(childId),
+      'skillId': serializer.toJson<String>(skillId),
+      'sessionId': serializer.toJson<String>(sessionId),
+      'at': serializer.toJson<DateTime>(at),
+      'gameId': serializer.toJson<String>(gameId),
+      'mechanicId': serializer.toJson<String>(mechanicId),
+      'activityId': serializer.toJson<String?>(activityId),
+      'context': serializer.toJson<String?>(context),
+      'rungId': serializer.toJson<String?>(rungId),
+      'scaffold': serializer.toJson<String?>(scaffold),
+      'trials': serializer.toJson<int>(trials),
+      'correct': serializer.toJson<int>(correct),
+      'hints': serializer.toJson<int>(hints),
+      'hintRequests': serializer.toJson<int>(hintRequests),
+      'adultAssists': serializer.toJson<int>(adultAssists),
+      'retries': serializer.toJson<int>(retries),
+      'selfCorrections': serializer.toJson<int>(selfCorrections),
+      'errorsJson': serializer.toJson<String>(errorsJson),
+    };
+  }
+
+  SkillEvidenceRow copyWith({
+    int? id,
+    String? childId,
+    String? skillId,
+    String? sessionId,
+    DateTime? at,
+    String? gameId,
+    String? mechanicId,
+    Value<String?> activityId = const Value.absent(),
+    Value<String?> context = const Value.absent(),
+    Value<String?> rungId = const Value.absent(),
+    Value<String?> scaffold = const Value.absent(),
+    int? trials,
+    int? correct,
+    int? hints,
+    int? hintRequests,
+    int? adultAssists,
+    int? retries,
+    int? selfCorrections,
+    String? errorsJson,
+  }) => SkillEvidenceRow(
+    id: id ?? this.id,
+    childId: childId ?? this.childId,
+    skillId: skillId ?? this.skillId,
+    sessionId: sessionId ?? this.sessionId,
+    at: at ?? this.at,
+    gameId: gameId ?? this.gameId,
+    mechanicId: mechanicId ?? this.mechanicId,
+    activityId: activityId.present ? activityId.value : this.activityId,
+    context: context.present ? context.value : this.context,
+    rungId: rungId.present ? rungId.value : this.rungId,
+    scaffold: scaffold.present ? scaffold.value : this.scaffold,
+    trials: trials ?? this.trials,
+    correct: correct ?? this.correct,
+    hints: hints ?? this.hints,
+    hintRequests: hintRequests ?? this.hintRequests,
+    adultAssists: adultAssists ?? this.adultAssists,
+    retries: retries ?? this.retries,
+    selfCorrections: selfCorrections ?? this.selfCorrections,
+    errorsJson: errorsJson ?? this.errorsJson,
+  );
+  SkillEvidenceRow copyWithCompanion(SkillEvidenceRowsCompanion data) {
+    return SkillEvidenceRow(
+      id: data.id.present ? data.id.value : this.id,
+      childId: data.childId.present ? data.childId.value : this.childId,
+      skillId: data.skillId.present ? data.skillId.value : this.skillId,
+      sessionId: data.sessionId.present ? data.sessionId.value : this.sessionId,
+      at: data.at.present ? data.at.value : this.at,
+      gameId: data.gameId.present ? data.gameId.value : this.gameId,
+      mechanicId: data.mechanicId.present
+          ? data.mechanicId.value
+          : this.mechanicId,
+      activityId: data.activityId.present
+          ? data.activityId.value
+          : this.activityId,
+      context: data.context.present ? data.context.value : this.context,
+      rungId: data.rungId.present ? data.rungId.value : this.rungId,
+      scaffold: data.scaffold.present ? data.scaffold.value : this.scaffold,
+      trials: data.trials.present ? data.trials.value : this.trials,
+      correct: data.correct.present ? data.correct.value : this.correct,
+      hints: data.hints.present ? data.hints.value : this.hints,
+      hintRequests: data.hintRequests.present
+          ? data.hintRequests.value
+          : this.hintRequests,
+      adultAssists: data.adultAssists.present
+          ? data.adultAssists.value
+          : this.adultAssists,
+      retries: data.retries.present ? data.retries.value : this.retries,
+      selfCorrections: data.selfCorrections.present
+          ? data.selfCorrections.value
+          : this.selfCorrections,
+      errorsJson: data.errorsJson.present
+          ? data.errorsJson.value
+          : this.errorsJson,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('SkillEvidenceRow(')
+          ..write('id: $id, ')
+          ..write('childId: $childId, ')
+          ..write('skillId: $skillId, ')
+          ..write('sessionId: $sessionId, ')
+          ..write('at: $at, ')
+          ..write('gameId: $gameId, ')
+          ..write('mechanicId: $mechanicId, ')
+          ..write('activityId: $activityId, ')
+          ..write('context: $context, ')
+          ..write('rungId: $rungId, ')
+          ..write('scaffold: $scaffold, ')
+          ..write('trials: $trials, ')
+          ..write('correct: $correct, ')
+          ..write('hints: $hints, ')
+          ..write('hintRequests: $hintRequests, ')
+          ..write('adultAssists: $adultAssists, ')
+          ..write('retries: $retries, ')
+          ..write('selfCorrections: $selfCorrections, ')
+          ..write('errorsJson: $errorsJson')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    id,
+    childId,
+    skillId,
+    sessionId,
+    at,
+    gameId,
+    mechanicId,
+    activityId,
+    context,
+    rungId,
+    scaffold,
+    trials,
+    correct,
+    hints,
+    hintRequests,
+    adultAssists,
+    retries,
+    selfCorrections,
+    errorsJson,
+  );
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is SkillEvidenceRow &&
+          other.id == this.id &&
+          other.childId == this.childId &&
+          other.skillId == this.skillId &&
+          other.sessionId == this.sessionId &&
+          other.at == this.at &&
+          other.gameId == this.gameId &&
+          other.mechanicId == this.mechanicId &&
+          other.activityId == this.activityId &&
+          other.context == this.context &&
+          other.rungId == this.rungId &&
+          other.scaffold == this.scaffold &&
+          other.trials == this.trials &&
+          other.correct == this.correct &&
+          other.hints == this.hints &&
+          other.hintRequests == this.hintRequests &&
+          other.adultAssists == this.adultAssists &&
+          other.retries == this.retries &&
+          other.selfCorrections == this.selfCorrections &&
+          other.errorsJson == this.errorsJson);
+}
+
+class SkillEvidenceRowsCompanion extends UpdateCompanion<SkillEvidenceRow> {
+  final Value<int> id;
+  final Value<String> childId;
+  final Value<String> skillId;
+  final Value<String> sessionId;
+  final Value<DateTime> at;
+  final Value<String> gameId;
+  final Value<String> mechanicId;
+  final Value<String?> activityId;
+  final Value<String?> context;
+  final Value<String?> rungId;
+  final Value<String?> scaffold;
+  final Value<int> trials;
+  final Value<int> correct;
+  final Value<int> hints;
+  final Value<int> hintRequests;
+  final Value<int> adultAssists;
+  final Value<int> retries;
+  final Value<int> selfCorrections;
+  final Value<String> errorsJson;
+  const SkillEvidenceRowsCompanion({
+    this.id = const Value.absent(),
+    this.childId = const Value.absent(),
+    this.skillId = const Value.absent(),
+    this.sessionId = const Value.absent(),
+    this.at = const Value.absent(),
+    this.gameId = const Value.absent(),
+    this.mechanicId = const Value.absent(),
+    this.activityId = const Value.absent(),
+    this.context = const Value.absent(),
+    this.rungId = const Value.absent(),
+    this.scaffold = const Value.absent(),
+    this.trials = const Value.absent(),
+    this.correct = const Value.absent(),
+    this.hints = const Value.absent(),
+    this.hintRequests = const Value.absent(),
+    this.adultAssists = const Value.absent(),
+    this.retries = const Value.absent(),
+    this.selfCorrections = const Value.absent(),
+    this.errorsJson = const Value.absent(),
+  });
+  SkillEvidenceRowsCompanion.insert({
+    this.id = const Value.absent(),
+    required String childId,
+    required String skillId,
+    required String sessionId,
+    required DateTime at,
+    required String gameId,
+    required String mechanicId,
+    this.activityId = const Value.absent(),
+    this.context = const Value.absent(),
+    this.rungId = const Value.absent(),
+    this.scaffold = const Value.absent(),
+    required int trials,
+    required int correct,
+    required int hints,
+    required int hintRequests,
+    required int adultAssists,
+    required int retries,
+    required int selfCorrections,
+    required String errorsJson,
+  }) : childId = Value(childId),
+       skillId = Value(skillId),
+       sessionId = Value(sessionId),
+       at = Value(at),
+       gameId = Value(gameId),
+       mechanicId = Value(mechanicId),
+       trials = Value(trials),
+       correct = Value(correct),
+       hints = Value(hints),
+       hintRequests = Value(hintRequests),
+       adultAssists = Value(adultAssists),
+       retries = Value(retries),
+       selfCorrections = Value(selfCorrections),
+       errorsJson = Value(errorsJson);
+  static Insertable<SkillEvidenceRow> custom({
+    Expression<int>? id,
+    Expression<String>? childId,
+    Expression<String>? skillId,
+    Expression<String>? sessionId,
+    Expression<DateTime>? at,
+    Expression<String>? gameId,
+    Expression<String>? mechanicId,
+    Expression<String>? activityId,
+    Expression<String>? context,
+    Expression<String>? rungId,
+    Expression<String>? scaffold,
+    Expression<int>? trials,
+    Expression<int>? correct,
+    Expression<int>? hints,
+    Expression<int>? hintRequests,
+    Expression<int>? adultAssists,
+    Expression<int>? retries,
+    Expression<int>? selfCorrections,
+    Expression<String>? errorsJson,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (childId != null) 'child_id': childId,
+      if (skillId != null) 'skill_id': skillId,
+      if (sessionId != null) 'session_id': sessionId,
+      if (at != null) 'at': at,
+      if (gameId != null) 'game_id': gameId,
+      if (mechanicId != null) 'mechanic_id': mechanicId,
+      if (activityId != null) 'activity_id': activityId,
+      if (context != null) 'context': context,
+      if (rungId != null) 'rung_id': rungId,
+      if (scaffold != null) 'scaffold': scaffold,
+      if (trials != null) 'trials': trials,
+      if (correct != null) 'correct': correct,
+      if (hints != null) 'hints': hints,
+      if (hintRequests != null) 'hint_requests': hintRequests,
+      if (adultAssists != null) 'adult_assists': adultAssists,
+      if (retries != null) 'retries': retries,
+      if (selfCorrections != null) 'self_corrections': selfCorrections,
+      if (errorsJson != null) 'errors_json': errorsJson,
+    });
+  }
+
+  SkillEvidenceRowsCompanion copyWith({
+    Value<int>? id,
+    Value<String>? childId,
+    Value<String>? skillId,
+    Value<String>? sessionId,
+    Value<DateTime>? at,
+    Value<String>? gameId,
+    Value<String>? mechanicId,
+    Value<String?>? activityId,
+    Value<String?>? context,
+    Value<String?>? rungId,
+    Value<String?>? scaffold,
+    Value<int>? trials,
+    Value<int>? correct,
+    Value<int>? hints,
+    Value<int>? hintRequests,
+    Value<int>? adultAssists,
+    Value<int>? retries,
+    Value<int>? selfCorrections,
+    Value<String>? errorsJson,
+  }) {
+    return SkillEvidenceRowsCompanion(
+      id: id ?? this.id,
+      childId: childId ?? this.childId,
+      skillId: skillId ?? this.skillId,
+      sessionId: sessionId ?? this.sessionId,
+      at: at ?? this.at,
+      gameId: gameId ?? this.gameId,
+      mechanicId: mechanicId ?? this.mechanicId,
+      activityId: activityId ?? this.activityId,
+      context: context ?? this.context,
+      rungId: rungId ?? this.rungId,
+      scaffold: scaffold ?? this.scaffold,
+      trials: trials ?? this.trials,
+      correct: correct ?? this.correct,
+      hints: hints ?? this.hints,
+      hintRequests: hintRequests ?? this.hintRequests,
+      adultAssists: adultAssists ?? this.adultAssists,
+      retries: retries ?? this.retries,
+      selfCorrections: selfCorrections ?? this.selfCorrections,
+      errorsJson: errorsJson ?? this.errorsJson,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (childId.present) {
+      map['child_id'] = Variable<String>(childId.value);
+    }
+    if (skillId.present) {
+      map['skill_id'] = Variable<String>(skillId.value);
+    }
+    if (sessionId.present) {
+      map['session_id'] = Variable<String>(sessionId.value);
+    }
+    if (at.present) {
+      map['at'] = Variable<DateTime>(at.value);
+    }
+    if (gameId.present) {
+      map['game_id'] = Variable<String>(gameId.value);
+    }
+    if (mechanicId.present) {
+      map['mechanic_id'] = Variable<String>(mechanicId.value);
+    }
+    if (activityId.present) {
+      map['activity_id'] = Variable<String>(activityId.value);
+    }
+    if (context.present) {
+      map['context'] = Variable<String>(context.value);
+    }
+    if (rungId.present) {
+      map['rung_id'] = Variable<String>(rungId.value);
+    }
+    if (scaffold.present) {
+      map['scaffold'] = Variable<String>(scaffold.value);
+    }
+    if (trials.present) {
+      map['trials'] = Variable<int>(trials.value);
+    }
+    if (correct.present) {
+      map['correct'] = Variable<int>(correct.value);
+    }
+    if (hints.present) {
+      map['hints'] = Variable<int>(hints.value);
+    }
+    if (hintRequests.present) {
+      map['hint_requests'] = Variable<int>(hintRequests.value);
+    }
+    if (adultAssists.present) {
+      map['adult_assists'] = Variable<int>(adultAssists.value);
+    }
+    if (retries.present) {
+      map['retries'] = Variable<int>(retries.value);
+    }
+    if (selfCorrections.present) {
+      map['self_corrections'] = Variable<int>(selfCorrections.value);
+    }
+    if (errorsJson.present) {
+      map['errors_json'] = Variable<String>(errorsJson.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('SkillEvidenceRowsCompanion(')
+          ..write('id: $id, ')
+          ..write('childId: $childId, ')
+          ..write('skillId: $skillId, ')
+          ..write('sessionId: $sessionId, ')
+          ..write('at: $at, ')
+          ..write('gameId: $gameId, ')
+          ..write('mechanicId: $mechanicId, ')
+          ..write('activityId: $activityId, ')
+          ..write('context: $context, ')
+          ..write('rungId: $rungId, ')
+          ..write('scaffold: $scaffold, ')
+          ..write('trials: $trials, ')
+          ..write('correct: $correct, ')
+          ..write('hints: $hints, ')
+          ..write('hintRequests: $hintRequests, ')
+          ..write('adultAssists: $adultAssists, ')
+          ..write('retries: $retries, ')
+          ..write('selfCorrections: $selfCorrections, ')
+          ..write('errorsJson: $errorsJson')
+          ..write(')'))
+        .toString();
+  }
+}
+
 abstract class _$NovaDatabase extends GeneratedDatabase {
   _$NovaDatabase(QueryExecutor e) : super(e);
   $NovaDatabaseManager get managers => $NovaDatabaseManager(this);
@@ -2427,6 +3472,8 @@ abstract class _$NovaDatabase extends GeneratedDatabase {
   late final $SettingRowsTable settingRows = $SettingRowsTable(this);
   late final $ActivityRecordRowsTable activityRecordRows =
       $ActivityRecordRowsTable(this);
+  late final $SkillEvidenceRowsTable skillEvidenceRows =
+      $SkillEvidenceRowsTable(this);
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
@@ -2438,6 +3485,7 @@ abstract class _$NovaDatabase extends GeneratedDatabase {
     levelProgressRows,
     settingRows,
     activityRecordRows,
+    skillEvidenceRows,
   ];
 }
 
@@ -3780,6 +4828,491 @@ typedef $$ActivityRecordRowsTableProcessedTableManager =
       ActivityRecordRow,
       PrefetchHooks Function()
     >;
+typedef $$SkillEvidenceRowsTableCreateCompanionBuilder =
+    SkillEvidenceRowsCompanion Function({
+      Value<int> id,
+      required String childId,
+      required String skillId,
+      required String sessionId,
+      required DateTime at,
+      required String gameId,
+      required String mechanicId,
+      Value<String?> activityId,
+      Value<String?> context,
+      Value<String?> rungId,
+      Value<String?> scaffold,
+      required int trials,
+      required int correct,
+      required int hints,
+      required int hintRequests,
+      required int adultAssists,
+      required int retries,
+      required int selfCorrections,
+      required String errorsJson,
+    });
+typedef $$SkillEvidenceRowsTableUpdateCompanionBuilder =
+    SkillEvidenceRowsCompanion Function({
+      Value<int> id,
+      Value<String> childId,
+      Value<String> skillId,
+      Value<String> sessionId,
+      Value<DateTime> at,
+      Value<String> gameId,
+      Value<String> mechanicId,
+      Value<String?> activityId,
+      Value<String?> context,
+      Value<String?> rungId,
+      Value<String?> scaffold,
+      Value<int> trials,
+      Value<int> correct,
+      Value<int> hints,
+      Value<int> hintRequests,
+      Value<int> adultAssists,
+      Value<int> retries,
+      Value<int> selfCorrections,
+      Value<String> errorsJson,
+    });
+
+class $$SkillEvidenceRowsTableFilterComposer
+    extends Composer<_$NovaDatabase, $SkillEvidenceRowsTable> {
+  $$SkillEvidenceRowsTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get childId => $composableBuilder(
+    column: $table.childId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get skillId => $composableBuilder(
+    column: $table.skillId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get sessionId => $composableBuilder(
+    column: $table.sessionId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get at => $composableBuilder(
+    column: $table.at,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get gameId => $composableBuilder(
+    column: $table.gameId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get mechanicId => $composableBuilder(
+    column: $table.mechanicId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get activityId => $composableBuilder(
+    column: $table.activityId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get context => $composableBuilder(
+    column: $table.context,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get rungId => $composableBuilder(
+    column: $table.rungId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get scaffold => $composableBuilder(
+    column: $table.scaffold,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get trials => $composableBuilder(
+    column: $table.trials,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get correct => $composableBuilder(
+    column: $table.correct,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get hints => $composableBuilder(
+    column: $table.hints,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get hintRequests => $composableBuilder(
+    column: $table.hintRequests,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get adultAssists => $composableBuilder(
+    column: $table.adultAssists,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get retries => $composableBuilder(
+    column: $table.retries,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get selfCorrections => $composableBuilder(
+    column: $table.selfCorrections,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get errorsJson => $composableBuilder(
+    column: $table.errorsJson,
+    builder: (column) => ColumnFilters(column),
+  );
+}
+
+class $$SkillEvidenceRowsTableOrderingComposer
+    extends Composer<_$NovaDatabase, $SkillEvidenceRowsTable> {
+  $$SkillEvidenceRowsTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get childId => $composableBuilder(
+    column: $table.childId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get skillId => $composableBuilder(
+    column: $table.skillId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get sessionId => $composableBuilder(
+    column: $table.sessionId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get at => $composableBuilder(
+    column: $table.at,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get gameId => $composableBuilder(
+    column: $table.gameId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get mechanicId => $composableBuilder(
+    column: $table.mechanicId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get activityId => $composableBuilder(
+    column: $table.activityId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get context => $composableBuilder(
+    column: $table.context,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get rungId => $composableBuilder(
+    column: $table.rungId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get scaffold => $composableBuilder(
+    column: $table.scaffold,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get trials => $composableBuilder(
+    column: $table.trials,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get correct => $composableBuilder(
+    column: $table.correct,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get hints => $composableBuilder(
+    column: $table.hints,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get hintRequests => $composableBuilder(
+    column: $table.hintRequests,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get adultAssists => $composableBuilder(
+    column: $table.adultAssists,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get retries => $composableBuilder(
+    column: $table.retries,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get selfCorrections => $composableBuilder(
+    column: $table.selfCorrections,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get errorsJson => $composableBuilder(
+    column: $table.errorsJson,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$SkillEvidenceRowsTableAnnotationComposer
+    extends Composer<_$NovaDatabase, $SkillEvidenceRowsTable> {
+  $$SkillEvidenceRowsTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<int> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get childId =>
+      $composableBuilder(column: $table.childId, builder: (column) => column);
+
+  GeneratedColumn<String> get skillId =>
+      $composableBuilder(column: $table.skillId, builder: (column) => column);
+
+  GeneratedColumn<String> get sessionId =>
+      $composableBuilder(column: $table.sessionId, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get at =>
+      $composableBuilder(column: $table.at, builder: (column) => column);
+
+  GeneratedColumn<String> get gameId =>
+      $composableBuilder(column: $table.gameId, builder: (column) => column);
+
+  GeneratedColumn<String> get mechanicId => $composableBuilder(
+    column: $table.mechanicId,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get activityId => $composableBuilder(
+    column: $table.activityId,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get context =>
+      $composableBuilder(column: $table.context, builder: (column) => column);
+
+  GeneratedColumn<String> get rungId =>
+      $composableBuilder(column: $table.rungId, builder: (column) => column);
+
+  GeneratedColumn<String> get scaffold =>
+      $composableBuilder(column: $table.scaffold, builder: (column) => column);
+
+  GeneratedColumn<int> get trials =>
+      $composableBuilder(column: $table.trials, builder: (column) => column);
+
+  GeneratedColumn<int> get correct =>
+      $composableBuilder(column: $table.correct, builder: (column) => column);
+
+  GeneratedColumn<int> get hints =>
+      $composableBuilder(column: $table.hints, builder: (column) => column);
+
+  GeneratedColumn<int> get hintRequests => $composableBuilder(
+    column: $table.hintRequests,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get adultAssists => $composableBuilder(
+    column: $table.adultAssists,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get retries =>
+      $composableBuilder(column: $table.retries, builder: (column) => column);
+
+  GeneratedColumn<int> get selfCorrections => $composableBuilder(
+    column: $table.selfCorrections,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get errorsJson => $composableBuilder(
+    column: $table.errorsJson,
+    builder: (column) => column,
+  );
+}
+
+class $$SkillEvidenceRowsTableTableManager
+    extends
+        RootTableManager<
+          _$NovaDatabase,
+          $SkillEvidenceRowsTable,
+          SkillEvidenceRow,
+          $$SkillEvidenceRowsTableFilterComposer,
+          $$SkillEvidenceRowsTableOrderingComposer,
+          $$SkillEvidenceRowsTableAnnotationComposer,
+          $$SkillEvidenceRowsTableCreateCompanionBuilder,
+          $$SkillEvidenceRowsTableUpdateCompanionBuilder,
+          (
+            SkillEvidenceRow,
+            BaseReferences<
+              _$NovaDatabase,
+              $SkillEvidenceRowsTable,
+              SkillEvidenceRow
+            >,
+          ),
+          SkillEvidenceRow,
+          PrefetchHooks Function()
+        > {
+  $$SkillEvidenceRowsTableTableManager(
+    _$NovaDatabase db,
+    $SkillEvidenceRowsTable table,
+  ) : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$SkillEvidenceRowsTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$SkillEvidenceRowsTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$SkillEvidenceRowsTableAnnotationComposer(
+                $db: db,
+                $table: table,
+              ),
+          updateCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                Value<String> childId = const Value.absent(),
+                Value<String> skillId = const Value.absent(),
+                Value<String> sessionId = const Value.absent(),
+                Value<DateTime> at = const Value.absent(),
+                Value<String> gameId = const Value.absent(),
+                Value<String> mechanicId = const Value.absent(),
+                Value<String?> activityId = const Value.absent(),
+                Value<String?> context = const Value.absent(),
+                Value<String?> rungId = const Value.absent(),
+                Value<String?> scaffold = const Value.absent(),
+                Value<int> trials = const Value.absent(),
+                Value<int> correct = const Value.absent(),
+                Value<int> hints = const Value.absent(),
+                Value<int> hintRequests = const Value.absent(),
+                Value<int> adultAssists = const Value.absent(),
+                Value<int> retries = const Value.absent(),
+                Value<int> selfCorrections = const Value.absent(),
+                Value<String> errorsJson = const Value.absent(),
+              }) => SkillEvidenceRowsCompanion(
+                id: id,
+                childId: childId,
+                skillId: skillId,
+                sessionId: sessionId,
+                at: at,
+                gameId: gameId,
+                mechanicId: mechanicId,
+                activityId: activityId,
+                context: context,
+                rungId: rungId,
+                scaffold: scaffold,
+                trials: trials,
+                correct: correct,
+                hints: hints,
+                hintRequests: hintRequests,
+                adultAssists: adultAssists,
+                retries: retries,
+                selfCorrections: selfCorrections,
+                errorsJson: errorsJson,
+              ),
+          createCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                required String childId,
+                required String skillId,
+                required String sessionId,
+                required DateTime at,
+                required String gameId,
+                required String mechanicId,
+                Value<String?> activityId = const Value.absent(),
+                Value<String?> context = const Value.absent(),
+                Value<String?> rungId = const Value.absent(),
+                Value<String?> scaffold = const Value.absent(),
+                required int trials,
+                required int correct,
+                required int hints,
+                required int hintRequests,
+                required int adultAssists,
+                required int retries,
+                required int selfCorrections,
+                required String errorsJson,
+              }) => SkillEvidenceRowsCompanion.insert(
+                id: id,
+                childId: childId,
+                skillId: skillId,
+                sessionId: sessionId,
+                at: at,
+                gameId: gameId,
+                mechanicId: mechanicId,
+                activityId: activityId,
+                context: context,
+                rungId: rungId,
+                scaffold: scaffold,
+                trials: trials,
+                correct: correct,
+                hints: hints,
+                hintRequests: hintRequests,
+                adultAssists: adultAssists,
+                retries: retries,
+                selfCorrections: selfCorrections,
+                errorsJson: errorsJson,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$SkillEvidenceRowsTableProcessedTableManager =
+    ProcessedTableManager<
+      _$NovaDatabase,
+      $SkillEvidenceRowsTable,
+      SkillEvidenceRow,
+      $$SkillEvidenceRowsTableFilterComposer,
+      $$SkillEvidenceRowsTableOrderingComposer,
+      $$SkillEvidenceRowsTableAnnotationComposer,
+      $$SkillEvidenceRowsTableCreateCompanionBuilder,
+      $$SkillEvidenceRowsTableUpdateCompanionBuilder,
+      (
+        SkillEvidenceRow,
+        BaseReferences<
+          _$NovaDatabase,
+          $SkillEvidenceRowsTable,
+          SkillEvidenceRow
+        >,
+      ),
+      SkillEvidenceRow,
+      PrefetchHooks Function()
+    >;
 
 class $NovaDatabaseManager {
   final _$NovaDatabase _db;
@@ -3796,4 +5329,6 @@ class $NovaDatabaseManager {
       $$SettingRowsTableTableManager(_db, _db.settingRows);
   $$ActivityRecordRowsTableTableManager get activityRecordRows =>
       $$ActivityRecordRowsTableTableManager(_db, _db.activityRecordRows);
+  $$SkillEvidenceRowsTableTableManager get skillEvidenceRows =>
+      $$SkillEvidenceRowsTableTableManager(_db, _db.skillEvidenceRows);
 }

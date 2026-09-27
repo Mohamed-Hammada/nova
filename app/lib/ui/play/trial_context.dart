@@ -35,6 +35,8 @@ class TrialContext {
     this.look = ChoiceLook.plain,
     this.startHelp = RoundHelp.none,
     this.onMoment,
+    this.onHandle,
+    this.onResponseDetail,
   });
   final String language;
   final AppLocalizations l10n;
@@ -42,6 +44,24 @@ class TrialContext {
   /// Log one response (correct or not). Some rounds log several. [attempt]
   /// is 2 or more for a second try in the same round.
   final void Function(bool correct, {int attempt}) onResponse;
+
+  /// The same, with what the round saw about the response (ErrorType:
+  /// over_count, distractor_selected...), reported from the mechanic itself.
+  /// When set, it is called instead of [onResponse].
+  final void Function(bool correct, {int attempt, List<String> errors})? onResponseDetail;
+
+  /// Views report every response through here.
+  void respond(bool correct, {int attempt = 1, List<String> errors = const []}) {
+    final detail = onResponseDetail;
+    if (detail != null) {
+      detail(correct, attempt: attempt, errors: errors);
+    } else {
+      onResponse(correct, attempt: attempt);
+    }
+  }
+
+  /// The child picked something up / put it down (drag rounds), for sound.
+  final void Function(bool drop)? onHandle;
 
   /// The round is over; move to the next.
   final VoidCallback onDone;

@@ -71,6 +71,7 @@ class ContentRuntime {
   Map<String, Parameter> allParameters() => _parametersById;
 
   Mechanic mechanic(String id) => _mechanicsById[id] ?? (throw ArgumentError('no such mechanic: $id'));
+  bool hasSignalDef(String id) => _signalsById.containsKey(id);
   SignalDef signalDef(String id) => _signalsById[id] ?? (throw ArgumentError('no such signal: $id'));
   LangPack langPack(String language) => _langpacksById[language] ?? (throw ArgumentError('no such langpack: $language'));
 

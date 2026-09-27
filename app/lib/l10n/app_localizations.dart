@@ -1735,6 +1735,600 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'I\'m right here with you. Let\'s look again together!'**
   String get withYou;
+
+  /// Settings section: music, effects, voice
+  ///
+  /// In en, this message translates to:
+  /// **'Sound'**
+  String get settingsSound;
+
+  /// Settings section: hints and motion
+  ///
+  /// In en, this message translates to:
+  /// **'Play'**
+  String get settingsPlay;
+
+  /// Settings section: name, age, companion, world
+  ///
+  /// In en, this message translates to:
+  /// **'Child'**
+  String get settingsChild;
+
+  /// Settings section: graphics quality
+  ///
+  /// In en, this message translates to:
+  /// **'Graphics'**
+  String get settingsGraphics;
+
+  /// Settings screen intro
+  ///
+  /// In en, this message translates to:
+  /// **'Everything here is saved on this device and applies straight away.'**
+  String get settingsIntro;
+
+  /// Setting: background music and ambience on/off
+  ///
+  /// In en, this message translates to:
+  /// **'Music'**
+  String get music;
+
+  /// Setting description
+  ///
+  /// In en, this message translates to:
+  /// **'Gentle music and nature sounds for each place of the journey.'**
+  String get musicDesc;
+
+  /// Setting: spoken instructions and recorded narration on/off
+  ///
+  /// In en, this message translates to:
+  /// **'Voice and narration'**
+  String get voiceNarration;
+
+  /// Setting: show the hint button during play
+  ///
+  /// In en, this message translates to:
+  /// **'Hint button'**
+  String get hintButton;
+
+  /// Setting description
+  ///
+  /// In en, this message translates to:
+  /// **'Shows the light-bulb button while playing. Nova\'s own step-by-step help stays on.'**
+  String get hintButtonDesc;
+
+  /// Setting: calmer screens
+  ///
+  /// In en, this message translates to:
+  /// **'Reduced motion'**
+  String get reducedMotion;
+
+  /// Setting description
+  ///
+  /// In en, this message translates to:
+  /// **'Calmer screens, with less moving and bouncing.'**
+  String get reducedMotionDesc;
+
+  /// Closes the settings screen
+  ///
+  /// In en, this message translates to:
+  /// **'Done'**
+  String get settingsDone;
+
+  /// Companion: next activity checks a secure skill in a new kind of game
+  ///
+  /// In en, this message translates to:
+  /// **'Let\'s try what you know in a new game!'**
+  String get recNewWay;
+
+  /// Skill trend
+  ///
+  /// In en, this message translates to:
+  /// **'Improving'**
+  String get trendImproving;
+
+  /// Skill trend
+  ///
+  /// In en, this message translates to:
+  /// **'Steady'**
+  String get trendSteady;
+
+  /// Skill trend
+  ///
+  /// In en, this message translates to:
+  /// **'Finding it harder lately'**
+  String get trendDeclining;
+
+  /// Skill trend
+  ///
+  /// In en, this message translates to:
+  /// **'Trend: needs more play'**
+  String get trendUnknown;
+
+  /// Skill independence
+  ///
+  /// In en, this message translates to:
+  /// **'Plays independently'**
+  String get independenceIndependent;
+
+  /// Skill independence
+  ///
+  /// In en, this message translates to:
+  /// **'Needs occasional help'**
+  String get independenceOccasional;
+
+  /// Skill independence
+  ///
+  /// In en, this message translates to:
+  /// **'Still needs help often'**
+  String get independenceNeedsHelp;
+
+  /// How much evidence there is
+  ///
+  /// In en, this message translates to:
+  /// **'Confidence: early evidence'**
+  String get confidenceEarly;
+
+  /// How much evidence there is
+  ///
+  /// In en, this message translates to:
+  /// **'Confidence: growing evidence'**
+  String get confidenceGrowing;
+
+  /// How much evidence there is
+  ///
+  /// In en, this message translates to:
+  /// **'Confidence: good evidence'**
+  String get confidenceGood;
+
+  /// Practice history of a skill
+  ///
+  /// In en, this message translates to:
+  /// **'{sessions} sessions · {rounds} rounds · {contexts} settings'**
+  String practiceHistory(String sessions, String rounds, String contexts);
+
+  /// Date a skill was last played
+  ///
+  /// In en, this message translates to:
+  /// **'Last practised: {date}'**
+  String lastPracticed(String date);
+
+  /// Transfer status
+  ///
+  /// In en, this message translates to:
+  /// **'Transfer: not yet'**
+  String get transferNotYet;
+
+  /// Transfer status
+  ///
+  /// In en, this message translates to:
+  /// **'Transfer: ready to try somewhere new'**
+  String get transferReady;
+
+  /// Transfer status
+  ///
+  /// In en, this message translates to:
+  /// **'Transfer: shown somewhere new'**
+  String get transferShown;
+
+  /// A repeated error pattern
+  ///
+  /// In en, this message translates to:
+  /// **'Keeps happening: {error}'**
+  String repeatedError(String error);
+
+  /// Self-corrections
+  ///
+  /// In en, this message translates to:
+  /// **'Fixed own mistakes {count} times'**
+  String selfCorrected(String count);
+
+  /// Error type
+  ///
+  /// In en, this message translates to:
+  /// **'counting past the number'**
+  String get errOverCount;
+
+  /// Error type
+  ///
+  /// In en, this message translates to:
+  /// **'stopping before the number'**
+  String get errUnderCount;
+
+  /// Error type
+  ///
+  /// In en, this message translates to:
+  /// **'picking the wrong kind of thing'**
+  String get errWrongObject;
+
+  /// Error type
+  ///
+  /// In en, this message translates to:
+  /// **'choosing a look-alike answer'**
+  String get errDistractor;
+
+  /// Error type
+  ///
+  /// In en, this message translates to:
+  /// **'choosing the smaller group'**
+  String get errChoseSmaller;
+
+  /// Error type
+  ///
+  /// In en, this message translates to:
+  /// **'choosing the bigger group'**
+  String get errChoseBigger;
+
+  /// Error type
+  ///
+  /// In en, this message translates to:
+  /// **'losing the order'**
+  String get errSequenceBreak;
+
+  /// Error type
+  ///
+  /// In en, this message translates to:
+  /// **'answering very quickly'**
+  String get errImpulsive;
+
+  /// Error type
+  ///
+  /// In en, this message translates to:
+  /// **'letting targets go by'**
+  String get errMissedTarget;
+
+  /// Error type
+  ///
+  /// In en, this message translates to:
+  /// **'sorting by the old rule'**
+  String get errPerseveration;
+
+  /// Error type
+  ///
+  /// In en, this message translates to:
+  /// **'the same mistake twice in a row'**
+  String get errRepeated;
+
+  /// Transfer probe task for grown-ups
+  ///
+  /// In en, this message translates to:
+  /// **'Try it at home: {task}'**
+  String tryAtHome(String task);
+
+  /// Grown-up reports the home task went well
+  ///
+  /// In en, this message translates to:
+  /// **'We did it!'**
+  String get tryAtHomeDidIt;
+
+  /// Grown-up reports the home task did not work yet
+  ///
+  /// In en, this message translates to:
+  /// **'Not yet'**
+  String get tryAtHomeNotYet;
+
+  /// Confirmation after a grown-up report
+  ///
+  /// In en, this message translates to:
+  /// **'Thanks! Noted.'**
+  String get tryAtHomeThanks;
+
+  /// Grown-up report: why the next activity was chosen
+  ///
+  /// In en, this message translates to:
+  /// **'Nova\'s next pick: {reason}'**
+  String whyNext(String reason);
+
+  /// Selection reason
+  ///
+  /// In en, this message translates to:
+  /// **'the next step of the adventure'**
+  String get reasonNextRequired;
+
+  /// Selection reason
+  ///
+  /// In en, this message translates to:
+  /// **'a skill that needs more practice'**
+  String get reasonPracticeMissingSkill;
+
+  /// Selection reason
+  ///
+  /// In en, this message translates to:
+  /// **'a mistake that keeps coming back'**
+  String get reasonRepeatedError;
+
+  /// Selection reason
+  ///
+  /// In en, this message translates to:
+  /// **'doing it with less help'**
+  String get reasonIndependence;
+
+  /// Selection reason
+  ///
+  /// In en, this message translates to:
+  /// **'keeping a known skill fresh'**
+  String get reasonReinforce;
+
+  /// Selection reason
+  ///
+  /// In en, this message translates to:
+  /// **'trying a known skill in a new kind of game'**
+  String get reasonTransfer;
+
+  /// Selection reason
+  ///
+  /// In en, this message translates to:
+  /// **'a challenge after strong play'**
+  String get reasonStretch;
+
+  /// Selection reason
+  ///
+  /// In en, this message translates to:
+  /// **'the same game again, made easier'**
+  String get reasonTryAgain;
+
+  /// Selection reason
+  ///
+  /// In en, this message translates to:
+  /// **'something different, for variety'**
+  String get reasonVariety;
+
+  /// Selection reason
+  ///
+  /// In en, this message translates to:
+  /// **'revisiting earlier games'**
+  String get reasonReview;
+
+  /// Progress: how skill profiles are built
+  ///
+  /// In en, this message translates to:
+  /// **'Each skill is described from all the sessions so far, not just the last one. Not a score.'**
+  String get skillProfileNote;
+
+  /// Communication skills (ENDCORE)
+  ///
+  /// In en, this message translates to:
+  /// **'{story} Show how you feel!'**
+  String promptShowFeeling(String story);
+
+  /// Communication skills (ENDCORE)
+  ///
+  /// In en, this message translates to:
+  /// **'{story} What could you say or do?'**
+  String promptWhatSay(String story);
+
+  /// Communication skills (ENDCORE)
+  ///
+  /// In en, this message translates to:
+  /// **'{story} What would help?'**
+  String promptHelpFriend(String story);
+
+  /// Communication skills (ENDCORE)
+  ///
+  /// In en, this message translates to:
+  /// **'{story} What is a calm way?'**
+  String promptCalmWay(String story);
+
+  /// Communication skills (ENDCORE)
+  ///
+  /// In en, this message translates to:
+  /// **'{story} What keeps it fair and friendly?'**
+  String promptFairWay(String story);
+
+  /// Communication skills (ENDCORE)
+  ///
+  /// In en, this message translates to:
+  /// **'giving up quietly (saying nothing)'**
+  String get errPassive;
+
+  /// Communication skills (ENDCORE)
+  ///
+  /// In en, this message translates to:
+  /// **'grabbing, pushing or shouting'**
+  String get errAggressive;
+
+  /// Communication skills (ENDCORE)
+  ///
+  /// In en, this message translates to:
+  /// **'unkind words to a friend'**
+  String get errUnkind;
+
+  /// Communication skills (ENDCORE)
+  ///
+  /// In en, this message translates to:
+  /// **'carrying on while a friend needs help'**
+  String get errSelfFocused;
+
+  /// Communication skills (ENDCORE)
+  ///
+  /// In en, this message translates to:
+  /// **'Communication and social skills'**
+  String get commSkillsTitle;
+
+  /// Communication skills (ENDCORE)
+  ///
+  /// In en, this message translates to:
+  /// **'Six skills in two levels, after the ENDCORE model (Fujimoto & Daibo, 2007): the basic skills underneath support the ones for getting on with others. For young children, shown through games and your own observations. A way of looking, not a test.'**
+  String get commSkillsIntro;
+
+  /// Communication skills (ENDCORE)
+  ///
+  /// In en, this message translates to:
+  /// **'Basic'**
+  String get commBasic;
+
+  /// Communication skills (ENDCORE)
+  ///
+  /// In en, this message translates to:
+  /// **'With others'**
+  String get commInterpersonal;
+
+  /// Communication skills (ENDCORE)
+  ///
+  /// In en, this message translates to:
+  /// **'Expressing'**
+  String get commExpressing;
+
+  /// Communication skills (ENDCORE)
+  ///
+  /// In en, this message translates to:
+  /// **'Understanding'**
+  String get commUnderstanding;
+
+  /// Communication skills (ENDCORE)
+  ///
+  /// In en, this message translates to:
+  /// **'Managing'**
+  String get commManaging;
+
+  /// Communication skills (ENDCORE)
+  ///
+  /// In en, this message translates to:
+  /// **'Showing feelings'**
+  String get commExpressivity;
+
+  /// Communication skills (ENDCORE)
+  ///
+  /// In en, this message translates to:
+  /// **'Reading feelings'**
+  String get commDecoding;
+
+  /// Communication skills (ENDCORE)
+  ///
+  /// In en, this message translates to:
+  /// **'Calming down'**
+  String get commSelfControl;
+
+  /// Communication skills (ENDCORE)
+  ///
+  /// In en, this message translates to:
+  /// **'Asking clearly and kindly'**
+  String get commAssertion;
+
+  /// Communication skills (ENDCORE)
+  ///
+  /// In en, this message translates to:
+  /// **'Caring about others'**
+  String get commOtherAcceptance;
+
+  /// Communication skills (ENDCORE)
+  ///
+  /// In en, this message translates to:
+  /// **'Keeping friendships good'**
+  String get commRelationships;
+
+  /// Communication skills (ENDCORE)
+  ///
+  /// In en, this message translates to:
+  /// **'Not played yet'**
+  String get commNoEvidence;
+
+  /// Settings: no text-to-speech voice for the language
+  ///
+  /// In en, this message translates to:
+  /// **'This device has no {language} voice, so questions are not read aloud in {language}.'**
+  String voiceMissing(String language);
+
+  /// Settings: no text-to-speech voice for the language
+  ///
+  /// In en, this message translates to:
+  /// **'To add one: on Windows, open Settings > Time & language > Speech > Add voices, choose {language}, then restart the browser (or use Microsoft Edge, which has {language} voices). On Android, open Settings > Text-to-speech and install {language}.'**
+  String voiceMissingHow(String language);
+
+  /// Round prompt
+  ///
+  /// In en, this message translates to:
+  /// **'{shown} and how many more make {total}?'**
+  String promptMakeTen(String shown, String total);
+
+  /// Round prompt
+  ///
+  /// In en, this message translates to:
+  /// **'The frog is on {at}. It hops {hops}. Where does it land?'**
+  String promptPathHop(String at, String hops);
+
+  /// Home notice: no TTS voice for the language
+  ///
+  /// In en, this message translates to:
+  /// **'For grown-ups: this device has no {language} voice, so questions are not read aloud. Tap to fix.'**
+  String noVoiceHome(String language);
+
+  /// Cherry Sums prompt (さくらんぼ計算)
+  ///
+  /// In en, this message translates to:
+  /// **'{a} needs how many to make 10?'**
+  String promptCherryTen(String a);
+
+  /// Cherry Sums prompt (さくらんぼ計算)
+  ///
+  /// In en, this message translates to:
+  /// **'{b} is {ten} and how many more?'**
+  String promptCherryRest(String b, String ten);
+
+  /// Cherry Sums prompt (さくらんぼ計算)
+  ///
+  /// In en, this message translates to:
+  /// **'Make ten first: {a} + {b} = ?'**
+  String promptCherrySum(String a, String b);
+
+  /// Grown-ups: Japanese math methods
+  ///
+  /// In en, this message translates to:
+  /// **'Japanese ways of learning to count and add'**
+  String get jpMathTitle;
+
+  /// Grown-ups: Japanese math methods
+  ///
+  /// In en, this message translates to:
+  /// **'Nova\'s number games follow methods used in Japanese classrooms and studied by researchers. Each has something to try at home.'**
+  String get jpMathIntro;
+
+  /// Grown-ups: Japanese math methods
+  ///
+  /// In en, this message translates to:
+  /// **'Parts of ten (ikutsu to ikutsu) — Make Ten'**
+  String get jpMakeTenTitle;
+
+  /// Grown-ups: Japanese math methods
+  ///
+  /// In en, this message translates to:
+  /// **'Every number to ten is two parts: 7 is 3 and 4. At home: show 7 fingers and ask how many more make 10.'**
+  String get jpMakeTenBody;
+
+  /// Grown-ups: Japanese math methods
+  ///
+  /// In en, this message translates to:
+  /// **'The cherry method (sakuranbo keisan) — Cherry Sums'**
+  String get jpCherryTitle;
+
+  /// Grown-ups: Japanese math methods
+  ///
+  /// In en, this message translates to:
+  /// **'To add 8 + 5, make ten first: split 5 into 2 and 3; 8 + 2 = 10, then 10 + 3 = 13. At home: fill a ten with buttons, then count the rest.'**
+  String get jpCherryBody;
+
+  /// Grown-ups: Japanese math methods
+  ///
+  /// In en, this message translates to:
+  /// **'Tape diagrams (tēpu-zu) — Tape Stories'**
+  String get jpTapeTitle;
+
+  /// Grown-ups: Japanese math methods
+  ///
+  /// In en, this message translates to:
+  /// **'A story problem drawn as one tape: two parts under the whole. At home: tell a small story problem and cut a paper strip into its two parts.'**
+  String get jpTapeBody;
+
+  /// Grown-ups: Japanese math methods
+  ///
+  /// In en, this message translates to:
+  /// **'Number paths, like sugoroku (sugoroku) — Frog Hops'**
+  String get jpPathTitle;
+
+  /// Grown-ups: Japanese math methods
+  ///
+  /// In en, this message translates to:
+  /// **'Moving along a numbered path, saying each number, builds the number line in the mind. At home: play a number board game to 10 or 20.'**
+  String get jpPathBody;
 }
 
 class _AppLocalizationsDelegate

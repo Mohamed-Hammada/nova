@@ -80,6 +80,32 @@ class ActivityRecordRows extends Table {
   Set<Column> get primaryKey => {childId, activityId};
 }
 
+/// One row per session and skill: the evidence the Skill Profile is built
+/// from (core/skills). Appended, never updated or deleted (schema v5).
+class SkillEvidenceRows extends Table {
+  IntColumn get id => integer().autoIncrement()();
+  TextColumn get childId => text()();
+  TextColumn get skillId => text()();
+  TextColumn get sessionId => text()();
+  DateTimeColumn get at => dateTime()();
+  TextColumn get gameId => text()();
+  TextColumn get mechanicId => text()();
+  TextColumn get activityId => text().nullable()();
+  TextColumn get context => text().nullable()();
+  TextColumn get rungId => text().nullable()();
+  TextColumn get scaffold => text().nullable()();
+  IntColumn get trials => integer()();
+  IntColumn get correct => integer()();
+  IntColumn get hints => integer()();
+  IntColumn get hintRequests => integer()();
+  IntColumn get adultAssists => integer()();
+  IntColumn get retries => integer()();
+  IntColumn get selfCorrections => integer()();
+
+  /// Error type -> count, as JSON.
+  TextColumn get errorsJson => text()();
+}
+
 /// Per-device settings: age group, language, and the grown-up's choices for
 /// voice, microphone and camera.
 class SettingRows extends Table {
@@ -90,12 +116,12 @@ class SettingRows extends Table {
   Set<Column> get primaryKey => {key};
 }
 
-@DriftDatabase(tables: [MasteryRecordRows, DimensionEstimateRows, GameRungState, LevelProgressRows, SettingRows, ActivityRecordRows])
+@DriftDatabase(tables: [MasteryRecordRows, DimensionEstimateRows, GameRungState, LevelProgressRows, SettingRows, ActivityRecordRows, SkillEvidenceRows])
 class NovaDatabase extends _$NovaDatabase {
   NovaDatabase(super.executor);
 
   @override
-  int get schemaVersion => 4;
+  int get schemaVersion => 5;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -122,6 +148,11 @@ class NovaDatabase extends _$NovaDatabase {
           }
           if (from < 4) {
             await m.addColumn(gameRungState, gameRungState.scaffold);
+          }
+          if (from < 5) {
+            // Skill evidence starts with the next session; older sessions
+            // live on as the mastery record and dimension estimates.
+            await m.createTable(skillEvidenceRows);
           }
         },
       );

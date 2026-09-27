@@ -76,6 +76,7 @@
   description_key: skill.math.add-sub.within-20.description
   prerequisites:
   - {skill: math.add-sub.within-10}
+  - {skill: math.number.parts-of-ten, evidence_refs: [ev.math.murata-2004]}
   age_range: [6, 8]
   indicators: [Uses make-ten to cross ten, Answers number sentences without objects]
   evidence_basis: judgment
@@ -106,3 +107,27 @@
   evidence_refs: [ev.design.math-strand-order]
   scope: universal
   deep_scope: false
+- id: math.number.parts-of-ten
+  domains: [math]
+  name_key: skill.math.number.parts-of-ten.name
+  description_key: skill.math.number.parts-of-ten.description
+  prerequisites:
+  - {skill: math.count.cardinality}
+  age_range: [4, 7]
+  indicators: [Says how many more make five or ten, Knows the pairs that make ten without counting]
+  evidence_basis: empirical
+  evidence_refs: [ev.math.kullberg-2020, ev.math.murata-2004]
+  scope: universal
+  deep_scope: true
+- id: math.number.path-to-10
+  domains: [math]
+  name_key: skill.math.number.path-to-10.name
+  description_key: skill.math.number.path-to-10.description
+  prerequisites:
+  - {skill: math.count.one-to-one-5}
+  age_range: [3, 6]
+  indicators: [Moves a counter the right number of squares along a numbered path, Says where it lands before moving]
+  evidence_basis: empirical
+  evidence_refs: [ev.math.siegler-ramani-2008, ev.math.ramani-siegler-2008]
+  scope: universal
+  deep_scope: true

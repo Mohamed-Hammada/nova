@@ -13,6 +13,7 @@ from .game_rules import check_games
 from .graph_rules import check_skill_graph
 from .i18n_rules import check_i18n
 from .id_lifecycle_rules import check_id_lifecycle, write_baseline
+from .research_rules import check_new_game_research
 from .journey_rules import check_journeys
 from .langpack_rules import check_langpacks
 from .loader import load_spec
@@ -80,6 +81,7 @@ def main(argv: list[str] | None = None) -> int:
     issues = run_all(spec, args.data / "schema")
     if not any(issue.level == "error" for issue in issues):
         issues += check_id_lifecycle(spec, baseline_path)
+        issues += check_new_game_research(spec, args.data / "research_grandfathered.json")
 
     if args.update_baseline:
         error_count = sum(1 for issue in issues if issue.level == "error")

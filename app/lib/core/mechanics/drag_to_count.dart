@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import 'package:nova_app/core/skills/error_types.dart';
+
 import 'game_mechanic.dart';
 import 'raw_events.dart';
 
@@ -28,6 +30,11 @@ class DragToCountController implements GameMechanic {
   int _hintsSinceLastSubmission = 0;
   int _attempt = 0;
   bool _hintVisible = false;
+
+  // Self-correction: the plate went wrong (one too many, or a wrong item)
+  // and the child put it right before saying "done", unprompted.
+  bool _wentWrong = false;
+  bool _corrected = false;
 
   int get requestedTotal => _requestedTotal;
 
@@ -69,6 +76,8 @@ class DragToCountController implements GameMechanic {
     _hintsSinceLastSubmission = 0;
     _attempt = 0;
     _hintVisible = false;
+    _wentWrong = false;
+    _corrected = false;
   }
 
   /// The child put one item on the plate.
@@ -78,6 +87,7 @@ class DragToCountController implements GameMechanic {
     } else {
       _runningTotal += 1;
     }
+    if (isDistractor || _runningTotal > _requestedTotal) _wentWrong = true;
     _hintVisible = false;
     _controller.add(ItemPlaced(
       runningTotal: _runningTotal, requestedTotal: _requestedTotal, usedHint: false,
@@ -94,6 +104,7 @@ class DragToCountController implements GameMechanic {
     } else {
       _runningTotal -= 1;
     }
+    if (_wentWrong && _distractorsOnPlate == 0 && _runningTotal <= _requestedTotal) _corrected = true;
     _hintVisible = false;
     _controller.add(ItemRemoved(runningTotal: _runningTotal, isDistractor: isDistractor, at: _now()));
   }
@@ -107,12 +118,22 @@ class DragToCountController implements GameMechanic {
   /// can react synchronously without depending on stream delivery order.
   TrialSubmitted submitTrial() {
     _attempt += 1;
+    final correct = _runningTotal == _requestedTotal && _distractorsOnPlate == 0;
     final event = TrialSubmitted(
-      correct: _runningTotal == _requestedTotal && _distractorsOnPlate == 0,
+      correct: correct,
       hintsUsedThisTrial: _hintsSinceLastSubmission,
+      hintRequestsThisTrial: _hintsSinceLastSubmission,
       attempt: _attempt,
+      errors: [
+        if (_distractorsOnPlate > 0) ErrorType.wrongObject,
+        if (_runningTotal > _requestedTotal) ErrorType.overCount,
+        if (_runningTotal < _requestedTotal) ErrorType.underCount,
+        if (correct && _corrected) ErrorType.selfCorrection,
+      ],
       at: _now(),
     );
+    _wentWrong = false;
+    _corrected = false;
     _hintsSinceLastSubmission = 0;
     _hintVisible = false;
     _controller.add(event);

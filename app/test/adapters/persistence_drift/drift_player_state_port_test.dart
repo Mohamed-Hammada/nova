@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:drift/native.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:nova_app/adapters/persistence_drift/database.dart';
+import 'package:nova_app/adapters/persistence_drift/drift_persistence_port.dart';
 import 'package:nova_app/adapters/persistence_drift/drift_player_state_port.dart';
 import 'package:nova_app/core/game/session_plan.dart';
 import 'package:nova_app/core/journey/journey_models.dart';
@@ -55,5 +56,24 @@ void main() {
     await DriftPlayerStatePort(upgraded).saveActivityRecord(records.single.finished(t, completed: true, stars: 3, accuracy: 1, outcome: const SessionOutcome(stars: 3, accuracy: 1, move: AdaptiveMove.advance)));
     expect((await DriftPlayerStatePort(upgraded).activityRecords(childId: 'c')).single.lastMove, AdaptiveMove.advance);
     expect(await upgraded.customSelect('SELECT scaffold FROM game_rung_state').get(), isEmpty);
+  });
+
+  test('a version 4 database upgrades to version 5: skill evidence starts, nothing is lost', () async {
+    final dir = Directory.systemTemp.createTempSync('nova-migration-');
+    addTearDown(() => dir.deleteSync(recursive: true));
+    final file = File('${dir.path}/nova.sqlite');
+    final t = DateTime(2026, 3, 1, 10);
+
+    final first = NovaDatabase(NativeDatabase(file));
+    await DriftPlayerStatePort(first).saveActivityRecord(ActivityRecord.fresh('c', 'tiny-001', t).started(t).finished(t, completed: true, stars: 2, accuracy: 0.7));
+    await first.customStatement('DROP TABLE skill_evidence_rows');
+    await first.customStatement('PRAGMA user_version = 4');
+    await first.close();
+
+    final upgraded = NovaDatabase(NativeDatabase(file));
+    addTearDown(upgraded.close);
+    expect((await DriftPlayerStatePort(upgraded).activityRecords(childId: 'c')).single.bestStars, 2);
+    expect(await upgraded.customSelect('SELECT * FROM skill_evidence_rows').get(), isEmpty);
+    expect(await DriftPersistencePort(upgraded).skillEvidence(childId: 'c'), isEmpty);
   });
 }

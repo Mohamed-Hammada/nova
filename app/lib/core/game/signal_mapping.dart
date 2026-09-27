@@ -1,4 +1,5 @@
 import 'package:nova_app/core/mechanics/raw_events.dart';
+import 'package:nova_app/core/skills/error_types.dart';
 
 class SignalDraft {
   const SignalDraft(this.signalDefId, this.value);
@@ -22,18 +23,27 @@ typedef SignalMapper = List<SignalDraft> Function(RawMechanicEvent event);
 /// hints used during a retry still count toward `hints_used`, so support
 /// received on a retry lowers Independence as it should.
 ///
-/// Placing and removing items produce no signal on their own. (Taking an item
-/// back before submitting could later feed `self_correction`, but what counts
-/// as an unprompted self-correction is a curriculum decision not yet made.)
+/// Placing and removing items produce no signal on their own. Each error
+/// the game reported on a submission is one `error_type` signal (its
+/// category travels on the raw event into the Skill Evidence), and a
+/// self-correction -- the plate went wrong and the child fixed it before
+/// saying "done", unprompted (a provisional definition) -- is one
+/// `self_correction` signal.
 List<SignalDraft> bearApplesSignalMapper(RawMechanicEvent event) {
+  List<SignalDraft> observed(List<String> errors) => [
+        for (final e in errors)
+          if (e == ErrorType.selfCorrection) const SignalDraft('self_correction', 1) else if (ErrorType.isMistake(e)) const SignalDraft('error_type', 1),
+      ];
   return switch (event) {
-    TrialSubmitted(attempt: 1, :final correct, :final hintsUsedThisTrial) => [
+    TrialSubmitted(attempt: 1, :final correct, :final hintsUsedThisTrial, :final errors) => [
         SignalDraft('accuracy', correct ? 1.0 : 0.0),
         SignalDraft('hints_used', hintsUsedThisTrial),
+        ...observed(errors),
       ],
-    TrialSubmitted(:final hintsUsedThisTrial) => [
+    TrialSubmitted(:final hintsUsedThisTrial, :final errors) => [
         const SignalDraft('retries', 1),
         SignalDraft('hints_used', hintsUsedThisTrial),
+        ...observed(errors),
       ],
     ItemPlaced() || ItemRemoved() => const [],
   };

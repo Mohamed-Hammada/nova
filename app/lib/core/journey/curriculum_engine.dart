@@ -1,15 +1,22 @@
 import 'package:nova_app/core/content/content_runtime.dart';
 import 'package:nova_app/core/content/models.dart';
+import 'package:nova_app/core/skills/skill_graph.dart';
 
 import 'journey_models.dart';
+import 'recommendation_engine.dart';
 
 /// The whole curriculum as one continuous journey: every stage of every
 /// age group's journey in the spec, in age order.
 class Curriculum {
-  Curriculum(this.stages) : _activities = {for (final s in stages) for (final a in s.activities) a.id: a};
+  Curriculum(this.stages, {SkillGraph? skillGraph})
+      : skillGraph = skillGraph ?? SkillGraph.empty,
+        _activities = {for (final s in stages) for (final a in s.activities) a.id: a};
 
   final List<JourneyStage> stages;
   final Map<String, Activity> _activities;
+
+  /// The skills' prerequisites, for the recommendation engine.
+  final SkillGraph skillGraph;
 
   Activity? activity(String id) => _activities[id];
   Iterable<Activity> get activities => _activities.values;
@@ -40,7 +47,7 @@ class Curriculum {
         ));
       }
     }
-    return Curriculum(stages);
+    return Curriculum(stages, skillGraph: SkillGraph.fromContent(content));
   }
 
   static Activity _activity(ContentRuntime content, JourneyLevel level, String stageId) {
@@ -62,6 +69,11 @@ class Curriculum {
       languages: languages,
       // A session is six short rounds: about three minutes.
       minutes: level.minutes ?? 3,
+      mechanics: {for (final g in games) g.mechanicId},
+      skillsByLanguage: {
+        for (final e in level.gamesByLanguage.entries)
+          if (content.hasGame(e.value)) e.key: content.game(e.value).primarySkillIds,
+      },
     );
   }
 
@@ -126,7 +138,9 @@ class CurriculumEngine {
     return stages.firstWhere((s) => s.ageRange.first == oldest).index;
   }
 
-  JourneyProgress evaluate(ChildProfile profile, Map<String, ActivityRecord> records, {ChildEvidence evidence = const ChildEvidence()}) {
+  /// Where the child is and what comes next. [language], when given, keeps
+  /// the recommendation to activities playable in it.
+  JourneyProgress evaluate(ChildProfile profile, Map<String, ActivityRecord> records, {ChildEvidence evidence = const ChildEvidence(), String? language}) {
     final stages = curriculum.stages;
     bool done(Activity a) => records[a.id]?.completed ?? false;
     bool stageDone(JourneyStage s) => s.required.every(done);
@@ -171,7 +185,18 @@ class CurriculumEngine {
       }));
     }
 
-    final recommendation = stages.isEmpty ? null : _recommend(stages[current], progress[current], records, evidence, finished: finished);
+    final recommendation = stages.isEmpty
+        ? null
+        : RecommendationEngine(graph: curriculum.skillGraph, maxRetries: maxRetries).recommend(RecommendationInput(
+            stage: stages[current],
+            progress: progress[current],
+            records: records,
+            evidence: evidence,
+            age: profile.age,
+            finished: finished,
+            language: language,
+            activity: curriculum.activity,
+          ));
     final recommended = recommendation?.activity;
     // A replay of something already done keeps its "done" mark.
     if (recommended != null && progress[current].activities[recommended.id] == ActivityStatus.available) {
@@ -198,81 +223,16 @@ class CurriculumEngine {
     return waiting ? ActivityStatus.locked : ActivityStatus.available;
   }
 
-  static const _rolePriority = [LevelRole.required, LevelRole.practice, LevelRole.challenge, LevelRole.optional, LevelRole.review];
-
   /// How many times the engine suggests going back to the same activity
   /// after a hard session before moving on (the Adaptive Engine has eased
   /// the game each time; the journey should not loop on one game).
   static const maxRetries = 3;
 
-  /// The next activity, from curriculum eligibility plus the child's
-  /// evidence. Performance never opens anything the curriculum keeps
-  /// locked: every candidate is an activity of the current stage the child
-  /// may start.
-  ///
-  /// 1. After a hard session (the Adaptive Engine eased the game): an open
-  ///    practice or review activity in the same area; otherwise the same
-  ///    activity again, now easier and with more help.
-  /// 2. After an accurate, independent session: an open challenge.
-  /// 3. Otherwise: required first, then practice, challenge, optional and
-  ///    review -- avoiding the area just played, favouring skills without
-  ///    secure mastery evidence, then the area done least.
-  /// 4. With everything done: replay the activity with the fewest stars.
-  Recommendation? _recommend(JourneyStage stage, StageProgress progress, Map<String, ActivityRecord> records, ChildEvidence evidence, {required bool finished}) {
-    bool startable(Activity a) => progress.activities[a.id]!.canStart;
-    final open = stage.activities.where((a) => progress.activities[a.id] == ActivityStatus.available).toList();
-
-    ActivityRecord? last;
-    final doneByDomain = <DevelopmentalDomain, int>{};
-    for (final r in records.values) {
-      final a = curriculum.activity(r.activityId);
-      if (a == null) continue;
-      if (r.completed) doneByDomain[a.domain] = (doneByDomain[a.domain] ?? 0) + 1;
-      if (last == null || r.lastPlayedAt.isAfter(last.lastPlayedAt)) last = r;
-    }
-    final lastActivity = last == null ? null : curriculum.activity(last.activityId);
-    final lastDomain = lastActivity?.domain;
-
-    if (!finished && last != null && lastActivity != null && last.struggled) {
-      final practice = stage.activities
-          .where((a) => a.id != lastActivity.id && (a.role == LevelRole.practice || a.role == LevelRole.review) && a.domain == lastActivity.domain && startable(a))
-          .toList()
-        ..sort((a, b) => (records[a.id]?.completions ?? 0).compareTo(records[b.id]?.completions ?? 0));
-      if (practice.isNotEmpty) return Recommendation(practice.first, RecommendationReason.practice);
-      if (lastActivity.stageId == stage.id && startable(lastActivity) && last.attempts < maxRetries) {
-        return Recommendation(lastActivity, RecommendationReason.tryAgainEasier);
-      }
-    }
-
-    if (!finished && last != null && last.thrived) {
-      final challenge = open.where((a) => a.role == LevelRole.challenge).toList();
-      if (challenge.isNotEmpty) return Recommendation(challenge.first, RecommendationReason.stretch);
-    }
-
-    if (open.isEmpty || finished) {
-      final replay = [...stage.activities]..sort((a, b) {
-          final byStars = (records[a.id]?.bestStars ?? 0).compareTo(records[b.id]?.bestStars ?? 0);
-          return byStars != 0 ? byStars : stage.activities.indexOf(a).compareTo(stage.activities.indexOf(b));
-        });
-      return replay.isEmpty ? null : Recommendation(replay.first, RecommendationReason.review);
-    }
-
-    for (final role in _rolePriority) {
-      final group = open.where((a) => a.role == role).toList();
-      if (group.isEmpty) continue;
-      group.sort((a, b) {
-        final repeatA = a.domain == lastDomain ? 1 : 0, repeatB = b.domain == lastDomain ? 1 : 0;
-        if (repeatA != repeatB) return repeatA.compareTo(repeatB);
-        final secureA = evidence.isSecure(a.skills) ? 1 : 0, secureB = evidence.isSecure(b.skills) ? 1 : 0;
-        if (secureA != secureB) return secureA.compareTo(secureB);
-        final countA = doneByDomain[a.domain] ?? 0, countB = doneByDomain[b.domain] ?? 0;
-        if (countA != countB) return countA.compareTo(countB);
-        return stage.activities.indexOf(a).compareTo(stage.activities.indexOf(b));
-      });
-      return Recommendation(group.first, role == LevelRole.required ? RecommendationReason.next : RecommendationReason.explore);
-    }
-    return null;
-  }
+  // The next activity comes from the RecommendationEngine: curriculum
+  // eligibility first (only the current adventure's startable activities),
+  // then a score over the child's evidence -- skill profiles, the skill
+  // graph, the last session, repeated errors, independence, transfer, and
+  // variety. See recommendation_engine.dart.
 
   List<DomainProgress> _domainProgress(List<JourneyStage> stages, Map<String, ActivityRecord> records) {
     final done = <DevelopmentalDomain, int>{}, total = <DevelopmentalDomain, int>{};

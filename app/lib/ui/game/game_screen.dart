@@ -1,3 +1,4 @@
+import 'package:nova_app/ui/audio/background_audio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -33,9 +34,15 @@ class GameScreen extends ConsumerStatefulWidget {
     this.stage3DTransport,
     this.force3D,
     this.onComplete,
+    this.activityId,
+    this.skin,
   });
   final String gameId;
   final String skillId;
+
+  /// The journey activity being played, and its picture skin.
+  final String? activityId;
+  final String? skin;
   final Stage3DTransport? stage3DTransport;
   final bool? force3D;
 
@@ -60,7 +67,7 @@ class _GameScreenState extends ConsumerState<GameScreen> {
     final content = ref.read(contentRuntimeProvider);
     final clock = ref.read(clockPortProvider);
     final cues = GameAudioCues(
-      audio: ref.read(audioPortProvider),
+      audio: ref.read(narrationPortProvider),
       content: content,
       game: content.game(widget.gameId),
       language: () => _language,
@@ -75,6 +82,8 @@ class _GameScreenState extends ConsumerState<GameScreen> {
       seed: clock.now().microsecondsSinceEpoch & 0x7fffffff,
       onCue: cues.call,
       now: clock.now,
+      activityId: widget.activityId,
+      context: widget.skin,
     )..addListener(_onSessionChanged);
     // Cues read the language lazily, so resolve it before the first cue.
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -113,8 +122,12 @@ class _GameScreenState extends ConsumerState<GameScreen> {
   Widget build(BuildContext context) {
     final content = ref.watch(contentRuntimeProvider);
     final place = content.hasGame(widget.gameId) ? ActivityCategory.of(content.game(widget.gameId)) : ActivityCategory.numbers;
-    // Every activity plays inside its place in the Nova world.
-    return Stack(
+    // Every activity plays inside its place in the Nova world -- and sounds
+    // like it, with the music ducked under the game.
+    return AudioSceneMarker(
+      scene: AudioScene.forPlace(place.name),
+      ducked: true,
+      child: Stack(
       fit: StackFit.expand,
       children: [
         StoryScene(theme: place.scene, horizon: 0.5),
@@ -122,6 +135,7 @@ class _GameScreenState extends ConsumerState<GameScreen> {
         const ColoredBox(color: Color(0xB3FFF8EC)),
         NovaPageBackdrop(child: _page(context)),
       ],
+      ),
     );
   }
 

@@ -60,7 +60,7 @@ class GrownUpSettings extends ConsumerWidget {
         children: [
           Semantics(header: true, child: Text(l10n.settingsTitle, style: theme.textTheme.titleLarge)),
           const SizedBox(height: NovaSpace.xs),
-          const _AgeSetting(),
+          const AgeSetting(),
           const Divider(height: NovaSpace.lg),
           toggleRow(Icons.record_voice_over_rounded, l10n.spokenPrompts, l10n.spokenPromptsDesc, ref.watch(speechEnabledProvider),
               (on) => ref.read(speechEnabledProvider.notifier).state = on),
@@ -96,8 +96,8 @@ class GrownUpSettings extends ConsumerWidget {
 /// The child's age, changed only here (or in "About me"). The journey
 /// re-positions for the new age; every record of what the child has done
 /// is kept.
-class _AgeSetting extends ConsumerWidget {
-  const _AgeSetting();
+class AgeSetting extends ConsumerWidget {
+  const AgeSetting({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

@@ -4,6 +4,7 @@ import 'package:nova_app/core/content/models.dart';
 import 'package:nova_app/core/journey/journey_models.dart';
 import 'package:nova_app/providers.dart';
 
+import '../audio/sound_effects.dart';
 import '../game/game_catalog.dart';
 import '../game/game_screen.dart';
 import '../play/level_screen.dart';
@@ -19,6 +20,8 @@ Future<void> playJourneyActivity(BuildContext context, WidgetRef ref, Activity a
   final before = ref.read(journeyProgressProvider);
   if (before == null || !ref.read(curriculumEngineProvider).canStart(before, activity.id)) return;
 
+  // Setting off for the activity's place.
+  ref.read(soundEffectsProvider).play(Sfx.transition);
   final recorder = ref.read(journeyRecorderProvider);
   await recorder.start(childId: currentChildId, activityId: activity.id);
   if (!context.mounted) return;
@@ -34,7 +37,7 @@ Future<void> playJourneyActivity(BuildContext context, WidgetRef ref, Activity a
   await Navigator.of(context).push(
     MaterialPageRoute<void>(
       builder: (_) => playableGames.containsKey(gameId)
-          ? GameScreen(gameId: gameId, skillId: ref.read(contentRuntimeProvider).game(gameId).primarySkillIds.first, onComplete: finished)
+          ? GameScreen(gameId: gameId, skillId: ref.read(contentRuntimeProvider).game(gameId).primarySkillIds.first, onComplete: finished, activityId: activity.id, skin: activity.level.skin)
           : LevelScreen(
               journey: Journey(id: 'journey.activity', nameKey: '', ageRange: [activity.minAge, activity.maxAge], levels: [activity.level]),
               levelIndex: 0,

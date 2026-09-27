@@ -11,6 +11,7 @@ import 'package:nova_app/core/play/voice_match.dart';
 import 'package:nova_app/core/play/trials.dart';
 import 'package:nova_app/providers.dart';
 
+import '../audio/background_audio.dart';
 import '../audio/sound_effects.dart';
 import '../characters/character_rig.dart';
 import '../characters/character_view.dart';
@@ -171,7 +172,7 @@ class _LevelScreenState extends ConsumerState<LevelScreen> {
         : (_scaffold == ScaffoldLevel.guided && s.index == 0 ? RoundHelp.firstStep : RoundHelp.none);
     setState(() => _roundHelp = help);
     if (help == RoundHelp.none) return;
-    s.useHint();
+    s.useHint(requested: false);
     if (s.current is! ChoiceTrial) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (mounted) _hint.value++;
@@ -222,8 +223,8 @@ class _LevelScreenState extends ConsumerState<LevelScreen> {
   /// Hints the child asked for in the current round.
   int _hintsThisRound = 0;
 
-  void _onResponse(bool correct, {int attempt = 1}) {
-    _session!.record(correct, attempt: attempt);
+  void _onResponse(bool correct, {int attempt = 1, List<String> errors = const []}) {
+    _session!.record(correct, attempt: attempt, errors: errors);
     final l10n = context.l10n;
     final retries = _session!.current is ChoiceTrial;
     // Streams log many quick responses; keep reactions for the other rounds.
@@ -245,13 +246,18 @@ class _LevelScreenState extends ConsumerState<LevelScreen> {
     // into encouragement -- never a buzzer or a red cross.
     if (correct) {
       // First-try success gets the big reaction; finding it after a miss is
-      // celebrated warmly too.
+      // celebrated warmly too. The companion only makes a sound for a run
+      // of strong play -- the chime already answers every right answer.
       _guide.react(onARoll ? Reaction.cheer : (attempt == 1 ? Reaction.happy : Reaction.encourage));
+      if (onARoll) _sfx.companion(Reaction.cheer);
       _guide.setMood(onARoll ? CharacterMood.excited : CharacterMood.happy, hold: const Duration(milliseconds: 1400));
     } else {
       _guide.setMood(CharacterMood.gentleDisappointment, hold: const Duration(milliseconds: 500));
       Future<void>.delayed(const Duration(milliseconds: 700), () {
-        if (mounted && !_finished) _guide.react(Reaction.encourage);
+        if (!mounted || _finished) return;
+        _guide.react(Reaction.encourage);
+        // After misses in a row the companion's warm "mm-hm!" says: I'm here.
+        if (needsCompany) _sfx.companion(Reaction.encourage);
       });
     }
     setState(() {
@@ -324,6 +330,9 @@ class _LevelScreenState extends ConsumerState<LevelScreen> {
       _confetti++;
     });
     _sfx.play(Sfx.celebrate);
+    Future<void>.delayed(const Duration(milliseconds: 900), () {
+      if (mounted) _sfx.companion(s.stars >= 3 ? Reaction.cheer : (s.stars <= 1 ? Reaction.encourage : Reaction.happy));
+    });
     // Strong play gets a big celebration; a hard session gets warm praise
     // for the effort -- never a sense of having failed.
     if (s.stars >= 3) {
@@ -348,6 +357,10 @@ class _LevelScreenState extends ConsumerState<LevelScreen> {
           skillId: _game.primarySkillIds.first,
           rawEvents: List.of(_events),
           mapper: trialSignalMapper,
+          // A journey activity is recorded as itself; its picture skin is
+          // the context the skill was practised in.
+          activityId: widget.onFinished == null ? null : _level.id,
+          context: _level.skin,
         );
     final onFinished = widget.onFinished;
     if (onFinished != null) {
@@ -373,6 +386,10 @@ class _LevelScreenState extends ConsumerState<LevelScreen> {
     _hintsThisRound++;
     _hint.value++;
     _guide.setMood(CharacterMood.thinking, hold: const Duration(milliseconds: 1200));
+    // The hint button sparkles (its own sound); the companion hums along.
+    Future<void>.delayed(const Duration(milliseconds: 350), () {
+      if (mounted && !_finished) _sfx.companionThinking();
+    });
     _announce();
   }
 
@@ -389,7 +406,11 @@ class _LevelScreenState extends ConsumerState<LevelScreen> {
     final done = session == null ? 0 : session.index;
     final total = session?.trials.length ?? 0;
 
-    return Scaffold(
+    // Play has the place's own sound, with the music ducked under the game.
+    return AudioSceneMarker(
+      scene: AudioScene.forPlace(place.name),
+      ducked: true,
+      child: Scaffold(
       body: StoryScene(
         theme: place.scene,
         horizon: 0.55,
@@ -407,6 +428,7 @@ class _LevelScreenState extends ConsumerState<LevelScreen> {
                     progressLabel: l10n.roundProgress(numeral((done + 1).clamp(1, total == 0 ? 1 : total), _lang), numeral(total, _lang)),
                     onClose: () => Navigator.of(context).maybePop(),
                     onHint: trial == null || _finished ? null : _hintPressed,
+                    showHint: ref.watch(hintsEnabledProvider),
                     onRepeat: trial == null ? null : _announce,
                   ),
                   Expanded(
@@ -461,6 +483,8 @@ class _LevelScreenState extends ConsumerState<LevelScreen> {
                                     language: _lang,
                                     l10n: l10n,
                                     onResponse: _onResponse,
+                                    onResponseDetail: _onResponse,
+                                    onHandle: (drop) => _sfx.play(drop ? Sfx.drop : Sfx.pick),
                                     onDone: _onDone,
                                     hint: _hint,
                                     speak: _speak,
@@ -557,6 +581,7 @@ class _LevelScreenState extends ConsumerState<LevelScreen> {
           ],
         ),
       ),
+      ),
     );
   }
 }
@@ -571,7 +596,11 @@ class _TopBar extends StatelessWidget {
     required this.onClose,
     this.onHint,
     this.onRepeat,
+    this.showHint = true,
   });
+
+  /// Whether the hint button is offered (a grown-up can turn it off).
+  final bool showHint;
   final String title;
   final ActivityCategory place;
   final int done;
@@ -607,8 +636,10 @@ class _TopBar extends StatelessWidget {
           ),
           const SizedBox(width: NovaSpace.sm),
           NovaRoundButton(icon: Icons.volume_up_rounded, label: l10n.repeatInstruction, color: NovaStory.ocean, size: 48, onPressed: onRepeat),
-          const SizedBox(width: NovaSpace.xs),
-          NovaRoundButton(icon: Icons.lightbulb_rounded, label: l10n.hint, color: NovaStory.honey, size: 48, onPressed: onHint),
+          if (showHint) ...[
+            const SizedBox(width: NovaSpace.xs),
+            NovaRoundButton(icon: Icons.lightbulb_rounded, label: l10n.hint, color: NovaStory.honey, size: 48, onPressed: onHint, sound: Sfx.hint),
+          ],
         ],
       ),
     );

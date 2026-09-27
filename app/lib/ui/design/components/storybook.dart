@@ -2,6 +2,7 @@ import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 
+import '../../audio/sound_effects.dart';
 import '../../theme/motion.dart';
 import '../../widgets/jelly_button.dart';
 import '../../widgets/props.dart';
@@ -55,8 +56,11 @@ class NovaPlayButton extends StatelessWidget {
 /// A round control (close, repeat, hint, settings). Always labelled for
 /// screen readers and long-press tooltips.
 class NovaRoundButton extends StatelessWidget {
-  const NovaRoundButton({super.key, required this.icon, required this.label, required this.onPressed, this.color = NovaStory.plum, this.size = 52});
+  const NovaRoundButton({super.key, required this.icon, required this.label, required this.onPressed, this.color = NovaStory.plum, this.size = 52, this.sound = Sfx.tap});
   final IconData icon;
+
+  /// The sound of pressing it (null: silent).
+  final Sfx? sound;
   final String label;
   final VoidCallback? onPressed;
   final Color color;
@@ -72,6 +76,7 @@ class NovaRoundButton extends StatelessWidget {
           circle: true,
           size: size,
           semanticLabel: label,
+          sound: sound,
           child: Icon(icon, color: Colors.white, size: size * 0.5),
         ),
       );

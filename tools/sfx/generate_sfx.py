@@ -104,3 +104,48 @@ for i in range(n):
     lp += 0.08 * (rnd.uniform(-1, 1) - lp)
     whoosh.append(lp * math.sin(math.pi * t) ** 2)
 write('whoosh', whoosh, gain=0.3)
+
+# --- Interaction sounds ------------------------------------------------------
+# Select: a lighter, higher tick than tap, for choosing among options.
+write('select', note(988, 0.07, decay=0.018, partials=((1, 1.0), (3, 0.15))), gain=0.35)
+# Pick: something lifted -- a soft rising "blip".
+write('pick', note(520, 0.1, decay=0.035, partials=((1, 1.0), (2, 0.2)), bend=0.5), gain=0.4)
+# Drop: set down -- a soft falling "thup" with a little body.
+write('drop', mix(note(330, 0.14, decay=0.04, partials=((1, 1.0), (2, 0.3)), bend=-0.35), note(160, 0.12, vol=0.4, decay=0.03)), gain=0.5)
+# Hint: a light bulb -- two soft rising sparkles.
+write('hint', mix(note(E6, 0.3, vol=0.3, decay=0.1, partials=((1, 1.0),)), note(A5, 0.35, vol=0.35, decay=0.12), sparkle(0.35, 4, 6, vol=0.12), offsets=[0.08, 0, 0.05]), gain=0.4)
+# Transition: a gentle page-turn swish plus a warm note, between places.
+rnd = random.Random(7)
+n = int(RATE * 0.5)
+lp, swish = 0.0, []
+for i in range(n):
+    t = i / n
+    lp += 0.14 * (rnd.uniform(-1, 1) - lp)
+    swish.append(lp * math.sin(math.pi * t) ** 3)
+write('transition', mix(swish, note(G5 / 2, 0.5, vol=0.25, decay=0.2, partials=((1, 1.0), (2, 0.2)))), gain=0.35)
+
+# --- The companion's voice: little wordless chirps, never speech ---------------
+def chirp(f0, f1, dur, vol=0.5):
+    """A creature-like glide from f0 to f1 with a soft vowel-ish body."""
+    n = int(RATE * dur)
+    out, phase = [], 0.0
+    for i in range(n):
+        t = i / n
+        f = f0 + (f1 - f0) * (t * t * (3 - 2 * t))
+        phase += 2 * math.pi * f / RATE
+        env = math.sin(math.pi * t) ** 1.5
+        out.append(vol * env * (math.sin(phase) + 0.25 * math.sin(2 * phase) + 0.08 * math.sin(3 * phase)))
+    return out
+
+# Wave: "hi-i!" -- up, then a little bounce.
+write('companion_wave', mix(chirp(620, 940, 0.16), chirp(820, 1180, 0.2), offsets=[0, 0.17]), gain=0.45)
+# Happy: a quick giggle of three rising blips.
+write('companion_happy', mix(chirp(700, 900, 0.08), chirp(800, 1000, 0.08), chirp(900, 1250, 0.12), offsets=[0, 0.1, 0.2]), gain=0.45)
+# Encourage: a warm "mm-hm!" -- low and friendly, rising at the end.
+write('companion_encourage', mix(chirp(330, 360, 0.18, vol=0.6), chirp(360, 520, 0.22, vol=0.6), offsets=[0, 0.2]), gain=0.42)
+# Thinking: "hmm..." -- a slow, level, slightly wavering hum.
+write('companion_thinking', chirp(300, 280, 0.55, vol=0.6), gain=0.35)
+# Surprise: "oh!" -- a quick upward pop.
+write('companion_surprise', chirp(500, 1100, 0.14), gain=0.45)
+# Celebrate: "yaaay!" -- a high glide with sparkles.
+write('companion_celebrate', mix(chirp(700, 1300, 0.3), chirp(1300, 1100, 0.25), sparkle(0.6, 6, 8, vol=0.12), offsets=[0, 0.28, 0.1]), gain=0.5)

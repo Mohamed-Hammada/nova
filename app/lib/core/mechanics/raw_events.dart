@@ -33,8 +33,24 @@ final class ItemRemoved extends RawMechanicEvent {
 /// [attempt] is 1 for the first submission of a trial and increases on each
 /// retry of the same trial.
 final class TrialSubmitted extends RawMechanicEvent {
-  const TrialSubmitted({required this.correct, required this.hintsUsedThisTrial, this.attempt = 1, required super.at});
+  const TrialSubmitted({
+    required this.correct,
+    required this.hintsUsedThisTrial,
+    this.attempt = 1,
+    this.hintRequestsThisTrial = 0,
+    this.errors = const [],
+    required super.at,
+  });
   final bool correct;
+
+  /// Of [hintsUsedThisTrial], the hints the child asked for (the rest came
+  /// from the scaffold).
+  final int hintRequestsThisTrial;
+
+  /// What the game observed about this response, explicitly (ErrorType):
+  /// over_count, distractor_selected, sequence_break, self_correction...
+  /// Empty for a plain right answer.
+  final List<String> errors;
 
   /// Hints used since the previous submission of this trial (or since the
   /// trial began, on the first attempt).

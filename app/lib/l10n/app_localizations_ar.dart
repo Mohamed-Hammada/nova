@@ -931,4 +931,350 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get withYou => 'أنا معك هنا. هيّا ننظر معًا مرة أخرى!';
+
+  @override
+  String get settingsSound => 'الصوت';
+
+  @override
+  String get settingsPlay => 'اللعب';
+
+  @override
+  String get settingsChild => 'الطفل';
+
+  @override
+  String get settingsGraphics => 'الرسوميات';
+
+  @override
+  String get settingsIntro => 'كل ما هنا يُحفَظ على هذا الجهاز ويُطبَّق فورًا.';
+
+  @override
+  String get music => 'الموسيقى';
+
+  @override
+  String get musicDesc => 'موسيقى هادئة وأصوات طبيعة لكل مكان في الرحلة.';
+
+  @override
+  String get voiceNarration => 'الصوت والسرد';
+
+  @override
+  String get hintButton => 'زر المساعدة';
+
+  @override
+  String get hintButtonDesc =>
+      'يُظهر زر المصباح أثناء اللعب. تبقى مساعدة نوفا المتدرّجة كما هي.';
+
+  @override
+  String get reducedMotion => 'حركة أقل';
+
+  @override
+  String get reducedMotionDesc => 'شاشات أهدأ، بحركة وقفز أقل.';
+
+  @override
+  String get settingsDone => 'تم';
+
+  @override
+  String get recNewWay => 'هيّا نجرّب ما تعرفه في لعبة جديدة!';
+
+  @override
+  String get trendImproving => 'في تحسّن';
+
+  @override
+  String get trendSteady => 'ثابت';
+
+  @override
+  String get trendDeclining => 'يجدها أصعب مؤخرًا';
+
+  @override
+  String get trendUnknown => 'الاتجاه: يحتاج لعبًا أكثر';
+
+  @override
+  String get independenceIndependent => 'يلعب باستقلالية';
+
+  @override
+  String get independenceOccasional => 'يحتاج مساعدة أحيانًا';
+
+  @override
+  String get independenceNeedsHelp => 'ما زال يحتاج المساعدة كثيرًا';
+
+  @override
+  String get confidenceEarly => 'الثقة: أدلّة مبدئية';
+
+  @override
+  String get confidenceGrowing => 'الثقة: أدلّة تتزايد';
+
+  @override
+  String get confidenceGood => 'الثقة: أدلّة جيدة';
+
+  @override
+  String practiceHistory(String sessions, String rounds, String contexts) {
+    return 'الجلسات: $sessions · الجولات: $rounds · السياقات: $contexts';
+  }
+
+  @override
+  String lastPracticed(String date) {
+    return 'آخر تدريب: $date';
+  }
+
+  @override
+  String get transferNotYet => 'النقل: ليس بعد';
+
+  @override
+  String get transferReady => 'النقل: جاهز للتجربة في مكان جديد';
+
+  @override
+  String get transferShown => 'النقل: ظهر في مكان جديد';
+
+  @override
+  String repeatedError(String error) {
+    return 'يتكرر: $error';
+  }
+
+  @override
+  String selfCorrected(String count) {
+    return 'صحّح أخطاءه بنفسه $count مرات';
+  }
+
+  @override
+  String get errOverCount => 'العدّ بعد الرقم المطلوب';
+
+  @override
+  String get errUnderCount => 'التوقف قبل الرقم المطلوب';
+
+  @override
+  String get errWrongObject => 'اختيار شيء من نوع آخر';
+
+  @override
+  String get errDistractor => 'اختيار إجابة مشابهة';
+
+  @override
+  String get errChoseSmaller => 'اختيار المجموعة الأصغر';
+
+  @override
+  String get errChoseBigger => 'اختيار المجموعة الأكبر';
+
+  @override
+  String get errSequenceBreak => 'فقدان الترتيب';
+
+  @override
+  String get errImpulsive => 'الإجابة بسرعة كبيرة';
+
+  @override
+  String get errMissedTarget => 'ترك الأهداف تمرّ';
+
+  @override
+  String get errPerseveration => 'الفرز بالقاعدة القديمة';
+
+  @override
+  String get errRepeated => 'تكرار الاختيار نفسه مرتين متتاليتين';
+
+  @override
+  String tryAtHome(String task) {
+    return 'جرّبوها في البيت: $task';
+  }
+
+  @override
+  String get tryAtHomeDidIt => 'نجحنا!';
+
+  @override
+  String get tryAtHomeNotYet => 'ليس بعد';
+
+  @override
+  String get tryAtHomeThanks => 'شكرًا! تمّ التسجيل.';
+
+  @override
+  String whyNext(String reason) {
+    return 'اختيار نوفا التالي: $reason';
+  }
+
+  @override
+  String get reasonNextRequired => 'الخطوة التالية في المغامرة';
+
+  @override
+  String get reasonPracticeMissingSkill => 'مهارة تحتاج تدريبًا أكثر';
+
+  @override
+  String get reasonRepeatedError => 'أمر يتكرر ويحتاج دعمًا';
+
+  @override
+  String get reasonIndependence => 'القيام بها بمساعدة أقل';
+
+  @override
+  String get reasonReinforce => 'إبقاء مهارة معروفة حاضرة';
+
+  @override
+  String get reasonTransfer => 'تجربة مهارة معروفة في نوع جديد من الألعاب';
+
+  @override
+  String get reasonStretch => 'تحدٍّ بعد لعب قوي';
+
+  @override
+  String get reasonTryAgain => 'اللعبة نفسها مرة أخرى، بشكل أسهل';
+
+  @override
+  String get reasonVariety => 'شيء مختلف، للتنويع';
+
+  @override
+  String get reasonReview => 'العودة إلى ألعاب سابقة';
+
+  @override
+  String get skillProfileNote =>
+      'تُوصَف كل مهارة من كل الجلسات حتى الآن، لا من آخر جلسة فقط. ليست درجة.';
+
+  @override
+  String promptShowFeeling(String story) {
+    return '$story أظهِر ما تشعر به!';
+  }
+
+  @override
+  String promptWhatSay(String story) {
+    return '$story ماذا يمكنك أن تقول أو تفعل؟';
+  }
+
+  @override
+  String promptHelpFriend(String story) {
+    return '$story ما الذي يساعد؟';
+  }
+
+  @override
+  String promptCalmWay(String story) {
+    return '$story ما الطريقة الهادئة؟';
+  }
+
+  @override
+  String promptFairWay(String story) {
+    return '$story ما الذي يجعلها عادلة ولطيفة؟';
+  }
+
+  @override
+  String get errPassive => 'التراجع بصمت (عدم قول شيء)';
+
+  @override
+  String get errAggressive => 'الخطف أو الدفع أو الصراخ';
+
+  @override
+  String get errUnkind => 'كلمات جارحة لصديق';
+
+  @override
+  String get errSelfFocused => 'الاستمرار بينما يحتاج صديق للمساعدة';
+
+  @override
+  String get commSkillsTitle => 'مهارات التواصل والتعامل مع الآخرين';
+
+  @override
+  String get commSkillsIntro =>
+      'ست مهارات على مستويين، وفق نموذج ENDCORE (فوجيموتو ودايبو، 2007): المهارات الأساسية في الأسفل تدعم مهارات التعامل مع الآخرين. تظهر عند الصغار من خلال الألعاب وملاحظاتكم. طريقة للنظر، وليست اختبارًا.';
+
+  @override
+  String get commBasic => 'أساسية';
+
+  @override
+  String get commInterpersonal => 'مع الآخرين';
+
+  @override
+  String get commExpressing => 'التعبير';
+
+  @override
+  String get commUnderstanding => 'الفهم';
+
+  @override
+  String get commManaging => 'الإدارة';
+
+  @override
+  String get commExpressivity => 'إظهار المشاعر';
+
+  @override
+  String get commDecoding => 'قراءة المشاعر';
+
+  @override
+  String get commSelfControl => 'تهدئة النفس';
+
+  @override
+  String get commAssertion => 'الطلب بوضوح ولطف';
+
+  @override
+  String get commOtherAcceptance => 'الاهتمام بالآخرين';
+
+  @override
+  String get commRelationships => 'الحفاظ على الصداقات';
+
+  @override
+  String get commNoEvidence => 'لم تُلعب بعد';
+
+  @override
+  String voiceMissing(String language) {
+    return 'لا يوجد على هذا الجهاز صوت للغة $language، لذلك لا تُقرأ الأسئلة بصوت عالٍ بهذه اللغة.';
+  }
+
+  @override
+  String voiceMissingHow(String language) {
+    return 'لإضافة صوت: على ويندوز افتح الإعدادات > الوقت واللغة > الكلام > إضافة أصوات، واختر $language، ثم أعد تشغيل المتصفح (أو استخدم متصفح Microsoft Edge ففيه أصوات $language). على أندرويد افتح الإعدادات > تحويل النص إلى كلام وثبّت $language.';
+  }
+
+  @override
+  String promptMakeTen(String shown, String total) {
+    return '$shown وكم يلزم ليصبح $total؟';
+  }
+
+  @override
+  String promptPathHop(String at, String hops) {
+    return 'الضفدع على $at. يقفز $hops. أين يصل؟';
+  }
+
+  @override
+  String noVoiceHome(String language) {
+    return 'للكبار: لا يوجد على هذا الجهاز صوت للغة $language، لذلك لا تُقرأ الأسئلة. اضغط للحل.';
+  }
+
+  @override
+  String promptCherryTen(String a) {
+    return 'كم يحتاج $a ليصبح ١٠؟';
+  }
+
+  @override
+  String promptCherryRest(String b, String ten) {
+    return 'كم يبقى من $b بعد أن نأخذ منه $ten؟';
+  }
+
+  @override
+  String promptCherrySum(String a, String b) {
+    return 'كوّن العشرة أولًا: $a + $b = ؟';
+  }
+
+  @override
+  String get jpMathTitle => 'طرق يابانية لتعلّم العدّ والجمع';
+
+  @override
+  String get jpMathIntro =>
+      'تتبع ألعاب الأعداد في نوفا طرقًا تُستعمل في الفصول اليابانية ودرسها باحثون. ولكل طريقة نشاط تجرّبونه في البيت.';
+
+  @override
+  String get jpMakeTenTitle =>
+      'أجزاء العشرة (ikutsu to ikutsu) — لعبة «كوّن العشرة»';
+
+  @override
+  String get jpMakeTenBody =>
+      'كل عدد حتى ١٠ جزآن: ٧ هو ٣ و٤. في البيت: ارفعوا ٧ أصابع واسألوا كم ينقص لنصل إلى ١٠.';
+
+  @override
+  String get jpCherryTitle =>
+      'الجمع بالكرز (sakuranbo keisan) — لعبة «الجمع بالكرز»';
+
+  @override
+  String get jpCherryBody =>
+      'لجمع ٨ + ٥ نكمل العشرة أولًا: نقسم ٥ إلى ٢ و٣؛ ٨ + ٢ = ١٠، ثم ١٠ + ٣ = ١٣. في البيت: املؤوا عشرة بالأزرار ثم عدّوا الباقي.';
+
+  @override
+  String get jpTapeTitle => 'مخطّط الشريط (tēpu-zu) — لعبة «شريط الحكاية»';
+
+  @override
+  String get jpTapeBody =>
+      'تُرسم المسألة الكلامية شريطًا واحدًا: جزءان تحت الكل. في البيت: احكوا مسألة صغيرة وقصّوا شريط ورق إلى جزأيها.';
+
+  @override
+  String get jpPathTitle =>
+      'مسار الأعداد مثل لعبة سوغوروكو اليابانية — لعبة «قفزات الضفدع»';
+
+  @override
+  String get jpPathBody =>
+      'التحرك على مسار مرقّم مع قول كل رقم يبني خط الأعداد في الذهن. في البيت: العبوا لعبة لوحة بالأعداد حتى ١٠ أو ٢٠.';
 }

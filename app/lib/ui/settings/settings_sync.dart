@@ -38,6 +38,9 @@ Future<void> loadSettings(ProviderContainer c, PlayerStatePort store) async {
   if (graphics != null) c.read(graphicsSettingProvider.notifier).state = GraphicsQualitySetting.fromString(graphics);
   c.read(speechEnabledProvider.notifier).state = (await get('speech')) != 'off';
   c.read(soundEffectsEnabledProvider.notifier).state = (await get('soundEffects')) != 'off';
+  c.read(musicEnabledProvider.notifier).state = (await get('music')) != 'off';
+  c.read(hintsEnabledProvider.notifier).state = (await get('hints')) != 'off';
+  c.read(reducedMotionProvider.notifier).state = (await get('reducedMotion')) == 'on';
   c.read(voiceAnswersProvider.notifier).state = (await get('voiceAnswers')) == 'on';
   c.read(cameraPlayProvider.notifier).state = (await get('camera')) == 'on';
 }
@@ -66,6 +69,9 @@ class SettingsSync extends ConsumerWidget {
     ref.listen(graphicsSettingProvider, (_, g) => save('graphics', g.toJson()));
     ref.listen(speechEnabledProvider, (_, on) => save('speech', on ? 'on' : 'off'));
     ref.listen(soundEffectsEnabledProvider, (_, on) => save('soundEffects', on ? 'on' : 'off'));
+    ref.listen(musicEnabledProvider, (_, on) => save('music', on ? 'on' : 'off'));
+    ref.listen(hintsEnabledProvider, (_, on) => save('hints', on ? 'on' : 'off'));
+    ref.listen(reducedMotionProvider, (_, on) => save('reducedMotion', on ? 'on' : 'off'));
     ref.listen(voiceAnswersProvider, (_, on) => save('voiceAnswers', on ? 'on' : 'off'));
     ref.listen(cameraPlayProvider, (_, on) => save('camera', on ? 'on' : 'off'));
     return child;

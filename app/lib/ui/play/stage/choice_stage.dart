@@ -124,7 +124,7 @@ class _ChoiceTrialViewState extends State<ChoiceTrialView> {
   void _choose(int i) {
     if (_chosen != null || _tried.contains(i) || _away.contains(i)) return;
     final correct = _t.isCorrect(i);
-    widget.ctx.onResponse(correct, attempt: _attempt);
+    widget.ctx.respond(correct, attempt: _attempt, errors: _t.errorsFor(i));
     if (correct) {
       setState(() {
         _chosen = i;

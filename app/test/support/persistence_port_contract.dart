@@ -3,6 +3,7 @@ import 'package:nova_app/core/adaptive/adaptive_decision.dart';
 import 'package:nova_app/core/assessment/dimension_estimate.dart';
 import 'package:nova_app/core/mastery/mastery_record.dart';
 import 'package:nova_app/core/ports/persistence_port.dart';
+import 'package:nova_app/core/skills/skill_evidence.dart';
 
 /// A live adapter under test, plus how to release it.
 class PersistenceHarness {
@@ -138,6 +139,44 @@ void persistencePortContract(String adapterName, Future<PersistenceHarness> Func
       expect(await port.currentDimension(childId: 'c2', skillId: skill, dimension: 'performance'), isNull);
       expect(await port.currentRung(childId: 'c2', gameId: game), isNull);
       expect(await port.currentRung(childId: 'c1', gameId: 'game.math.number-match'), isNull);
+    });
+
+    SkillEvidence evidence(String session, DateTime at, {String childId = 'c1', String skillId = skill, Map<String, int> errors = const {}}) => SkillEvidence(
+          childId: childId, skillId: skillId, sessionId: session, at: at,
+          gameId: game, mechanicId: 'drag-to-count', activityId: 'explorer-001', context: 'apples',
+          rungId: 'r2', scaffold: 'guided', trials: 6, correct: 4, hints: 2, hintRequests: 1,
+          adultAssists: 0, retries: 1, selfCorrections: 1, errors: errors,
+        );
+
+    test('skill evidence is appended with the session and read back in order, field for field', () async {
+      final port = harness.port;
+      expect(await port.skillEvidence(childId: 'c1'), isEmpty);
+      for (final (i, at) in [now, now.add(const Duration(hours: 1))].indexed) {
+        await port.saveSession(
+          childId: 'c1', skillId: skill,
+          mastery: MasteryRecord(childId: 'c1', skillId: skill, state: 'developing', confidence: 0.5, updatedAt: at),
+          performance: null, independence: null, transfer: null, decision: decision('r2'),
+          evidence: [evidence('s$i', at, errors: {'over_count': i + 1})],
+        );
+      }
+      final all = await port.skillEvidence(childId: 'c1', skillId: skill);
+      expect(all.map((e) => e.sessionId), ['s0', 's1']);
+      final e = all.last;
+      expect(e.at.isAtSameMomentAs(now.add(const Duration(hours: 1))), isTrue);
+      expect([e.gameId, e.mechanicId, e.activityId, e.context, e.rungId, e.scaffold], [game, 'drag-to-count', 'explorer-001', 'apples', 'r2', 'guided']);
+      expect([e.trials, e.correct, e.hints, e.hintRequests, e.adultAssists, e.retries, e.selfCorrections], [6, 4, 2, 1, 0, 1, 1]);
+      expect(e.errors, {'over_count': 2});
+      // Isolated per child and per skill.
+      expect(await port.skillEvidence(childId: 'c2'), isEmpty);
+      expect(await port.skillEvidence(childId: 'c1', skillId: 'math.count.cardinality'), isEmpty);
+    });
+
+    test("a dimension saved on its own (a grown-up's probe report) reads back", () async {
+      final port = harness.port;
+      await port.saveDimension(childId: 'c1', estimate: estimate('transfer', const {'passed': 1}, evidence: 2));
+      final t = (await port.currentDimension(childId: 'c1', skillId: skill, dimension: 'transfer'))!;
+      expect(t.metrics['passed'], 1);
+      expect(t.evidenceCount, 2);
     });
   });
 }

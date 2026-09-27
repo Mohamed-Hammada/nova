@@ -935,4 +935,352 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get withYou => 'I\'m right here with you. Let\'s look again together!';
+
+  @override
+  String get settingsSound => 'Sound';
+
+  @override
+  String get settingsPlay => 'Play';
+
+  @override
+  String get settingsChild => 'Child';
+
+  @override
+  String get settingsGraphics => 'Graphics';
+
+  @override
+  String get settingsIntro =>
+      'Everything here is saved on this device and applies straight away.';
+
+  @override
+  String get music => 'Music';
+
+  @override
+  String get musicDesc =>
+      'Gentle music and nature sounds for each place of the journey.';
+
+  @override
+  String get voiceNarration => 'Voice and narration';
+
+  @override
+  String get hintButton => 'Hint button';
+
+  @override
+  String get hintButtonDesc =>
+      'Shows the light-bulb button while playing. Nova\'s own step-by-step help stays on.';
+
+  @override
+  String get reducedMotion => 'Reduced motion';
+
+  @override
+  String get reducedMotionDesc =>
+      'Calmer screens, with less moving and bouncing.';
+
+  @override
+  String get settingsDone => 'Done';
+
+  @override
+  String get recNewWay => 'Let\'s try what you know in a new game!';
+
+  @override
+  String get trendImproving => 'Improving';
+
+  @override
+  String get trendSteady => 'Steady';
+
+  @override
+  String get trendDeclining => 'Finding it harder lately';
+
+  @override
+  String get trendUnknown => 'Trend: needs more play';
+
+  @override
+  String get independenceIndependent => 'Plays independently';
+
+  @override
+  String get independenceOccasional => 'Needs occasional help';
+
+  @override
+  String get independenceNeedsHelp => 'Still needs help often';
+
+  @override
+  String get confidenceEarly => 'Confidence: early evidence';
+
+  @override
+  String get confidenceGrowing => 'Confidence: growing evidence';
+
+  @override
+  String get confidenceGood => 'Confidence: good evidence';
+
+  @override
+  String practiceHistory(String sessions, String rounds, String contexts) {
+    return '$sessions sessions · $rounds rounds · $contexts settings';
+  }
+
+  @override
+  String lastPracticed(String date) {
+    return 'Last practised: $date';
+  }
+
+  @override
+  String get transferNotYet => 'Transfer: not yet';
+
+  @override
+  String get transferReady => 'Transfer: ready to try somewhere new';
+
+  @override
+  String get transferShown => 'Transfer: shown somewhere new';
+
+  @override
+  String repeatedError(String error) {
+    return 'Keeps happening: $error';
+  }
+
+  @override
+  String selfCorrected(String count) {
+    return 'Fixed own mistakes $count times';
+  }
+
+  @override
+  String get errOverCount => 'counting past the number';
+
+  @override
+  String get errUnderCount => 'stopping before the number';
+
+  @override
+  String get errWrongObject => 'picking the wrong kind of thing';
+
+  @override
+  String get errDistractor => 'choosing a look-alike answer';
+
+  @override
+  String get errChoseSmaller => 'choosing the smaller group';
+
+  @override
+  String get errChoseBigger => 'choosing the bigger group';
+
+  @override
+  String get errSequenceBreak => 'losing the order';
+
+  @override
+  String get errImpulsive => 'answering very quickly';
+
+  @override
+  String get errMissedTarget => 'letting targets go by';
+
+  @override
+  String get errPerseveration => 'sorting by the old rule';
+
+  @override
+  String get errRepeated => 'the same mistake twice in a row';
+
+  @override
+  String tryAtHome(String task) {
+    return 'Try it at home: $task';
+  }
+
+  @override
+  String get tryAtHomeDidIt => 'We did it!';
+
+  @override
+  String get tryAtHomeNotYet => 'Not yet';
+
+  @override
+  String get tryAtHomeThanks => 'Thanks! Noted.';
+
+  @override
+  String whyNext(String reason) {
+    return 'Nova\'s next pick: $reason';
+  }
+
+  @override
+  String get reasonNextRequired => 'the next step of the adventure';
+
+  @override
+  String get reasonPracticeMissingSkill => 'a skill that needs more practice';
+
+  @override
+  String get reasonRepeatedError => 'a mistake that keeps coming back';
+
+  @override
+  String get reasonIndependence => 'doing it with less help';
+
+  @override
+  String get reasonReinforce => 'keeping a known skill fresh';
+
+  @override
+  String get reasonTransfer => 'trying a known skill in a new kind of game';
+
+  @override
+  String get reasonStretch => 'a challenge after strong play';
+
+  @override
+  String get reasonTryAgain => 'the same game again, made easier';
+
+  @override
+  String get reasonVariety => 'something different, for variety';
+
+  @override
+  String get reasonReview => 'revisiting earlier games';
+
+  @override
+  String get skillProfileNote =>
+      'Each skill is described from all the sessions so far, not just the last one. Not a score.';
+
+  @override
+  String promptShowFeeling(String story) {
+    return '$story Show how you feel!';
+  }
+
+  @override
+  String promptWhatSay(String story) {
+    return '$story What could you say or do?';
+  }
+
+  @override
+  String promptHelpFriend(String story) {
+    return '$story What would help?';
+  }
+
+  @override
+  String promptCalmWay(String story) {
+    return '$story What is a calm way?';
+  }
+
+  @override
+  String promptFairWay(String story) {
+    return '$story What keeps it fair and friendly?';
+  }
+
+  @override
+  String get errPassive => 'giving up quietly (saying nothing)';
+
+  @override
+  String get errAggressive => 'grabbing, pushing or shouting';
+
+  @override
+  String get errUnkind => 'unkind words to a friend';
+
+  @override
+  String get errSelfFocused => 'carrying on while a friend needs help';
+
+  @override
+  String get commSkillsTitle => 'Communication and social skills';
+
+  @override
+  String get commSkillsIntro =>
+      'Six skills in two levels, after the ENDCORE model (Fujimoto & Daibo, 2007): the basic skills underneath support the ones for getting on with others. For young children, shown through games and your own observations. A way of looking, not a test.';
+
+  @override
+  String get commBasic => 'Basic';
+
+  @override
+  String get commInterpersonal => 'With others';
+
+  @override
+  String get commExpressing => 'Expressing';
+
+  @override
+  String get commUnderstanding => 'Understanding';
+
+  @override
+  String get commManaging => 'Managing';
+
+  @override
+  String get commExpressivity => 'Showing feelings';
+
+  @override
+  String get commDecoding => 'Reading feelings';
+
+  @override
+  String get commSelfControl => 'Calming down';
+
+  @override
+  String get commAssertion => 'Asking clearly and kindly';
+
+  @override
+  String get commOtherAcceptance => 'Caring about others';
+
+  @override
+  String get commRelationships => 'Keeping friendships good';
+
+  @override
+  String get commNoEvidence => 'Not played yet';
+
+  @override
+  String voiceMissing(String language) {
+    return 'This device has no $language voice, so questions are not read aloud in $language.';
+  }
+
+  @override
+  String voiceMissingHow(String language) {
+    return 'To add one: on Windows, open Settings > Time & language > Speech > Add voices, choose $language, then restart the browser (or use Microsoft Edge, which has $language voices). On Android, open Settings > Text-to-speech and install $language.';
+  }
+
+  @override
+  String promptMakeTen(String shown, String total) {
+    return '$shown and how many more make $total?';
+  }
+
+  @override
+  String promptPathHop(String at, String hops) {
+    return 'The frog is on $at. It hops $hops. Where does it land?';
+  }
+
+  @override
+  String noVoiceHome(String language) {
+    return 'For grown-ups: this device has no $language voice, so questions are not read aloud. Tap to fix.';
+  }
+
+  @override
+  String promptCherryTen(String a) {
+    return '$a needs how many to make 10?';
+  }
+
+  @override
+  String promptCherryRest(String b, String ten) {
+    return '$b is $ten and how many more?';
+  }
+
+  @override
+  String promptCherrySum(String a, String b) {
+    return 'Make ten first: $a + $b = ?';
+  }
+
+  @override
+  String get jpMathTitle => 'Japanese ways of learning to count and add';
+
+  @override
+  String get jpMathIntro =>
+      'Nova\'s number games follow methods used in Japanese classrooms and studied by researchers. Each has something to try at home.';
+
+  @override
+  String get jpMakeTenTitle => 'Parts of ten (ikutsu to ikutsu) — Make Ten';
+
+  @override
+  String get jpMakeTenBody =>
+      'Every number to ten is two parts: 7 is 3 and 4. At home: show 7 fingers and ask how many more make 10.';
+
+  @override
+  String get jpCherryTitle =>
+      'The cherry method (sakuranbo keisan) — Cherry Sums';
+
+  @override
+  String get jpCherryBody =>
+      'To add 8 + 5, make ten first: split 5 into 2 and 3; 8 + 2 = 10, then 10 + 3 = 13. At home: fill a ten with buttons, then count the rest.';
+
+  @override
+  String get jpTapeTitle => 'Tape diagrams (tēpu-zu) — Tape Stories';
+
+  @override
+  String get jpTapeBody =>
+      'A story problem drawn as one tape: two parts under the whole. At home: tell a small story problem and cut a paper strip into its two parts.';
+
+  @override
+  String get jpPathTitle =>
+      'Number paths, like sugoroku (sugoroku) — Frog Hops';
+
+  @override
+  String get jpPathBody =>
+      'Moving along a numbered path, saying each number, builds the number line in the mind. At home: play a number board game to 10 or 20.';
 }

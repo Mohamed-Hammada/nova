@@ -1,5 +1,11 @@
 import 'package:nova_app/core/game/session_plan.dart';
 import 'package:nova_app/core/content/models.dart';
+import 'package:nova_app/core/skills/skill_evidence.dart';
+import 'package:nova_app/core/skills/skill_profile.dart';
+
+import 'recommendation_engine.dart';
+
+export 'recommendation_engine.dart' show RecommendationCandidate, SelectionReason, ScoreFactor;
 
 /// The child using Nova. [age] is the child's real, chronological age: it
 /// is only ever changed by a grown-up, never by progress. Where the child
@@ -57,6 +63,8 @@ class Activity {
     required this.languages,
     required this.minutes,
     this.completion = const CompletionCriteria(),
+    this.mechanics = const {},
+    this.skillsByLanguage = const {},
   });
 
   /// The journey level id; the same whatever language the child plays in.
@@ -76,6 +84,17 @@ class Activity {
   final Set<String> languages;
   final double minutes;
   final CompletionCriteria completion;
+
+  /// The mechanics its game plays with (one per language's game): what a
+  /// transfer check compares -- a new mechanic, not a new skin.
+  final Set<String> mechanics;
+
+  /// The skills of the game played in each language (literacy games differ
+  /// by language); [skills] is the first game's.
+  final Map<String, List<String>> skillsByLanguage;
+
+  /// The skills trained when played in [language] (null: [skills]).
+  List<String> skillsFor(String? language) => (language == null ? null : skillsByLanguage[language]) ?? skills;
 
   DevelopmentalDomain get domain => domains.first;
   bool get isRequired => role == LevelRole.required;
@@ -206,18 +225,41 @@ class SessionOutcome {
   final bool finishedAllRounds;
 }
 
-/// What the child has shown so far, beyond their activity records: the
-/// Mastery Engine's state per skill (absent: no evidence yet; null value:
-/// "Not yet"). Read from GameRuntime by the app and handed in here, so the
-/// curriculum engine stays pure.
+/// What the child has shown so far, beyond their activity records: a Skill
+/// Profile per skill (accumulated evidence, SkillProfileBuilder) and the
+/// recent sessions, for variety. Read from GameRuntime by the app and
+/// handed in here, so the curriculum engine stays pure.
 class ChildEvidence {
-  const ChildEvidence({this.masteryBySkill = const {}});
-  final Map<String, String?> masteryBySkill;
+  const ChildEvidence({Map<String, String?> masteryBySkill = const {}, Map<String, SkillProfile> profiles = const {}, this.history = const []})
+      : _mastery = masteryBySkill,
+        _profiles = profiles;
+
+  final Map<String, String?> _mastery;
+  final Map<String, SkillProfile> _profiles;
+
+  /// The child's recent sessions, newest first.
+  final List<PlayedSession> history;
+
+  /// Mastery state per skill (absent: no evidence yet; null value: "Not
+  /// yet").
+  Map<String, String?> get masteryBySkill => {
+        for (final e in _mastery.entries) e.key: e.value,
+        for (final e in _profiles.entries) e.key: e.value.state.key,
+      };
+
+  /// A profile per skill with evidence; a state alone becomes a thin one.
+  Map<String, SkillProfile> get profiles => {
+        for (final e in _mastery.entries) e.key: SkillProfile.stateOnly(e.key, e.value),
+        ..._profiles,
+      };
 
   static const _secure = {'secure', 'transfer'};
 
   /// Whether every one of [skills] already has secure (or transfer) evidence.
-  bool isSecure(List<String> skills) => skills.isNotEmpty && skills.every((s) => _secure.contains(masteryBySkill[s]));
+  bool isSecure(List<String> skills) {
+    final mastery = masteryBySkill;
+    return skills.isNotEmpty && skills.every((s) => _secure.contains(mastery[s]));
+  }
 }
 
 /// Why an activity is recommended.
@@ -239,12 +281,23 @@ enum RecommendationReason {
 
   /// Everything is done: revisit an earlier activity.
   review,
+
+  /// A skill the child has made secure, tried in a new kind of game.
+  newWay,
 }
 
+/// The next activity, the child-facing reason Home shows, and -- for
+/// grown-ups and debugging only -- the engine's internal explanation.
 class Recommendation {
-  const Recommendation(this.activity, this.reason);
+  const Recommendation(this.activity, this.reason, {this.why, this.candidates = const []});
   final Activity activity;
   final RecommendationReason reason;
+
+  /// Why the engine picked it (never shown to the child).
+  final RecommendationCandidate? why;
+
+  /// Every candidate it weighed, best first.
+  final List<RecommendationCandidate> candidates;
 }
 
 /// Where an activity stands for this child.

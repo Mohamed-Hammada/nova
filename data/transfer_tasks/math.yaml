@@ -40,3 +40,19 @@
   description: The adult tells a short story with real objects (3 grapes, then 2 more) and asks how many now, with some objects hidden in a cup.
   signals: [accuracy, adult_assist, error_type]
   scoring: The adult marks each answer correct or not.
+- id: task.math.make-ten-at-home
+  name_key: task.math.make-ten-at-home.name
+  age_range: [4, 7]
+  skills: [math.number.parts-of-ten]
+  mechanic_id: physical-counting
+  description: The adult shows some fingers (or puts some spoons out) and asks how many more make ten; then the child asks the adult.
+  signals: [accuracy, adult_assist]
+  scoring: The adult marks each answer given without counting one by one.
+- id: task.math.board-game-at-home
+  name_key: task.math.board-game-at-home.name
+  age_range: [3, 6]
+  skills: [math.number.path-to-10]
+  mechanic_id: physical-counting
+  description: Adult and child play a board game on a numbered path (to 10 or 20), saying each number as the counter moves.
+  signals: [accuracy, adult_assist]
+  scoring: The adult notes whether the child moves the right number of squares and says the numbers.

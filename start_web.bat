@@ -1,7 +1,8 @@
 @echo off
 rem =========================================================================
 rem Nova - Web App Launcher
-rem Starts Nova Web app on port 8686 (or a custom port if specified).
+rem Starts Nova Web app on port 8686 (or a custom port if specified), in
+rem Microsoft Edge when installed -- it has Arabic voices, Chrome has none.
 rem Usage:
 rem   start_web.bat
 rem   start_web.bat --web-port 3000

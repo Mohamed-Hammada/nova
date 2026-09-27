@@ -5,6 +5,7 @@ The ids and strings here are fixtures only; they are not curriculum content.
 """
 from __future__ import annotations
 
+import json
 from pathlib import Path
 
 import yaml
@@ -392,3 +393,5 @@ def write_spec(spec: Spec, root: Path) -> None:
         dump(root / "i18n" / f"{language}.yaml", table)
     for language, table in spec.audio.items():
         dump(root / "audio" / f"{language}.yaml", table)
+    # The fixture's games stand for games that predate the research rule.
+    (root / "research_grandfathered.json").write_text(json.dumps({"games": [g["id"] for g in spec.games]}), encoding="utf-8")

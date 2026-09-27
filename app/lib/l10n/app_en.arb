@@ -666,5 +666,514 @@
   "withYou": "I'm right here with you. Let's look again together!",
   "@withYou": {
     "description": "Companion: the child missed twice in a row; reassurance"
+  },
+  "settingsSound": "Sound",
+  "@settingsSound": {
+    "description": "Settings section: music, effects, voice"
+  },
+  "settingsPlay": "Play",
+  "@settingsPlay": {
+    "description": "Settings section: hints and motion"
+  },
+  "settingsChild": "Child",
+  "@settingsChild": {
+    "description": "Settings section: name, age, companion, world"
+  },
+  "settingsGraphics": "Graphics",
+  "@settingsGraphics": {
+    "description": "Settings section: graphics quality"
+  },
+  "settingsIntro": "Everything here is saved on this device and applies straight away.",
+  "@settingsIntro": {
+    "description": "Settings screen intro"
+  },
+  "music": "Music",
+  "@music": {
+    "description": "Setting: background music and ambience on/off"
+  },
+  "musicDesc": "Gentle music and nature sounds for each place of the journey.",
+  "@musicDesc": {
+    "description": "Setting description"
+  },
+  "voiceNarration": "Voice and narration",
+  "@voiceNarration": {
+    "description": "Setting: spoken instructions and recorded narration on/off"
+  },
+  "hintButton": "Hint button",
+  "@hintButton": {
+    "description": "Setting: show the hint button during play"
+  },
+  "hintButtonDesc": "Shows the light-bulb button while playing. Nova's own step-by-step help stays on.",
+  "@hintButtonDesc": {
+    "description": "Setting description"
+  },
+  "reducedMotion": "Reduced motion",
+  "@reducedMotion": {
+    "description": "Setting: calmer screens"
+  },
+  "reducedMotionDesc": "Calmer screens, with less moving and bouncing.",
+  "@reducedMotionDesc": {
+    "description": "Setting description"
+  },
+  "settingsDone": "Done",
+  "@settingsDone": {
+    "description": "Closes the settings screen"
+  },
+  "recNewWay": "Let's try what you know in a new game!",
+  "@recNewWay": {
+    "description": "Companion: next activity checks a secure skill in a new kind of game"
+  },
+  "trendImproving": "Improving",
+  "@trendImproving": {
+    "description": "Skill trend"
+  },
+  "trendSteady": "Steady",
+  "@trendSteady": {
+    "description": "Skill trend"
+  },
+  "trendDeclining": "Finding it harder lately",
+  "@trendDeclining": {
+    "description": "Skill trend"
+  },
+  "trendUnknown": "Trend: needs more play",
+  "@trendUnknown": {
+    "description": "Skill trend"
+  },
+  "independenceIndependent": "Plays independently",
+  "@independenceIndependent": {
+    "description": "Skill independence"
+  },
+  "independenceOccasional": "Needs occasional help",
+  "@independenceOccasional": {
+    "description": "Skill independence"
+  },
+  "independenceNeedsHelp": "Still needs help often",
+  "@independenceNeedsHelp": {
+    "description": "Skill independence"
+  },
+  "confidenceEarly": "Confidence: early evidence",
+  "@confidenceEarly": {
+    "description": "How much evidence there is"
+  },
+  "confidenceGrowing": "Confidence: growing evidence",
+  "@confidenceGrowing": {
+    "description": "How much evidence there is"
+  },
+  "confidenceGood": "Confidence: good evidence",
+  "@confidenceGood": {
+    "description": "How much evidence there is"
+  },
+  "practiceHistory": "{sessions} sessions · {rounds} rounds · {contexts} settings",
+  "@practiceHistory": {
+    "description": "Practice history of a skill",
+    "placeholders": {
+      "sessions": {
+        "type": "String"
+      },
+      "rounds": {
+        "type": "String"
+      },
+      "contexts": {
+        "type": "String"
+      }
+    }
+  },
+  "lastPracticed": "Last practised: {date}",
+  "@lastPracticed": {
+    "description": "Date a skill was last played",
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "transferNotYet": "Transfer: not yet",
+  "@transferNotYet": {
+    "description": "Transfer status"
+  },
+  "transferReady": "Transfer: ready to try somewhere new",
+  "@transferReady": {
+    "description": "Transfer status"
+  },
+  "transferShown": "Transfer: shown somewhere new",
+  "@transferShown": {
+    "description": "Transfer status"
+  },
+  "repeatedError": "Keeps happening: {error}",
+  "@repeatedError": {
+    "description": "A repeated error pattern",
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "selfCorrected": "Fixed own mistakes {count} times",
+  "@selfCorrected": {
+    "description": "Self-corrections",
+    "placeholders": {
+      "count": {
+        "type": "String"
+      }
+    }
+  },
+  "errOverCount": "counting past the number",
+  "@errOverCount": {
+    "description": "Error type"
+  },
+  "errUnderCount": "stopping before the number",
+  "@errUnderCount": {
+    "description": "Error type"
+  },
+  "errWrongObject": "picking the wrong kind of thing",
+  "@errWrongObject": {
+    "description": "Error type"
+  },
+  "errDistractor": "choosing a look-alike answer",
+  "@errDistractor": {
+    "description": "Error type"
+  },
+  "errChoseSmaller": "choosing the smaller group",
+  "@errChoseSmaller": {
+    "description": "Error type"
+  },
+  "errChoseBigger": "choosing the bigger group",
+  "@errChoseBigger": {
+    "description": "Error type"
+  },
+  "errSequenceBreak": "losing the order",
+  "@errSequenceBreak": {
+    "description": "Error type"
+  },
+  "errImpulsive": "answering very quickly",
+  "@errImpulsive": {
+    "description": "Error type"
+  },
+  "errMissedTarget": "letting targets go by",
+  "@errMissedTarget": {
+    "description": "Error type"
+  },
+  "errPerseveration": "sorting by the old rule",
+  "@errPerseveration": {
+    "description": "Error type"
+  },
+  "errRepeated": "the same mistake twice in a row",
+  "@errRepeated": {
+    "description": "Error type"
+  },
+  "tryAtHome": "Try it at home: {task}",
+  "@tryAtHome": {
+    "description": "Transfer probe task for grown-ups",
+    "placeholders": {
+      "task": {
+        "type": "String"
+      }
+    }
+  },
+  "tryAtHomeDidIt": "We did it!",
+  "@tryAtHomeDidIt": {
+    "description": "Grown-up reports the home task went well"
+  },
+  "tryAtHomeNotYet": "Not yet",
+  "@tryAtHomeNotYet": {
+    "description": "Grown-up reports the home task did not work yet"
+  },
+  "tryAtHomeThanks": "Thanks! Noted.",
+  "@tryAtHomeThanks": {
+    "description": "Confirmation after a grown-up report"
+  },
+  "whyNext": "Nova's next pick: {reason}",
+  "@whyNext": {
+    "description": "Grown-up report: why the next activity was chosen",
+    "placeholders": {
+      "reason": {
+        "type": "String"
+      }
+    }
+  },
+  "reasonNextRequired": "the next step of the adventure",
+  "@reasonNextRequired": {
+    "description": "Selection reason"
+  },
+  "reasonPracticeMissingSkill": "a skill that needs more practice",
+  "@reasonPracticeMissingSkill": {
+    "description": "Selection reason"
+  },
+  "reasonRepeatedError": "a mistake that keeps coming back",
+  "@reasonRepeatedError": {
+    "description": "Selection reason"
+  },
+  "reasonIndependence": "doing it with less help",
+  "@reasonIndependence": {
+    "description": "Selection reason"
+  },
+  "reasonReinforce": "keeping a known skill fresh",
+  "@reasonReinforce": {
+    "description": "Selection reason"
+  },
+  "reasonTransfer": "trying a known skill in a new kind of game",
+  "@reasonTransfer": {
+    "description": "Selection reason"
+  },
+  "reasonStretch": "a challenge after strong play",
+  "@reasonStretch": {
+    "description": "Selection reason"
+  },
+  "reasonTryAgain": "the same game again, made easier",
+  "@reasonTryAgain": {
+    "description": "Selection reason"
+  },
+  "reasonVariety": "something different, for variety",
+  "@reasonVariety": {
+    "description": "Selection reason"
+  },
+  "reasonReview": "revisiting earlier games",
+  "@reasonReview": {
+    "description": "Selection reason"
+  },
+  "skillProfileNote": "Each skill is described from all the sessions so far, not just the last one. Not a score.",
+  "@skillProfileNote": {
+    "description": "Progress: how skill profiles are built"
+  },
+  "promptShowFeeling": "{story} Show how you feel!",
+  "@promptShowFeeling": {
+    "description": "Communication skills (ENDCORE)",
+    "placeholders": {
+      "story": {
+        "type": "String"
+      }
+    }
+  },
+  "promptWhatSay": "{story} What could you say or do?",
+  "@promptWhatSay": {
+    "description": "Communication skills (ENDCORE)",
+    "placeholders": {
+      "story": {
+        "type": "String"
+      }
+    }
+  },
+  "promptHelpFriend": "{story} What would help?",
+  "@promptHelpFriend": {
+    "description": "Communication skills (ENDCORE)",
+    "placeholders": {
+      "story": {
+        "type": "String"
+      }
+    }
+  },
+  "promptCalmWay": "{story} What is a calm way?",
+  "@promptCalmWay": {
+    "description": "Communication skills (ENDCORE)",
+    "placeholders": {
+      "story": {
+        "type": "String"
+      }
+    }
+  },
+  "promptFairWay": "{story} What keeps it fair and friendly?",
+  "@promptFairWay": {
+    "description": "Communication skills (ENDCORE)",
+    "placeholders": {
+      "story": {
+        "type": "String"
+      }
+    }
+  },
+  "errPassive": "giving up quietly (saying nothing)",
+  "@errPassive": {
+    "description": "Communication skills (ENDCORE)"
+  },
+  "errAggressive": "grabbing, pushing or shouting",
+  "@errAggressive": {
+    "description": "Communication skills (ENDCORE)"
+  },
+  "errUnkind": "unkind words to a friend",
+  "@errUnkind": {
+    "description": "Communication skills (ENDCORE)"
+  },
+  "errSelfFocused": "carrying on while a friend needs help",
+  "@errSelfFocused": {
+    "description": "Communication skills (ENDCORE)"
+  },
+  "commSkillsTitle": "Communication and social skills",
+  "@commSkillsTitle": {
+    "description": "Communication skills (ENDCORE)"
+  },
+  "commSkillsIntro": "Six skills in two levels, after the ENDCORE model (Fujimoto & Daibo, 2007): the basic skills underneath support the ones for getting on with others. For young children, shown through games and your own observations. A way of looking, not a test.",
+  "@commSkillsIntro": {
+    "description": "Communication skills (ENDCORE)"
+  },
+  "commBasic": "Basic",
+  "@commBasic": {
+    "description": "Communication skills (ENDCORE)"
+  },
+  "commInterpersonal": "With others",
+  "@commInterpersonal": {
+    "description": "Communication skills (ENDCORE)"
+  },
+  "commExpressing": "Expressing",
+  "@commExpressing": {
+    "description": "Communication skills (ENDCORE)"
+  },
+  "commUnderstanding": "Understanding",
+  "@commUnderstanding": {
+    "description": "Communication skills (ENDCORE)"
+  },
+  "commManaging": "Managing",
+  "@commManaging": {
+    "description": "Communication skills (ENDCORE)"
+  },
+  "commExpressivity": "Showing feelings",
+  "@commExpressivity": {
+    "description": "Communication skills (ENDCORE)"
+  },
+  "commDecoding": "Reading feelings",
+  "@commDecoding": {
+    "description": "Communication skills (ENDCORE)"
+  },
+  "commSelfControl": "Calming down",
+  "@commSelfControl": {
+    "description": "Communication skills (ENDCORE)"
+  },
+  "commAssertion": "Asking clearly and kindly",
+  "@commAssertion": {
+    "description": "Communication skills (ENDCORE)"
+  },
+  "commOtherAcceptance": "Caring about others",
+  "@commOtherAcceptance": {
+    "description": "Communication skills (ENDCORE)"
+  },
+  "commRelationships": "Keeping friendships good",
+  "@commRelationships": {
+    "description": "Communication skills (ENDCORE)"
+  },
+  "commNoEvidence": "Not played yet",
+  "@commNoEvidence": {
+    "description": "Communication skills (ENDCORE)"
+  },
+  "voiceMissing": "This device has no {language} voice, so questions are not read aloud in {language}.",
+  "@voiceMissing": {
+    "description": "Settings: no text-to-speech voice for the language",
+    "placeholders": {
+      "language": {
+        "type": "String"
+      }
+    }
+  },
+  "voiceMissingHow": "To add one: on Windows, open Settings > Time & language > Speech > Add voices, choose {language}, then restart the browser (or use Microsoft Edge, which has {language} voices). On Android, open Settings > Text-to-speech and install {language}.",
+  "@voiceMissingHow": {
+    "description": "Settings: no text-to-speech voice for the language",
+    "placeholders": {
+      "language": {
+        "type": "String"
+      }
+    }
+  },
+  "promptMakeTen": "{shown} and how many more make {total}?",
+  "@promptMakeTen": {
+    "description": "Round prompt",
+    "placeholders": {
+      "shown": {
+        "type": "String"
+      },
+      "total": {
+        "type": "String"
+      }
+    }
+  },
+  "promptPathHop": "The frog is on {at}. It hops {hops}. Where does it land?",
+  "@promptPathHop": {
+    "description": "Round prompt",
+    "placeholders": {
+      "at": {
+        "type": "String"
+      },
+      "hops": {
+        "type": "String"
+      }
+    }
+  },
+  "noVoiceHome": "For grown-ups: this device has no {language} voice, so questions are not read aloud. Tap to fix.",
+  "@noVoiceHome": {
+    "description": "Home notice: no TTS voice for the language",
+    "placeholders": {
+      "language": {
+        "type": "String"
+      }
+    }
+  },
+  "promptCherryTen": "{a} needs how many to make 10?",
+  "@promptCherryTen": {
+    "description": "Cherry Sums prompt (さくらんぼ計算)",
+    "placeholders": {
+      "a": {
+        "type": "String"
+      }
+    }
+  },
+  "promptCherryRest": "{b} is {ten} and how many more?",
+  "@promptCherryRest": {
+    "description": "Cherry Sums prompt (さくらんぼ計算)",
+    "placeholders": {
+      "b": {
+        "type": "String"
+      },
+      "ten": {
+        "type": "String"
+      }
+    }
+  },
+  "promptCherrySum": "Make ten first: {a} + {b} = ?",
+  "@promptCherrySum": {
+    "description": "Cherry Sums prompt (さくらんぼ計算)",
+    "placeholders": {
+      "a": {
+        "type": "String"
+      },
+      "b": {
+        "type": "String"
+      }
+    }
+  },
+  "jpMathTitle": "Japanese ways of learning to count and add",
+  "@jpMathTitle": {
+    "description": "Grown-ups: Japanese math methods"
+  },
+  "jpMathIntro": "Nova's number games follow methods used in Japanese classrooms and studied by researchers. Each has something to try at home.",
+  "@jpMathIntro": {
+    "description": "Grown-ups: Japanese math methods"
+  },
+  "jpMakeTenTitle": "Parts of ten (ikutsu to ikutsu) — Make Ten",
+  "@jpMakeTenTitle": {
+    "description": "Grown-ups: Japanese math methods"
+  },
+  "jpMakeTenBody": "Every number to ten is two parts: 7 is 3 and 4. At home: show 7 fingers and ask how many more make 10.",
+  "@jpMakeTenBody": {
+    "description": "Grown-ups: Japanese math methods"
+  },
+  "jpCherryTitle": "The cherry method (sakuranbo keisan) — Cherry Sums",
+  "@jpCherryTitle": {
+    "description": "Grown-ups: Japanese math methods"
+  },
+  "jpCherryBody": "To add 8 + 5, make ten first: split 5 into 2 and 3; 8 + 2 = 10, then 10 + 3 = 13. At home: fill a ten with buttons, then count the rest.",
+  "@jpCherryBody": {
+    "description": "Grown-ups: Japanese math methods"
+  },
+  "jpTapeTitle": "Tape diagrams (tēpu-zu) — Tape Stories",
+  "@jpTapeTitle": {
+    "description": "Grown-ups: Japanese math methods"
+  },
+  "jpTapeBody": "A story problem drawn as one tape: two parts under the whole. At home: tell a small story problem and cut a paper strip into its two parts.",
+  "@jpTapeBody": {
+    "description": "Grown-ups: Japanese math methods"
+  },
+  "jpPathTitle": "Number paths, like sugoroku (sugoroku) — Frog Hops",
+  "@jpPathTitle": {
+    "description": "Grown-ups: Japanese math methods"
+  },
+  "jpPathBody": "Moving along a numbered path, saying each number, builds the number line in the mind. At home: play a number board game to 10 or 20.",
+  "@jpPathBody": {
+    "description": "Grown-ups: Japanese math methods"
   }
 }

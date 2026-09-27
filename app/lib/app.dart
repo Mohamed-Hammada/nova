@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:nova_app/providers.dart';
 
+import 'ui/audio/background_audio.dart';
+import 'ui/audio/sound_effects.dart';
 import 'ui/design/nova_design.dart';
 import 'ui/home/home_screen.dart';
 import 'ui/journey/onboarding_screen.dart';
@@ -46,14 +48,30 @@ class NovaApp extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return NovaMaterialApp(
-      locale: ref.watch(localeProvider),
-      builder: (context, child) => AmbientMotion(
-        enabled: ref.watch(ambientMotionProvider),
-        child: Graphics(
-          quality: ref.watch(graphicsProvider),
-          child: SettingsSync(child: child!),
-        ),
-      ),
+      // The interface uses exactly the language the content and speech use
+      // (the picked one, else the device's): two separate resolutions could
+      // disagree (seen in Edge: English labels with Arabic digits and speech).
+      locale: ref.watch(localeProvider) ?? Locale(ref.watch(languageProvider)),
+      builder: (context, child) {
+        // A grown-up's "reduced motion" works like the device setting: every
+        // animation that honours one honours the other.
+        final reduce = ref.watch(reducedMotionProvider);
+        final media = MediaQuery.of(context);
+        final sfx = ref.watch(soundEffectsProvider);
+        return MediaQuery(
+          data: reduce ? media.copyWith(disableAnimations: true) : media,
+          child: AmbientMotion(
+            enabled: ref.watch(ambientMotionProvider),
+            child: Graphics(
+              quality: ref.watch(graphicsProvider),
+              child: SfxScope(
+                play: sfx.play,
+                child: BackgroundAudioDirector(child: SettingsSync(child: child!)),
+              ),
+            ),
+          ),
+        );
+      },
       // A child who has not told Nova their age yet starts with onboarding.
       home: ref.watch(childAgeProvider) == null ? const OnboardingScreen() : const HomeScreen(),
     );

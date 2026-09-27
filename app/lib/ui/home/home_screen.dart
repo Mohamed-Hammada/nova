@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:nova_app/core/content/models.dart';
 import 'package:nova_app/providers.dart';
+import 'package:nova_app/ui/audio/background_audio.dart';
+import 'package:nova_app/ui/audio/sound_effects.dart';
 import 'package:nova_app/ui/characters/character_rig.dart';
 import 'package:nova_app/ui/characters/character_view.dart';
 import 'package:nova_app/ui/design/nova_design.dart';
@@ -17,6 +19,7 @@ import 'package:nova_app/ui/progress/progress_screen.dart';
 import 'package:nova_app/ui/scene/story_scene.dart';
 import 'package:nova_app/ui/settings/face_play.dart';
 import 'package:nova_app/ui/settings/profile_screen.dart';
+import 'package:nova_app/ui/settings/settings_screen.dart';
 import 'package:nova_app/ui/shell/language_menu.dart';
 import 'package:nova_app/ui/widgets/props.dart';
 import 'package:nova_app/ui/world/activity_world.dart';
@@ -44,7 +47,11 @@ class HomeScreen extends ConsumerWidget {
     final explore = ref.watch(exploreActivitiesProvider);
     // Without a curriculum (an older bundle) there is still one next game.
     final empty = journey == null && ref.watch(offeredGamesProvider).isEmpty;
-    return Scaffold(
+    // Home has its own warm music and meadow sounds; an adventure opened
+    // from here crossfades to its place's, and coming back crossfades home.
+    return AudioSceneMarker(
+      scene: AudioScene.home,
+      child: Scaffold(
       body: StoryScene(
         theme: SceneTheme.meadow,
         horizon: 0.5,
@@ -63,6 +70,7 @@ class HomeScreen extends ConsumerWidget {
                           padding: EdgeInsets.fromLTRB(gutter, NovaSpace.sm, gutter, NovaSpace.xxl),
                           children: [
                             const _TopBar(),
+                            const _NoVoiceNotice(),
                             const SizedBox(height: NovaSpace.md),
                             _Hero(wide: wide),
                             if (journey != null) ...[const SizedBox(height: NovaSpace.xl), _SectionTitle(l10n.myJourney), const SizedBox(height: NovaSpace.sm), _JourneyStrip(progress: journey)],
@@ -83,6 +91,7 @@ class HomeScreen extends ConsumerWidget {
                   },
                 ),
         ),
+      ),
       ),
     );
   }
@@ -119,6 +128,8 @@ class _TopBar extends ConsumerWidget {
     // With very large text on a phone the name would crowd the controls;
     // the face alone still opens "About me".
     final showName = MediaQuery.sizeOf(context).width >= 600 || MediaQuery.textScalerOf(context).scale(10) <= 13;
+    // Very narrow phones: slightly smaller round controls, so all fit.
+    final control = MediaQuery.sizeOf(context).width < 380 ? 46.0 : 52.0;
     return Row(
       children: [
         // The child's own badge: their friend's face and their name. It takes
@@ -167,9 +178,57 @@ class _TopBar extends ConsumerWidget {
           icon: Icons.family_restroom_rounded,
           label: l10n.grownUps,
           color: NovaStory.plum,
+          size: control,
           onPressed: () => Navigator.of(context).push(MaterialPageRoute<void>(builder: (_) => const ProgressScreen())),
         ),
+        const SizedBox(width: NovaSpace.xs),
+        // Settings, right here: music, sound, voice, the child, language.
+        NovaRoundButton(
+          key: const ValueKey('home.settings'),
+          icon: Icons.settings_rounded,
+          label: l10n.settingsTitle,
+          color: NovaStory.ocean,
+          size: control,
+          onPressed: () => Navigator.of(context).push(MaterialPageRoute<void>(builder: (_) => const SettingsScreen())),
+        ),
       ],
+    );
+  }
+}
+
+/// For grown-ups: the child plays in a language this device has no voice
+/// for, so nothing is read aloud. Says so on Home (a child would otherwise
+/// just hear silence) and opens Settings, which explains how to add one.
+class _NoVoiceNotice extends ConsumerWidget {
+  const _NoVoiceNotice();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final lang = ref.watch(languageProvider);
+    if (!ref.watch(speechEnabledProvider) || (ref.watch(voiceAvailableProvider(lang)).value ?? true)) return const SizedBox.shrink();
+    final l10n = context.l10n;
+    return Padding(
+      padding: const EdgeInsets.only(top: NovaSpace.sm),
+      child: Semantics(
+        button: true,
+        child: InkWell(
+          key: const ValueKey('home.noVoice'),
+          borderRadius: BorderRadius.circular(NovaRadius.lg),
+          onTap: () => Navigator.of(context).push(MaterialPageRoute<void>(builder: (_) => const SettingsScreen())),
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: NovaSpace.md, vertical: NovaSpace.xs),
+            decoration: BoxDecoration(color: NovaStory.cloud.withValues(alpha: 0.95), borderRadius: BorderRadius.circular(NovaRadius.lg), boxShadow: NovaShadow.soft),
+            child: Row(
+              children: [
+                const Icon(Icons.volume_off_rounded, color: NovaStory.plum),
+                const SizedBox(width: NovaSpace.xs),
+                Expanded(child: Text(l10n.noVoiceHome(lang == 'ar' ? l10n.languageNameArabic : l10n.languageNameEnglish), style: NovaType.label(context))),
+                const Icon(Icons.chevron_right_rounded),
+              ],
+            ),
+          ),
+        ),
+      ),
     );
   }
 }
@@ -243,6 +302,7 @@ class _HeroState extends ConsumerState<_Hero> {
             RecommendationReason.practice => l10n.recPractice,
             RecommendationReason.tryAgainEasier => l10n.recTryAgain,
             RecommendationReason.stretch => l10n.scaffoldIndependent,
+            RecommendationReason.newWay => l10n.recNewWay,
             _ => l10n.weAreIn(contentText(ref.watch(contentRuntimeProvider), journey.current.stage.nameKey, ref.watch(languageProvider))),
           };
 
@@ -253,7 +313,10 @@ class _HeroState extends ConsumerState<_Hero> {
         children: [
           Positioned.fill(
             child: GestureDetector(
-              onTap: () => _guide.react(Reaction.wave),
+              onTap: () {
+                _guide.react(Reaction.wave);
+                ref.read(soundEffectsProvider).companion(Reaction.wave);
+              },
               child: Semantics(
                 label: friend,
                 child: CharacterView(key: ValueKey(companion), kind: companion, controller: _guide, entrance: Reaction.wave),

@@ -1,0 +1,66 @@
+# Communication and social skills, organised by the ENDCORE model (Fujimoto & Daibo, 2007): three
+# basic skills under three interpersonal skills, in an expressive, a responsive and a management
+# system. The responsive basic skill (decoding) is the existing sel.emotion.* pair. What each skill
+# looks like at 2-8 follows the preschool factors of Takahashi et al. (2008): self-expression,
+# self-restraint and cooperation. Prerequisite edges follow the model's hierarchy (a basic skill
+# under its interpersonal skill); they are design inferences, not measured orderings.
+- id: sel.comm.expressivity
+  domains: [social_emotional]
+  name_key: skill.sel.comm.expressivity.name
+  description_key: skill.sel.comm.expressivity.description
+  prerequisites:
+  - {skill: sel.emotion.faces}
+  age_range: [2, 6]
+  indicators: [Shows the feeling that fits a moment on their own face, Names their own feeling when asked]
+  evidence_basis: framework
+  evidence_refs: [ev.sel.fujimoto-daibo-2007, ev.sel.takahashi-2008]
+  scope: universal
+  deep_scope: false
+- id: sel.comm.self-control
+  domains: [social_emotional]
+  name_key: skill.sel.comm.self-control.name
+  description_key: skill.sel.comm.self-control.description
+  prerequisites: []
+  age_range: [3, 8]
+  indicators: [Chooses a calm way to handle a big feeling, Can wait or hold back a want for a moment]
+  evidence_basis: framework
+  evidence_refs: [ev.sel.fujimoto-daibo-2007, ev.sel.takahashi-2008]
+  scope: universal
+  deep_scope: false
+- id: sel.comm.assertion
+  domains: [social_emotional]
+  name_key: skill.sel.comm.assertion.name
+  description_key: skill.sel.comm.assertion.description
+  prerequisites:
+  - {skill: sel.comm.expressivity}
+  age_range: [4, 8]
+  indicators: [Says what they need clearly and kindly, Neither gives up silently nor grabs or shouts]
+  evidence_basis: framework
+  evidence_refs: [ev.sel.fujimoto-daibo-2007, ev.sel.takahashi-2008]
+  scope: universal
+  deep_scope: false
+- id: sel.comm.other-acceptance
+  domains: [social_emotional]
+  name_key: skill.sel.comm.other-acceptance.name
+  description_key: skill.sel.comm.other-acceptance.description
+  prerequisites:
+  - {skill: sel.emotion.faces}
+  age_range: [3, 8]
+  indicators: [Chooses a kind way to help a friend who feels bad, Accepts that a friend likes something different]
+  evidence_basis: framework
+  evidence_refs: [ev.sel.fujimoto-daibo-2007, ev.sel.takahashi-2008]
+  scope: universal
+  deep_scope: false
+- id: sel.comm.relationships
+  domains: [social_emotional]
+  name_key: skill.sel.comm.relationships.name
+  description_key: skill.sel.comm.relationships.description
+  prerequisites:
+  - {skill: sel.comm.self-control}
+  - {skill: sel.comm.other-acceptance}
+  age_range: [5, 8]
+  indicators: [Suggests taking turns or sharing when two friends want the same thing, Chooses a way to make up after a quarrel]
+  evidence_basis: framework
+  evidence_refs: [ev.sel.fujimoto-daibo-2007, ev.sel.takahashi-2008]
+  scope: universal
+  deep_scope: false

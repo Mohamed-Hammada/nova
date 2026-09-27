@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../audio/sound_effects.dart';
 import '../theme/nova_theme.dart';
 
 /// A chunky, physical-feeling button: a lit, glossy face sitting on a
@@ -16,6 +17,7 @@ class JellyButton extends StatefulWidget {
     this.size = 64,
     this.circle = false,
     this.semanticLabel,
+    this.sound = Sfx.tap,
   });
 
   final VoidCallback? onPressed;
@@ -26,6 +28,9 @@ class JellyButton extends StatefulWidget {
   final double size;
   final bool circle;
   final String? semanticLabel;
+
+  /// The sound of pressing it (null: silent), when sound effects are on.
+  final Sfx? sound;
 
   @override
   State<JellyButton> createState() => _JellyButtonState();
@@ -94,7 +99,12 @@ class _JellyButtonState extends State<JellyButton> with TickerProviderStateMixin
         onTapDown: enabled ? _down : null,
         onTapUp: enabled ? _up : null,
         onTapCancel: () => _press.reverse(),
-        onTap: widget.onPressed,
+        onTap: enabled
+            ? () {
+                if (widget.sound != null) SfxScope.tap(context, widget.sound!);
+                widget.onPressed!();
+              }
+            : null,
         child: AnimatedBuilder(
           animation: Listenable.merge([_press, _spring]),
           builder: (context, _) {

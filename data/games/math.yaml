@@ -280,3 +280,116 @@
   progression: {advance_parameter: param.default.advance-accuracy, retreat_parameter: param.default.retreat-accuracy}
   transfer_probes: []
   language_dependencies: []
+- id: game.math.make-ten
+  name_key: game.math.make-ten.name
+  age_range: [4, 7]
+  primary_skills: [math.number.parts-of-ten]
+  secondary_skills: []
+  objective: Find how many more make five, or ten.
+  mechanic_id: make-number
+  mechanic: A five- or ten-frame shows some dots; the child chooses how many more fill it (いくつといくつ, the parts of ten), then just the numbers.
+  evidence_basis: empirical
+  evidence_refs: [ev.math.kullberg-2020, ev.math.murata-2004]
+  difficulty:
+    varied: [item_complexity, abstraction]
+    anchors:
+      item_complexity: [make five, make ten]
+      abstraction: [dots on the frame, numbers only]
+    rungs:
+    - id: r1
+      values: {item_complexity: 0, distractors: 0, working_memory_load: 0, rule_complexity: 0, abstraction: 0, cognitive_load: 0, independence: 0}
+    - id: r2
+      values: {item_complexity: 1, distractors: 0, working_memory_load: 0, rule_complexity: 0, abstraction: 0, cognitive_load: 0, independence: 0}
+    - id: r3
+      values: {item_complexity: 1, distractors: 0, working_memory_load: 0, rule_complexity: 0, abstraction: 1, cognitive_load: 0, independence: 0}
+  scaffolding:
+    hints: [The empty squares of the frame glow, one by one., The companion counts on from the dots to five or ten.]
+    adult_prompt: 'Show seven fingers and ask: how many more make ten? Then swap.'
+  signals: [accuracy, hints_used, retries, error_type, completion]
+  progression: {advance_parameter: param.default.advance-accuracy, retreat_parameter: param.default.retreat-accuracy}
+  transfer_probes:
+  - {id: probe.make-ten-at-home, type: cross_game, delayed: false, skill: math.number.parts-of-ten, mechanic_id: physical-counting, task_ref: task.math.make-ten-at-home, changes: From dots on a screen to fingers and real objects., preserved: How many more make ten.}
+  language_dependencies: []
+- id: game.math.number-path
+  name_key: game.math.number-path.name
+  age_range: [3, 6]
+  primary_skills: [math.number.path-to-10]
+  secondary_skills: []
+  objective: Hop along the number path and say where you land.
+  mechanic_id: board-game-move
+  mechanic: A frog sits on a numbered path (1 to 5, then 1 to 10); the spinner says how many hops; the child chooses the number it lands on, and the hops are counted aloud along the path.
+  evidence_basis: empirical
+  evidence_refs: [ev.math.siegler-ramani-2008, ev.math.ramani-siegler-2008, ev.math.urakami-sugimura-2017]
+  difficulty:
+    varied: [item_complexity]
+    anchors:
+      item_complexity: [a path of 5 and hops of 1 or 2, a path of 10 and hops of 1 to 3]
+    rungs:
+    - id: r1
+      values: {item_complexity: 0, distractors: 0, working_memory_load: 0, rule_complexity: 0, abstraction: 0, cognitive_load: 0, independence: 0}
+    - id: r2
+      values: {item_complexity: 1, distractors: 0, working_memory_load: 0, rule_complexity: 0, abstraction: 0, cognitive_load: 0, independence: 0}
+  scaffolding:
+    hints: [The frog hops one square at a time while each number is said., The squares it will pass glow.]
+    adult_prompt: 'Play a number board game together (a path to 10 or 20), and say each number as you move.'
+  signals: [accuracy, hints_used, retries, error_type, completion]
+  progression: {advance_parameter: param.default.advance-accuracy, retreat_parameter: param.default.retreat-accuracy}
+  transfer_probes:
+  - {id: probe.board-game-at-home, type: cross_game, delayed: false, skill: math.number.path-to-10, mechanic_id: physical-counting, task_ref: task.math.board-game-at-home, changes: From a screen path to a real board game., preserved: Moving along a numbered path and saying where you land.}
+  language_dependencies: []
+- id: game.math.cherry-sums
+  name_key: game.math.cherry-sums.name
+  age_range: [6, 8]
+  primary_skills: [math.add-sub.within-20]
+  secondary_skills: [math.number.parts-of-ten]
+  objective: Add past ten by making ten first (さくらんぼ計算, the Japanese cherry method).
+  mechanic_id: make-ten-split
+  mechanic: 'A sum like 8 + 5 is shown with the 5 split into two cherries: first the child finds the part that makes 8 up to 10 (2), then what is left (3), then the whole sum (13).'
+  evidence_basis: empirical
+  evidence_refs: [ev.math.murata-2004, ev.math.kullberg-2020]
+  difficulty:
+    varied: [item_complexity]
+    anchors:
+      item_complexity: [find the part that makes ten, find the part that is left, the whole sum]
+    rungs:
+    - id: r1
+      values: {item_complexity: 0, distractors: 0, working_memory_load: 0, rule_complexity: 0, abstraction: 0, cognitive_load: 0, independence: 0}
+    - id: r2
+      values: {item_complexity: 1, distractors: 0, working_memory_load: 0, rule_complexity: 0, abstraction: 0, cognitive_load: 0, independence: 0}
+    - id: r3
+      values: {item_complexity: 2, distractors: 0, working_memory_load: 0, rule_complexity: 0, abstraction: 0, cognitive_load: 0, independence: 0}
+  scaffolding:
+    hints: [The first cherry fills the ten-frame up to ten., The companion says the two steps aloud (8 and 2 make 10; 10 and 3 make 13).]
+    adult_prompt: 'Add past ten with small objects: fill a ten first, then count what is left.'
+  signals: [accuracy, hints_used, retries, error_type, completion]
+  progression: {advance_parameter: param.default.advance-accuracy, retreat_parameter: param.default.retreat-accuracy}
+  transfer_probes:
+  - {id: probe.cherry-at-home, type: cross_game, delayed: false, skill: math.add-sub.within-20, mechanic_id: physical-counting, task_ref: task.math.add-at-home, changes: From cherries on a screen to real objects., preserved: Making ten first to add past ten.}
+  language_dependencies: []
+- id: game.math.tape-stories
+  name_key: game.math.tape-stories.name
+  age_range: [6, 8]
+  primary_skills: [math.add-sub.within-10]
+  secondary_skills: []
+  objective: Solve a short story problem with a tape diagram (テープ図).
+  mechanic_id: tape-diagram
+  mechanic: 'A story problem is read aloud and drawn as a tape: two parts side by side under one whole. The child finds the missing number -- the whole first, then a missing part.'
+  evidence_basis: framework
+  evidence_refs: [ev.math.murata-2008]
+  difficulty:
+    varied: [rule_complexity]
+    anchors:
+      rule_complexity: [the whole is missing (put together), a part is missing (take away)]
+    rungs:
+    - id: r1
+      values: {item_complexity: 0, distractors: 0, working_memory_load: 0, rule_complexity: 0, abstraction: 0, cognitive_load: 0, independence: 0}
+    - id: r2
+      values: {item_complexity: 0, distractors: 0, working_memory_load: 0, rule_complexity: 1, abstraction: 0, cognitive_load: 0, independence: 0}
+  scaffolding:
+    hints: [The story is read again while each part of the tape lights up., The companion points at the part of the tape that is missing.]
+    adult_prompt: 'Tell a story problem at home and draw it as a strip of paper cut into two parts.'
+  signals: [accuracy, hints_used, retries, error_type, completion]
+  progression: {advance_parameter: param.default.advance-accuracy, retreat_parameter: param.default.retreat-accuracy}
+  transfer_probes:
+  - {id: probe.tape-at-home, type: cross_game, delayed: false, skill: math.add-sub.within-10, mechanic_id: physical-counting, task_ref: task.math.add-at-home, changes: From a drawn tape to real objects and a paper strip., preserved: Seeing the parts and the whole of a story problem.}
+  language_dependencies: []

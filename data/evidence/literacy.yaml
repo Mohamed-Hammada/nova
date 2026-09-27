@@ -320,3 +320,42 @@
     uncorrected production artefact (a raw bibliography key, bib_meiseles_1980, in its second
     sentence), which is a small sign of loose editorial handling. Its recommendations are
     recommendations, not tested interventions.
+# Added 2026-09-27 (research rule): the sources behind Story Time and the syllable games.
+- id: ev.literacy.mol-2008
+  title: 'Added value of dialogic parent-child book readings: a meta-analysis'
+  citation: Mol, S. E., Bus, A. G., de Jong, M. T., & Smeets, D. J. H. (2008). Early Education and Development, 19(1), 7-26. doi:10.1080/10409280701838603
+  url: https://doi.org/10.1080/10409280701838603
+  verified: true
+  evidence_type: meta_analysis
+  evidence_strength: moderate
+  population: 16 studies of young children read to by parents or teachers (dialogic reading vs reading as usual)
+  delivery: mixed
+  language: multi
+  finding: >-
+    Interactive (dialogic) book reading, in which the child is asked questions and answers actively,
+    added to vocabulary compared with typical shared reading: for expressive vocabulary d = .59 (k = 9,
+    n = 322). The effect was substantially smaller for 4-5 year olds and for children at risk.
+  limits: >-
+    Adult-child reading, not an app; Nova's Story Time only borrows the question types (what happened,
+    who, finish the sentence), so it practises listening and recall, and the home task invites the real
+    thing.
+- id: ev.literacy.kakihana-2009
+  title: 'Cognitive determinants of kana literacy in young children (幼児のかな識字能力の認知的規定因)'
+  citation: Kakihana, S., Ando, J., Koyama, M., Iitaka, S., & Sugawara, I. (2009). Japanese Journal of Educational Psychology (教育心理学研究), 57(3), 295-308.
+  url: https://www.jstage.jst.go.jp/article/jjep/57/3/57_3_295/_article/-char/ja/
+  verified: true
+  research_origin: [JP]
+  evidence_type: developmental_framework
+  evidence_strength: emerging
+  population: 55 Japanese children aged 3-4
+  delivery: not_applicable
+  language: ja
+  finding: >-
+    Children who knew more kana letter sounds scored higher on mora awareness, digit span, non-word
+    repetition, vocabulary and visual perception, but in a logistic regression only mora awareness (the
+    sound units kana spell) made an independent contribution to letter-sound knowledge; the factors
+    that matter changed as literacy developed.
+  limits: >-
+    Correlational, a small sample, and kana is a syllabic script: for Arabic and English Nova reads it as
+    support for practising the spoken units of words (syllables) early, alongside letters, not as proof
+    that the same holds for alphabets.

@@ -1,0 +1,41 @@
+# Real-life checks for the communication skills: a grown-up notices the skill in everyday play.
+- id: task.sel.show-feelings
+  name_key: task.sel.show-feelings.name
+  age_range: [2, 5]
+  skills: [sel.comm.expressivity]
+  mechanic_id: real-life-social
+  description: Take turns showing a feeling with your face and body and guessing it.
+  signals: [accuracy, adult_assist]
+  scoring: The grown-up notes whether the child did it on their own in a real moment.
+- id: task.sel.ask-kindly
+  name_key: task.sel.ask-kindly.name
+  age_range: [4, 8]
+  skills: [sel.comm.assertion]
+  mechanic_id: real-life-social
+  description: Practise asking for a turn or for help in your own words, and praise clear, kind asking.
+  signals: [accuracy, adult_assist]
+  scoring: The grown-up notes whether the child did it on their own in a real moment.
+- id: task.sel.help-at-home
+  name_key: task.sel.help-at-home.name
+  age_range: [3, 8]
+  skills: [sel.comm.other-acceptance]
+  mechanic_id: real-life-social
+  description: When a sibling or friend is sad, ask together what might help them.
+  signals: [accuracy, adult_assist]
+  scoring: The grown-up notes whether the child did it on their own in a real moment.
+- id: task.sel.calm-at-home
+  name_key: task.sel.calm-at-home.name
+  age_range: [3, 8]
+  skills: [sel.comm.self-control]
+  mechanic_id: real-life-social
+  description: Practise a calm-down breath together when nobody is upset, so it is ready when someone is.
+  signals: [accuracy, adult_assist]
+  scoring: The grown-up notes whether the child did it on their own in a real moment.
+- id: task.sel.turns-at-home
+  name_key: task.sel.turns-at-home.name
+  age_range: [5, 8]
+  skills: [sel.comm.relationships]
+  mechanic_id: real-life-social
+  description: In real play, notice and praise taking turns and making up after a quarrel.
+  signals: [accuracy, adult_assist]
+  scoring: The grown-up notes whether the child did it on their own in a real moment.

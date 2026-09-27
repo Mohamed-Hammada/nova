@@ -75,3 +75,13 @@
   description: Drag letter tiles into slots, in order, to build a pictured or spoken word.
 - id: read-and-match
   description: Read a short printed word, with no audio, and choose the picture it names.
+- id: real-life-social
+  description: A grown-up notices a social skill in the child's own everyday play (asking kindly, taking turns, calming down).
+- id: make-number
+  description: Find the missing part that makes a number (how many more make five or ten), shown on a five- or ten-frame.
+- id: board-game-move
+  description: Move a counter along a numbered path by a spinner, saying each number, and say where it lands.
+- id: make-ten-split
+  description: Add past ten by splitting the second number to make ten first (the Japanese cherry method).
+- id: tape-diagram
+  description: 'Solve a story problem drawn as a tape diagram: parts side by side under the whole.'

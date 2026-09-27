@@ -12,6 +12,11 @@
     "title": { "type": "string", "minLength": 1 },
     "citation": { "type": "string", "minLength": 1 },
     "url": { "type": "string", "minLength": 1 },
+    "research_origin": {
+      "description": "ISO 3166-1 alpha-2 codes of where the research was done (e.g. JP); Japanese research is preferred for new games",
+      "type": "array", "minItems": 1, "uniqueItems": true,
+      "items": { "type": "string", "pattern": "^[A-Z]{2}$" }
+    },
     "verified": { "type": "boolean" },
     "evidence_type": {
       "enum": [

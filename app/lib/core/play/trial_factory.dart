@@ -1,8 +1,12 @@
 import 'dart:math';
 
 import 'package:nova_app/core/content/models.dart';
+import 'package:nova_app/core/skills/error_types.dart';
 
 import 'lexicon.dart';
+import 'social_stories.dart';
+import 'story_time.dart';
+import 'tape_stories.dart';
 import 'stories.dart';
 import 'trials.dart';
 
@@ -40,6 +44,18 @@ class TrialFactory {
     'game.ef.feed-the-fish': _feedFish,
     'game.sel.feelings-friends': _feelings,
     'game.sel.how-would-they-feel': _situations,
+    // Communication skills (ENDCORE; Takahashi et al. 2008): social_stories.dart.
+    'game.sel.show-my-feeling': _showFeeling,
+    // Research-backed math and language (docs/product/math-and-language-research.md).
+    'game.math.make-ten': _makeTen,
+    'game.math.cherry-sums': _cherrySums,
+    'game.math.tape-stories': _tapeStories,
+    'game.math.number-path': _numberPath,
+    for (final l in ['en', 'ar']) 'game.lit.$l.story-time': _storyTime,
+    'game.sel.kind-words': (c) => _social(c, kindWordsMoments, 'what_say'),
+    'game.sel.help-a-friend': (c) => _social(c, helpFriendMoments, 'help_friend'),
+    'game.sel.calm-down': (c) => _social(c, calmDownMoments, 'calm_way'),
+    'game.sel.fair-play': (c) => _social(c, fairPlayMoments, 'fair_way'),
     for (final l in ['en', 'ar']) ...{
       'game.lit.$l.listen-and-find': _listen,
       'game.lit.$l.word-hunt': _wordHunt,
@@ -62,6 +78,16 @@ class TrialFactory {
   static final Map<String, String> _mechanics = {
     'game.sel.feelings-friends': 'emotion-match',
     'game.sel.how-would-they-feel': 'story-choice',
+    'game.sel.show-my-feeling': 'emotion-match',
+    'game.math.make-ten': 'make-number',
+    'game.math.cherry-sums': 'make-ten-split',
+    'game.math.tape-stories': 'tape-diagram',
+    'game.math.number-path': 'board-game-move',
+    for (final l in ['en', 'ar']) 'game.lit.$l.story-time': 'story-choice',
+    'game.sel.kind-words': 'story-choice',
+    'game.sel.help-a-friend': 'story-choice',
+    'game.sel.calm-down': 'story-choice',
+    'game.sel.fair-play': 'story-choice',
     'game.lit.ar.letter-forms': 'letter-match',
     'game.lit.en.letter-pairs': 'letter-match',
     'game.math.bear-apples': 'drag-to-count',
@@ -228,6 +254,11 @@ List<Trial> _moreOrLess(_Ctx c) {
           options: [for (final v in values) GroupVisual(pic, v, scattered: c.ic > 0, seed: c.rng.nextInt(999))],
           answer: askMore ? bigger : 1 - bigger,
           optionsAreBig: true,
+          // The one wrong group is the smaller one for "more", the bigger
+          // one for "fewer".
+          optionErrors: [
+            for (var o = 0; o < 2; o++) o == (askMore ? bigger : 1 - bigger) ? null : (askMore ? ErrorType.choseSmaller : ErrorType.choseBigger),
+          ],
         );
       }(),
   ];
@@ -506,6 +537,202 @@ List<Trial> _situations(_Ctx c) {
           options: [for (final e in options) FaceVisual(s.who, e)],
           answer: answer,
           speak: text,
+        );
+      }(),
+  ];
+}
+
+// ----------------------------------------------- research-backed math/lit ----
+
+/// Make Ten: the frame shows some dots; how many more fill it? First five,
+/// then ten, then the numbers alone (the parts of ten, いくつといくつ).
+List<Trial> _makeTen(_Ctx c) {
+  final total = c.ic == 0 ? 5 : 10;
+  final showDots = c.abs == 0;
+  final used = <int>{};
+  return [
+    for (var i = 0; i < trialsPerSession; i++)
+      () {
+        var shown = c.between(1, total - 1);
+        for (var guard = 0; guard < 6 && used.contains(shown); guard++) {
+          shown = c.between(1, total - 1);
+        }
+        used.add(shown);
+        final missing = total - shown;
+        final wrong = c.near(missing, 2, min: 0, max: total);
+        final (options, answer) = c.withAnswer(missing, wrong);
+        return ChoiceTrial(
+          promptKey: 'make_ten',
+          promptArgs: {'shown': '$shown', 'total': '$total'},
+          question: FrameVisual(shown, slots: total, showDots: showDots),
+          options: [for (final o in options) NumeralVisual(o)],
+          answer: answer,
+          optionErrors: [for (final o in options) o == missing ? null : (o > missing ? ErrorType.overCount : ErrorType.underCount)],
+        );
+      }(),
+  ];
+}
+
+/// Cherry Sums (さくらんぼ計算): a + b past ten, b split to make ten first.
+/// Rung 1 asks for the part that makes ten, rung 2 for what is left, rung 3
+/// for the whole sum (with the two cherries shown).
+List<Trial> _cherrySums(_Ctx c) {
+  final step = c.ic;
+  final seen = <(int, int)>{};
+  return [
+    for (var i = 0; i < trialsPerSession; i++)
+      () {
+        late int a, b;
+        for (var guard = 0; guard < 20; guard++) {
+          a = c.between(6, 9);
+          b = c.between(11 - a, 9); // a + b passes ten
+          if (seen.add((a, b))) break;
+        }
+        final toTen = 10 - a;
+        final rest = b - toTen;
+        final sum = a + b;
+        final answer = switch (step) { 0 => toTen, 1 => rest, _ => sum };
+        final wrong = c.near(answer, 2, min: 0, max: 18);
+        final (options, index) = c.withAnswer(answer, wrong);
+        return ChoiceTrial(
+          promptKey: step == 0 ? 'cherry_ten' : (step == 1 ? 'cherry_rest' : 'cherry_sum'),
+          promptArgs: {'a': '$a', 'b': '$b', 'ten': '$toTen'},
+          question: CherryVisual(a: a, b: b, first: step == 0 ? null : toTen, second: step == 1 ? null : rest, askTotal: step == 2),
+          options: [for (final o in options) NumeralVisual(o)],
+          answer: index,
+          optionErrors: [for (final o in options) o == answer ? null : (o > answer ? ErrorType.overCount : ErrorType.underCount)],
+        );
+      }(),
+  ];
+}
+
+/// Tape Stories (テープ図): a story problem read aloud and drawn as a tape.
+/// Rung 1: the whole is missing (put together); rung 2: a part is missing
+/// (take away).
+List<Trial> _tapeStories(_Ctx c) {
+  final takeAway = c.rule > 0;
+  return [
+    for (var i = 0; i < trialsPerSession; i++)
+      () {
+        final hero = c.pick(tapeHeroes);
+        final noun = c.pick(tapeNouns);
+        final a = c.between(1, 7);
+        final b = c.between(1, 9 - a + 1).clamp(1, 10 - a);
+        final whole = a + b;
+        final story = takeAway ? separateStory(c.lang, hero, noun, whole, b) : joinStory(c.lang, hero, noun, a, b);
+        final answer = takeAway ? a : whole;
+        final wrong = c.near(answer, 2, min: 0, max: 10);
+        final (options, index) = c.withAnswer(answer, wrong);
+        return ChoiceTrial(
+          promptKey: 'tape_story',
+          promptArgs: {'story': story},
+          question: TapeVisual(partA: takeAway ? null : a, partB: b, whole: takeAway ? whole : null, sizeA: a, sizeB: b),
+          options: [for (final o in options) NumeralVisual(o)],
+          answer: index,
+          speak: story,
+          optionErrors: [for (final o in options) o == answer ? null : (o > answer ? ErrorType.overCount : ErrorType.underCount)],
+        );
+      }(),
+  ];
+}
+
+/// Frog Hops: a linear board game. The frog is on a square; the spinner
+/// says how many hops; where does it land? (Siegler & Ramani, 2008.)
+List<Trial> _numberPath(_Ctx c) {
+  final length = c.ic == 0 ? 5 : 10;
+  final maxHop = c.ic == 0 ? 2 : 3;
+  return [
+    for (var i = 0; i < trialsPerSession; i++)
+      () {
+        final hops = c.between(1, maxHop);
+        final at = c.between(1, length - hops);
+        final land = at + hops;
+        final wrong = c.near(land, 2, min: 1, max: length);
+        final (options, answer) = c.withAnswer(land, wrong);
+        return ChoiceTrial(
+          promptKey: 'path_hop',
+          promptArgs: {'at': '$at', 'hops': '$hops'},
+          question: PathVisual(length: length, at: at, hops: hops),
+          options: [for (final o in options) NumeralVisual(o)],
+          answer: answer,
+          optionErrors: [for (final o in options) o == land ? null : (o > land ? ErrorType.overCount : ErrorType.underCount)],
+        );
+      }(),
+  ];
+}
+
+/// Story Time: two short picture stories, a question after each page (who,
+/// what happened, finish the sentence), answered with a picture.
+List<Trial> _storyTime(_Ctx c) {
+  final choices = c.dist == 0 ? 2 : 3;
+  final stories = c.shuffled(storyTimeStories).take(2).toList();
+  return [
+    for (final story in stories)
+      for (final page in story.pages)
+        () {
+          final (options, answer) = c.withAnswer(page.answer, page.others.take(choices - 1).toList());
+          final text = c.ar ? page.ar : page.en;
+          final ask = c.ar ? page.askAr : page.askEn;
+          return ChoiceTrial(
+            promptKey: 'story_q',
+            promptArgs: {'page': text, 'ask': ask},
+            // The picture shows who and what they did, not the thing asked
+            // about: the answer comes from listening, not from matching.
+            question: SceneVisual(page.who, page.action),
+            options: options,
+            answer: answer,
+            speak: '$text $ask',
+          );
+        }(),
+  ].take(trialsPerSession).toList();
+}
+
+// ---------------------------------------------------- communication skills ----
+
+/// Show how you feel: a moment happens to the child; they pick the face that
+/// shows the feeling that fits (expressivity). Wrong faces are distractors.
+List<Trial> _showFeeling(_Ctx c) {
+  final choices = c.dist == 0 ? 2 : 3;
+  final me = c.pick(Who.values);
+  return [
+    for (final m in c.shuffled(feelingMoments).take(trialsPerSession))
+      () {
+        final wrong = c.shuffled(Emotion.values.where((e) => e != m.emotion)).take(choices - 1).toList();
+        final (options, answer) = c.withAnswer(m.emotion, wrong);
+        final text = c.ar ? m.ar : m.en;
+        return ChoiceTrial(
+          promptKey: 'show_feeling',
+          promptArgs: {'story': text},
+          question: SceneVisual(me, Act.waving, prop: m.prop),
+          options: [for (final e in options) FaceVisual(me, e)],
+          answer: answer,
+          speak: text,
+          optionErrors: [for (final e in options) e == m.emotion ? null : ErrorType.distractorSelected],
+        );
+      }(),
+  ];
+}
+
+/// A social moment and ways through it, read aloud; one is kind, clear, calm
+/// or fair, and each other one reports what choosing it means (ErrorType).
+List<Trial> _social(_Ctx c, List<SocialMoment> moments, String promptKey) {
+  final choices = c.dist == 0 ? 2 : 3;
+  return [
+    for (final m in c.shuffled(moments).take(trialsPerSession))
+      () {
+        final others = c.shuffled(m.others).take(choices - 1).toList();
+        final (options, answer) = c.withAnswer(m.good, others);
+        final story = m.story(c.lang);
+        final spoken = [story, for (final (i, o) in options.indexed) '${i + 1}. ${o.text(c.lang)}'].join(' ');
+        return ChoiceTrial(
+          promptKey: promptKey,
+          promptArgs: {'story': story},
+          question: FaceVisual(m.who, m.emotion),
+          options: [for (final o in options) TextVisual(o.text(c.lang), isSentence: true)],
+          answer: answer,
+          speak: spoken,
+          optionsAreBig: true,
+          optionErrors: [for (final o in options) o.error],
         );
       }(),
   ];

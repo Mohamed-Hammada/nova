@@ -114,14 +114,15 @@ Bear's Apples' `bear`) draw it through the same system.
   (`game_rung_state`) and the next session applies them (modelled: help every round, guided: help
   on the first round; this help is logged as a hint so it never reads as independent work).
 
-The loop end to end: activity -> game session -> learning signals -> assessment -> mastery +
-adaptive decision (rung, scaffold) -> `SessionOutcome` (accuracy, hints, move, scaffold) recorded on
-the activity -> `CurriculumEngine` recommendation (with `ChildEvidence`: mastery per skill) -> the
-journey. The recommendation stays inside curriculum eligibility (current stage, unlocked,
-prerequisites met): after a hard session it suggests practice in the same area or the same game
-again (now easier; at most a few times), after accurate independent play an open challenge,
-otherwise required work first (avoiding the area just played, favouring skills without secure
-evidence). Home, the map and stage screens all read the one `journeyProgressProvider`.
+The loop end to end: activity -> game session -> learning signals (with explicit error types) ->
+assessment -> adaptive decision (rung, scaffold) and **skill evidence** (appended per session) ->
+**Skill Profile** per skill (`core/skills/`: mastery from a rolling window of sessions, trend,
+independence, consistency, repeated errors, contexts, transfer) -> `CurriculumEngine`, whose
+`RecommendationEngine` scores every eligible activity of the current stage (skill need, the skill
+graph, the last session, repeated errors, independence, transfer, variety) -> the journey. Scoring
+never widens eligibility (current stage, unlocked, prerequisites met, age, language). Home, the map
+and stage screens all read the one `journeyProgressProvider`. Details, weights and open decisions:
+[docs/product/skill-profile-and-audio.md](../docs/product/skill-profile-and-audio.md).
 
 Stage names are placeholder copy (`copy_status: draft` in `data/journeys/journeys.yaml`, counted by
 the validator report); their ids are technical slugs, so wording can change without touching ids.
@@ -129,6 +130,8 @@ the validator report); their ids are technical slugs, so wording can change with
 ## Settings and personalisation
 
 - First launch: onboarding asks the child's name and age.
+- Settings (the gear on Home): music, sound effects, voice and narration, hint button, reduced
+  motion, name, age, companion, world, language, graphics. Saved per device.
 - About me (tap the avatar chip): name, exact age, companion, world, language.
 - Grown-ups: the child's age (the journey adapts, nothing is deleted), spoken instructions, voice
   answers, face play, graphics quality (`ui/theme/graphics.dart`: Low keeps backgrounds still and

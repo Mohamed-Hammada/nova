@@ -25,7 +25,7 @@
     copy_status: draft
     place: feelings
     age_range: [2, 2]
-    levels: [tiny-011, tiny-012, tiny-013, tiny-014, tiny-015, tiny-016, tiny-017, tiny-018, tiny-019, tiny-020]
+    levels: [tiny-011, tiny-012, tiny-013, tiny-014, tiny-015, tiny-016, tiny-017, tiny-018, tiny-019, tiny-020, tiny-051]
   - id: stage.tiny.whisper-woods
     name_key: stage.tiny.whisper-woods.name
     copy_status: draft
@@ -37,13 +37,13 @@
     copy_status: draft
     place: memory
     age_range: [3, 3]
-    levels: [tiny-031, tiny-032, tiny-033, tiny-034, tiny-035, tiny-036, tiny-037, tiny-038, tiny-039, tiny-040]
+    levels: [tiny-031, tiny-032, tiny-033, tiny-034, tiny-035, tiny-036, tiny-037, tiny-038, tiny-039, tiny-040, tiny-055]
   - id: stage.tiny.rainbow-hill
     name_key: stage.tiny.rainbow-hill.name
     copy_status: draft
     place: discovery
     age_range: [3, 3]
-    levels: [tiny-041, tiny-042, tiny-043, tiny-044, tiny-045, tiny-046, tiny-047, tiny-048, tiny-049, tiny-050]
+    levels: [tiny-041, tiny-042, tiny-043, tiny-044, tiny-045, tiny-046, tiny-047, tiny-048, tiny-049, tiny-050, tiny-052, tiny-053, tiny-054]
   levels:
   - {id: tiny-001, game: game.math.bunny-carrots, skin: carrots}
   - id: tiny-002
@@ -74,6 +74,7 @@
     games_by_language: {en: game.lit.en.listen-and-find, ar: game.lit.ar.listen-and-find}
     role: optional
   - {id: tiny-020, game: game.memory.peekaboo-pairs, role: review}
+  - {id: tiny-051, game: game.sel.show-my-feeling}
   - {id: tiny-021, game: game.math.bear-apples, skin: flowers}
   - id: tiny-022
     games_by_language: {en: game.lit.en.clap-syllables, ar: game.lit.ar.clap-syllables}
@@ -106,6 +107,9 @@
     prerequisites: [tiny-031, tiny-032, tiny-033]
   - {id: tiny-039, game: game.math.more-or-less, skin: hearts, role: optional}
   - {id: tiny-040, game: game.sel.feelings-friends, role: review}
+  - id: tiny-055
+    games_by_language: {en: game.lit.en.story-time, ar: game.lit.ar.story-time}
+    role: optional
   - {id: tiny-041, game: game.math.more-or-less, skin: carrots}
   - {id: tiny-042, game: game.memory.simon-lights}
   - id: tiny-043
@@ -120,6 +124,9 @@
     games_by_language: {en: game.lit.en.book-explorer, ar: game.lit.ar.book-explorer}
     role: optional
   - {id: tiny-050, game: game.math.pattern-train, role: review}
+  - {id: tiny-052, game: game.sel.calm-down, role: practice}
+  - {id: tiny-053, game: game.sel.help-a-friend, role: optional}
+  - {id: tiny-054, game: game.math.number-path, role: practice}
 - id: journey.explorer
   name_key: journey.explorer.name
   age_range: [4, 5]
@@ -135,25 +142,25 @@
     copy_status: draft
     place: language
     age_range: [4, 4]
-    levels: [explorer-011, explorer-012, explorer-013, explorer-014, explorer-015, explorer-016, explorer-017, explorer-018, explorer-019, explorer-020]
+    levels: [explorer-011, explorer-012, explorer-013, explorer-014, explorer-015, explorer-016, explorer-017, explorer-018, explorer-019, explorer-020, explorer-051, explorer-056]
   - id: stage.explorer.echo-valley
     name_key: stage.explorer.echo-valley.name
     copy_status: draft
     place: sounds
     age_range: [4, 4]
-    levels: [explorer-021, explorer-022, explorer-023, explorer-024, explorer-025, explorer-026, explorer-027, explorer-028, explorer-029, explorer-030]
+    levels: [explorer-021, explorer-022, explorer-023, explorer-024, explorer-025, explorer-026, explorer-027, explorer-028, explorer-029, explorer-030, explorer-057]
   - id: stage.explorer.lily-pond
     name_key: stage.explorer.lily-pond.name
     copy_status: draft
     place: movement
     age_range: [5, 5]
-    levels: [explorer-031, explorer-032, explorer-033, explorer-034, explorer-035, explorer-036, explorer-037, explorer-038, explorer-039, explorer-040]
+    levels: [explorer-031, explorer-032, explorer-033, explorer-034, explorer-035, explorer-036, explorer-037, explorer-038, explorer-039, explorer-040, explorer-058]
   - id: stage.explorer.kindness-garden
     name_key: stage.explorer.kindness-garden.name
     copy_status: draft
     place: feelings
     age_range: [5, 5]
-    levels: [explorer-041, explorer-042, explorer-043, explorer-044, explorer-045, explorer-046, explorer-047, explorer-048, explorer-049, explorer-050]
+    levels: [explorer-041, explorer-042, explorer-043, explorer-044, explorer-045, explorer-046, explorer-047, explorer-048, explorer-049, explorer-050, explorer-052, explorer-053, explorer-054, explorer-055]
   levels:
   - {id: explorer-001, game: game.math.bear-apples, skin: carrots}
   - id: explorer-002
@@ -186,6 +193,9 @@
     prerequisites: [explorer-011, explorer-012, explorer-013]
   - {id: explorer-019, game: game.ef.sort-switch, role: optional}
   - {id: explorer-020, game: game.math.number-match, skin: balls, role: review}
+  - {id: explorer-051, game: game.sel.kind-words, role: practice}
+  - id: explorer-056
+    games_by_language: {en: game.lit.en.story-time, ar: game.lit.ar.story-time}
   - {id: explorer-021, game: game.math.number-catch}
   - id: explorer-022
     games_by_language: {en: game.lit.en.first-sound, ar: game.lit.ar.first-sound}
@@ -200,6 +210,7 @@
   - {id: explorer-028, game: game.math.number-catch, role: challenge, prerequisites: [explorer-021, explorer-022, explorer-023]}
   - {id: explorer-029, game: game.sel.feelings-friends, role: optional}
   - {id: explorer-030, game: game.ef.sort-switch, role: review}
+  - {id: explorer-057, game: game.math.number-path, role: practice}
   - {id: explorer-031, game: game.math.star-count, skin: hearts}
   - id: explorer-032
     games_by_language: {en: game.lit.en.letter-catch, ar: game.lit.ar.letter-catch}
@@ -216,6 +227,7 @@
     games_by_language: {en: game.lit.en.sound-blender, ar: game.lit.ar.sound-blender}
     role: optional
   - {id: explorer-040, game: game.math.star-count, skin: apples, role: review}
+  - {id: explorer-058, game: game.math.make-ten, role: practice}
   - id: explorer-041
     games_by_language: {en: game.lit.en.word-builder, ar: game.lit.ar.word-builder}
   - {id: explorer-042, game: game.math.add-take-away}
@@ -230,6 +242,10 @@
     games_by_language: {en: game.lit.en.word-builder, ar: game.lit.ar.word-builder}
     role: optional
   - {id: explorer-050, game: game.math.add-take-away, role: review}
+  - {id: explorer-052, game: game.sel.help-a-friend}
+  - {id: explorer-053, game: game.sel.calm-down}
+  - {id: explorer-054, game: game.sel.fair-play, role: practice}
+  - {id: explorer-055, game: game.sel.kind-words, role: review}
 - id: journey.champion
   name_key: journey.champion.name
   age_range: [6, 8]
@@ -239,7 +255,7 @@
     copy_status: draft
     place: numbers
     age_range: [6, 6]
-    levels: [champion-001, champion-002, champion-003, champion-004, champion-005, champion-006, champion-007, champion-008, champion-009, champion-010]
+    levels: [champion-001, champion-002, champion-003, champion-004, champion-005, champion-006, champion-007, champion-008, champion-009, champion-010, champion-053, champion-054, champion-055]
   - id: stage.champion.letter-lighthouse
     name_key: stage.champion.letter-lighthouse.name
     copy_status: draft
@@ -251,13 +267,13 @@
     copy_status: draft
     place: discovery
     age_range: [7, 7]
-    levels: [champion-021, champion-022, champion-023, champion-024, champion-025, champion-026, champion-027, champion-028, champion-029, champion-030]
+    levels: [champion-021, champion-022, champion-023, champion-024, champion-025, champion-026, champion-027, champion-028, champion-029, champion-030, champion-051, champion-056]
   - id: stage.champion.starlight-cove
     name_key: stage.champion.starlight-cove.name
     copy_status: draft
     place: memory
     age_range: [7, 7]
-    levels: [champion-031, champion-032, champion-033, champion-034, champion-035, champion-036, champion-037, champion-038, champion-039, champion-040]
+    levels: [champion-031, champion-032, champion-033, champion-034, champion-035, champion-036, champion-037, champion-038, champion-039, champion-040, champion-052]
   - id: stage.champion.explorers-summit
     name_key: stage.champion.explorers-summit.name
     copy_status: draft
@@ -280,6 +296,9 @@
     prerequisites: [champion-001, champion-002, champion-003]
   - {id: champion-009, game: game.math.add-take-away, role: optional}
   - {id: champion-010, game: game.sel.how-would-they-feel, role: review}
+  - {id: champion-053, game: game.math.make-ten}
+  - {id: champion-054, game: game.math.cherry-sums}
+  - {id: champion-055, game: game.math.tape-stories, role: practice}
   - id: champion-011
     games_by_language: {en: game.lit.en.word-builder, ar: game.lit.ar.word-builder}
   - {id: champion-012, game: game.math.add-take-away}
@@ -309,6 +328,8 @@
   - {id: champion-028, game: game.memory.simon-lights, role: challenge, prerequisites: [champion-021, champion-022, champion-023]}
   - {id: champion-029, game: game.math.add-take-away, role: optional}
   - {id: champion-030, game: game.ef.sort-switch, role: review}
+  - {id: champion-051, game: game.sel.fair-play, role: practice}
+  - {id: champion-056, game: game.math.tape-stories, role: review}
   - {id: champion-031, game: game.math.space-shop}
   - id: champion-032
     games_by_language: {en: game.lit.en.word-pictures, ar: game.lit.ar.word-pictures}
@@ -323,6 +344,7 @@
     games_by_language: {en: game.lit.en.word-pictures, ar: game.lit.ar.word-pictures}
     role: optional
   - {id: champion-040, game: game.memory.simon-lights, role: review}
+  - {id: champion-052, game: game.sel.kind-words, role: optional}
   - {id: champion-041, game: game.math.number-line-hop}
   - {id: champion-042, game: game.ef.sort-switch}
   - id: champion-043

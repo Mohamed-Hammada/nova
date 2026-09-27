@@ -1,3 +1,4 @@
+import 'package:nova_app/core/skills/skill_evidence.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:nova_app/core/adaptive/adaptive_decision.dart';
 import 'package:nova_app/core/assessment/dimension_estimate.dart';
@@ -32,11 +33,13 @@ class _FailingSavePersistence extends InMemoryPersistencePort {
     required DimensionEstimate? independence,
     required DimensionEstimate? transfer,
     required AdaptiveDecision decision,
+    List<SkillEvidence> evidence = const [],
   }) async {
     if (failuresLeft-- > 0) throw StateError('disk full');
     return super.saveSession(
       childId: childId, skillId: skillId, mastery: mastery,
       performance: performance, independence: independence, transfer: transfer, decision: decision,
+      evidence: evidence,
     );
   }
 }

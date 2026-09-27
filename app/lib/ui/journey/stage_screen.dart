@@ -1,3 +1,4 @@
+import 'package:nova_app/ui/audio/background_audio.dart';
 import 'dart:async';
 
 import 'package:flutter/material.dart';
@@ -38,8 +39,14 @@ class _StageScreenState extends ConsumerState<StageScreen> {
     super.dispose();
   }
 
+  /// The adventure's place decides its sound: crossfading from Home's.
   @override
   Widget build(BuildContext context) {
+    final stage = ref.watch(curriculumProvider).stages.where((s) => s.id == widget.stageId).firstOrNull;
+    return AudioSceneMarker(scene: AudioScene.forPlace(stage?.place), child: _screen(context));
+  }
+
+  Widget _screen(BuildContext context) {
     final l10n = context.l10n;
     final content = ref.watch(contentRuntimeProvider);
     final lang = ref.watch(languageProvider);

@@ -2,12 +2,14 @@ import 'package:nova_app/core/adaptive/adaptive_decision.dart';
 import 'package:nova_app/core/assessment/dimension_estimate.dart';
 import 'package:nova_app/core/mastery/mastery_record.dart';
 import 'package:nova_app/core/ports/persistence_port.dart';
+import 'package:nova_app/core/skills/skill_evidence.dart';
 
 class InMemoryPersistencePort implements PersistencePort {
   final Map<String, MasteryRecord> _mastery = {};
   final Map<String, DimensionEstimate> _dimensions = {};
   final Map<String, String> _rungs = {};
   final Map<String, String> _scaffolds = {};
+  final List<SkillEvidence> _evidence = [];
 
   @override
   Future<void> saveSession({
@@ -18,7 +20,9 @@ class InMemoryPersistencePort implements PersistencePort {
     required DimensionEstimate? independence,
     required DimensionEstimate? transfer,
     required AdaptiveDecision decision,
+    List<SkillEvidence> evidence = const [],
   }) async {
+    _evidence.addAll(evidence);
     _mastery['$childId:$skillId'] = mastery;
     if (performance != null) _dimensions['$childId:$skillId:performance'] = performance;
     if (independence != null) _dimensions['$childId:$skillId:independence'] = independence;
@@ -26,6 +30,16 @@ class InMemoryPersistencePort implements PersistencePort {
     _rungs['$childId:${decision.gameId}'] = decision.nextRungId;
     _scaffolds['$childId:${decision.gameId}'] = decision.scaffold;
   }
+
+  @override
+  Future<List<SkillEvidence>> skillEvidence({required String childId, String? skillId}) async => [
+        for (final e in _evidence)
+          if (e.childId == childId && (skillId == null || e.skillId == skillId)) e,
+      ]..sort((a, b) => a.at.compareTo(b.at));
+
+  @override
+  Future<void> saveDimension({required String childId, required DimensionEstimate estimate}) async =>
+      _dimensions['$childId:${estimate.skillId}:${estimate.dimension}'] = estimate;
 
   @override
   Future<MasteryRecord?> currentMastery({required String childId, required String skillId}) async => _mastery['$childId:$skillId'];
