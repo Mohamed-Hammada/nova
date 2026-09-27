@@ -77,9 +77,16 @@ if defined FOUND_JDK (
 )
 
 rem 5. Determine Build Mode
+rem    --debug picks the mode here; every other argument goes on to flutter build.
+rem    (The build scripts add --debug/--release themselves, so it is not forwarded.)
 set "BUILD_MODE=release"
+set "BUILD_ARGS="
 for %%A in (%*) do (
-  if "%%A"=="--debug" set "BUILD_MODE=debug"
+  if "%%~A"=="--debug" (
+    set "BUILD_MODE=debug"
+  ) else (
+    set "BUILD_ARGS=!BUILD_ARGS! %%A"
+  )
 )
 
 echo.
@@ -88,11 +95,11 @@ echo.
 
 rem 6. Run build via repository scripts
 if "%BUILD_MODE%"=="debug" (
-  call scripts\build_apk_debug.bat %*
+  call scripts\build_apk_debug.bat !BUILD_ARGS!
   set "BUILD_RESULT=!ERRORLEVEL!"
   set "OUT_FILE=%~dp0nova.apk"
 ) else (
-  call scripts\build_apk_release.bat %*
+  call scripts\build_apk_release.bat !BUILD_ARGS!
   set "BUILD_RESULT=!ERRORLEVEL!"
   set "OUT_FILE=%~dp0nova-release.apk"
 )
