@@ -9,6 +9,7 @@ import 'package:nova_app/core/ports/clock_port.dart';
 import 'package:nova_app/core/ports/loop_audio_port.dart';
 import 'package:nova_app/core/ports/persistence_port.dart';
 import 'package:nova_app/providers.dart';
+import 'package:nova_app/ui/journey/journey_providers.dart';
 
 import 'fake_audio_port.dart';
 import 'fake_clock.dart';
@@ -80,6 +81,10 @@ Future<AppHarness> pumpNovaApp(
   // Navigator rather than the previous app's route stack.
   await tester.pumpWidget(const SizedBox());
   await tester.pumpWidget(UncontrolledProviderScope(container: container, child: const NovaApp()));
+  if (age != null) {
+    await container.read(activityRecordsProvider.future);
+    await container.read(childEvidenceProvider.future);
+  }
   await tester.pumpAndSettle();
   return AppHarness(persistence: store, clock: clock, audio: audio, container: container);
 }
@@ -99,7 +104,10 @@ Future<void> openBearApples(WidgetTester tester, {String name = "Bear's Apples"}
 /// 'stage.explorer.counting-orchard'.
 Future<void> openStage(WidgetTester tester, String stageId) async {
   final finder = find.byKey(ValueKey('home.stage.$stageId'));
-  await tester.scrollUntilVisible(finder, 200, scrollable: find.byType(Scrollable).first);
+  final scrollable = find.byType(Scrollable);
+  if (scrollable.evaluate().isNotEmpty) {
+    await tester.scrollUntilVisible(finder, 200, scrollable: scrollable.first);
+  }
   await tester.ensureVisible(finder);
   await tester.pumpAndSettle();
   await tester.tap(finder);

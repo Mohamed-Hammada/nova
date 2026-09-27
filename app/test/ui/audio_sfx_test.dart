@@ -6,6 +6,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:nova_app/core/ports/audio_port.dart';
 import 'package:nova_app/providers.dart';
 import 'package:nova_app/ui/audio/sound_effects.dart';
+import 'package:nova_app/ui/design/nova_design.dart';
+import 'package:nova_app/ui/game/game_screen.dart';
 import 'package:nova_app/ui/play/trial_views.dart';
 
 import '../support/fixture_content.dart';
@@ -62,5 +64,67 @@ void main() {
     await tester.pump(const Duration(seconds: 2));
     await tester.pumpWidget(const SizedBox());
     await tester.pump(const Duration(seconds: 3));
+  });
+
+  testWidgets('game has sound: GameScreen plays sfx for trial start, item placement, and hints', (tester) async {
+    final sfx = _Recorder();
+    await pumpNovaApp(tester, content: fixtureContent(), size: const Size(1280, 900), soundEffects: sfx);
+    final play = find.byKey(const ValueKey('home.continue'));
+    await tester.tap(play);
+    for (var i = 0; i < 8; i++) {
+      await tester.pump(const Duration(milliseconds: 250));
+    }
+    expect(sfx.played, contains(Sfx.whoosh.asset));
+
+    // Place an apple
+    final appleOnTable = find.byKey(const ValueKey('drag-to-count.item.0'));
+    await tester.tap(appleOnTable);
+    await tester.pump(const Duration(milliseconds: 300));
+    expect(sfx.played, contains(Sfx.tap.asset));
+
+    // Remove the apple from the plate
+    final appleOnPlate = find.byKey(const ValueKey('drag-to-count.plate-item.0'));
+    await tester.tap(appleOnPlate);
+    await tester.pump(const Duration(milliseconds: 300));
+    expect(sfx.played, contains(Sfx.pop.asset));
+
+    // Place it back
+    await tester.tap(appleOnTable);
+    await tester.pump(const Duration(milliseconds: 300));
+
+    // Tap hint
+    final hint = find.byIcon(Icons.lightbulb_rounded);
+    await tester.tap(hint);
+    await tester.pump(const Duration(milliseconds: 300));
+    expect(sfx.played, contains(Sfx.show.asset));
+
+    // Submit incomplete answer to verify retry sfx
+    final done = find.widgetWithText(NovaButton, 'Done').first;
+    await tester.tap(done);
+    await tester.pump(const Duration(milliseconds: 300));
+    expect(sfx.played, contains(Sfx.retry.asset));
+
+    // Retry trial
+    final state = tester.state<GameScreenState>(find.byType(GameScreen));
+    final session = state.session;
+    session.retry();
+    await tester.pump(const Duration(milliseconds: 300));
+
+    // Place remaining required targets
+    for (final unplaced in session.items.where((i) => !i.onPlate && !i.isDistractor).toList()) {
+      if (session.targetsOnPlate >= session.currentTrial!.requested) break;
+      session.place(unplaced.id);
+    }
+    await tester.pump(const Duration(milliseconds: 300));
+
+    // Submit correct answer
+    session.submit();
+    await tester.pump(const Duration(milliseconds: 300));
+    expect(sfx.played, contains(Sfx.success.asset));
+
+    // Move to next / complete
+    session.next();
+    await tester.pump(const Duration(milliseconds: 300));
+    expect(sfx.played, contains(Sfx.celebrate.asset));
   });
 }

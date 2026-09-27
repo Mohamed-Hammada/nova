@@ -6,6 +6,7 @@ import 'package:nova_app/mechanics_flutter/drag_to_count_mechanic.dart';
 import 'package:nova_app/providers.dart';
 import 'package:nova_app/core/journey/journey_models.dart';
 import 'package:nova_app/core/play/session.dart';
+import 'package:nova_app/core/ports/speech_port.dart';
 import 'package:nova_app/ui/design/nova_design.dart';
 import 'package:nova_app/ui/l10n.dart';
 import 'package:nova_app/ui/progress/progress_screen.dart';
@@ -13,6 +14,7 @@ import 'package:nova_app/ui/scene/story_scene.dart';
 import 'package:nova_app/ui/world/activity_world.dart';
 
 import 'bear_apples_art.dart';
+import '../audio/sound_effects.dart';
 import 'game_audio.dart';
 import 'game_catalog.dart';
 import 'game_session_controller.dart';
@@ -52,12 +54,15 @@ class GameScreen extends ConsumerStatefulWidget {
   final void Function(SessionOutcome outcome)? onComplete;
 
   @override
-  ConsumerState<GameScreen> createState() => _GameScreenState();
+  ConsumerState<GameScreen> createState() => GameScreenState();
 }
 
-class _GameScreenState extends ConsumerState<GameScreen> {
+class GameScreenState extends ConsumerState<GameScreen> {
+  GameSessionController get session => _session;
   late final PlayableGame _game = playableGames[widget.gameId]!;
   late final GameSessionController _session;
+  late final SpeechPort _speech;
+  late final SoundEffects _sfx;
   String _language = 'en';
   bool _reported = false;
 
@@ -66,11 +71,14 @@ class _GameScreenState extends ConsumerState<GameScreen> {
     super.initState();
     final content = ref.read(contentRuntimeProvider);
     final clock = ref.read(clockPortProvider);
+    _speech = ref.read(speechPortProvider);
+    _sfx = ref.read(soundEffectsProvider);
     final cues = GameAudioCues(
       audio: ref.read(narrationPortProvider),
       content: content,
       game: content.game(widget.gameId),
       language: () => _language,
+      sfx: _sfx,
     );
     _session = GameSessionController(
       runtime: ref.read(gameRuntimeProvider),
@@ -94,6 +102,18 @@ class _GameScreenState extends ConsumerState<GameScreen> {
     });
   }
 
+  int? _lastSpokenTrialIndex;
+
+  void _speakPrompt() {
+    final trial = _session.currentTrial;
+    if (trial != null && mounted) {
+      _speech.speak(
+        _game.prompt(context, trial.requested),
+        language: _language,
+      );
+    }
+  }
+
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
@@ -101,6 +121,15 @@ class _GameScreenState extends ConsumerState<GameScreen> {
   }
 
   void _onSessionChanged() {
+    if (_session.phase == GamePhase.playing && _session.trialIndex != _lastSpokenTrialIndex) {
+      _lastSpokenTrialIndex = _session.trialIndex;
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted && _session.phase == GamePhase.playing) {
+          _speakPrompt();
+        }
+      });
+    }
+
     // A completed session changed persisted mastery: drop cached reads.
     if (_session.phase == GamePhase.complete && !_reported) {
       _reported = true;
@@ -115,6 +144,7 @@ class _GameScreenState extends ConsumerState<GameScreen> {
     _session
       ..removeListener(_onSessionChanged)
       ..dispose();
+    _speech.stop();
     super.dispose();
   }
 
@@ -147,7 +177,10 @@ class _GameScreenState extends ConsumerState<GameScreen> {
         final leave = IconButton(
           tooltip: l10n.leaveGame,
           icon: const Icon(Icons.close_rounded),
-          onPressed: () => Navigator.of(context).maybePop(),
+          onPressed: () {
+            _sfx.play(Sfx.tap);
+            Navigator.of(context).maybePop();
+          },
         );
         switch (_session.phase) {
           case GamePhase.loading:
@@ -181,6 +214,14 @@ class _GameScreenState extends ConsumerState<GameScreen> {
               lastStableTier: _lastStableTier,
               stage3DTransport: widget.stage3DTransport,
               force3D: widget.force3D,
+              onTapPrompt: () {
+                _sfx.play(Sfx.tap);
+                _speakPrompt();
+              },
+              onRetry: () {
+                _sfx.play(Sfx.tap);
+                _session.retry();
+              },
               onStage3DError: (code, message) {
                 setState(() {
                   _stage3DFellBack = true;
@@ -221,6 +262,8 @@ class _PlayView extends StatelessWidget {
     this.lastStableTier,
     this.stage3DTransport,
     this.force3D,
+    this.onTapPrompt,
+    this.onRetry,
     required this.onStage3DError,
     required this.onTierChanged,
     required this.onOpenQualitySettings,
@@ -233,6 +276,8 @@ class _PlayView extends StatelessWidget {
   final QualityTier? lastStableTier;
   final Stage3DTransport? stage3DTransport;
   final bool? force3D;
+  final VoidCallback? onTapPrompt;
+  final VoidCallback? onRetry;
   final void Function(String code, String message) onStage3DError;
   final void Function(QualityTier tier) onTierChanged;
   final VoidCallback onOpenQualitySettings;
@@ -342,14 +387,18 @@ class _PlayView extends StatelessWidget {
         skin: game.skin(context),
         enabled: playing,
         showCount: session.hintVisible,
-        plateHeader: game.companionReceiver != null
-            ? game.companionReceiver!(
-                context,
-                _characterState,
-                trial.requested,
-                pointing: session.hintVisible,
-              )
-            : game.receiver(context, _mood, trial.requested),
+        plateHeader: GestureDetector(
+          onTap: onTapPrompt,
+          behavior: HitTestBehavior.opaque,
+          child: game.companionReceiver != null
+              ? game.companionReceiver!(
+                  context,
+                  _characterState,
+                  trial.requested,
+                  pointing: session.hintVisible,
+                )
+              : game.receiver(context, _mood, trial.requested),
+        ),
         onPlace: session.place,
         onRemove: session.remove,
       );
@@ -403,7 +452,11 @@ class _PlayView extends StatelessWidget {
                   Semantics(
                     liveRegion: true,
                     header: true,
-                    child: Text(game.prompt(context, trial.requested), style: theme.textTheme.headlineMedium, textAlign: TextAlign.center),
+                    button: true,
+                    child: GestureDetector(
+                      onTap: onTapPrompt,
+                      child: Text(game.prompt(context, trial.requested), style: theme.textTheme.headlineMedium, textAlign: TextAlign.center),
+                    ),
                   ),
                   const SizedBox(height: NovaSpace.xxs),
                   Text(
@@ -461,7 +514,7 @@ class _PlayView extends StatelessWidget {
             icon: retry ? Icons.replay_rounded : Icons.arrow_forward_rounded,
             size: NovaButtonSize.child,
             autofocus: true,
-            onPressed: retry ? session.retry : session.next,
+            onPressed: retry ? (onRetry ?? session.retry) : session.next,
           ),
         );
       default:
